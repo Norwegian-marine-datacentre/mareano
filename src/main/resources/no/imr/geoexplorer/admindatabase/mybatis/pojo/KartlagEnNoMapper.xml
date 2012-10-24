@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper      
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"      
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="no.imr.geoexplorer.admindatabase.pojo.KartlagEnNoMapper"> 
+
+	<resultMap id="KartlagEnNoResult" type="no.imr.geoexplorer.admindatabase.mybatis.pojo.KartlagEnNo">
+    	<id property="kartlagId" column="kartlag_id"/>
+    	<result property="title" column="title"/>
+    	<result property="alternateTitle" column="alternate_title"/>
+    	<result property="abstracts" column="abstract"/>
+	</resultMap>
+
+	<sql id="kartlagSelect">
+   		SELECT kartlag_id, title, alternate_title, abstract
+    </sql>
+    
+	<select id="getKartlagEn" resultMap="KartlagEnNoResult" resultType="java.util.ArrayList">
+    	<include refid="kartlagSelect" />
+    	FROM kartlag_en where kartlag_id=#{kartlagId}
+	</select>
+	
+	<select id="getKartlagNo" resultMap="KartlagEnNoResult" resultType="java.util.ArrayList">
+    	<include refid="kartlagSelect" />
+    	FROM kartlag_no where kartlag_id=#{kartlagId}
+	</select>
+				
+</mapper>

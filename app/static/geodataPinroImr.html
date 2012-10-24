@@ -1,0 +1,356 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+    <head>
+		<title id="page-title">Geodata from Institute of Marine Research</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link rel="shortcut icon" href="theme/app/img/favicon.ico">
+        <!-- Ext resources -->
+        <link rel="stylesheet" type="text/css" href="externals/ext/resources/css/ext-all.css">
+        <link rel="stylesheet" type="text/css" href="externals/ext/resources/css/xtheme-gray.css">
+        <script type="text/javascript" src="externals/ext/adapter/ext/ext-base-debug.js"></script>
+        <script type="text/javascript" src="externals/ext/ext-all-debug-w-comments.js"></script>
+		<style type="text/css">
+select.fishexchange{
+	width:150px;
+	border:1px solid #000;
+	font-family:Georgia,Serif;
+}
+</style>
+	<meta http-equiv="X-UA-Compatible" content="IE=IE8" >
+
+	<script type="text/javascript" src="javascript/jquery-1.6.2.min.js"></script>
+    <script type="text/javascript">jQuery.noConflict();</script>
+
+    <!-- link href="http://www.imr.no/css/stylesheet.css" rel="stylesheet" type="text/css" -->
+    <link href="theme/imr/imr.css" rel="stylesheet" type="text/css">
+    <script type="text/javascript" src="javascript/layerIcon.js"></script>
+	<script type="text/javascript" src="javascript/combobox.js"></script>
+
+    <!-- OpenLayers resources -->
+    <link rel="stylesheet" type="text/css" href="externals/openlayers/theme/default/style.css">
+    <script type="text/javascript" src="script/OpenLayers.js"></script>
+
+    <!-- GeoExt resources -->
+    <link rel="stylesheet" type="text/css" href="externals/GeoExt/resources/css/popup.css">
+    <link rel="stylesheet" type="text/css" href="externals/GeoExt/resources/css/layerlegend.css">
+    <link rel="stylesheet" type="text/css" href="externals/GeoExt/resources/css/gxtheme-gray.css">
+    <script type="text/javascript" src="script/GeoExt.js"></script>
+
+    <!-- gxp resources -->
+    <link rel="stylesheet" type="text/css" href="externals/gxp/src/theme/all.css">
+    <script type="text/javascript" src="script/gxp.js"></script>
+
+    <!-- proj4js resources -->
+	<!--<script type="text/javascript" src="externals/proj4js/lib/proj4js-compressed.js"></script>-->
+    <script type="text/javascript" src="javascript/proj4js-compressed.js"></script>
+
+    <!-- GeoExplorer resources -->
+    <link rel="stylesheet" type="text/css" href="theme/app/geoexplorer.css" />
+    <!--[if IE]><link rel="stylesheet" type="text/css" href="theme/app/ie.css"/><![endif]-->
+    <link rel="stylesheet" type="text/css" href="theme/ux/colorpicker/color-picker.ux.css" />
+    <script type="text/javascript" src="script/GeoExplorer_en.js"></script>
+    <script type="text/javascript" src="script/ux.js"></script>
+
+    <!-- PrintPreview resources -->
+    <link rel="stylesheet" type="text/css" href="externals/PrintPreview/resources/css/printpreview.css">
+    <script type="text/javascript" src="script/PrintPreview.js"></script>
+	<script type="text/javascript">
+		/**
+		 * Disable fishexchange knapp til id=parameter i dropdown er valgt
+		 * Part of the functionality of this script is found in combobox.js - paramchange()
+		 ***/
+		jQuery(document).ready(function() {
+			jQuery('body').change(function(event) {
+				if ( jQuery(event.target).is('#grid') ) {
+					gridchange();
+				}				
+				if ( jQuery(event.target).is('#dataset') ) {
+					datasetchange();
+				}
+				if ( jQuery(event.target).is('#parameter') ) {
+					paramchange();
+				}
+			});
+			jQuery('body').change(function(event) {
+				if (jQuery(event.target).is('#parameter') && jQuery(event.target).val()=="Select value") {
+					jQuery("#makemap").attr("disabled", "disabled");
+					jQuery("#createpdf").attr("disabled","disabled");
+				}         			
+			});
+			jQuery('.icon-norsk').click(function(event) {
+				jQuery(".x-btn-text").each(function(index) {
+			    	if (jQuery(this).text() == "Go to coordinat") { 
+				    	jQuery(this).html("Gå til koordinat");
+			    	} else if (jQuery(this).text() == "Coordinates (WGS84):") {
+			        	jQuery(this).html("Koordinater (WGS84):");
+			        }
+				});
+			    jQuery(".x-form-field").each(function(index) {
+			    	jQuery(this).val("G\u00e5 til omr\u00e5de");
+				});
+			    jQuery(".x-combo-list-item").each(function(index) {
+			    	 if ( jQuery(this).text() == "Barent Sea") {
+			    	   jQuery(this).html("Barentshavet");
+			    	} else if ( jQuery(this).text() == "Norwegian Sea") {
+						jQuery(this).html("Norskehavet");
+			        } else if ( jQuery(this).text() == "North Sea") {
+						jQuery(this).html("Nordsjøen");
+			        }
+				});       	
+			});
+		});
+	</script>
+
+    <script>
+    function init() {
+        gxp.plugins.LayerTree.prototype.baseNodeText = "Base Layer";
+        gxp.plugins.LayerTree.prototype.overlayNodeText = "Overlays";
+        gxp.plugins.AddLayers.prototype.addActionTip = "Add layers";
+        gxp.plugins.AddLayers.prototype.addServerText = "Add a New Server";
+        gxp.plugins.AddLayers.prototype.addButtonText = "Legg til kartlag";
+        gxp.plugins.AddLayers.prototype.availableLayersText = "Available Layers";
+        gxp.plugins.AddLayers.prototype.layerSelectionText = "View available data from:";
+        gxp.plugins.AddLayers.prototype.doneText = "Done";
+        gxp.plugins.AddLayers.prototype.addButtonText = "Add layers";
+
+        if (GeoExt.Lang) {
+            GeoExt.Lang.set(OpenLayers.Util.getParameters()["locale"] || GeoExt.Lang.locale);
+        }
+        OpenLayers.ImgPath = "theme/app/img/";
+        
+        var app = new GeoExplorer.Composer({
+            /* authStatus: <% status %>, */
+            proxy: "proxy/?url=",
+            printService: "/geoserver/pdf/",
+            about: {
+                title: "Geodata from the Institute of Marine Research",
+                "abstract": "This is a map application that has assembled some marine related web based maps." +
+                    "This application is based on GeoExplorer which has been developed by <a href='http://opengeo.org'>OpenGeo</a>.",
+                contact: "For more information, contact <a href='http://www.imr.no'>Institute of Marine Research</a>."
+            },
+            defaultSourceType: "gxp_wmscsource",
+            sources: {
+                suite2: {
+                    url: "http://localhost:8080/geoserver/wms/test",
+                    title: "Havforskniningsinstiuttet" <!-- HI -->
+                },
+                ol: {
+                    ptype: "gx_olsource"
+                }
+            },
+            map: {
+            	projection: "EPSG:3995",
+            	units: "m",
+            	maxResolution: 10832.0,
+            	maxExtent: [-20037508.3428, -15496570.7397, 20037508.3428, 18764656.2314],
+            	numZoomLevels: 18,
+                layers: [
+				{
+                    source: "ol",
+                    type: "OpenLayers.Layer.WMS",
+                    group: "background",
+                    args: [
+                        "Country",
+						"http://localhost:8080/geoserver/test/wms",
+						{layers: "test:country", format: "image/jpeg", transparent: true, isBaseLayer: true}
+                    ]
+				}, {
+                    source: "ol",
+                    type: "OpenLayers.Layer.WMS",
+                    group: "background",
+                    args: [
+						"Continent",
+						"http://localhost:8080/geoserver/test/wms",
+						{layers: "test:continent", format: "image/jpeg", transparent: true, isBaseLayer: true}
+                    ]
+				}
+                ],
+                center: [0,0],
+                zoom: 0
+            }
+        });
+
+        app.on("ready", function() {
+            var treeRoot = Ext.ComponentMgr.all.find(function(c) {
+                return c instanceof Ext.tree.TreePanel;
+            });
+			/******/
+			var img = OpenLayers.Util.getImagesLocation() + "loading3.gif";
+			var size = new OpenLayers.Size(40, 35);
+			var dim = OpenLayers.Element.getDimensions(this.mapPanel.map.viewPortDiv);
+			var pos = new OpenLayers.Pixel((dim.width - size.w) / 2, (dim.height - size.h) / 2);
+			var imgDiv = OpenLayers.Util.createDiv("LoadMonitor", pos, size, img);
+			imgDiv.style.zIndex = 1000;
+		    this.mapPanel.map.viewPortDiv.appendChild( imgDiv );
+		    imgDiv.style.display = "none";
+			/******/
+
+			function addLayerToGroup( gruppeNavn, gruppeText, map, mapPanel ) {
+				var indexOfWMSgruppe = [];
+				var layerName = [];
+				for (var i = map.layers.length-1;i>=0;--i) {
+					if ( map.layers[i].group == gruppeNavn ) {
+						for( var j= mapPanel.map.layers.length-1; j>=0;--j) {
+							if ( mapPanel.map.layers[j].params != null && map.layers[i].args[2].layers == mapPanel.map.layers[j].params['LAYERS'] ) {
+								//alert("layer:"+map.layers[i].args[2].layers+" param:"+mapPanel.map.layers[j].params['LAYERS']);
+								indexOfWMSgruppe.push( j );
+								layerName.push( map.layers[i].args[2].layers );
+							}
+						}
+					}
+				}
+				var tmpLoader = new GeoExt.tree.LayerLoader({			    
+		        	filter: function(record) {
+			        	var featureInfoEvents = [];
+	                	/** Add event for getFeatureInfo */
+	                	function setThisHTML(response) {
+	                		var from = response.responseText.indexOf("<body>");
+	                		var to = response.responseText.indexOf("</body>");
+	                		var bodyStr = response.responseText.substring(from, to);
+	                		/** Ugly - fix by not sending request when click outside layer */
+	                		if ( response.responseText != null && response.responseText != "" && bodyStr.length > 14 ) {
+	                			//Ext.MessageBox.show( 'Feature Info', response.responseText );
+	                			winPanel = new Ext.Window({title: 'Feature Info',autoHeight: true,width:300,html: response.responseText});
+	                			winPanel.show();
+	                			//Ext.MessageBox.show( {title: 'Feature Info', msg: response.responseText, setAutoScroll:true} );
+	                		}
+		            	};		            	
+	                	var tmpMap = mapPanel.map;
+						if (record.get("layer").url!=null && !(record.get("layer") instanceof OpenLayers.Layer.Vector) && 
+							record.get("layer").url.indexOf( 'http://maps.imr.no/geoserver/wms' ) != -1 ) {
+							
+							var isRegFlag = 0;
+							if ( featureInfoEvents != [] ) {
+	            				for ( var i=0, len=featureInfoEvents.length; i<len; i++ ) {
+									if ( featureInfoEvents[i] == record.get("layer") ) {
+										isRegFlag = 1;
+									}
+	            				}
+							}
+							
+							if ( isRegFlag == 0 ) {
+								featureInfoEvents.push( record.get("layer") ); 
+								tmpMap.events.register('click', record.get("layer"), function (e) {
+									
+									if ( record.get("layer").getVisibility() ) {
+										var params = {
+			                        		REQUEST: "GetFeatureInfo",
+				                        	EXCEPTIONS: "application/vnd.ogc.se_xml",
+				                        	BBOX: tmpMap.getExtent().toBBOX(),
+				                        	X: e.xy.x,
+				                        	Y: e.xy.y,
+				                        	INFO_FORMAT: 'text/html',
+				                        	QUERY_LAYERS: record.get("layer").params['LAYERS'],
+				                        	FEATURE_COUNT: 50,
+				                        	Layers: record.get("layer").params['LAYERS'],
+				                        	Styles: '',
+				                        	Srs: 'EPSG:32633',
+				                        	WIDTH: tmpMap.size.w,
+				                        	HEIGHT: tmpMap.size.h,
+				                        	format: 'image/jpeg'
+			                    		};
+			                    		var returned = OpenLayers.loadURL("http://maps.imr.no/geoserver/wms", params, this, setThisHTML);
+			                    		//returned.abort(); //to avoid two popups
+			                    		OpenLayers.Event.stop(e);
+									}
+		                    	});
+							}
+						}
+		        		/** adding the right layer to the right container */		        	
+						for( var i= layerName.length-1; i>=0; --i ) {
+							if ( record.get("group") == gruppeNavn ) {
+								return true;
+							}
+						}
+						return false;
+			        },
+					createNode: function(attr) {
+			        	var layerRecord = this.store.getByLayer(attr.layer);
+			        	var cssBgImg = "";
+						var url = "";
+						if ( layerRecord.getLayer() instanceof OpenLayers.Layer.WMS ) {
+	                		url = layerRecord.getLayer().url;
+						}
+	                	if ( url.indexOf("npd.no") != -1 ) {
+	                		cssBgImg = "gx-tree-rasterlayer-icon-OD";
+	                	} else if ( url.indexOf("crius.nodc") != -1 || url.indexOf("atlas.nodc") != -1 || 
+	                        	url.indexOf("maps.nodc") != -1 || url.indexOf("talos.nodc") != -1 || url.indexOf("maps.imr.no") != -1
+	                        	|| url.indexOf("atlas2.nodc.no") != -1) {
+	                		cssBgImg = "gx-tree-rasterlayer-icon-HI";
+	                	} else if ( url.indexOf("ngu.no") != -1 ) {
+	                		cssBgImg = "gx-tree-rasterlayer-icon-NGU";
+	                	} else if ( url.indexOf("dirnat.no") != -1 ) {
+	                		cssBgImg = "gx-tree-rasterlayer-icon-DN";
+	                	} else if ( url.indexOf("fiskeridir.no") != -1 ) {
+	                		cssBgImg = "gx-tree-rasterlayer-icon-FD";
+	                	} else if ( url.indexOf("geonorge.no") != -1 || url.indexOf("statkart.no") != -1 ) {
+	                		cssBgImg = "gx-tree-rasterlayer-icon-SK";
+	                	} else if ( url.indexOf("kystverket.no") != -1 ) {
+	                		cssBgImg = "gx-tree-rasterlayer-icon-KV";                		
+	                	} else {
+	                		cssBgImg = "gx-tree-rasterlayer-icon";
+	                	}
+
+	                	attr.iconCls = cssBgImg;						
+						return GeoExt.tree.LayerLoader.prototype.createNode.call(this, attr);
+			   		}		        
+				}); 
+
+				var layerContainerGruppe = new GeoExt.tree.LayerContainer({
+					text: gruppeText,				
+					checked: false,
+                	listeners: {
+                		"checkchange": function(node, checked) { //routene for setting all subnodes if parent is checked
+							node.expand();
+							node.eachChild(function(child){
+		     		        	child.ui.toggleCheck(checked);
+		    				});
+						}
+					},					
+					layerStore: mapPanel.layers,
+				    loader: tmpLoader    
+				});				
+				return layerContainerGruppe;
+			}
+			/***********************************/
+            var tmp = Ext.ComponentMgr.all.find(function(c) {
+            	if( c instanceof Ext.Button ) {
+                	if (c.tooltip=="Publiser kartet") {c.setTooltip("Publish map");
+                	} else if (c.tooltip=="Lagre kartet") {c.setTooltip("Save map");
+                	} else if (c.tooltip=="tegn polygon") {c.setTooltip("Draw polygon");
+                	} else if (c.tooltip=="tegn linje") {c.setTooltip("Draw line");
+                	} else if (c.tooltip=="Legg til kartlag") {c.setTooltip("Add layer");
+                	} else if (c.tooltip=="Fjern kartlag") {c.setTooltip("Remove layer");
+                	} else if (c.tooltip=="Kartlag egenskaper") {c.setTooltip("Layer properties");
+                	} else if (c.tooltip=="Behandle kartlagstiler") {c.setTooltip("Manage Layer stiles");
+                	} else if (c.tooltip=="panorere kartet") {c.setTooltip("Pan");
+                	} else if (c.tooltip=="Hent Feature Info") {c.setTooltip("Get Feature Info");
+                	} else if (c.tooltip=="Lag en ny feature") {c.setTooltip("Create a new feature");
+                	} else if (c.tooltip=="Editer eksisterende feature") {c.setTooltip("Edit existing feature");
+                	} else if (c.tooltip=="M&aring;l") {c.setTooltip("Measure");
+                	} else if (c.tooltip=="Zoom inn") {c.setTooltip("Zoom in");
+                	} else if (c.tooltip=="Zoom ut") {c.setTooltip("Zoom out");
+                	} else if (c.tooltip=="Zoom til forrige utstrekning") {c.setTooltip("Zoom to last extent");
+                	} else if (c.tooltip=="Zoom til neste utstrekning") {c.setTooltip("Zoom to next extent");
+                	} else if (c.tooltip=="Zoom til synlig utstrekning") {c.setTooltip("Zoom to visible extent");
+                	} else if (c.tooltip=="Skriv ut kartet") {c.setTooltip("Print map");
+                	} else if (c.tooltip=="Vis Google Earth") {c.setTooltip("Show Google Earth");
+                	} else if (c.tooltip=="til koordinat") {c.setTooltip("Go to coordinat");}
+            	}
+                if( c instanceof Ext.menu.CheckItem ) {
+					if ( c.text=="Lengde" ) c.text = "Length";
+					if ( c.text == "Areal" ) c.setText("Area");
+                }  
+            });                     
+        });
+
+		//Adding overviewmap and keyboard defaults
+
+    }
+    </script>
+	</head>
+	<body onload="init()">
+		<div id="choises" style="display:none"></div>
+		<form id="hidden_pdf" method="post"></form>		
+	</body>
+</html>

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper      
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"      
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="no.imr.geoexplorer.admindatabase.pojo.KartlagMapper"> 
+
+	<resultMap id="KartlagResult" type="no.imr.geoexplorer.admindatabase.mybatis.pojo.Kartlag">
+    	<id property="kartlagId" column="kartlag_id"/>
+    	<result property="karttjenesterId" column="karttjenester_id"/>
+    	<result property="layers" column="layers"/>
+    	<result property="scalemin" column="scalemin"/>
+    	<result property="scalemax" column="scalemax"/>
+    	<result property="downloadurl" column="downloadurl"/>
+    	<result property="exGeographicBoundingBoxWestBoundLongitude" column="ex_geographic_bounding_box_west_bound_longitude"/>
+    	<result property="exGeographicBoundingBoxEastBoundLongitude" column="ex_geographic_bounding_box_east_bound_longitude"/>
+    	<result property="exGeographicBoundingBoxSouthBoundLatitude" column="ex_geographic_bounding_box_south_bound_latitude"/>
+    	<result property="exGeographicBoundingBoxNorthBoundLatitude" column="ex_geographic_bounding_box_north_bound_latitude"/>
+    	<result property="keyword" column="keyword"/>
+    	<result property="queryable" column="queryable"/>
+    	<result property="sort" column="sort"/>
+    	<result property="available" column="available"/>
+    	<result property="genericTitle" column="generic_title"/>
+    	<result property="modified" column="modified"/>
+    	<result property="infoFormat" column="info_format"/>        	
+		<association property="karttjeneste" column="karttjenester_id" javaType="no.imr.geoexplorer.admindatabase.mybatis.pojo.Karttjenester"
+			select="selectKarttjenesterFromKartlag"/>
+		<collection property="kartbilder" ofType="no.imr.geoexplorer.admindatabase.mybatis.pojo.Kartbilder" 
+			column="kartlag_id" select="selectKartbilderFromKartlag"/>		
+	</resultMap>
+
+	<sql id="kartlagSelect">
+   		SELECT kartlag_id, karttjenester_id, layers, scalemin,  scalemax, downloadurl, 
+   		ex_geographic_bounding_box_west_bound_longitude, 
+   		ex_geographic_bounding_box_east_bound_longitude, 
+   		ex_geographic_bounding_box_south_bound_latitude, 
+   		ex_geographic_bounding_box_north_bound_latitude,
+   		keyword, queryable, sort, available, generic_title, modified, info_format
+    </sql>
+    
+	<select id="getKartlag" resultMap="KartlagResult" resultType="java.util.ArrayList">
+    	<include refid="kartlagSelect" />
+    	FROM kartlag
+	</select>
+	
+	<select id="getKartlagId" parameterType="java.lang.String" 
+			resultMap="KartlagResult" resultType="java.util.ArrayList">
+		<include refid="kartlagSelect" />
+    	FROM kartlag WHERE generic_title = #{kartlag}
+	</select>
+	
+	<select id="getKartlagFromKartbilder" resultMap="KartlagResult" resultType="java.util.ArrayList">
+		SELECT k.kartlag_id, k.karttjenester_id, k.layers, k.scalemin,  k.scalemax, k.downloadurl, 
+   			k.ex_geographic_bounding_box_west_bound_longitude, 
+   			k.ex_geographic_bounding_box_east_bound_longitude, 
+   			k.ex_geographic_bounding_box_south_bound_latitude, 
+   			k.ex_geographic_bounding_box_north_bound_latitude,
+   			k.keyword, k.queryable, k.sort, k.available, k.generic_title, k.modified, k.info_format
+    	FROM kartlag k, kartbilder_kartlag kk WHERE kk.kartbilder_id=#{kartbilder_id} and k.kartlag_id=kk.kartlag_id
+	</select>
+	
+	<select id="selectKartbilderFromKartlag" parameterType="long" 
+			resultType="no.imr.geoexplorer.admindatabase.mybatis.pojo.Kartbilder">
+    	SELECT k.kartbilder_id as kartbilderId, k.hovedtemaer_id as hovedtemaerId, 
+    		k.type as type, k.startextent_minx as startextentMinx, k.startextent_maxx as startextentMaxx, 
+    		k.startextent_miny as startextentMiny, k.startextent_maxy as startextentMaxy, k.sort as sort, 
+    		k.generic_title as genericTitle, k.modified as modified   
+    	FROM kartbilder as k, kartbilder_kartlag kk WHERE kk.kartlag_id=#{kartlag_id} and k.kartbilder_id=kk.kartbilder_id
+	</select>	
+
+	<select id="selectKarttjenesterFromKartlag" parameterType="long"
+		resultType="no.imr.geoexplorer.admindatabase.mybatis.pojo.Karttjenester">
+	    SELECT k.karttjenester_id as karttjenesterId, k.url as url, k.link2geonorge as link2geonorge, 
+	    	k.url_logo as urlLogo, k.url_organisation as urlOrganisation, k.generic_title as genericTitle, 
+	    	k.modified as modified, k.format as format, k.available as available , k.sk_tjenesteid as skTjenesteId
+	    FROM karttjenester as k WHERE k.karttjenester_id = #{karttjenester_id}
+	</select>	
+	
+</mapper>

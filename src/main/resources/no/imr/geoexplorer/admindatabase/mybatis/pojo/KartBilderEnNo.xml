@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper      
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"      
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="no.imr.geoexplorer.admindatabase.pojo.KartBilderEnNoMapper"> 
+
+	<resultMap id="KartbilderEnNoResult" type="no.imr.geoexplorer.admindatabase.mybatis.pojo.KartBilderEnNo">
+    	<id property="kartbilderId" column="kartbilder_id"/>
+    	<result property="title" column="title"/>
+    	<result property="alternateTitle" column="alternate_title"/>
+    	<result property="abstracts" column="abstract"/>
+	</resultMap>
+
+	<sql id="kartbilderSelect">
+   		SELECT kartbilder_id, title, alternate_title, abstract
+    </sql>
+    
+	<select id="getKartbilderEn" resultMap="KartbilderEnNoResult" resultType="java.util.ArrayList">
+    	<include refid="kartbilderSelect" />
+    	FROM kartbilder_en where kartbilder_id=#{kartbilderId}
+	</select>
+	
+	<select id="getKartbilderNo" resultMap="KartbilderEnNoResult" resultType="java.util.ArrayList">
+    	<include refid="kartbilderSelect" />
+    	FROM kartbilder_no where kartbilder_id=#{kartbilderId}
+	</select>
+				
+</mapper>

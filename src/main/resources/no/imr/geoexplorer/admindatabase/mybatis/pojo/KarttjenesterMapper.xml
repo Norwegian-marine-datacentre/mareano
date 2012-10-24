@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper      
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"      
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="no.imr.geoexplorer.admindatabase.pojo.KarttjenesterMapper"> 
+
+	<resultMap id="KarttjenesterResult" type="no.imr.geoexplorer.admindatabase.mybatis.pojo.Karttjenester">
+    	<id property="karttjenesterId" column="karttjenester_id"/>
+    	<result property="url" column="url"/>
+    	<result property="link2geonorge" column="link2geonorge"/>
+    	<result property="urlLogo" column="url_logo"/>
+    	<result property="urlOrganisation" column="url_organisation"/>
+    	<result property="genericTitle" column="generic_title"/>
+    	<result property="modified" column="modified"/>
+    	<result property="format" column="format"/>
+    	<result property="available" column="available"/>
+    	<result property="skTjenesteid" column="sk_tjenesteid"/>
+		<collection property="kartlag" ofType="no.imr.geoexplorer.admindatabase.mybatis.pojo.KartLag" 
+			column="karttjenester_id" select="selectKartlagFromKarttjeneste"/>		    	
+	</resultMap>
+	
+	<sql id="karttjeneterSelect">
+   		SELECT karttjenester_id, url, link2geonorge, url_logo, url_organisation, 
+   			generic_title, modified, format, available, sk_tjenesteid
+    </sql>
+    
+    <select id="getKarttjenester" resultMap="KarttjenesterResult" resultType="java.util.ArrayList">
+    	<include refid="karttjeneterSelect" />
+    	FROM karttjenester
+	</select>
+	
+	<select id="selectKartlagFromKarttjeneste" parameterType="long" 
+			resultType="no.imr.geoexplorer.admindatabase.mybatis.pojo.Kartlag">
+    	SELECT k.kartlag_id as kartlagId, k.karttjenester_id as karttjenesterId, k.layers as layers, 
+    		k.scalemin as scalemin,  k.scalemax as scalemax, k.downloadurl as downloadurl, 
+   			k.ex_geographic_bounding_box_west_bound_longitude as exGeographicBoundingBoxWestBoundLongitude, 
+   			k.ex_geographic_bounding_box_east_bound_longitude as exGeographicBoundingBoxEastBoundlongitude, 
+   			k.ex_geographic_bounding_box_south_bound_latitude as exGeographicBoundingBoxSouthBoundLatitude, 
+   			k.ex_geographic_bounding_box_north_bound_latitude as exGeographicBoundingBoxNorthBoundLatitude,
+   			k.keyword as keyword, k.queryable as queryable, k.sort as sort, k.available as available, 
+   			k.generic_title as genericTitle, k.modified as modified, k.info_format as infoFormat  
+    	FROM kartlag as k WHERE k.karttjenester_id=#{karttjenester_id}
+	</select>	
+</mapper>
