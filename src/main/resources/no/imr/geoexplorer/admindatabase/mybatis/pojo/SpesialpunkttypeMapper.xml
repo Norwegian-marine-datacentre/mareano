@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper      
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"      
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="no.imr.geoexplorer.admindatabase.pojo.SpesialpunkttypeMapper"> 
+
+	<resultMap id="SpesialpunkttypeResult" type="no.imr.geoexplorer.admindatabase.mybatis.pojo.Spesialpunkttype">
+    	<id property="spesialpunkttypeId" column="spesialpunkttype_id"/>
+    	<result property="title" column="title"/>		
+	</resultMap>
+	
+	<sql id="spesialpunkttypeSelect">
+   		SELECT spesialpunkttype_id, title
+    </sql>	
+    
+	<select id="getSpesialpunkttype" resultMap="SpesialpunkttypeResult" resultType="java.util.ArrayList">
+    	<include refid="spesialpunkttypeSelect" />
+    	FROM spesialpunkttype
+	</select>    
+	
+	
+</mapper>

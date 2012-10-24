@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper      
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"      
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="no.imr.geoexplorer.admindatabase.pojo.KartbilderMapper"> 
+	<resultMap id="KartbilderResult" type="no.imr.geoexplorer.admindatabase.mybatis.pojo.Kartbilder">
+    	<id property="kartbilderId" column="kartbilder_id"/>
+    	<result property="hovedtemaerId" column="hovedtemaer_id"/>
+    	<result property="type" column="type"/>
+    	<result property="startextentMinx" column="startextent_minx"/>
+    	<result property="startextentMaxx" column="startextent_maxx"/>
+    	<result property="startextentMiny" column="startextent_miny"/>
+    	<result property="startextentMaxy" column="startextent_maxy"/>
+    	<result property="sort" column="sort"/>
+    	<result property="genericTitle" column="generic_title"/>
+    	<result property="modified" column="modified"/>
+		<association property="hovedtema" column="hovedtemaer_id" 
+			javaType="no.imr.geoexplorer.admindatabase.mybatis.pojo.Hovedtema" select="selectHovedtemaFromKartbilder" />
+		<collection property="kartlag" ofType="no.imr.geoexplorer.admindatabase.mybatis.pojo.Kartbilder" 
+			column="kartbilder_id" select="selectKartlagFromKartbilder"/>				
+	</resultMap>
+
+	<sql id="kartbilderSelect">
+   		SELECT kartbilder_id, hovedtemaer_id, type, startextent_minx, startextent_maxx, startextent_miny, startextent_maxy, 
+   		sort, generic_title, modified   
+    </sql>
+    
+	<select id="getKartbilder" resultMap="KartbilderResult" resultType="java.util.ArrayList">
+    	<include refid="kartbilderSelect" />
+    	FROM kartbilder
+	</select>
+	
+	<select id="getKartbilderFromKartlag" resultMap="KartbilderResult" resultType="java.util.ArrayList">
+   		SELECT k.kartbilder_id, k.hovedtemaer_id, k.type, k.startextent_minx, k.startextent_maxx, 
+   		k.startextent_miny, k.startextent_maxy, k.sort, k.generic_title, k.modified 
+    	FROM kartbilder k, kartbilder_kartlag kk WHERE kk.kartlag_id=#{kartlag_id} and k.kartbilder_id= kk.kartbilder_id
+	</select>	
+	
+	<select id="selectHovedtemaFromKartbilder" parameterType="long"
+		resultType="no.imr.geoexplorer.admindatabase.mybatis.pojo.Hovedtema">
+	    SELECT h.hovedtemaer_id as hovedtemaerId, h.simpleshow as simpleshow, h.type as type, h.sort as sort, 
+	    	h.generic_title as genericTitle, h.modified as modified 
+	    FROM hovedtemaer as h WHERE h.hovedtemaer_id = #{hovedtemaer_id}
+	</select>
+	
+	<select id="selectKartlagFromKartbilder" parameterType="long"
+		resultType="no.imr.geoexplorer.admindatabase.mybatis.pojo.Kartlag">
+	    SELECT k.kartlag_id as kartlagId, k.karttjenester_id as karttjenesterId, k.layers as layers, 
+    		k.scalemin as scalemin,  k.scalemax as scalemax, k.downloadurl as downloadurl, 
+   			k.ex_geographic_bounding_box_west_bound_longitude as exGeographicBoundingBoxWestBoundLongitude, 
+   			k.ex_geographic_bounding_box_east_bound_longitude as exGeographicBoundingBoxEastBoundlongitude, 
+   			k.ex_geographic_bounding_box_south_bound_latitude as exGeographicBoundingBoxSouthBoundLatitude, 
+   			k.ex_geographic_bounding_box_north_bound_latitude as exGeographicBoundingBoxNorthBoundLatitude,
+   			k.keyword as keyword, k.queryable as queryable, k.sort as sort, k.available as available, 
+   			k.generic_title as genericTitle, k.modified as modified, k.info_format as infoFormat 
+	    FROM kartlag as k, kartbilder_kartlag kk WHERE kk.kartbilder_id = #{kartbilder_id} and k.kartlag_id=kk.kartlag_id
+	</select>
+</mapper>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper      
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"      
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="no.imr.geoexplorer.admindatabase.pojo.LegendMapper"> 
+
+	<resultMap id="LegendResult" type="no.imr.geoexplorer.admindatabase.mybatis.pojo.Legend">
+    	<id property="legendsId" column="legends_id"/>
+    	<result property="kartlagId" column="kartlag_id"/>
+    	<result property="url" column="url"/>
+    	<result property="sort" column="sort"/>
+    	<result property="genericTitle" column="generic_title"/>
+	
+	</resultMap>
+		
+	<sql id="legendSelect">
+   		SELECT legends_id, kartlag_id, url, sort, generic_title
+    </sql>
+    
+	<select id="getLegends" resultMap="LegendResult" resultType="java.util.ArrayList">
+    	<include refid="legendSelect" />
+    	FROM legends
+	</select>
+	
+	<select id="getLegend" resultMap="LegendResult" resultType="java.util.ArrayList">
+    	<include refid="legendSelect" />
+    	FROM legends WHERE kartlag_id=#{kartlagId}
+	</select>
+	
+	<select id="getLegendNo" resultMap="LegendResult" resultType="java.util.ArrayList">
+    	SELECT no.text as generic_title FROM legends l, legends_no no WHERE l.kartlag_id=#{kartlagId} and l.legends_id=no.legends_id
+	</select>
+
+	<select id="getLegendEn" resultMap="LegendResult" resultType="java.util.ArrayList">
+    	SELECT en.text as generic_title FROM legends l, legends_en en WHERE l.kartlag_id=#{kartlagId} and l.legends_id=en.legends_id
+	</select>	
+			
+</mapper>

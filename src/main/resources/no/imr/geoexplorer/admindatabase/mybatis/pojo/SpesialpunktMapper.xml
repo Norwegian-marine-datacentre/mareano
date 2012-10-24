@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper      
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"      
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="no.imr.geoexplorer.admindatabase.pojo.SpesialpunktMapper"> 
+
+	<resultMap id="SpesialpunktResult" type="no.imr.geoexplorer.admindatabase.mybatis.pojo.Spesialpunkt">
+    	<id property="spesialpunktId" column="spesialpunkt_id"/>
+    	<result property="kartlagId" column="kartlag_id"/>
+    	<result property="spesialpunkttypeId" column="spesialpunkttype_id"/>
+    	<result property="xUtm33" column="x_utm33"/>
+    	<result property="yUtm33" column="y_utm33"/>
+    	<result property="radiusPixel" column="radius_pixel"/>
+    	<result property="genericTitle" column="generic_title"/>
+    	<result property="url" column="url"/>
+    	<result property="modified" column="modified"/>
+    	<result property="urlThumbnail" column="url_thumbnail"/>
+    	<result property="mediaHeight" column="media_height"/>
+    	<result property="mediaHeight" column="media_height"/>
+    	<result property="mediaWidth" column="media_width"/>
+		<association property="kartlag" column="kartlag_id" javaType="no.imr.geoexplorer.admindatabase.mybatis.pojo.Kartlag"
+			select="selectKartlagFromSpesialpunkt"/>
+		<association  property="spesialpunkttype" column="spesialpunkttype_id" javaType="no.imr.geoexplorer.admindatabase.mybatis.pojo.Spesialpunkttype" 
+			select="selectSpesialpunkttypeFromSpesialpunkt"/>		
+	</resultMap>
+	
+	<sql id="spesialpunktSelect">
+   		SELECT spesialpunkt_id, kartlag_id, spesialpunkttype_id, 
+   		x_utm33, y_utm33, radius_pixel, generic_title ,url, 
+   		modified, url_thumbnail, media_height, media_width
+    </sql>
+    
+	<select id="getSpesialpunkt" resultMap="SpesialpunktResult" resultType="java.util.ArrayList">
+    	<include refid="spesialpunktSelect" />
+    	FROM spesialpunkt
+	</select>
+	
+	<select id="getSpesialpunktFraKart" resultMap="SpesialpunktResult" resultType="java.util.ArrayList">
+    	<include refid="spesialpunktSelect" />
+    	FROM spesialpunkt WHERE kartlag_id=#{kartlagId}
+	</select>	
+	
+	<select id="selectKartlagFromSpesialpunkt" parameterType="long" 
+			resultType="no.imr.geoexplorer.admindatabase.mybatis.pojo.Kartlag">
+		SELECT k.kartlag_id, k.karttjenester_id, k.layers, k.scalemin,  k.scalemax, k.downloadurl, 
+   			k.ex_geographic_bounding_box_west_bound_longitude, 
+   			k.ex_geographic_bounding_box_east_bound_longitude, 
+   			k.ex_geographic_bounding_box_south_bound_latitude, 
+   			k.ex_geographic_bounding_box_north_bound_latitude,
+   			k.keyword, k.queryable, k.sort, k.available, k.generic_title, k.modified, k.info_format
+    	FROM kartlag k WHERE k.kartlag_id=#{kartlag_id}
+	</select>		
+	
+	<select id="selectSpesialpunkttypeFromSpesialpunkt" parameterType="long" 
+			resultType="no.imr.geoexplorer.admindatabase.mybatis.pojo.Spesialpunkttype">
+		SELECT s.spesialpunkttype_id, s.title
+    	FROM spesialpunkttype s WHERE s.spesialpunkttype_id=#{spesialpunkttype_id}
+	</select>
+		
+</mapper>

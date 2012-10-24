@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper      
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"      
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="no.imr.geoexplorer.admindatabase.pojo.HovedtemaEnNoMapper"> 
+
+	<resultMap id="HovedtemaEnNoResult" type="no.imr.geoexplorer.admindatabase.mybatis.pojo.HovedtemaEnNo">
+    	<id property="hovedtemaerId" column="hovedtemaer_id"/>
+    	<result property="title" column="title"/>
+    	<result property="alternateTitle" column="alternate_title"/>
+    	<result property="abstracts" column="abstract"/>
+	</resultMap>
+
+	<sql id="hovedtemaSelect">
+   		SELECT hovedtemaer_id, title, alternate_title, abstract
+    </sql>
+    
+	<select id="getHovedtemaEn" resultMap="HovedtemaEnNoResult" resultType="java.util.ArrayList">
+    	<include refid="hovedtemaSelect" />
+    	FROM hovedtemaer_en where hovedtemaer_id=#{hovedtemaerId}
+	</select>
+	
+	<select id="getHovedtemaNo" resultMap="HovedtemaEnNoResult" resultType="java.util.ArrayList">
+    	<include refid="hovedtemaSelect" />
+    	FROM hovedtemaer_no where hovedtemaer_id=#{hovedtemaerId}
+	</select>
+				
+</mapper>

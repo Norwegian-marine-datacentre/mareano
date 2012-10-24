@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper      
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"      
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="no.imr.geoexplorer.admindatabase.pojo.HovedtemaMapper"> 
+
+	<resultMap id="HovedtemaResult" type="no.imr.geoexplorer.admindatabase.mybatis.pojo.Hovedtema">
+    	<id property="hovedtemaerId" column="hovedtemaer_id"/>
+    	<result property="simpleshow" column="simpleshow"/>
+    	<result property="type" column="type"/>
+    	<result property="sort" column="sort"/>
+    	<result property="genericTitle" column="generic_title"/>
+    	<result property="modified" column="modified"/>
+       <collection property="kartbilder" ofType="no.imr.geoexplorer.admindatabase.mybatis.pojo.Kartbilder" 
+       			column="hovedtemaer_id" select="selectKartbilderFromHovedtema">
+       </collection>
+	</resultMap>
+  
+	<sql id="hovedtemaSelect">
+   		SELECT hovedtemaer_id, simpleshow, type, sort, generic_title, modified <!-- alternate_title -->
+    </sql>
+	
+	<select id="getHovedtemaer" resultMap="HovedtemaResult" resultType="java.util.ArrayList">
+    	<include refid="hovedtemaSelect" />
+    	FROM hovedtemaer
+	</select>
+
+	<select id="selectKartbilderFromHovedtema" parameterType="long" 
+			resultType="no.imr.geoexplorer.admindatabase.mybatis.pojo.Kartbilder">
+    	SELECT k.kartbilder_id as kartbilderId, k.hovedtemaer_id as hovedtemaerId, 
+    		k.type as type, k.startextent_minx as startextentMinx, k.startextent_maxx as startextentMaxx, 
+    		k.startextent_miny as startextentMiny, k.startextent_maxy as startextentMaxy, k.sort as sort, 
+    		k.generic_title as genericTitle, k.modified as modified   
+    	FROM kartbilder as k WHERE k.hovedtemaer_id=#{hovedtemaer_id}
+	</select>
+	
+</mapper>

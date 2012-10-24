@@ -1,0 +1,515 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<FeatureCollection
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:gml="http://www.opengis.net/gml">
+	<gml:boundedBy>
+		<gml:Box srsName='EPSG:4326'>
+			<gml:coordinates>-9.205,10.795 59.39800000000001,79.39800000000001</gml:coordinates>
+		</gml:Box>
+	</gml:boundedBy>
+	<gml:featureMember>
+		<xsi:attributes>
+			<xsi:name>6900799</xsi:name>
+			<xsi:pid>FE8241BD120AE6ECC296FD89AF379DF4</xsi:pid>
+			<xsi:description>74</xsi:description>
+			<xsi:time>23.05.2012</xsi:time>
+			<xsi:id>D261E1CF10EB823B2A9585A2EB951D8E</xsi:id>
+			<gml:Point srsName='EPSG:4326'>
+				<gml:coordinates>0.795,69.39800000000001</gml:coordinates>
+			</gml:Point>
+		</xsi:attributes>
+	</gml:featureMember>
+	<gml:featureMember>
+		<xsi:attributes>
+			<xsi:name>6900835</xsi:name>
+			<xsi:pid>D13F8FFDE645437B18A0224E345E30CF</xsi:pid>
+			<xsi:description>83</xsi:description>
+			<xsi:time>24.05.2012</xsi:time>
+			<xsi:id>85451269C25FF74C4562EFAC2164152B</xsi:id>
+			<gml:Point srsName='EPSG:4326'>
+				<gml:coordinates>1.278,63.418000000000006</gml:coordinates>
+			</gml:Point>
+		</xsi:attributes>
+	</gml:featureMember>
+	<gml:featureMember>
+		<xsi:attributes>
+			<xsi:name>Johan Hjort</xsi:name>
+			<xsi:pid>56259272F8B4F193189D94B67CAEEE88</xsi:pid>
+			<xsi:description>183</xsi:description>
+			<xsi:time>24.05.2012</xsi:time>
+			<xsi:id>F33787697E010F478F8D6BB75C3C33CD</xsi:id>
+			<gml:Point srsName='EPSG:4326'>
+				<gml:coordinates>12.026666666666667,71.74916666666667</gml:coordinates>
+			</gml:Point>
+		</xsi:attributes>
+	</gml:featureMember>
+	<gml:featureMember>
+		<xsi:attributes>
+			<xsi:name>6900798</xsi:name>
+			<xsi:pid>3F9709C5188103E43C1BD8A804CE7401</xsi:pid>
+			<xsi:description>87</xsi:description>
+			<xsi:time>25.05.2012</xsi:time>
+			<xsi:id>449954CCFA9726EFD899E2DFEC8B186C</xsi:id>
+			<gml:Point srsName='EPSG:4326'>
+				<gml:coordinates>-0.8260000000000001,69.311</gml:coordinates>
+			</gml:Point>
+		</xsi:attributes>
+	</gml:featureMember>
+	<gml:featureMember>
+		<xsi:attributes>
+			<xsi:name>Johan Hjort</xsi:name>
+			<xsi:pid>56259272F8B4F193189D94B67CAEEE88</xsi:pid>
+			<xsi:description>184</xsi:description>
+			<xsi:time>25.05.2012</xsi:time>
+			<xsi:id>A25E7D7FF0441E8ABC1A45E8D9F56EA1</xsi:id>
+			<gml:Point srsName='EPSG:4326'>
+				<gml:coordinates>8.004333333333333,71.75333333333333</gml:coordinates>
+			</gml:Point>
+		</xsi:attributes>
+	</gml:featureMember>
+	<gml:featureMember>
+		<xsi:attributes>
+			<xsi:name>Johan Hjort</xsi:name>
+			<xsi:pid>56259272F8B4F193189D94B67CAEEE88</xsi:pid>
+			<xsi:description>185</xsi:description>
+			<xsi:time>25.05.2012</xsi:time>
+			<xsi:id>1C057209EFBFDC433DAC9E11CAAF06D7</xsi:id>
+			<gml:Point srsName='EPSG:4326'>
+				<gml:coordinates>4.9254999999999995,71.41583333333334</gml:coordinates>
+			</gml:Point>
+		</xsi:attributes>
+	</gml:featureMember>
+	<gml:featureMember>
+		<xsi:attributes>
+			<xsi:name>Johan Hjort</xsi:name>
+			<xsi:pid>56259272F8B4F193189D94B67CAEEE88</xsi:pid>
+			<xsi:description>186</xsi:description>
+			<xsi:time>25.05.2012</xsi:time>
+			<xsi:id>1AAAAD3DC328F29F26F3A8562A5C185E</xsi:id>
+			<gml:Point srsName='EPSG:4326'>
+				<gml:coordinates>3.832,71.74716666666667</gml:coordinates>
+			</gml:Point>
+		</xsi:attributes>
+	</gml:featureMember>
+	<gml:featureMember>
+		<xsi:attributes>
+			<xsi:name>Johan Hjort</xsi:name>
+			<xsi:pid>56259272F8B4F193189D94B67CAEEE88</xsi:pid>
+			<xsi:description>187</xsi:description>
+			<xsi:time>26.05.2012</xsi:time>
+			<xsi:id>1280FF1280FB1D42F08C46F2E61995E6</xsi:id>
+			<gml:Point srsName='EPSG:4326'>
+				<gml:coordinates>2.759333333333333,72.083</gml:coordinates>
+			</gml:Point>
+		</xsi:attributes>
+	</gml:featureMember>
+	<gml:featureMember>
+		<xsi:attributes>
+			<xsi:name>Johan Hjort</xsi:name>
+			<xsi:pid>56259272F8B4F193189D94B67CAEEE88</xsi:pid>
+			<xsi:description>188</xsi:description>
+			<xsi:time>26.05.2012</xsi:time>
+			<xsi:id>6918474CA5EB29D757B89C370681ADFE</xsi:id>
+			<gml:Point srsName='EPSG:4326'>
+				<gml:coordinates>1.6673333333333333,72.41866666666667</gml:coordinates>
+			</gml:Point>
+		</xsi:attributes>
+	</gml:featureMember>
+	<gml:featureMember>
+		<xsi:attributes>
+			<xsi:name>Johan Hjort</xsi:name>
+			<xsi:pid>56259272F8B4F193189D94B67CAEEE88</xsi:pid>
+			<xsi:description>189</xsi:description>
+			<xsi:time>26.05.2012</xsi:time>
+			<xsi:id>22D1E427B8EAAA9355186C0409E16C5D</xsi:id>
+			<gml:Point srsName='EPSG:4326'>
+				<gml:coordinates>0.5846666666666667,72.74916666666667</gml:coordinates>
+			</gml:Point>
+		</xsi:attributes>
+	</gml:featureMember>
+	<gml:featureMember>
+		<xsi:attributes>
+			<xsi:name>7900177</xsi:name>
+			<xsi:pid>E82CA9E5FD25B8D142238EAE1B91F3A5</xsi:pid>
+			<xsi:description>211</xsi:description>
+			<xsi:time>26.05.2012</xsi:time>
+			<xsi:id>49D8504B4C84D9AD3246F7D4DD797D9F</xsi:id>
+			<gml:Point srsName='EPSG:4326'>
+				<gml:coordinates>9.358,72.11</gml:coordinates>
+			</gml:Point>
+		</xsi:attributes>
+	</gml:featureMember>
+	<gml:featureMember>
+		<xsi:attributes>
+			<xsi:name>Johan Hjort</xsi:name>
+			<xsi:pid>56259272F8B4F193189D94B67CAEEE88</xsi:pid>
+			<xsi:description>190</xsi:description>
+			<xsi:time>26.05.2012</xsi:time>
+			<xsi:id>64F0A237AAE98785DE707EE49C5A2010</xsi:id>
+			<gml:Point srsName='EPSG:4326'>
+				<gml:coordinates>-0.49233333333333335,73.08266666666667</gml:coordinates>
+			</gml:Point>
+		</xsi:attributes>
+	</gml:featureMember>
+	<gml:featureMember>
+		<xsi:attributes>
+			<xsi:name>Johan Hjort</xsi:name>
+			<xsi:pid>56259272F8B4F193189D94B67CAEEE88</xsi:pid>
+			<xsi:description>191</xsi:description>
+			<xsi:time>27.05.2012</xsi:time>
+			<xsi:id>125C8AEC9B18B9DC9857C49BB712F01E</xsi:id>
+			<gml:Point srsName='EPSG:4326'>
+				<gml:coordinates>3.014,72.92133333333334</gml:coordinates>
+			</gml:Point>
+		</xsi:attributes>
+	</gml:featureMember>
+	<gml:featureMember>
+		<xsi:attributes>
+			<xsi:name>Johan Hjort</xsi:name>
+			<xsi:pid>56259272F8B4F193189D94B67CAEEE88</xsi:pid>
+			<xsi:description>192</xsi:description>
+			<xsi:time>27.05.2012</xsi:time>
+			<xsi:id>868366B9A4F6F804342AA30075E015B5</xsi:id>
+			<gml:Point srsName='EPSG:4326'>
+				<gml:coordinates>6.500333333333334,72.918</gml:coordinates>
+			</gml:Point>
+		</xsi:attributes>
+	</gml:featureMember>
+	<gml:featureMember>
+		<xsi:attributes>
+			<xsi:name>H&#229;kon Mosby</xsi:name>
+			<xsi:pid>01C22E23A83710735EF0D205391C668F</xsi:pid>
+			<xsi:description>582</xsi:description>
+			<xsi:time>27.05.2012</xsi:time>
+			<xsi:id>21E275EF26CA6412E43BFC11951D2F43</xsi:id>
+			<gml:Point srsName='EPSG:4326'>
+				<gml:coordinates>-0.7961666666666667,61.309666666666665</gml:coordinates>
+			</gml:Point>
+		</xsi:attributes>
+	</gml:featureMember>
+	<gml:featureMember>
+		<xsi:attributes>
+			<xsi:name>Johan Hjort</xsi:name>
+			<xsi:pid>56259272F8B4F193189D94B67CAEEE88</xsi:pid>
+			<xsi:description>193</xsi:description>
+			<xsi:time>27.05.2012</xsi:time>
+			<xsi:id>268115C078097663AB0F5687E9A9C698</xsi:id>
+			<gml:Point srsName='EPSG:4326'>
+				<gml:coordinates>9.9905,72.91516666666666</gml:coordinates>
+			</gml:Point>
+		</xsi:attributes>
+	</gml:featureMember>
+	<gml:featureMember>
+		<xsi:attributes>
+			<xsi:name>6900667</xsi:name>
+			<xsi:pid>8B93E38CF1CA1A5F437F2E43C6DA63BA</xsi:pid>
+			<xsi:description>174</xsi:description>
+			<xsi:time>27.05.2012</xsi:time>
+			<xsi:id>4BEA41D2DBA808A965F5FC7E03BD35A9</xsi:id>
+			<gml:Point srsName='EPSG:4326'>
+				<gml:coordinates>7.96,71.84100000000001</gml:coordinates>
+			</gml:Point>
+		</xsi:attributes>
+	</gml:featureMember>
+	<gml:featureMember>
+		<xsi:attributes>
+			<xsi:name>6900668</xsi:name>
+			<xsi:pid>CC34E66CD58D32781B5E0F0FC3750F7B</xsi:pid>
+			<xsi:description>179</xsi:description>
+			<xsi:time>27.05.2012</xsi:time>
+			<xsi:id>3B2A26B7E158B365FEC7488205B2C8A6</xsi:id>
+			<gml:Point srsName='EPSG:4326'>
+				<gml:coordinates>-6.813000000000001,65.10900000000001</gml:coordinates>
+			</gml:Point>
+		</xsi:attributes>
+	</gml:featureMember>
+	<gml:featureMember>
+		<xsi:attributes>
+			<xsi:name>6900796</xsi:name>
+			<xsi:pid>ECA2E6C052F1A3D14D55B16143D2E38A</xsi:pid>
+			<xsi:description>87</xsi:description>
+			<xsi:time>27.05.2012</xsi:time>
+			<xsi:id>9CB6BB5031A2C2C806F1EE79A5A6543F</xsi:id>
+			<gml:Point srsName='EPSG:4326'>
+				<gml:coordinates>-4.863,65.99900000000001</gml:coordinates>
+			</gml:Point>
+		</xsi:attributes>
+	</gml:featureMember>
+	<gml:featureMember>
+		<xsi:attributes>
+			<xsi:name>H&#229;kon Mosby</xsi:name>
+			<xsi:pid>01C22E23A83710735EF0D205391C668F</xsi:pid>
+			<xsi:description>583</xsi:description>
+			<xsi:time>28.05.2012</xsi:time>
+			<xsi:id>83EDF73E020D2F59689EE635BBBB57B7</xsi:id>
+			<gml:Point srsName='EPSG:4326'>
+				<gml:coordinates>-8.467,61.672333333333334</gml:coordinates>
+			</gml:Point>
+		</xsi:attributes>
+	</gml:featureMember>
+	<gml:featureMember>
+		<xsi:attributes>
+			<xsi:name>H&#229;kon Mosby</xsi:name>
+			<xsi:pid>01C22E23A83710735EF0D205391C668F</xsi:pid>
+			<xsi:description>584</xsi:description>
+			<xsi:time>28.05.2012</xsi:time>
+			<xsi:id>EF2686DFACD5AD2DEC80346760D22B9D</xsi:id>
+			<gml:Point srsName='EPSG:4326'>
+				<gml:coordinates>-8.5405,61.62616666666667</gml:coordinates>
+			</gml:Point>
+		</xsi:attributes>
+	</gml:featureMember>
+	<gml:featureMember>
+		<xsi:attributes>
+			<xsi:name>H&#229;kon Mosby</xsi:name>
+			<xsi:pid>01C22E23A83710735EF0D205391C668F</xsi:pid>
+			<xsi:description>585</xsi:description>
+			<xsi:time>28.05.2012</xsi:time>
+			<xsi:id>81140FC0C60032220892AAB6A47944E0</xsi:id>
+			<gml:Point srsName='EPSG:4326'>
+				<gml:coordinates>-8.629166666666666,61.56283333333333</gml:coordinates>
+			</gml:Point>
+		</xsi:attributes>
+	</gml:featureMember>
+	<gml:featureMember>
+		<xsi:attributes>
+			<xsi:name>H&#229;kon Mosby</xsi:name>
+			<xsi:pid>01C22E23A83710735EF0D205391C668F</xsi:pid>
+			<xsi:description>586</xsi:description>
+			<xsi:time>28.05.2012</xsi:time>
+			<xsi:id>88E71DC544200BCF5EE656672B67F651</xsi:id>
+			<gml:Point srsName='EPSG:4326'>
+				<gml:coordinates>-9.331,61.7525</gml:coordinates>
+			</gml:Point>
+		</xsi:attributes>
+	</gml:featureMember>
+	<gml:featureMember>
+		<xsi:attributes>
+			<xsi:name>H&#229;kon Mosby</xsi:name>
+			<xsi:pid>01C22E23A83710735EF0D205391C668F</xsi:pid>
+			<xsi:description>587</xsi:description>
+			<xsi:time>28.05.2012</xsi:time>
+			<xsi:id>B1B7A9B61287414012E3FD3DA0C910BE</xsi:id>
+			<gml:Point srsName='EPSG:4326'>
+				<gml:coordinates>-9.334166666666667,61.748333333333335</gml:coordinates>
+			</gml:Point>
+		</xsi:attributes>
+	</gml:featureMember>
+	<gml:featureMember>
+		<xsi:attributes>
+			<xsi:name>H&#229;kon Mosby</xsi:name>
+			<xsi:pid>01C22E23A83710735EF0D205391C668F</xsi:pid>
+			<xsi:description>588</xsi:description>
+			<xsi:time>28.05.2012</xsi:time>
+			<xsi:id>B31BF08A9958CF805B84D5587510A8C4</xsi:id>
+			<gml:Point srsName='EPSG:4326'>
+				<gml:coordinates>-9.3325,61.75116666666667</gml:coordinates>
+			</gml:Point>
+		</xsi:attributes>
+	</gml:featureMember>
+	<gml:featureMember>
+		<xsi:attributes>
+			<xsi:name>H&#229;kon Mosby</xsi:name>
+			<xsi:pid>01C22E23A83710735EF0D205391C668F</xsi:pid>
+			<xsi:description>589</xsi:description>
+			<xsi:time>28.05.2012</xsi:time>
+			<xsi:id>28CA5B38ED8D6DC1B945FBAD569B9E93</xsi:id>
+			<gml:Point srsName='EPSG:4326'>
+				<gml:coordinates>-9.332,61.75183333333333</gml:coordinates>
+			</gml:Point>
+		</xsi:attributes>
+	</gml:featureMember>
+	<gml:featureMember>
+		<xsi:attributes>
+			<xsi:name>H&#229;kon Mosby</xsi:name>
+			<xsi:pid>01C22E23A83710735EF0D205391C668F</xsi:pid>
+			<xsi:description>590</xsi:description>
+			<xsi:time>29.05.2012</xsi:time>
+			<xsi:id>F2B549CADA01837E9FCCD8F6FFF1453E</xsi:id>
+			<gml:Point srsName='EPSG:4326'>
+				<gml:coordinates>-9.334,61.751666666666665</gml:coordinates>
+			</gml:Point>
+		</xsi:attributes>
+	</gml:featureMember>
+	<gml:featureMember>
+		<xsi:attributes>
+			<xsi:name>6900799</xsi:name>
+			<xsi:pid>FE8241BD120AE6ECC296FD89AF379DF4</xsi:pid>
+			<xsi:description>75</xsi:description>
+			<xsi:time>29.05.2012</xsi:time>
+			<xsi:id>D2F5E56327A3EC0A5A05B8CC84900C0D</xsi:id>
+			<gml:Point srsName='EPSG:4326'>
+				<gml:coordinates>1.2990000000000002,69.794</gml:coordinates>
+			</gml:Point>
+		</xsi:attributes>
+	</gml:featureMember>
+	<gml:featureMember>
+		<xsi:attributes>
+			<xsi:name>H&#229;kon Mosby</xsi:name>
+			<xsi:pid>01C22E23A83710735EF0D205391C668F</xsi:pid>
+			<xsi:description>591</xsi:description>
+			<xsi:time>29.05.2012</xsi:time>
+			<xsi:id>83AD0153A0A5C5433D55E6EA06B36340</xsi:id>
+			<gml:Point srsName='EPSG:4326'>
+				<gml:coordinates>-9.332666666666666,61.751333333333335</gml:coordinates>
+			</gml:Point>
+		</xsi:attributes>
+	</gml:featureMember>
+	<gml:featureMember>
+		<xsi:attributes>
+			<xsi:name>H&#229;kon Mosby</xsi:name>
+			<xsi:pid>01C22E23A83710735EF0D205391C668F</xsi:pid>
+			<xsi:description>592</xsi:description>
+			<xsi:time>29.05.2012</xsi:time>
+			<xsi:id>D6C950D79C95B5F1ED3F6A333127FB3D</xsi:id>
+			<gml:Point srsName='EPSG:4326'>
+				<gml:coordinates>-9.333,61.75116666666667</gml:coordinates>
+			</gml:Point>
+		</xsi:attributes>
+	</gml:featureMember>
+	<gml:featureMember>
+		<xsi:attributes>
+			<xsi:name>H&#229;kon Mosby</xsi:name>
+			<xsi:pid>01C22E23A83710735EF0D205391C668F</xsi:pid>
+			<xsi:description>593</xsi:description>
+			<xsi:time>29.05.2012</xsi:time>
+			<xsi:id>CF3DF7286102A3234214DC99A6350CC9</xsi:id>
+			<gml:Point srsName='EPSG:4326'>
+				<gml:coordinates>-9.3325,61.750166666666665</gml:coordinates>
+			</gml:Point>
+		</xsi:attributes>
+	</gml:featureMember>
+	<gml:featureMember>
+		<xsi:attributes>
+			<xsi:name>H&#229;kon Mosby</xsi:name>
+			<xsi:pid>01C22E23A83710735EF0D205391C668F</xsi:pid>
+			<xsi:description>594</xsi:description>
+			<xsi:time>29.05.2012</xsi:time>
+			<xsi:id>CBCA4542885AE7D31BF5BEA75EA90A9D</xsi:id>
+			<gml:Point srsName='EPSG:4326'>
+				<gml:coordinates>-9.3335,61.75183333333333</gml:coordinates>
+			</gml:Point>
+		</xsi:attributes>
+	</gml:featureMember>
+	<gml:featureMember>
+		<xsi:attributes>
+			<xsi:name>H&#229;kon Mosby</xsi:name>
+			<xsi:pid>01C22E23A83710735EF0D205391C668F</xsi:pid>
+			<xsi:description>595</xsi:description>
+			<xsi:time>29.05.2012</xsi:time>
+			<xsi:id>EED5AA4643D07F6EB56899DE341411E7</xsi:id>
+			<gml:Point srsName='EPSG:4326'>
+				<gml:coordinates>-9.3335,61.75</gml:coordinates>
+			</gml:Point>
+		</xsi:attributes>
+	</gml:featureMember>
+	<gml:featureMember>
+		<xsi:attributes>
+			<xsi:name>H&#229;kon Mosby</xsi:name>
+			<xsi:pid>01C22E23A83710735EF0D205391C668F</xsi:pid>
+			<xsi:description>596</xsi:description>
+			<xsi:time>29.05.2012</xsi:time>
+			<xsi:id>2B089F614DCA8C061B84BEF9EE26CBC6</xsi:id>
+			<gml:Point srsName='EPSG:4326'>
+				<gml:coordinates>-9.333333333333334,61.751</gml:coordinates>
+			</gml:Point>
+		</xsi:attributes>
+	</gml:featureMember>
+	<gml:featureMember>
+		<xsi:attributes>
+			<xsi:name>H&#229;kon Mosby</xsi:name>
+			<xsi:pid>01C22E23A83710735EF0D205391C668F</xsi:pid>
+			<xsi:description>597</xsi:description>
+			<xsi:time>29.05.2012</xsi:time>
+			<xsi:id>96496992A51641DC9E1D66347F6E6FD4</xsi:id>
+			<gml:Point srsName='EPSG:4326'>
+				<gml:coordinates>-9.343,61.748666666666665</gml:coordinates>
+			</gml:Point>
+		</xsi:attributes>
+	</gml:featureMember>
+	<gml:featureMember>
+		<xsi:attributes>
+			<xsi:name>H&#229;kon Mosby</xsi:name>
+			<xsi:pid>01C22E23A83710735EF0D205391C668F</xsi:pid>
+			<xsi:description>598</xsi:description>
+			<xsi:time>29.05.2012</xsi:time>
+			<xsi:id>75C27DD992BB0F5812C5FB96B8F515B2</xsi:id>
+			<gml:Point srsName='EPSG:4326'>
+				<gml:coordinates>-9.459,61.931333333333335</gml:coordinates>
+			</gml:Point>
+		</xsi:attributes>
+	</gml:featureMember>
+	<gml:featureMember>
+		<xsi:attributes>
+			<xsi:name>H&#229;kon Mosby</xsi:name>
+			<xsi:pid>01C22E23A83710735EF0D205391C668F</xsi:pid>
+			<xsi:description>599</xsi:description>
+			<xsi:time>29.05.2012</xsi:time>
+			<xsi:id>8C3CB4071C687D83349CC4AE3D8FB508</xsi:id>
+			<gml:Point srsName='EPSG:4326'>
+				<gml:coordinates>-9.597666666666667,61.836166666666664</gml:coordinates>
+			</gml:Point>
+		</xsi:attributes>
+	</gml:featureMember>
+	<gml:featureMember>
+		<xsi:attributes>
+			<xsi:name>H&#229;kon Mosby</xsi:name>
+			<xsi:pid>01C22E23A83710735EF0D205391C668F</xsi:pid>
+			<xsi:description>600</xsi:description>
+			<xsi:time>29.05.2012</xsi:time>
+			<xsi:id>B2AE5BF44C1ADF51985FBE0B37A34A4C</xsi:id>
+			<gml:Point srsName='EPSG:4326'>
+				<gml:coordinates>-9.7205,61.72516666666667</gml:coordinates>
+			</gml:Point>
+		</xsi:attributes>
+	</gml:featureMember>
+	<gml:featureMember>
+		<xsi:attributes>
+			<xsi:name>H&#229;kon Mosby</xsi:name>
+			<xsi:pid>01C22E23A83710735EF0D205391C668F</xsi:pid>
+			<xsi:description>601</xsi:description>
+			<xsi:time>29.05.2012</xsi:time>
+			<xsi:id>63EFC2C54229979639E5AB662736BE7A</xsi:id>
+			<gml:Point srsName='EPSG:4326'>
+				<gml:coordinates>-9.759,61.80316666666667</gml:coordinates>
+			</gml:Point>
+		</xsi:attributes>
+	</gml:featureMember>
+	<gml:featureMember>
+		<xsi:attributes>
+			<xsi:name>H&#229;kon Mosby</xsi:name>
+			<xsi:pid>01C22E23A83710735EF0D205391C668F</xsi:pid>
+			<xsi:description>602</xsi:description>
+			<xsi:time>29.05.2012</xsi:time>
+			<xsi:id>B50F093E4FF3D7E14792EB23A34463D9</xsi:id>
+			<gml:Point srsName='EPSG:4326'>
+				<gml:coordinates>-9.758,61.80283333333333</gml:coordinates>
+			</gml:Point>
+		</xsi:attributes>
+	</gml:featureMember>
+	<gml:featureMember>
+		<xsi:attributes>
+			<xsi:name>H&#229;kon Mosby</xsi:name>
+			<xsi:pid>01C22E23A83710735EF0D205391C668F</xsi:pid>
+			<xsi:description>603</xsi:description>
+			<xsi:time>29.05.2012</xsi:time>
+			<xsi:id>2C237DF08AEC668F7897E4C3159965D1</xsi:id>
+			<gml:Point srsName='EPSG:4326'>
+				<gml:coordinates>-9.7605,61.801833333333335</gml:coordinates>
+			</gml:Point>
+		</xsi:attributes>
+	</gml:featureMember>
+	<gml:featureMember>
+		<xsi:attributes>
+			<xsi:name>H&#229;kon Mosby</xsi:name>
+			<xsi:pid>01C22E23A83710735EF0D205391C668F</xsi:pid>
+			<xsi:description>604</xsi:description>
+			<xsi:time>29.05.2012</xsi:time>
+			<xsi:id>6C0769C7503AA902AB2FB1105213E43F</xsi:id>
+			<gml:Point srsName='EPSG:4326'>
+				<gml:coordinates>-9.760166666666667,61.802166666666665</gml:coordinates>
+			</gml:Point>
+		</xsi:attributes>
+	</gml:featureMember>
+
+</FeatureCollection>

@@ -1,0 +1,19 @@
+<FeatureCollection xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:gml="http://www.opengis.net/gml">
+  <gml:boundedBy>
+    <gml:Box srsName="EPSG:32633">
+      <gml:coordinates>-3265743.20512821,5680000,4383213.20512821,10193000</gml:coordinates>
+    </gml:Box>
+  </gml:boundedBy>
+  <gml:featureMember class="linked-list">
+    <xsi:attributes>
+      <xsi:name>name</xsi:name>
+      <xsi:pid>pid</xsi:pid>
+      <xsi:description>desc</xsi:description>
+      <xsi:time>time</xsi:time>
+      <xsi:id>id</xsi:id>
+      <gml:Point srsName="EPSG:32633">
+        <gml:coordinates>729673,7897450</gml:coordinates>
+      </gml:Point>
+    </xsi:attributes>
+  </gml:featureMember>
+</FeatureCollection>
