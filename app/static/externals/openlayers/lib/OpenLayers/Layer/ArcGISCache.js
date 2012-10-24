@@ -1,5 +1,5 @@
 /** 
- * @requires OpenLayers/Layer/XYZ.js 
+ * @requires OpenLayers/Layer/XYZ.js
  */ 
 
 /** 
@@ -172,21 +172,23 @@ OpenLayers.Layer.ArcGISCache = OpenLayers.Class(OpenLayers.Layer.XYZ, {
                 
                 this.lods = [];
                 for(var key in info.tileInfo.lods) {
-                    var lod = info.tileInfo.lods[key];
-                    if (this.useScales) {
-                        this.scales.push(lod.scale);
-                    } else {
-                        this.resolutions.push(lod.resolution);
+                    if (info.tileInfo.lods.hasOwnProperty(key)) {
+                        var lod = info.tileInfo.lods[key];
+                        if (this.useScales) {
+                            this.scales.push(lod.scale);
+                        } else {
+                            this.resolutions.push(lod.resolution);
+                        }
+                    
+                        var start = this.getContainingTileCoords(upperLeft, lod.resolution);
+                        lod.startTileCol = start.x;
+                        lod.startTileRow = start.y;
+                    
+                        var end = this.getContainingTileCoords(bottomRight, lod.resolution);
+                        lod.endTileCol = end.x;
+                        lod.endTileRow = end.y;    
+                        this.lods.push(lod);
                     }
-                    
-                    var start = this.getContainingTileCoords(upperLeft, lod.resolution);
-                    lod.startTileCol = start.x;
-                    lod.startTileRow = start.y;
-                    
-                    var end = this.getContainingTileCoords(bottomRight, lod.resolution);
-                    lod.endTileCol = end.x;
-                    lod.endTileRow = end.y;    
-                    this.lods.push(lod);
                 }
 
                 this.maxExtent = this.calculateMaxExtentWithLOD(this.lods[0]);
@@ -357,11 +359,22 @@ OpenLayers.Layer.ArcGISCache = OpenLayers.Class(OpenLayers.Layer.XYZ, {
     },
 
     /**
+     * Method: initGriddedTiles
+     * 
+     * Parameters:
+     * bounds - {<OpenLayers.Bounds>}
+     */
+    initGriddedTiles: function(bounds) {
+        delete this._tileOrigin;
+        OpenLayers.Layer.XYZ.prototype.initGriddedTiles.apply(this, arguments);
+    },
+    
+    /**
      * Method: getMaxExtent
      * Get this layer's maximum extent.
      *
      * Returns:
-     * {OpenLayers.Bounds}
+     * {<OpenLayers.Bounds>}
      */
     getMaxExtent: function() {
         var resolution = this.map.getResolution();
@@ -377,8 +390,11 @@ OpenLayers.Layer.ArcGISCache = OpenLayers.Class(OpenLayers.Layer.XYZ, {
      * {<OpenLayers.LonLat>} The tile origin.
      */
     getTileOrigin: function() {
-        var extent = this.getMaxExtent();
-        return new OpenLayers.LonLat(extent.left, extent.bottom);
+        if (!this._tileOrigin) {
+            var extent = this.getMaxExtent();
+            this._tileOrigin = new OpenLayers.LonLat(extent.left, extent.bottom);
+        }
+        return this._tileOrigin;
     },
 
    /**
@@ -450,7 +466,9 @@ OpenLayers.Layer.ArcGISCache = OpenLayers.Class(OpenLayers.Layer.XYZ, {
         // Write the values into our formatted url
         url = OpenLayers.String.format(url, {'x': x, 'y': y, 'z': z});
 
-        return url;
+        return OpenLayers.Util.urlAppend(
+            url, OpenLayers.Util.getParameterString(this.params)
+        );
     },
 
     /**

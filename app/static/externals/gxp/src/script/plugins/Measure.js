@@ -1,13 +1,22 @@
 /**
  * Copyright (c) 2008-2011 The Open Planning Project
  * 
- * Published under the BSD license.
+ * Published under the GPL license.
  * See https://github.com/opengeo/gxp/raw/master/license.txt for the full text
  * of the license.
  */
 
 /**
  * @requires plugins/Tool.js
+ * @requires OpenLayers/StyleMap.js
+ * @requires OpenLayers/Rule.js
+ * @requires OpenLayers/Control/Measure.js
+ * @requires OpenLayers/Layer/Vector.js
+ * @requires OpenLayers/Handler/Path.js
+ * @requires OpenLayers/Handler/Polygon.js
+ * @requires OpenLayers/Renderer/SVG.js
+ * @requires OpenLayers/Renderer/VML.js
+ * @requires OpenLayers/Renderer/Canvas.js
  */
 
 /** api: (define)
@@ -35,35 +44,41 @@ gxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
      */
     outputTarget: "map",
 
+    /** api: config[buttonText]
+     *  ``String``
+     *  Text for the Measure button (i18n).
+     */
+    buttonText: "Measure",
+
     /** api: config[lengthMenuText]
      *  ``String``
      *  Text for measure length menu item (i18n).
      */
-    lengthMenuText: "Lengde", //"Length",
+    lengthMenuText: "Length",
 
     /** api: config[areaMenuText]
      *  ``String``
      *  Text for measure area menu item (i18n).
      */
-    areaMenuText: "Areal", //"Area",
+    areaMenuText: "Area",
 
     /** api: config[lengthTooltip]
      *  ``String``
      *  Text for measure length action tooltip (i18n).
      */
-    lengthTooltip: "M&aring;l lengde", //"Measure length",
+    lengthTooltip: "Measure length",
 
     /** api: config[areaTooltip]
      *  ``String``
      *  Text for measure area action tooltip (i18n).
      */
-    areaTooltip: "M&aring;l areal", //"Measure area",
+    areaTooltip: "Measure area",
 
     /** api: config[measureTooltip]
      *  ``String``
      *  Text for measure action tooltip (i18n).
      */
-    measureTooltip: "M&aring;l", //"Measure",
+    measureTooltip: "Measure",
 
     /** private: method[constructor]
      */
@@ -173,26 +188,6 @@ gxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
                         measureToolTip.show();
                     }
                 },
-                measure: function(event) {
-                    cleanup();
-                    measureToolTip = this.addOutput({
-                        xtype: 'tooltip',
-                        target: Ext.getBody(),
-                        html: makeString(event),
-                        title: title,
-                        autoHide: false,
-                        closable: true,
-                        draggable: false,
-                        mouseOffset: [0, 0],
-                        showDelay: 1,
-                        listeners: {
-                            hide: function() {
-                                measureControl.cancel();
-                                cleanup();
-                            }
-                        }
-                    });
-                },
                 deactivate: cleanup,
                 scope: this
             }
@@ -210,6 +205,7 @@ gxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
         this.button = new Ext.SplitButton({
             iconCls: "gxp-icon-measure-length",
             tooltip: this.measureTooltip,
+            buttonText: this.buttonText,
             enableToggle: true,
             toggleGroup: this.toggleGroup,
             allowDepress: true,

@@ -11,7 +11,7 @@ var _getOrderedAssets = function(first, include, exclude, last, assets) {
         }
     }
 
-    // determine which files to omit from implicit includes
+    // determine which files to omit based on exclude list
     var omit = {};
     exclude.forEach(function(path) {
         omit[path] = true;
@@ -19,7 +19,7 @@ var _getOrderedAssets = function(first, include, exclude, last, assets) {
 
     var unordered = {};
     first.concat(include, last).forEach(function(path) {
-        if (!(omit[path])) {
+        if (!shouldOmit(omit, path)) {
             unordered[path] = true;
         }
     });
@@ -43,6 +43,19 @@ var _getOrderedAssets = function(first, include, exclude, last, assets) {
 
 };
 
+function shouldOmit(omit, path) {
+    var should = (path in omit);
+    if (!should) {
+        for (var pattern in omit) {
+            if (path.indexOf(pattern) === 0) {
+                should = true;
+                break
+            }
+        }
+    }
+    return should;
+}
+
 var expand = function(unordered, omit, assets) {
     var path, entry, require, include, newlyIncluded, expanded = true;
     while (expanded) {
@@ -54,19 +67,22 @@ var expand = function(unordered, omit, assets) {
             entry = assets[path];
             if (entry) {
                 for (require in entry.require) {
-                    if (!(unordered[require])) {
+                    if (shouldOmit(omit, require)) {
+                        // delete require if it was listed in exclude
+                        delete entry.require[require];
+                    } else if (!(unordered[require])) {
                         expanded = true;
                         newlyIncluded[require] = true;
                     }
                 }
                 for (include in entry.include) {
-                    if (!(omit[include]) && (!(unordered[include]))) {
+                    if (!shouldOmit(omit, include) && !unordered[include]) {
                         expanded = true;
                         newlyIncluded[include] = true;
                     }
                 }
             } else {
-                throw "Entry not found in assets: " + path;
+                throw new Error("Entry not found in assets: " + path);
             }
         }
         unordered = newlyIncluded;
@@ -75,22 +91,31 @@ var expand = function(unordered, omit, assets) {
 };
 
 var order = function(config) {
-    var base = FS.path(config.root[0]);
-    var assets = ASSETS.compile(base);
-    
+    var assets = ASSETS.compile(config.root);
     var first = config.first || [];
     var include = config.include || [];
     var exclude = config.exclude || [];
     var last = config.last || [];
-    
-    return _getOrderedAssets(first, include, exclude, last, assets);
+    var ordered = _getOrderedAssets(first, include, exclude, last, assets);
+    var scripts = ordered.map(function(path) {
+        return {
+            path: path,
+            root: assets[path].root
+        };
+    });
+    return scripts;
 };
 
 var concat = function(config) {
-    var base = FS.path(config.root[0]);
-    var sources = order(config).map(function(path) {
-        var source = "/** FILE: " + path + " **/\n";
-        return source + FS.read(FS.join(base, path));
+    var sources = order(config).map(function(script) {
+        var file, source = "/** FILE: " + script.path + " **/\n";
+        file = FS.join(script.root, script.path);
+        if (FS.exists(file)) {
+            source += FS.read(file);
+        } else {
+            throw new Error("Can't find script: " + file);
+        }
+        return source;
     });
     return sources.join("\n");
 };

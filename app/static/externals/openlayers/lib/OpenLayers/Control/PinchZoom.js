@@ -1,9 +1,10 @@
-/* Copyright (c) 2006-2011 by OpenLayers Contributors (see authors.txt for
- * full list of contributors). Published under the Clear BSD license.
- * See http://svn.openlayers.org/trunk/openlayers/license.txt for the
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for
+ * full list of contributors). Published under the 2-clause BSD license.
+ * See license.txt in the OpenLayers distribution or repository for the
  * full text of the license. */
 
 /**
+ * @requires OpenLayers/Util/vendorPrefix.js
  * @requires OpenLayers/Handler/Pinch.js
  */
 
@@ -20,12 +21,6 @@ OpenLayers.Control.PinchZoom = OpenLayers.Class(OpenLayers.Control, {
      * {OpenLayers.Control.TYPES}
      */
     type: OpenLayers.Control.TYPE_TOOL,
-
-    /**
-     * Property: containerOrigin
-     * {Object} Cached object representing the layer container origin (in pixels).
-     */
-    containerOrigin: null,
 
     /**
      * Property: pinchOrigin
@@ -47,6 +42,11 @@ OpenLayers.Control.PinchZoom = OpenLayers.Class(OpenLayers.Control, {
     autoActivate: true,
     
     /**
+     * APIProperty: handlerOptions
+     * {Object} Used to set non-default properties on the pinch handler
+     */
+
+    /**
      * Constructor: OpenLayers.Control.PinchZoom
      * Create a control for zooming with pinch gestures.  This works on devices
      *     with multi-touch support.
@@ -64,56 +64,6 @@ OpenLayers.Control.PinchZoom = OpenLayers.Class(OpenLayers.Control, {
         }, this.handlerOptions);
     },
     
-    /**
-     * APIMethod: activate
-     * Activate this control.  Must be called after the control is added to a 
-     * map.
-     *
-     * Returns:
-     * {Boolean} The control was successfully activated.
-     */
-    activate: function() {
-        var activated = OpenLayers.Control.prototype.activate.apply(this,arguments);
-        if (activated) {
-            this.map.events.on({
-                moveend: this.updateContainerOrigin,
-                scope: this
-            });
-            this.updateContainerOrigin();
-        }
-        return activated;
-    },
-
-    /**
-     * APIMethod: deactivate
-     * Deactivate this control.
-     *
-     * Returns:
-     * {Boolean} The control was successfully deactivated.
-     */
-    deactivate: function() {
-        var deactivated = OpenLayers.Control.prototype.deactivate.apply(this,arguments);
-        if (this.map && this.map.events) {
-            this.map.events.un({
-                moveend: this.updateContainerOrigin,
-                scope: this
-            });
-        }
-        return deactivated;
-    },
-    
-    /**
-     * Method: updateContainerOrigin
-     * Must be called each time the layer container origin changes.
-     */
-    updateContainerOrigin: function() {
-        var container = this.map.layerContainerDiv;
-        this.containerOrigin = {
-            x: parseInt(container.style.left, 10),
-            y: parseInt(container.style.top, 10)
-        };
-    },
-
     /**
      * Method: pinchStart
      *
@@ -137,7 +87,7 @@ OpenLayers.Control.PinchZoom = OpenLayers.Class(OpenLayers.Control, {
      */
     pinchMove: function(evt, pinchData) {
         var scale = pinchData.scale;
-        var containerOrigin = this.containerOrigin;
+        var containerOrigin = this.map.layerContainerOriginPx;
         var pinchOrigin = this.pinchOrigin;
         var current = evt.xy;
 
@@ -156,8 +106,10 @@ OpenLayers.Control.PinchZoom = OpenLayers.Class(OpenLayers.Control, {
      */
     applyTransform: function(transform) {
         var style = this.map.layerContainerDiv.style;
-        style['-webkit-transform'] = transform;
-        style['-moz-transform'] = transform;
+        var transformProperty = OpenLayers.Util.vendorPrefix.style("transform");
+        if (transformProperty) {
+            style[transformProperty] = transform;
+        }
     },
     
     /**
@@ -182,6 +134,20 @@ OpenLayers.Control.PinchZoom = OpenLayers.Class(OpenLayers.Control, {
 
             location.lon += resolution * ((size.w / 2) - zoomPixel.x);
             location.lat -= resolution * ((size.h / 2) - zoomPixel.y);
+
+            // Force a reflow before calling setCenter. This is to work
+            // around an issue occuring in iOS.
+            //
+            // See https://github.com/openlayers/openlayers/pull/351.
+            //
+            // Without a reflow setting the layer container div's top left
+            // style properties to "0px" - as done in Map.moveTo when zoom
+            // is changed - won't actually correctly reposition the layer
+            // container div.
+            //
+            // Also, we need to use a statement that the Google Closure
+            // compiler won't optimize away.
+            this.map.div.clientWidth = this.map.div.clientWidth;
 
             this.map.setCenter(location, zoom);
         }

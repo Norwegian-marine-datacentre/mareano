@@ -1,3 +1,6 @@
+/**
+ * @requires GeoExt/Lang.js
+ */
 
 GeoExt.Lang.add("fr", {
 
@@ -6,22 +9,25 @@ GeoExt.Lang.add("fr", {
         addActionTip: "Ajouter des calques",
         addServerText: "Ajouter un nouveau serveur",
         untitledText: "Sans titre",
-        addLayerSourceErrorText: "Erreur capacités WMS obtenir ({msg}).\nVeuillez vérifier URL et essayez à nouveau.",
-        availableLayersText: "Layers disponible",
+        addLayerSourceErrorText: "Impossible d'obtenir les capacités WMS ({msg}).\nVeuillez vérifier l'URL et essayez à nouveau.",
+        availableLayersText: "Couches disponibles",
         doneText: "Terminé",
-        uploadText: "Upload Data"
+        uploadText: "Télécharger des données"
     },
     
     "gxp.plugins.BingSource.prototype": {
         title: "Calques Bing",
         roadTitle: "Bing routes",
-        aerialTitle: "Bing aérienne",
-        labeledAerialTitle: "Bing aérienne avec des étiquettes"
+        aerialTitle: "Bing images aériennes",
+        labeledAerialTitle: "Bing images aériennes avec étiquettes"
     },    
 
     "gxp.plugins.FeatureEditor.prototype": {
-        createFeatureActionTip: "Créer une nouvelle fonctionnalité",
-        editFeatureActionTip: "Modifier les existants fonction"
+        splitButtonText: "Edit",
+        createFeatureActionText: "Create",
+        editFeatureActionText: "Modify",
+        createFeatureActionTip: "Créer un nouvel objet",
+        editFeatureActionTip: "Modifier un objet existant"
     },
     
     "gxp.plugins.FeatureGrid.prototype": {
@@ -30,22 +36,21 @@ GeoExt.Lang.add("fr", {
         previousPageTip: "Page précédente",
         zoomPageExtentTip: "Zoom sur la page",
         nextPageTip: "Page suivante",
-        nextPageTip: "Dernière page",
-        totalMsg: "Total: {0} records"
+        lastPageTip: "Dernière page",
+        totalMsg: "Features {1} to {2} of {0}"
     },
 
     "gxp.plugins.GoogleEarth.prototype": {
-        apiKeyPrompt: "Please enter the Google API key for ",
         menuText: "Passer à la visionneuse 3D",
         tooltip: "Passer à la visionneuse 3D"
     },
     
     "gxp.plugins.GoogleSource.prototype": {
         title: "Calques Google",
-        roadmapAbstract: "Voir carte de rue",
-        satelliteAbstract: "Voir les images satellite",
-        hybridAbstract: "Afficher des images avec des noms de rue",
-        terrainAbstract: "Voir carte de rue avec le terrain"
+        roadmapAbstract: "Carte routière",
+        satelliteAbstract: "Images satellite",
+        hybridAbstract: "Images avec routes",
+        terrainAbstract: "Carte routière avec le terrain"
     },
 
     "gxp.plugins.LayerProperties.prototype": {
@@ -54,9 +59,14 @@ GeoExt.Lang.add("fr", {
     },
     
     "gxp.plugins.LayerTree.prototype": {
+        shortTitle: "Layers",
         rootNodeText: "Layers",
         overlayNodeText: "Surimpressions",
         baseNodeText: "Couches"
+    },
+
+    "gxp.plugins.LayerManager.prototype": {
+        baseNodeText: "Couche"
     },
 
     "gxp.plugins.Legend.prototype": { 
@@ -65,27 +75,28 @@ GeoExt.Lang.add("fr", {
     },
 
     "gxp.plugins.Measure.prototype": {
+        buttonText: "Mesure",
         lengthMenuText: "Longueur",
-        areaMenuText: "Zone",
-        lengthTooltip: "Mesure Longueur",
-        areaTooltip: "Mesure Zone",
+        areaMenuText: "Surface",
+        lengthTooltip: "Mesure de longueur",
+        areaTooltip: "Mesure de surface",
         measureTooltip: "Mesure"
     },
 
     "gxp.plugins.Navigation.prototype": {
-        menuText: "Plan Pan",
-        tooltip: "Plan Pan"
+        menuText: "Panner la carte",
+        tooltip: "Panner la carte"
     },
 
     "gxp.plugins.NavigationHistory.prototype": {
-        previousMenuText: "Zoom précédent Un",
-        nextMenuText: "Zoom sure une Next",
-        previousTooltip: "Zoom précédent Un",
-        nextTooltip: "Zoom sur une Next"
+        previousMenuText: "Position précédente",
+        nextMenuText: "Position suivante",
+        previousTooltip: "Position précédente",
+        nextTooltip: "Position suivante"
     },
 
     "gxp.plugins.LoadingIndicator.prototype": {
-        loadingMapMessage: "Loading Map..."
+        loadingMapMessage: "Chargement de la carte..."
     },
 
     "gxp.plugins.MapBoxSource.prototype": {
@@ -107,16 +118,17 @@ GeoExt.Lang.add("fr", {
 
     "gxp.plugins.OSMSource.prototype": {
         title: "Calques OpenStreetMap",
-        mapnikAttribution: "Les données CC-By-SA by <a href='http://openstreetmap.org/'>OpenStreetMap</a>",
-        osmarenderAttribution: "Les données CC-By-SA by <a href='http://openstreetmap.org/'>OpenStreetMap</a>"
+        mapnikAttribution: "&copy; <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors",
+        osmarenderAttribution: "Données CC-By-SA par <a href='http://openstreetmap.org/'>OpenStreetMap</a>"
     },
 
     "gxp.plugins.Print.prototype": {
-        menuText: "Imprimer carte",
-        tooltip: "Imprimer carte",
+        buttonText:"Imprimer",
+        menuText: "Imprimer la carte",
+        tooltip: "Imprimer la carte",
         previewText: "Aperçu avant impression",
-        notAllNotPrintableText: "Non Tous les couches peuvent être imprimés",
-        nonePrintableText: "Aucune de vos couches de carte peut être imprimée"
+        notAllNotPrintableText: "Non, toutes les couches peuvent être imprimées",
+        nonePrintableText: "Aucune de vos couches ne peut être imprimée"
     },
 
     "gxp.plugins.MapQuestSource.prototype": {
@@ -128,11 +140,10 @@ GeoExt.Lang.add("fr", {
     },
 
     "gxp.plugins.QueryForm.prototype": {
-        queryActionText: "Query",
+        queryActionText: "Interrogation",
         queryMenuText: "Couche de requêtes",
         queryActionTip: "Interroger la couche sélectionnée",
-        queryByLocationText: "Query selon le lieu",
-        currentTextText: "Mesure actuelle",
+        queryByLocationText: "Query by current map extent",
         queryByAttributesText: "Requête par attributs"
     },
 
@@ -142,46 +153,49 @@ GeoExt.Lang.add("fr", {
     },
 
     "gxp.plugins.WMSGetFeatureInfo.prototype": {
+        buttonText:"Identify",
         infoActionTip: "Get Feature Info",
-        popupTitle: "entité Info"
+        popupTitle: "Info sur l'objet"
     },
 
     "gxp.plugins.Zoom.prototype": {
-        zoomInMenuText: "Zoom In",
+        zoomMenuText: "Zoom Box",
+        zoomInMenuText: "Zoom avant",
         zoomOutMenuText: "Zoom arrière",
-        zoomInTooltip: "Zoom In",
+        zoomTooltip: "Zoom by dragging a box",
+        zoomInTooltip: "Zoom avant",
         zoomOutTooltip: "Zoom arrière"
     },
     
     "gxp.plugins.ZoomToExtent.prototype": {
-        menuText: "Zoom sur la carte Max",
-        tooltip: "Zoom sur la carte Max"
+        menuText: "Zoomer sur la carte max",
+        tooltip: "Zoomer sur la carte max"
     },
     
     "gxp.plugins.ZoomToDataExtent.prototype": {
-        menuText: "Zoom sur la couche",
-        tooltip: "Zoom sur la couche"
+        menuText: "Zoomer sur la couche",
+        tooltip: "Zoomer sur la couche"
     },
 
     "gxp.plugins.ZoomToLayerExtent.prototype": {
-        menuText: "Zoom à la couche",
-        tooltip: "Zoom à la couche"
+        menuText: "Zoomer sur la couche",
+        tooltip: "Zoomer sur la couche"
     },
     
     "gxp.plugins.ZoomToSelectedFeatures.prototype": {
-        menuText: "Zoom sur les fonctions sélectionnées",
-        tooltip: "Zoom sur les caractéristiques sélectionnées"
+        menuText: "Zoomer sur les objets sélectionnés",
+        tooltip: "Zoomer sur les objets sélectionnés"
     },
 
     "gxp.FeatureEditPopup.prototype": {
-        closeMsgTitle: "Enregistrer les modifications?",
-        closeMsg: "Cette fonction a des modifications non enregistrées. Voulez-vous enregistrer vos modifications?",
-        deleteMsgTitle: "Supprimer entité?",
-        deleteMsg: "Etes-vous sûr de vouloir supprimer cette fonctionnalité?",
+        closeMsgTitle: "Enregistrer les modifications ?",
+        closeMsg: "Cet objet a des modifications non enregistrées. Voulez-vous enregistrer vos modifications ?",
+        deleteMsgTitle: "Supprimer l'objet ?",
+        deleteMsg: "Etes-vous sûr de vouloir supprimer cet objet ?",
         editButtonText: "Modifier",
-        editButtonTooltip: "Faire de cette fonctionnalité modifiable",
+        editButtonTooltip: "Modifier cet objet",
         deleteButtonText: "Supprimer",
-        deleteButtonTooltip: "Supprimer cette fonction",
+        deleteButtonTooltip: "Supprimer cet objet",
         cancelButtonText: "Annuler",
         cancelButtonTooltip: "Arrêter de modifier, annuler les modifications",
         saveButtonText: "Enregistrer",
@@ -206,8 +220,8 @@ GeoExt.Lang.add("fr", {
     "gxp.grid.CapabilitiesGrid.prototype": {
         nameHeaderText : "Nom",
         titleHeaderText : "Titre",
-        queryableHeaderText : "Queryable",
-        layerSelectionLabel: "Voir les données disponibles à partir de:",
+        queryableHeaderText : "Interrogeable",
+        layerSelectionLabel: "Voir les données disponibles à partir de :",
         layerAdditionLabel: "ou ajouter un nouveau serveur.",
         expanderTemplateText: "<p><b>Résumé:</b> {abstract}</p>"
     },
@@ -228,7 +242,7 @@ GeoExt.Lang.add("fr", {
     },
 
     "gxp.QueryPanel.prototype": {
-        queryByLocationText: "Query selon le lieu",
+        queryByLocationText: "Interrogation selon le lieu",
         currentTextText: "Mesure actuelle",
         queryByAttributesText: "Requête par attributs",
         layerText: "Calque"
@@ -246,7 +260,7 @@ GeoExt.Lang.add("fr", {
     
     "gxp.ScaleLimitPanel.prototype": {
         scaleSliderTemplate: "{scaleType} échelle 1:{scale}",
-        maxScaleLimitText: "Max limite d'échelle"
+        maxScaleLimitText: "Échelle maximale"
     },
     
     "gxp.TextSymbolizer.prototype": {
@@ -265,11 +279,14 @@ GeoExt.Lang.add("fr", {
         formatText: "Format",
         transparentText: "Transparent",
         cacheText: "Cache",
-        cacheFieldText: "Utiliser la version mise en cache"
+        cacheFieldText: "Utiliser la version mise en cache",
+        stylesText: "Available styles",
+        infoFormatText: "Info format",
+        infoFormatEmptyText: "Choisissez un format"
     },
 
     "gxp.EmbedMapDialog.prototype": {
-        publishMessage: "Votre carte est prête à être publiée sur le web Il suffit de copier le code HTML suivant pour intégrer la carte dans votre site Web:",
+        publishMessage: "Votre carte est prête à être publiée sur le web. Il suffit de copier le code HTML suivant pour intégrer la carte dans votre site Web :",
         heightLabel: 'Hauteur',
         widthLabel: 'Largeur',
         mapSizeLabel: 'Taille de la carte',
@@ -288,20 +305,21 @@ GeoExt.Lang.add("fr", {
         fieldEmptyText: "Parcourir pour ...",
         uploadText: "Upload",
         waitMsgText: "Transfert de vos données ...",
-        invalidFileExtensionText: "Extension de fichier doit être: ",
+        invalidFileExtensionText: "L'extension du fichier doit être : ",
         optionsText: "Options",
         workspaceLabel: "Espace de travail",
         workspaceEmptyText: "Espace de travail par défaut",
         dataStoreLabel: "Magasin de données",
-        dataStoreEmptyText: "Magasin de données par défaut"
+        dataStoreEmptyText: "Create new store",
+        defaultDataStoreEmptyText: "Magasin de données par défaut"
     },
 
-    "gxp.NewSourceWindow.prototype": {
-        title: "Add New Server...",
-        cancelText: "Cancel",
-        addServerText: "Add Server",
-        invalidURLText: "Enter a valid URL to a WMS endpoint (e.g. http://example.com/geoserver/wms)",
-        contactingServerText: "Contacting Server..."
+    "gxp.NewSourceDialog.prototype": {
+        title: "Ajouter un nouveau serveur...",
+        cancelText: "Annuler",
+        addServerText: "Ajouter un serveur",
+        invalidURLText: "Indiquez l'URL valide d'un serveur WMS (e.g. http://example.com/geoserver/wms)",
+        contactingServerText: "Interrogation du serveur..."
     },
 
     "gxp.ScaleOverlay.prototype": { 

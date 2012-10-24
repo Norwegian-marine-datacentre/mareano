@@ -1,6 +1,6 @@
-/* Copyright (c) 2006-2011 by OpenLayers Contributors (see authors.txt for 
- * full list of contributors). Published under the Clear BSD license.  
- * See http://svn.openlayers.org/trunk/openlayers/license.txt for the
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for 
+ * full list of contributors). Published under the 2-clause BSD license.
+ * See license.txt in the OpenLayers distribution or repository for the
  * full text of the license. */
 
 /**
@@ -43,7 +43,7 @@ OpenLayers.Protocol.WFS.v1 = OpenLayers.Class(OpenLayers.Protocol, {
     /**
      * Property: geometryName
      * {String} Name of the geometry attribute for features.  Default is
-     *     "the_geom".
+     *     "the_geom" for WFS <version> 1.0, and null for higher versions.
      */
     geometryName: "the_geom",
     
@@ -102,16 +102,16 @@ OpenLayers.Protocol.WFS.v1 = OpenLayers.Class(OpenLayers.Protocol, {
      *     for this featureType).
      * featurePrefix - {String} Feature namespace alias (optional - only used
      *     for writing if featureNS is provided).  Default is 'feature'.
-     * geometryName - {String} Name of geometry attribute.  If featureNS is not
-     *     configured, the default is null to avoid failing on BBOX filters,
-     *     and it will be set on <read>. Otherwise, the default is 'the_geom'.
+     * geometryName - {String} Name of geometry attribute.  The default is
+     *     'the_geom' for WFS <version> 1.0, and null for higher versions. If
+     *     null, it will be set to the name of the first geometry found in the
+     *     first read operation.
+     * multi - {Boolean} If set to true, geometries will be casted to Multi
+     *     geometries before they are written in a transaction. No casting will
+     *     be done when reading features.
      */
     initialize: function(options) {
         OpenLayers.Protocol.prototype.initialize.apply(this, [options]);
-        if (!options.geometryName && !options.featureNS) {
-            // poorly configured protocol - try to not fail on BBOX filters
-            this.geometryName = null;
-        }
         if(!options.format) {
             this.format = OpenLayers.Format.WFST(OpenLayers.Util.extend({
                 version: this.version,
@@ -122,6 +122,9 @@ OpenLayers.Protocol.WFS.v1 = OpenLayers.Class(OpenLayers.Protocol, {
                 srsName: this.srsName,
                 schema: this.schema
             }, this.formatOptions));
+        }
+        if (!options.geometryName && parseFloat(this.format.version) > 1.0) {
+            this.setGeometryName(null);
         }
     },
     
@@ -381,7 +384,7 @@ OpenLayers.Protocol.WFS.v1 = OpenLayers.Class(OpenLayers.Protocol, {
      * Send a request that deletes all features by their filter.
      * 
      * Parameters:
-     * filter - {OpenLayers.Filter} filter
+     * filter - {<OpenLayers.Filter>} filter
      */
     filterDelete: function(filter, options) {
         options = OpenLayers.Util.extend({}, options);

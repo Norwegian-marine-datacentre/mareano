@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2011 The Open Source Geospatial Foundation
+ * Copyright (c) 2008-2012 The Open Source Geospatial Foundation
  * 
  * Published under the BSD license.
  * See http://svn.geoext.org/core/trunk/geoext/license.txt for the full text
@@ -8,6 +8,7 @@
 
 /**
  * @include GeoExt/data/FeatureReader.js
+ * @require OpenLayers/Feature/Vector.js
  */
 
 /** api: (define)
@@ -420,7 +421,15 @@ GeoExt.data.FeatureStoreMixin = function() {
                     }
                 }
             }
+        },
+
+        /** private: method[destroy]
+         */
+        destroy: function() {
+            this.unbind();
+            GeoExt.data.FeatureStore.superclass.destroy.call(this);
         }
+
     };
 };
 

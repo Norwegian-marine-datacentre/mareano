@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2011 The Open Source Geospatial Foundation
+ * Copyright (c) 2008-2012 The Open Source Geospatial Foundation
  * 
  * Published under the BSD license.
  * See http://svn.geoext.org/core/trunk/geoext/license.txt for the full text
@@ -73,6 +73,7 @@
             "GeoExt/data/LayerReader.js",
             "GeoExt/data/LayerStore.js",
             "GeoExt/data/ScaleStore.js",
+            "GeoExt/data/StyleReader.js",
             "GeoExt/data/WMSCapabilitiesReader.js",
             "GeoExt/data/WMSCapabilitiesStore.js",
             "GeoExt/data/WFSCapabilitiesReader.js",
@@ -80,6 +81,7 @@
             "GeoExt/data/WMSDescribeLayerReader.js",
             "GeoExt/data/WMSDescribeLayerStore.js",
             "GeoExt/data/WMCReader.js",
+            "GeoExt/data/CSWRecordsReader.js",
             "GeoExt/widgets/Action.js",
             "GeoExt/data/ProtocolProxy.js",
             "GeoExt/widgets/FeatureRenderer.js",
@@ -88,7 +90,9 @@
             "GeoExt/widgets/form.js",
             "GeoExt/widgets/form/SearchAction.js",
             "GeoExt/widgets/form/BasicForm.js",
+            "GeoExt/widgets/form/GeocoderComboBox.js",
             "GeoExt/widgets/form/FormPanel.js",
+            "GeoExt/widgets/grid/SymbolizerColumn.js",
             "GeoExt/widgets/tips/SliderTip.js",
             "GeoExt/widgets/tips/LayerOpacitySliderTip.js",
             "GeoExt/widgets/tips/ZoomSliderTip.js",

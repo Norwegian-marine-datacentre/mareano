@@ -1,12 +1,16 @@
 /**
- * Copyright (c) 2008-2011 The Open Source Geospatial Foundation
+ * Copyright (c) 2008-2012 The Open Source Geospatial Foundation
  * 
  * Published under the BSD license.
  * See http://svn.geoext.org/core/trunk/geoext/license.txt for the full text
  * of the license.
  */
 
-/** api: (define)
+/**
+ * @require OpenLayers/Format/WFSDescribeFeatureType.js
+ */
+
+/* api: (define)
  *  module = GeoExt.data
  *  class = AttributeReader
  *  base_link = `Ext.data.DataReader <http://dev.sencha.com/deploy/dev/docs/?class=Ext.data.DataReader>`_
@@ -87,14 +91,15 @@ Ext.extend(GeoExt.data.AttributeReader, Ext.data.DataReader, {
         var recordType = this.recordType;
         var fields = recordType.prototype.fields;
         var numFields = fields.length;
-        var attr, values, name, record, ignore, value, records = [];
+        var attr, values, name, record, ignore, value, field, records = [];
         for(var i=0, len=attributes.length; i<len; ++i) {
             ignore = false;
             attr = attributes[i];
             values = {};
             for(var j=0; j<numFields; ++j) {
-                name = fields.items[j].name;
-                value = attr[name];
+                field = fields.items[j];
+                name = field.name;
+                value = field.convert(attr[name]);
                 if(this.ignoreAttribute(name, value)) {
                     ignore = true;
                     break;

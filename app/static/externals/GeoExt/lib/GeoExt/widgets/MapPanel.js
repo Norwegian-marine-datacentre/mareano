@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2011 The Open Source Geospatial Foundation
+ * Copyright (c) 2008-2012 The Open Source Geospatial Foundation
  * 
  * Published under the BSD license.
  * See http://svn.geoext.org/core/trunk/geoext/license.txt for the full text
@@ -8,6 +8,9 @@
 
 /**
  * @include GeoExt/data/LayerStore.js
+ * @require OpenLayers/Map.js
+ * @require OpenLayers/BaseTypes/LonLat.js
+ * @require OpenLayers/BaseTypes/Bounds.js
  */
 
 /** api: (define)
@@ -191,6 +194,17 @@ GeoExt.MapPanel = Ext.extend(Ext.Panel, {
             "removelayer": this.onRemovelayer,
             scope: this
         });
+        //TODO This should be handled by a LayoutManager
+        this.on("afterlayout", function() {
+            //TODO remove function check when we require OpenLayers > 2.11
+            if (typeof this.map.getViewport === "function") {
+                this.items.each(function(cmp) {
+                    if (typeof cmp.addToMapPanel === "function") {
+                        cmp.getEl().appendTo(this.map.getViewport());
+                    }
+                }, this);
+            }
+        }, this);
     },
 
     /** private: method[onMoveend]

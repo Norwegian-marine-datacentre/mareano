@@ -1,14 +1,23 @@
 /**
  * Copyright (c) 2008-2011 The Open Planning Project
  * 
- * Published under the BSD license.
+ * Published under the GPL license.
  * See https://github.com/opengeo/gxp/raw/master/license.txt for the full text
  * of the license.
  */
 
 /**
- * @include widgets/RulePanel.js
- * @include widgets/StylePropertiesDialog.js
+ * @require util.js
+ * @require widgets/RulePanel.js
+ * @require widgets/StylePropertiesDialog.js
+ * @requires OpenLayers/Renderer/SVG.js
+ * @requires OpenLayers/Renderer/VML.js
+ * @requires OpenLayers/Renderer/Canvas.js
+ * @require OpenLayers/Style2.js
+ * @require OpenLayers/Format/SLD/v1_0_0_GeoServer.js
+ * @require GeoExt/data/AttributeStore.js
+ * @require GeoExt/widgets/WMSLegend.js
+ * @require GeoExt/widgets/VectorLegend.js
  */
 
 /** api: (define)
@@ -82,6 +91,10 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
      stylesFieldsetTitle: "Styles",
     /** api: config[rulesFieldsetTitle] (i18n) */
      rulesFieldsetTitle: "Rules",
+    /** api: config[errorTitle] (i18n) */
+     errorTitle: "Error saving style",
+    /** api: config[errorMsg] (i18n) */
+     errorMsg: "There was an error saving the style back to the server.",
 
     //TODO create a StylesStore which can read styles using GetStyles. Create
     // subclasses for that store with writing capabilities, e.g.
@@ -166,7 +179,14 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
      *  false.
      */
     modified: false,
-        
+    
+    /** private: config[dialogCls]
+     *  ``Ext.Component`` The dialogue class to use. Default is ``Ext.Window``.
+     *  If using e.g. ``Ext.Container``, override the ``showDlg`` method to
+     *  add the dialogue to a container.
+     */
+    dialogCls: Ext.Window,
+
     /** private: method[initComponent]
      */
     initComponent: function() {
@@ -291,6 +311,15 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
         this.on({
             "beforesaved": function() { this._saving = true; },
             "saved": function() { delete this._saving; },
+            "savefailed": function() { 
+                Ext.Msg.show({
+                    title: this.errorTitle,
+                    msg: this.errorMsg,
+                    icon: Ext.MessageBox.ERROR,
+                    buttons: {ok: true}
+                });
+                delete this._saving; 
+            },
             "render": function() {
                 gxp.util.dispatch([this.getStyles], function() {
                     this.enable();
@@ -336,7 +365,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                 iconCls: "cancel",
                 handler: function() {
                     styleProperties.propertiesDialog.userStyle = userStyle;
-                    styleProperties.close();
+                    styleProperties.destroy();
                     if (prevStyle) {
                         this._cancelling = true;
                         this.stylesStore.remove(this.selectedStyle);
@@ -352,13 +381,14 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                 text: this.saveText,
                 iconCls: "save",
                 handler: function() {
-                    styleProperties.close();
+                    styleProperties.destroy();
                 }
             }]
         };
-        var styleProperties = new Ext.Window(Ext.apply(buttonCfg, {
+        var styleProperties = new this.dialogCls(Ext.apply(buttonCfg, {
             title: String.format(this.styleWindowTitle,
                 userStyle.title || userStyle.name),
+            shortTitle: userStyle.title || userStyle.name,
             bodyBorder: false,
             autoHeight: true,
             width: 300,
@@ -374,7 +404,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                 }
             },
             listeners: {
-                "close": function() {
+                "beforedestroy": function() {
                     this.selectedStyle.set(
                         "userStyle",
                         styleProperties.propertiesDialog.userStyle);
@@ -382,7 +412,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                 scope: this
             }
         }));
-        styleProperties.show();
+        this.showDlg(styleProperties);
     },
     
     /** api: method[createSLD]
@@ -412,7 +442,8 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
             }
         });
         return new OpenLayers.Format.SLD({
-            multipleSymbolizers: true
+            multipleSymbolizers: true,
+            profile: "GeoServer"
         }).write(sld);
     },
     
@@ -443,7 +474,9 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
      *  the last rule.
      */
     updateRuleRemoveButton: function() {
-        this.items.get(3).items.get(1).setDisabled(!this.selectedRule);
+        this.items.get(3).items.get(1).setDisabled(
+            !this.selectedRule || this.items.get(2).items.get(0).rules.length < 2
+        );
     },
     
     /** private: method[createRule]
@@ -531,7 +564,9 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
     /** private: method[removeRule]
      */
     removeRule: function() {
-        this.selectedStyle.get("userStyle").rules.remove(this.selectedRule);
+        var selectedRule = this.selectedRule;
+        this.items.get(2).items.get(0).unselect();
+        this.selectedStyle.get("userStyle").rules.remove(selectedRule);
         // mark the style as modified
         this.afterRuleChange();
     },
@@ -556,11 +591,13 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
         var rule = this.selectedRule;
         var origRule = rule.clone();
 
-        var ruleDlg = new Ext.Window({
+        var ruleDlg = new this.dialogCls({
             title: String.format(this.ruleWindowTitle,
                 rule.title || rule.name || this.newRuleText),
-            width: 340,
-            autoHeight: true,
+            shortTitle: rule.title || rule.name || this.newRuleText,
+            layout: "fit",
+            width: 320,
+            height: 450,
             modal: true,
             items: [{
                 xtype: "gxp_rulepanel",
@@ -577,6 +614,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                     method: "GET",
                     disableCaching: false
                 }),
+                autoScroll: true,
                 border: false,
                 defaults: {
                     autoHeight: true,
@@ -584,7 +622,11 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                 },
                 listeners: {
                     "change": this.saveRule,
-                    "tabchange": function() {ruleDlg.syncShadow();},
+                    "tabchange": function() {
+                        if (ruleDlg instanceof Ext.Window) {
+                            ruleDlg.syncShadow();
+                        }
+                    },
                     scope: this
                 }
             }],
@@ -593,16 +635,16 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                 iconCls: "cancel",
                 handler: function() {
                     this.saveRule(ruleDlg.rulePanel, origRule);
-                    ruleDlg.close();
+                    ruleDlg.destroy();
                 },
                 scope: this
             }, {
                 text: this.saveText,
                 iconCls: "save",
-                handler: function() { ruleDlg.close(); }
+                handler: function() { ruleDlg.destroy(); }
             }]
         });
-        ruleDlg.show();
+        this.showDlg(ruleDlg);
     },
     
     /** private: method[saveRule]
@@ -664,7 +706,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                 this.stylesStore.findExact("name", initialStyle));
         }
         
-        var format = new OpenLayers.Format.SLD({multipleSymbolizers: true});
+        var format = new OpenLayers.Format.SLD({profile: "GeoServer", multipleSymbolizers: true});
         
         try {
             var sld = format.read(data);
@@ -725,7 +767,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
     createLegend: function(rules) {
         var R = OpenLayers.Symbolizer.Raster;
         if (R && rules[0] && rules[0].symbolizers[0] instanceof R) {            
-            throw("Raster symbolizers are not supported.");
+            throw new Error("Raster symbolizers are not supported.");
         } else {
             this.addVectorLegend(rules);
         }
@@ -817,7 +859,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
     /** private: method[createStylesStore]
      */
     createStylesStore: function(callback) {
-        var styles = this.layerRecord.get("styles");
+        var styles = this.layerRecord.get("styles") || [];
         this.stylesStore = new Ext.data.JsonStore({
             data: {
                 styles: styles
@@ -1092,6 +1134,15 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
         var layerName = this.layerRecord.get("name");
         return layerName.split(":").pop() + "_" +
             gxp.util.md5(layerName + new Date() + Math.random()).substr(0, 8);
+    },
+    
+    /** private: method[showDlg]
+     *  :arg dlg:
+     *
+     *  Shows a subdialog
+     */
+    showDlg: function(dlg) {
+        dlg.show();
     }
     
 });
@@ -1156,89 +1207,9 @@ OpenLayers.Renderer.defaultSymbolizer = {
     fontSize: 10,
     haloColor: "#FFFFFF",
     haloOpacity: 1,
-    haloRadius: 1
+    haloRadius: 1,
+    labelAlign: 'cm'
 };
 
 /** api: xtype = gxp_wmsstylesdialog */
 Ext.reg('gxp_wmsstylesdialog', gxp.WMSStylesDialog);
-
-
-
-/**
- * Extensions and customizations to OpenLayers to get support for SLD 
- * vendor specific extensions introduced by GeoTools.
- */
-
-OpenLayers.Format && OpenLayers.Format.SLD && OpenLayers.Format.SLD.v1 && (function() {
-    
-    // read/write GeoTools custom VendorOption elements
-    OpenLayers.Format.SLD.v1.prototype.readers.sld["VendorOption"] = function(node, obj) {
-        if (!obj.vendorOptions) {
-            obj.vendorOptions = [];
-        }
-        obj.vendorOptions.push({
-            name: node.getAttribute("name"),
-            value: this.getChildValue(node)
-        });    
-    };
-    OpenLayers.Format.SLD.v1.prototype.writers.sld["VendorOption"] = function(option) {
-        return this.createElementNSPlus("sld:VendorOption", {
-            attributes: {name: option.name},
-            value: option.value
-        });
-    };
-
-    // read GeoTools custom Priority element in TextSymbolizer
-    OpenLayers.Format.SLD.v1.prototype.readers.sld["Priority"] = function(node, obj) {
-        obj.priority = this.readOgcExpression(node);
-    };
-    OpenLayers.Format.SLD.v1.prototype.writers.sld["Priority"] = function(priority) {
-        var node = this.createElementNSPlus("sld:Priority");
-        this.writeNode("ogc:Literal", priority, node);
-        return node;
-    };
-
-    // extend OL SLD parser to accommodate GeoTools extensions to SLD
-    // http://svn.osgeo.org/geotools/branches/2.6.x/modules/extension/xsd/xsd-sld/src/main/resources/org/geotools/sld/bindings/StyledLayerDescriptor.xsd
-
-    var writers = OpenLayers.Format.SLD.v1.prototype.writers.sld;
-    var original;
-
-    // modify TextSymbolizer writer to include Graphic and Priority elements
-    original = writers.TextSymbolizer;
-    writers.TextSymbolizer = (function(original) {
-        return function(symbolizer) {
-            var node = original.apply(this, arguments);
-            if (symbolizer.externalGraphic || symbolizer.graphicName) {
-                this.writeNode("Graphic", symbolizer, node);
-            }
-            if ("priority" in symbolizer) {
-                this.writeNode("Priority", symbolizer.priority, node);
-            }
-            return node;
-        };
-    })(original);
-    
-
-    // modify symbolizer writers to include any VendorOption elements
-    var modify = ["PointSymbolizer", "LineSymbolizer", "PolygonSymbolizer", "TextSymbolizer"];
-    var name;
-    for (var i=0, ii=modify.length; i<ii; ++i) {
-        name = modify[i];
-        original = writers[name];
-        writers[name] = (function(original) {
-            return function(symbolizer) {
-                var node = original.apply(this, arguments);
-                var options = symbolizer.vendorOptions;
-                if (options) {
-                    for (var i=0, ii=options.length; i<ii; ++i) {
-                        this.writeNode("VendorOption", options[i], node);
-                    }
-                }
-                return node;
-            };
-        })(original);
-    }
-
-})();
-

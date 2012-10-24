@@ -18,26 +18,10 @@ OpenLayers.Lang.it = {
 
     'Base Layer': "Livello base",
 
-    'sameProjection':
-        "La mini mappa funziona solamente se ha la stessa proiezione della mappa principale",
-
-    'readNotImplemented': "Lettura non implementata.",
-
-    'writeNotImplemented': "Scrittura non implementata.",
-
     'noFID': "Impossibile aggiornare un elemento grafico che non abbia il FID.",
-
-    'errorLoadingGML': "Errore nel caricamento del file GML ${url}",
 
     'browserNotSupported':
         "Il tuo browser non supporta il rendering vettoriale. I renderizzatore attualemnte supportati sono:\n${renderers}",
-
-    'componentShouldBe': "addFeatures : il componente dovrebbe essere di tipo ${geomType}",
-
-    // console message
-    'getFeatureError':
-        "getFeatureFromEvent chiamata su di un livello senza renderizzatore. Ciò significa che " +
-        "il livello è stato cancellato, ma non i gestori associati ad esso.",
 
     // console message
     'minZoomLevelError':
@@ -79,10 +63,6 @@ OpenLayers.Lang.it = {
     'Scale = 1 : ${scaleDenom}': "Scala = 1 : ${scaleDenom}",
 
     // console message
-    'layerAlreadyAdded':
-        "Stai cercando di aggiungere il livello: ${layerName} alla mappa, ma tale livello è già stato aggiunto.",
-
-    // console message
     'reprojectDeprecated':
         "Stai utilizzando l'opzione 'reproject' sul livello ${layerName}. " +
         "Questa opzione è deprecata: il suo utilizzo è stato introdotto per" +
@@ -96,21 +76,5 @@ OpenLayers.Lang.it = {
         "Questo metodo è stato deprecato e sarà rimosso dalla versione 3.0. " +
         "Si prega di utilizzare il metodo ${newMethod} in alternativa.",
 
-    // console message
-    'boundsAddError': "Devi specificare i valori di x e y alla funzione add.",
-
-    // console message
-    'lonlatAddError': "Devi specificare i valori di lon e lat alla funzione add.",
-
-    // console message
-    'pixelAddError': "Devi specificare i valori di x e y alla funzione add.",
-
-    // console message
-    'unsupportedGeometryType': "Tipo di geometria non supportata: ${geomType}",
-
-    // console message
-    'pagePositionFailed':
-        "OpenLayers.Util.pagePosition fallita: l'elemento con id ${elemId} è posizionato in modo errato.",
-                    
     'end': ''
 };

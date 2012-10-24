@@ -1,9 +1,14 @@
 /**
- * Copyright (c) 2008-2011 The Open Source Geospatial Foundation
+ * Copyright (c) 2008-2012 The Open Source Geospatial Foundation
  * 
  * Published under the BSD license.
  * See http://svn.geoext.org/core/trunk/geoext/license.txt for the full text
  * of the license.
+ */
+
+/**
+ * @require OpenLayers/Format/WMSDescribeLayer.js
+ * @require OpenLayers/Format/WMSDescribeLayer/v1_1.js
  */
 
 /** api: (define)
@@ -75,6 +80,9 @@ Ext.extend(GeoExt.data.WMSDescribeLayerReader, Ext.data.DataReader, {
         
         if(typeof data === "string" || data.nodeType) {
             data = this.meta.format.read(data);
+        }
+        if (!!data.error) {
+            throw new Ext.data.DataReader.Error("invalid-response", data.error);
         }
         var records = [], description;        
         for(var i=0, len=data.length; i<len; i++){

@@ -1,14 +1,15 @@
 /**
  * Copyright (c) 2008-2011 The Open Planning Project
  * 
- * Published under the BSD license.
+ * Published under the GPL license.
  * See https://github.com/opengeo/gxp/raw/master/license.txt for the full text
  * of the license.
  */
 
 /**
  * @requires plugins/ClickableFeatures.js
- * @include widgets/grid/FeatureGrid.js
+ * @requires widgets/grid/FeatureGrid.js
+ * @requires GeoExt/widgets/grid/FeatureSelectionModel.js
  */
 
 /** api: (define)
@@ -99,7 +100,7 @@ gxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
      */
     previousPageTip: "Previous page",
 
-    /** api: config[zoomFirstPageTip]
+    /** api: config[zoomPageExtentTip]
      *  ``String``
      *  Tooltip string for zoom to page extent action (i18n).
      */
@@ -121,18 +122,20 @@ gxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
      *  ``String``
      *  String template for showing total number of records (i18n).
      */
-    totalMsg: "Total: {0} records",
+    totalMsg: "Features {1} to {2} of {0}",
 
     /** private: method[displayTotalResults]
      */
     displayTotalResults: function() {
         var featureManager = this.target.tools[this.featureManager];
-        if (this.showTotalResults === true && featureManager.numberOfFeatures !== null) {
+        if (this.showTotalResults === true) {
             this.displayItem.setText(
-                String.format(
+                featureManager.numberOfFeatures !== null ? String.format(
                     this.totalMsg,
-                    featureManager.numberOfFeatures
-                )
+                    featureManager.numberOfFeatures,
+                    featureManager.pageIndex * featureManager.maxFeatures + Math.min(featureManager.numberOfFeatures, 1),
+                    Math.min((featureManager.pageIndex + 1) * featureManager.maxFeatures, featureManager.numberOfFeatures)
+                ) : ""
             );
         }
     },
@@ -144,9 +147,11 @@ gxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
         var map = this.target.mapPanel.map, smCfg;
         // a minimal SelectFeature control - used just to provide select and
         // unselect, won't be added to the map unless selectOnMap is true
-        this.selectControl = new OpenLayers.Control.SelectFeature(featureManager.featureLayer);
+        this.selectControl = new OpenLayers.Control.SelectFeature(
+            featureManager.featureLayer, this.initialConfig.controlOptions
+        );
         if (this.selectOnMap) {
-             if (featureManager.paging) {
+             if (this.autoLoadFeature || (featureManager.paging && featureManager.pagingType === gxp.plugins.FeatureManager.QUADTREE_PAGING)) {
                 this.selectControl.events.on({
                     "activate": function() {
                         map.events.register(
@@ -172,7 +177,7 @@ gxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
                 autoActivateControl: false,
                 listeners: {
                     "beforerowselect": function() {
-                        if(this.selectControl.active || featureManager.featureStore.getModifiedRecords().length) {
+                        if((window.event && window.event.type == "contextmenu") ||this.selectControl.active || featureManager.featureStore.getModifiedRecords().length) {
                             return false;
                         }
                     },
@@ -183,8 +188,10 @@ gxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
         this.displayItem = new Ext.Toolbar.TextItem({});
         config = Ext.apply({
             xtype: "gxp_featuregrid",
+            border: false,
             sm: new GeoExt.grid.FeatureSelectionModel(smCfg),
             autoScroll: true,
+            columnMenuDisabled: !!featureManager.paging,
             bbar: (featureManager.paging ? [{
                 iconCls: "x-tbar-page-first",
                 ref: "../firstPageButton",
@@ -206,7 +213,8 @@ gxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
                 ref: "../zoomToPageButton",
                 tooltip: this.zoomPageExtentTip,
                 disabled: true,
-                hidden: featureManager.autoZoomPage,
+                hidden: (featureManager.pagingType !== gxp.plugins.FeatureManager.QUADTREE_PAGING) ||
+                    featureManager.autoZoomPage,
                 handler: function() {
                     var extent = featureManager.getPageExtent();
                     if (extent !== null) {
@@ -240,24 +248,29 @@ gxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
             }] : [])),
             listeners: {
                 "added": function(cmp, ownerCt) {
-                    var onClear = (function() {
+                    function onClear() {
                         this.displayTotalResults();
                         this.selectOnMap && this.selectControl.deactivate();
                         this.autoCollapse && typeof ownerCt.collapse == "function" &&
                             ownerCt.collapse();
-                    }).bind(this);
-                    var onPopulate = (function() {
+                    }
+                    function onPopulate() {
                         this.displayTotalResults();
                         this.selectOnMap && this.selectControl.activate();
                         this.autoExpand && typeof ownerCt.expand == "function" &&
                             ownerCt.expand();
-                    }).bind(this);
+                    }
                     featureManager.on({
                         "query": function(tool, store) {
-                            store && store.getCount() ? onPopulate() : onClear();
+                            if (store && store.getCount()) {
+                                onPopulate.call(this);
+                            } else {
+                                onClear.call(this);
+                            }
                         },
                         "layerchange": onClear,
-                        "clearfeatures": onClear
+                        "clearfeatures": onClear,
+                        scope: this
                     });
                 },
                 contextmenu: function(event) {
@@ -276,9 +289,9 @@ gxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
         }, config || {});
         var featureGrid = gxp.plugins.FeatureGrid.superclass.addOutput.call(this, config);
         
-        if (this.alwaysDisplayOnMap || this.selectOnMap) {
+        if (this.alwaysDisplayOnMap || (this.selectOnMap === true && this.displayMode === "selected")) {
             featureManager.showLayer(this.id, this.displayMode);
-        }
+        }        
        
         featureManager.paging && featureManager.on({
             "beforesetpage": function() {
@@ -297,19 +310,34 @@ gxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
             scope: this
         });
                 
-        featureManager.on("layerchange", function(mgr, rec, schema) {
+        function onLayerChange() {
+            var schema = featureManager.schema,
+                ignoreFields = ["feature", "state", "fid"];
             //TODO use schema instead of store to configure the fields
-            var ignoreFields = ["feature", "state", "fid"];
             schema && schema.each(function(r) {
                 r.get("type").indexOf("gml:") == 0 && ignoreFields.push(r.get("name"));
             });
             featureGrid.ignoreFields = ignoreFields;
             featureGrid.setStore(featureManager.featureStore, schema);
-        }, this);
+            if (!featureManager.featureStore) {
+                // not a feature layer, reset toolbar
+                featureGrid.lastPageButton.disable();
+                featureGrid.nextPageButton.disable();
+                featureGrid.firstPageButton.disable();
+                featureGrid.prevPageButton.disable();
+                featureGrid.zoomToPageButton.disable();
+                this.displayTotalResults();
+            }
+        }
+
+        if (featureManager.featureStore) {
+            onLayerChange.call(this);
+        } 
+        featureManager.on("layerchange", onLayerChange, this);
         
         return featureGrid;
     }
-            
+                
 });
 
 Ext.preg(gxp.plugins.FeatureGrid.prototype.ptype, gxp.plugins.FeatureGrid);

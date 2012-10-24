@@ -1,16 +1,22 @@
 /**
- * Copyright (c) 2008-2011 The Open Source Geospatial Foundation
+ * Copyright (c) 2008-2012 The Open Source Geospatial Foundation
  * 
  * Published under the BSD license.
  * See http://svn.geoext.org/core/trunk/geoext/license.txt for the full text
  * of the license.
  */
-Ext.namespace("GeoExt.plugins");
+
+/**
+ * @require OpenLayers/Layer/Vector.js
+ * @require OpenLayers/Control/TransformFeature.js
+ * @require OpenLayers/BaseTypes/LonLat.js
+ */
 
 /** api: (define)
  *  module = GeoExt.plugins
  *  class = PrintExtent
  */
+Ext.namespace("GeoExt.plugins");
 
 /** api: example
  *  Sample code to create a MapPanel with a PrintExtent, and print it
@@ -81,6 +87,12 @@ GeoExt.plugins.PrintExtent = Ext.extend(Ext.util.Observable, {
      */
     layer: null,
     
+    /** api: config[transformFeatureOptions]
+     *  ``Object`` Optional options for the`OpenLayers.Control.TransformFeature` 
+     *  control.
+     */
+    transformFeatureOptions: null,
+
     /** private: property[control]
      *  ``OpenLayers.Control.TransformFeature`` The control used to change
      *      extent, center, rotation and scale.
@@ -256,9 +268,8 @@ GeoExt.plugins.PrintExtent = Ext.extend(Ext.util.Observable, {
         // We use obj.events to test whether an OpenLayers object is
         // destroyed or not.
 
-        var map = this.map;
+        var map = this.map, layer = this.layer, control = this.control;
 
-        var control = this.control;
         if(control && control.events) {
             control.deactivate();
             if(map && map.events && control.map) {
@@ -266,11 +277,7 @@ GeoExt.plugins.PrintExtent = Ext.extend(Ext.util.Observable, {
             }
         }
 
-        var layer = this.layer;
-
-        if(!this.initialConfig.layer &&
-           map && map.events &&
-           layer && layer.map) {
+        if(map && map.events && layer && layer.map) {
             map.removeLayer(layer);
         }
     },
@@ -309,7 +316,7 @@ GeoExt.plugins.PrintExtent = Ext.extend(Ext.util.Observable, {
     /** private: method[createControl]
      */
     createControl: function() {
-        this.control = new OpenLayers.Control.TransformFeature(this.layer, {
+        this.control = new OpenLayers.Control.TransformFeature(this.layer, Ext.applyIf({
             preserveAspectRatio: true,
             eventListeners: {
                 "beforesetfeature": function(e) {
@@ -363,7 +370,7 @@ GeoExt.plugins.PrintExtent = Ext.extend(Ext.util.Observable, {
                 "transformcomplete": this.updateBox,
                 scope: this
             }
-        });
+        }, this.transformFeatureOptions));
     },
 
     /** private: method[fitPage]

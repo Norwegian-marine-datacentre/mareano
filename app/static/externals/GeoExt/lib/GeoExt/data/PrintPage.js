@@ -1,17 +1,24 @@
 /**
- * Copyright (c) 2008-2011 The Open Source Geospatial Foundation
+ * Copyright (c) 2008-2012 The Open Source Geospatial Foundation
  * 
  * Published under the BSD license.
  * See http://svn.geoext.org/core/trunk/geoext/license.txt for the full text
  * of the license.
  */
-Ext.namespace("GeoExt.data");
+
+/**
+ * @require OpenLayers/Feature/Vector.js
+ * @require OpenLayers/Geometry/Polygon.js
+ * @require OpenLayers/Util.js
+ * @require OpenLayers/BaseTypes/Bounds.js
+ */
 
 /** api: (define)
  *  module = GeoExt.data
  *  class = PrintPage
  *  base_link = `Ext.util.Observable <http://dev.sencha.com/deploy/dev/docs/?class=Ext.util.Observable>`_
  */
+Ext.namespace("GeoExt.data");
 
 /** api: constructor
  *  .. class:: PrintPage
@@ -95,7 +102,15 @@ GeoExt.data.PrintPage = Ext.extend(Ext.util.Observable, {
         GeoExt.data.PrintPage.superclass.constructor.apply(this, arguments);
 
         this.feature = new OpenLayers.Feature.Vector(
-            OpenLayers.Geometry.fromWKT("POLYGON((-1 -1,1 -1,1 1,-1 1,-1 -1))"));
+            new OpenLayers.Geometry.Polygon([
+                new OpenLayers.Geometry.LinearRing([
+                    new OpenLayers.Geometry.Point(-1, -1),
+                    new OpenLayers.Geometry.Point(1, -1),
+                    new OpenLayers.Geometry.Point(1, 1),
+                    new OpenLayers.Geometry.Point(-1, 1)
+                ])
+            ])
+        );
 
         if(this.printProvider.capabilities) {
             this.setScale(this.printProvider.scales.getAt(0));

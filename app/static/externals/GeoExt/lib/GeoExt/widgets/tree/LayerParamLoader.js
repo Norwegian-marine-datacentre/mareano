@@ -1,17 +1,21 @@
 /**
- * Copyright (c) 2008-2011 The Open Source Geospatial Foundation
+ * Copyright (c) 2008-2012 The Open Source Geospatial Foundation
  * 
  * Published under the BSD license.
  * See http://svn.geoext.org/core/trunk/geoext/license.txt for the full text
  * of the license.
  */
-Ext.namespace("GeoExt.tree");
+
+/**
+ * @require OpenLayers/Layer/HTTPRequest.js
+ */
 
 /** api: (define)
  *  module = GeoExt.tree
  *  class = LayerParamLoader
  *  base_link = `Ext.util.Observable <http://dev.sencha.com/deploy/dev/docs/?class=Ext.util.Observable>`_
  */
+Ext.namespace("GeoExt.tree");
 
 /** api: constructor
  *  .. class:: LayerParamLoader

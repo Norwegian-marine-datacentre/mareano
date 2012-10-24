@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2008-2011 The Open Planning Project
  * 
- * Published under the BSD license.
+ * Published under the GPL license.
  * See https://github.com/opengeo/gxp/raw/master/license.txt for the full text
  * of the license.
  */
@@ -9,6 +9,7 @@
 /**
  * @requires plugins/Tool.js
  * @requires widgets/WMSStylesDialog.js
+ * @requires plugins/GeoServerStyleWriter.js
  */
 
 /** api: (define)
@@ -41,7 +42,13 @@ gxp.plugins.Styler = Ext.extend(gxp.plugins.Tool, {
      *  ``String``
      *  Text for layer properties action tooltip (i18n).
      */
-    tooltip: "Behandle kartlagstiler", //"Manage layer styles",
+    tooltip: "Manage layer styles",
+    
+    /** api: config[roles]
+     *  ``Array`` Roles authorized to style layers. Default is
+     *  ["ROLE_ADMINISTRATOR"]
+     */
+    roles: ["ROLE_ADMINISTRATOR"],
     
     /** api: config[sameOriginStyling]
      *  ``Boolean``
@@ -50,7 +57,7 @@ gxp.plugins.Styler = Ext.extend(gxp.plugins.Tool, {
      *  do styling through commonly used proxies as all authorization headers
      *  and cookies are shared with all remote sources.  Default is ``true``.
      */
-    sameOriginStyling: false,
+    sameOriginStyling: true,
     
     /** api: config[rasterStyling]
      *  ``Boolean`` If set to true, single-band raster styling will be
@@ -79,6 +86,30 @@ gxp.plugins.Styler = Ext.extend(gxp.plugins.Tool, {
             closeAction: "close"
         });
     },
+
+    /** private: method[init]
+     *  :arg target: ``Object`` The object initializing this plugin.
+     */
+    init: function(target) {
+        gxp.plugins.Styler.superclass.init.apply(this, arguments);
+        this.target.on("authorizationchange", this.enableOrDisable, this);
+    },
+
+    /** private: method[destroy]
+     */
+    destroy: function() {
+        this.target.un("authorizationchange", this.enableOrDisable, this);
+        gxp.plugins.Styler.superclass.destroy.apply(this, arguments);
+    },
+
+    /** private: method[enableOrDisable]
+     *  Enable or disable the button when the login status changes.
+     */
+    enableOrDisable: function() {
+        if (this.target && this.target.selectedLayer !== null) {
+            this.handleLayerChange(this.target.selectedLayer);
+        }
+    },
     
     /** api: method[addActions]
      */
@@ -90,7 +121,7 @@ gxp.plugins.Styler = Ext.extend(gxp.plugins.Tool, {
             disabled: true,
             tooltip: this.tooltip,
             handler: function() {
-                this.addOutput();
+                this.target.doAuthorized(this.roles, this.addOutput, this);
             },
             scope: this
         }]);
@@ -111,7 +142,7 @@ gxp.plugins.Styler = Ext.extend(gxp.plugins.Tool, {
      */
     handleLayerChange: function(record) {
         this.launchAction.disable();
-        if (record /*&& record.get("styles")*/) {
+        if (record) {
             var source = this.target.getSource(record);
             if (source instanceof gxp.plugins.WMSSource) {
                 source.describeLayer(record, function(describeRec) {
@@ -153,6 +184,14 @@ gxp.plugins.Styler = Ext.extend(gxp.plugins.Tool, {
                 // this could be made more robust
                 // for now, only style for sources with relative url
                 editableStyles = url.charAt(0) === "/";
+                // and assume that local sources are GeoServer instances with
+                // styling capabilities
+                if (this.target.authenticate && editableStyles) {
+                    // we'll do on-demand authentication when the button is
+                    // pressed.
+                    this.launchAction.enable();
+                    return;
+                }
             } else {
                 editableStyles = true;
             }
@@ -190,6 +229,7 @@ gxp.plugins.Styler = Ext.extend(gxp.plugins.Tool, {
         var origCfg = this.initialConfig.outputConfig || {};
         this.outputConfig.title = origCfg.title ||
             this.menuText + ": " + record.get("title");
+        this.outputConfig.shortTitle = record.get("title");
 
         Ext.apply(config, gxp.WMSStylesDialog.createGeoServerStylerConfig(record));
         if (this.rasterStyling === true) {
@@ -200,8 +240,18 @@ gxp.plugins.Styler = Ext.extend(gxp.plugins.Tool, {
         Ext.applyIf(config, {style: "padding: 10px"});
         
         var output = gxp.plugins.Styler.superclass.addOutput.call(this, config);
+        if (!(output.ownerCt.ownerCt instanceof Ext.Window)) {
+            output.dialogCls = Ext.Panel;
+            output.showDlg = function(dlg) {
+                dlg.layout = "fit";
+                dlg.autoHeight = false;
+                output.ownerCt.add(dlg);
+            };
+        }
         output.stylesStore.on("load", function() {
-            this.outputTarget || output.ownerCt.ownerCt.center();
+            if (!this.outputTarget && output.ownerCt.ownerCt instanceof Ext.Window) {
+                output.ownerCt.ownerCt.center();
+            }
         });
     }
         

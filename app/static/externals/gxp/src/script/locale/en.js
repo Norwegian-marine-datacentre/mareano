@@ -1,3 +1,6 @@
+/**
+ * @requires GeoExt/Lang.js
+ */
 
 GeoExt.Lang.add("en", {
 
@@ -17,7 +20,7 @@ GeoExt.Lang.add("en", {
         panelTitleText: "Title",
         layerSelectionText: "View available data from:",
         doneText: "Done",
-        uploadText: "Upload Data"
+        uploadText: "Upload layers"
     },
     
     "gxp.plugins.BingSource.prototype": {
@@ -28,6 +31,9 @@ GeoExt.Lang.add("en", {
     },
 
     "gxp.plugins.FeatureEditor.prototype": {
+        splitButtonText: "Edit",
+        createFeatureActionText: "Create",
+        editFeatureActionText: "Modify",
         createFeatureActionTip: "Create a new feature",
         editFeatureActionTip: "Edit existing feature"
     },
@@ -38,22 +44,11 @@ GeoExt.Lang.add("en", {
         previousPageTip: "Previous page",
         zoomPageExtentTip: "Zoom to page extent",
         nextPageTip: "Next page",
-        nextPageTip: "Last page",
-        totalMsg: "Total: {0} records"
+        lastPageTip: "Last page",
+        totalMsg: "Features {1} to {2} of {0}"
     },
 
-    "GeoExt.Action": {
-    	control: new OpenLayers.Control.DrawFeature(
-    			vector, OpenLayers.Handler.Path
-    	),
-        iconCls: "icon-line",
-        map: this.mapPanel.map,
-        toggleGroup: "draw",
-        tooltip: "tegn linje",
-    }, 
-    
     "gxp.plugins.GoogleEarth.prototype": {
-        apiKeyPrompt: "Please enter the Google API key for ",
         menuText: "3D Viewer",
         tooltip: "Switch to 3D Viewer"
     },
@@ -72,18 +67,19 @@ GeoExt.Lang.add("en", {
     },
     
     "gxp.plugins.LayerTree.prototype": {
+        shortTitle: "Layers",
         rootNodeText: "Layers",
         overlayNodeText: "Overlays",
         baseNodeText: "Base Layers"
     },
 
     "gxp.plugins.Legend.prototype": {
-        menuText: "Show Legend",
-        tooltip: "Show Legend"
+        menuText: "Show legend",
+        tooltip: "Show legend"
     },
 
     "gxp.plugins.LoadingIndicator.prototype": {
-        loadingMapMessage: "Loading Map..."
+        loadingMapMessage: "Loading map..."
     },
 
     "gxp.plugins.MapBoxSource.prototype": {
@@ -104,6 +100,7 @@ GeoExt.Lang.add("en", {
     },
 
     "gxp.plugins.Measure.prototype": {
+        buttonText: "Measure",
         lengthMenuText: "Length",
         areaMenuText: "Area",
         lengthTooltip: "Measure length",
@@ -112,26 +109,27 @@ GeoExt.Lang.add("en", {
     },
 
     "gxp.plugins.Navigation.prototype": {
-        menuText: "Pan Map",
-        tooltip: "Pan Map"
+        menuText: "Pan map",
+        tooltip: "Pan map"
     },
 
     "gxp.plugins.NavigationHistory.prototype": {
-        previousMenuText: "Zoom To Previous Extent",
-        nextMenuText: "Zoom To Next Extent",
-        previousTooltip: "Zoom To Previous Extent",
-        nextTooltip: "Zoom To Next Extent"
+        previousMenuText: "Zoom to previous extent",
+        nextMenuText: "Zoom to next extent",
+        previousTooltip: "Zoom to previous extent",
+        nextTooltip: "Zoom to next extent"
     },
 
     "gxp.plugins.OSMSource.prototype": {
         title: "OpenStreetMap Layers",
-        mapnikAttribution: "Data CC-By-SA by <a href='http://openstreetmap.org/'>OpenStreetMap</a>",
+        mapnikAttribution: "&copy; <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors",
         osmarenderAttribution: "Data CC-By-SA by <a href='http://openstreetmap.org/'>OpenStreetMap</a>"
     },
 
     "gxp.plugins.Print.prototype": {
-        menuText: "Print Map",
-        tooltip: "Print Map",
+        buttonText:"Print",
+        menuText: "Print map",
+        tooltip: "Print map",
         previewText: "Print Preview",
         notAllNotPrintableText: "Not All Layers Can Be Printed",
         nonePrintableText: "None of your current map layers can be printed"
@@ -149,8 +147,7 @@ GeoExt.Lang.add("en", {
         queryActionText: "Query",
         queryMenuText: "Query layer",
         queryActionTip: "Query the selected layer",
-        queryByLocationText: "Query by location",
-        currentTextText: "Current extent",
+        queryByLocationText: "Query by current map extent",
         queryByAttributesText: "Query by attributes",
         queryMsg: "Querying...",
         cancelButtonText: "Cancel",
@@ -164,26 +161,29 @@ GeoExt.Lang.add("en", {
     },
     
     "gxp.plugins.Styler.prototype": {
-        menuText: "Edit Styles",
-        tooltip: "Manage layer styles"
+        menuText: "Layer Styles",
+        tooltip: "Layer Styles"
 
     },
 
     "gxp.plugins.WMSGetFeatureInfo.prototype": {
+        buttonText:"Identify",
         infoActionTip: "Get Feature Info",
         popupTitle: "Feature Info"
     },
 
     "gxp.plugins.Zoom.prototype": {
-        zoomInMenuText: "Zoom In",
-        zoomOutMenuText: "Zoom Out",
-        zoomInTooltip: "Zoom In",
-        zoomOutTooltip: "Zoom Out"
+        zoomMenuText: "Zoom box",
+        zoomInMenuText: "Zoom in",
+        zoomOutMenuText: "Zoom out",
+        zoomTooltip: "Zoom by dragging a box",
+        zoomInTooltip: "Zoom in",
+        zoomOutTooltip: "Zoom out"
     },
     
     "gxp.plugins.ZoomToExtent.prototype": {
-        menuText: "Zoom To Max Extent",
-        tooltip: "Zoom To Max Extent"
+        menuText: "Zoom to max extent",
+        tooltip: "Zoom to max extent"
     },
     
     "gxp.plugins.ZoomToDataExtent.prototype": {
@@ -315,7 +315,9 @@ GeoExt.Lang.add("en", {
         transparentText: "Transparent",
         cacheText: "Cache",
         cacheFieldText: "Use cached version",
-        stylesText: "Styles"
+        stylesText: "Available Styles",
+        infoFormatText: "Info format",
+        infoFormatEmptyText: "Select a format"
     },
 
     "gxp.EmbedMapDialog.prototype": {
@@ -370,11 +372,12 @@ GeoExt.Lang.add("en", {
         workspaceLabel: "Workspace",
         workspaceEmptyText: "Default workspace",
         dataStoreLabel: "Store",
-        dataStoreEmptyText: "Default datastore"
+        dataStoreEmptyText: "Create new store",
+        defaultDataStoreEmptyText: "Default data store"
     },
     
-    "gxp.NewSourceWindow.prototype": {
-        title: "Add New Server...",
+    "gxp.NewSourceDialog.prototype": {
+        title: "Add new server...",
         cancelText: "Cancel",
         addServerText: "Add Server",
         invalidURLText: "Enter a valid URL to a WMS endpoint (e.g. http://example.com/geoserver/wms)",

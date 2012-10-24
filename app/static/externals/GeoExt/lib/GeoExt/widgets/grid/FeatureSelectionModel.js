@@ -1,9 +1,15 @@
 /**
- * Copyright (c) 2008-2011 The Open Source Geospatial Foundation
+ * Copyright (c) 2008-2012 The Open Source Geospatial Foundation
  * 
  * Published under the BSD license.
  * See http://svn.geoext.org/core/trunk/geoext/license.txt for the full text
  * of the license.
+ */
+
+/**
+ * @require OpenLayers/Control/SelectFeature.js
+ * @require OpenLayers/Layer/Vector.js
+ * @require OpenLayers/BaseTypes/Class.js
  */
 
 /** api: (define)
@@ -92,6 +98,17 @@ GeoExt.grid.FeatureSelectionModelMixin = function() {
          *  ``Ext.grid.AbstractSelectionModel`` Our superclass.
          */
         superclass: null,
+        
+        /** private: property[selectedFeatures]
+         *  ``Array`` An array to store the selected features.
+         */
+        selectedFeatures: [],
+        
+        /** api: config[autoPanMapOnSelection]
+         *  ``Boolean`` If true the map will recenter on feature selection
+         *  so that the selected features are visible. Defaults to false.
+         */
+        autoPanMapOnSelection: false,
 
         /** private */
         constructor: function(config) {
@@ -107,6 +124,10 @@ GeoExt.grid.FeatureSelectionModelMixin = function() {
                 );
                 delete config.layer;
                 delete config.selectControl;
+            }
+            if (config.autoPanMapOnSelection) {
+                this.autoPanMapOnSelection = true;
+                delete config.autoPanMapOnSelection;
             }
             this.superclass = arguments.callee.superclass;
             this.superclass.constructor.call(this, config);
@@ -276,8 +297,12 @@ GeoExt.grid.FeatureSelectionModelMixin = function() {
                         this._selecting = true;
                         this.selectControl.select(feature);
                         this._selecting = false;
+                        this.selectedFeatures.push(feature);
                         break;
                     }
+                }
+                if(this.autoPanMapOnSelection) {
+                    this.recenterToSelectionExtent();
                 }
              }
         },
@@ -296,8 +321,12 @@ GeoExt.grid.FeatureSelectionModelMixin = function() {
                         this._selecting = true;
                         this.selectControl.unselect(feature);
                         this._selecting = false;
+                        OpenLayers.Util.removeItem(this.selectedFeatures, feature);
                         break;
                     }
+                }
+                if(this.autoPanMapOnSelection && this.selectedFeatures.length > 0) {
+                    this.recenterToSelectionExtent();
                 }
             }
         },
@@ -307,6 +336,47 @@ GeoExt.grid.FeatureSelectionModelMixin = function() {
          */
         getLayers: function() {
             return this.selectControl.layers || [this.selectControl.layer];
+        },
+        
+        /**
+         * private: method[recenterToSelectionExtent]
+         * centers the map in order to display all
+         * selected features
+         */
+        recenterToSelectionExtent: function() {
+            var map = this.selectControl.map;
+            var selectionExtent = this.getSelectionExtent();
+            var selectionExtentZoom = map.getZoomForExtent(selectionExtent, false);
+            if(selectionExtentZoom > map.getZoom()) {
+                map.setCenter(selectionExtent.getCenterLonLat());
+            }
+            else {
+                map.zoomToExtent(selectionExtent);
+            }
+        },
+        
+        /** api: method[getSelectionExtent]
+         *  :return: ``OpenLayers.Bounds`` or null if the layer has no features with
+         *      geometries
+         *
+         *  Calculates the max extent which includes all selected features.
+         */
+        getSelectionExtent: function () {
+            var maxExtent = null;
+            var features = this.selectedFeatures;
+            if(features && (features.length > 0)) {
+                var geometry = null;
+                for(var i=0, len=features.length; i<len; i++) {
+                    geometry = features[i].geometry;
+                    if (geometry) {
+                        if (maxExtent === null) {
+                            maxExtent = new OpenLayers.Bounds();
+                        }
+                        maxExtent.extend(geometry.getBounds());
+                    }
+                }
+            }
+            return maxExtent;
         }
     };
 };

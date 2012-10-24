@@ -1,6 +1,6 @@
-/* Copyright (c) 2006-2011 by OpenLayers Contributors (see authors.txt for 
- * full list of contributors). Published under the Clear BSD license.  
- * See http://svn.openlayers.org/trunk/openlayers/license.txt for the
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for 
+ * full list of contributors). Published under the 2-clause BSD license.
+ * See license.txt in the OpenLayers distribution or repository for the
  * full text of the license. */
 /**
  * @requires OpenLayers/Format/Filter.js
@@ -27,7 +27,7 @@ OpenLayers.Format.Filter.v1 = OpenLayers.Class(OpenLayers.Format.XML, {
         xlink: "http://www.w3.org/1999/xlink",
         xsi: "http://www.w3.org/2001/XMLSchema-instance"
     },
-    
+
     /**
      * Property: defaultPrefix
      */
@@ -77,6 +77,27 @@ OpenLayers.Format.Filter.v1 = OpenLayers.Class(OpenLayers.Format.XML, {
      */
     readers: {
         "ogc": {
+            "_expression": function(node) {
+                // only the simplest of ogc:expression handled
+                // "some text and an <PropertyName>attribute</PropertyName>"}
+                var obj, value = "";
+                for(var child=node.firstChild; child; child=child.nextSibling) {
+                    switch(child.nodeType) {
+                        case 1:
+                            obj = this.readNode(child);
+                            if (obj.property) {
+                                value += "${" + obj.property + "}";
+                            } else if (obj.value !== undefined) {
+                                value += obj.value;
+                            }
+                            break;
+                        case 3: // text node
+                        case 4: // cdata section
+                            value += child.nodeValue;
+                    }
+                }
+                return value;
+            },
             "Filter": function(node, parent) {
                 // Filters correspond to subclasses of OpenLayers.Filter.
                 // Since they contain information we don't persist, we
@@ -159,18 +180,18 @@ OpenLayers.Format.Filter.v1 = OpenLayers.Class(OpenLayers.Format.XML, {
             },
             "Literal": function(node, obj) {
                 obj.value = OpenLayers.String.numericIf(
-                    this.getChildValue(node));
+                    this.getChildValue(node), true);
             },
             "PropertyName": function(node, filter) {
                 filter.property = this.getChildValue(node);
             },
             "LowerBoundary": function(node, filter) {
                 filter.lowerBoundary = OpenLayers.String.numericIf(
-                    this.readOgcExpression(node));
+                    this.readers.ogc._expression.call(this, node), true);
             },
             "UpperBoundary": function(node, filter) {
                 filter.upperBoundary = OpenLayers.String.numericIf(
-                    this.readOgcExpression(node));
+                    this.readers.ogc._expression.call(this, node), true);
             },
             "Intersects": function(node, obj) {
                 this.readSpatial(node, obj, OpenLayers.Filter.Spatial.INTERSECTS);
@@ -191,6 +212,13 @@ OpenLayers.Format.Filter.v1 = OpenLayers.Class(OpenLayers.Format.XML, {
             "Function": function(node, obj) {
                 //TODO write decoder for it
                 return;
+            },
+            "PropertyIsNull": function(node, obj) {
+                var filter = new OpenLayers.Filter.Comparison({
+                    type: OpenLayers.Filter.Comparison.IS_NULL
+                });
+                this.readChildNodes(node, filter);
+                obj.filters.push(filter);
             }
         }
     },
@@ -216,26 +244,6 @@ OpenLayers.Format.Filter.v1 = OpenLayers.Class(OpenLayers.Format.XML, {
         filter.value = filter.components[0];
         delete filter.components;
         obj.filters.push(filter);
-    },
-
-    /**
-     * Method: readOgcExpression
-     * Limited support for OGC expressions.
-     *
-     * Parameters:
-     * node - {DOMElement} A DOM element that contains an ogc:expression.
-     *
-     * Returns:
-     * {String} A value to be used in a symbolizer.
-     */
-    readOgcExpression: function(node) {
-        var obj = {};
-        this.readChildNodes(node, obj);
-        var value = obj.value;
-        if(value === undefined) {
-            value = this.getChildValue(node);
-        }
-        return value;
     },
 
     /**
@@ -297,7 +305,7 @@ OpenLayers.Format.Filter.v1 = OpenLayers.Class(OpenLayers.Format.XML, {
             "Filter": function(filter) {
                 var node = this.createElementNSPlus("ogc:Filter");
                 if (filter.type === "FID") {
-                    this.writeFeatureIdNodes(filter, node);
+                    OpenLayers.Format.Filter.v1.prototype.writeFeatureIdNodes.call(this, filter, node);
                 } else {
                     this.writeNode(this.getFilterType(filter), filter, node);
                 }
@@ -314,7 +322,7 @@ OpenLayers.Format.Filter.v1 = OpenLayers.Class(OpenLayers.Format.XML, {
                 for (var i=0, ii=filter.filters.length; i<ii; ++i) {
                     childFilter = filter.filters[i];
                     if (childFilter.type === "FID") {
-                        this.writeFeatureIdNodes(childFilter, node);
+                        OpenLayers.Format.Filter.v1.prototype.writeFeatureIdNodes.call(this, childFilter, node);
                     } else {
                     this.writeNode(
                         this.getFilterType(childFilter), childFilter, node
@@ -329,7 +337,7 @@ OpenLayers.Format.Filter.v1 = OpenLayers.Class(OpenLayers.Format.XML, {
                 for (var i=0, ii=filter.filters.length; i<ii; ++i) {
                     childFilter = filter.filters[i];
                     if (childFilter.type === "FID") {
-                        this.writeFeatureIdNodes(childFilter, node);
+                        OpenLayers.Format.Filter.v1.prototype.writeFeatureIdNodes.call(this, childFilter, node);
                     } else {
                     this.writeNode(
                         this.getFilterType(childFilter), childFilter, node
@@ -342,7 +350,7 @@ OpenLayers.Format.Filter.v1 = OpenLayers.Class(OpenLayers.Format.XML, {
                 var node = this.createElementNSPlus("ogc:Not");
                 var childFilter = filter.filters[0];
                 if (childFilter.type === "FID") {
-                    this.writeFeatureIdNodes(childFilter, node);
+                    OpenLayers.Format.Filter.v1.prototype.writeFeatureIdNodes.call(this, childFilter, node);
                 } else {
                 this.writeNode(
                     this.getFilterType(childFilter), childFilter, node
@@ -447,6 +455,11 @@ OpenLayers.Format.Filter.v1 = OpenLayers.Class(OpenLayers.Format.XML, {
                     this.writeOgcExpression(params[i], node);
                 }
                 return node;
+            },
+            "PropertyIsNull": function(filter) {
+                var node = this.createElementNSPlus("ogc:PropertyIsNull");
+                this.writeNode("PropertyName", filter, node);
+                return node;
             }
         }
     },
@@ -479,6 +492,7 @@ OpenLayers.Format.Filter.v1 = OpenLayers.Class(OpenLayers.Format.XML, {
         ">=": "PropertyIsGreaterThanOrEqualTo",
         "..": "PropertyIsBetween",
         "~": "PropertyIsLike",
+        "NULL": "PropertyIsNull",
         "BBOX": "BBOX",
         "DWITHIN": "DWITHIN",
         "WITHIN": "WITHIN",

@@ -1,13 +1,14 @@
 /**
  * Copyright (c) 2008-2011 The Open Planning Project
  * 
- * Published under the BSD license.
+ * Published under the GPL license.
  * See https://github.com/opengeo/gxp/raw/master/license.txt for the full text
  * of the license.
  */
 
 /**
  * @requires plugins/Tool.js
+ * @requires OpenLayers/Control/NavigationHistory.js
  */
 
 /** api: (define)
@@ -46,13 +47,13 @@ gxp.plugins.NavigationHistory = Ext.extend(gxp.plugins.Tool, {
      *  ``String``
      *  Text for zoom previous action tooltip (i18n).
      */
-    previousTooltip: "Zoom til forrige utstrekning", //"To Previous Extent",
+    previousTooltip: "Zoom To Previous Extent",
 
     /** api: config[nextTooltip]
      *  ``String``
      *  Text for zoom next action tooltip (i18n).
      */
-    nextTooltip: "Zoom til neste utstrekning", //"Zoom To Next Extent",
+    nextTooltip: "Zoom To Next Extent",
     
     /** private: method[constructor]
      */

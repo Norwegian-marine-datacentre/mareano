@@ -27,7 +27,7 @@ Ext.namespace("GeoExt.tree");
   *
   *      var UIClass = Ext.extend(
   *          Ext.tree.TreeNodeUI,
-  *          GeoExt.tree.TreeNodeUIEventMixin
+  *          GeoExt.tree.TreeNodeUIEventMixin()
   *      );
   *      var tree = new Ext.tree.TreePanel({
   *          root: {
@@ -87,5 +87,5 @@ GeoExt.tree.TreeNodeUIEventMixin = function(){
                 this.superclass.onClick.apply(this, arguments);
             }
         }
-    }
+    };
 };

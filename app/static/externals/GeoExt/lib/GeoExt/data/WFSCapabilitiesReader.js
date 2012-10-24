@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2011 The Open Source Geospatial Foundation
+ * Copyright (c) 2008-2012 The Open Source Geospatial Foundation
  * 
  * Published under the BSD license.
  * See http://svn.geoext.org/core/trunk/geoext/license.txt for the full text
@@ -8,6 +8,12 @@
 
 /**
  * @include GeoExt/data/LayerRecord.js
+ * @require OpenLayers/Format/WFSCapabilities.js
+ * @require OpenLayers/Format/WFSCapabilities/v1_1_0.js
+ * @require OpenLayers/Protocol/WFS.js
+ * @require OpenLayers/Protocol/WFS/v1_0_0.js
+ * @require OpenLayers/Strategy/Fixed.js
+ * @require OpenLayers/Layer/Vector.js
  */
 
 /** api: (define)

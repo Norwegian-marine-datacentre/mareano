@@ -1,6 +1,6 @@
-/* Copyright (c) 2006-2011 by OpenLayers Contributors (see authors.txt for 
- * full list of contributors). Published under the Clear BSD license.  
- * See http://svn.openlayers.org/trunk/openlayers/license.txt for the
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for 
+ * full list of contributors). Published under the 2-clause BSD license.
+ * See license.txt in the OpenLayers distribution or repository for the
  * full text of the license. */
 
 
@@ -58,11 +58,11 @@ OpenLayers.Layer.HTTPRequest = OpenLayers.Class(OpenLayers.Layer, {
      * options - {Object} Hashtable of extra options to tag onto the layer
      */
     initialize: function(name, url, params, options) {
-        var newArguments = arguments;
-        newArguments = [name, options];
-        OpenLayers.Layer.prototype.initialize.apply(this, newArguments);
+        OpenLayers.Layer.prototype.initialize.apply(this, [name, options]);
         this.url = url;
-        this.params = OpenLayers.Util.extend( {}, params);
+        if (!this.params) {
+            this.params = OpenLayers.Util.extend({}, params);
+        }
     },
 
     /**

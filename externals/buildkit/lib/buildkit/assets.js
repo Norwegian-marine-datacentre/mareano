@@ -1,21 +1,24 @@
 var FS = require("fs");
 
 var JS_RE = /\.js$/;
-var REQUIRE_RE = /^\s\**\s*@requires?\s+([\w\/]+\.js)\s*$/;
-var INCLUDE_RE = /^\s\**\s*@includes?\s+([\w\/]+\.js)\s*$/;
+var REQUIRE_RE = /^\s\**\s*@requires?\s+([\w\/.\-]+\.js)\s*$/;
+var INCLUDE_RE = /^\s\**\s*@includes?\s+([\w\/.\-]+\.js)\s*$/;
 
-var compile = function(base) {
+var compile = function(roots) {
     var assets = {};
-    FS.listTree(base).forEach(function(path) {
-        if (FS.isFile(FS.join(base, path)) && JS_RE.test(path)) {
-            assets[path.replace(/\\/g, "/")] = getDependencies(base, path);
-        }
+    roots.forEach(function(root) {
+        FS.listTree(root).forEach(function(path) {
+            if (FS.isFile(FS.join(root, path)) && JS_RE.test(path)) {
+                assets[path.replace(/\\/g, "/")] = getDependencies(root, path);
+            }
+        });
     });
     return assets;    
 };
 
-var getDependencies = function(base, path) {
-    var source = FS.read(FS.join(base, path));
+var getDependencies = function(root, path) {
+    var file = FS.join(root, path);
+    var source = FS.read(file);
     var require = {};
     var include = {};
     source.split("\n").forEach(function(line) {
@@ -29,6 +32,7 @@ var getDependencies = function(base, path) {
         }
     });
     return {
+        root: root,
         include: include,
         require: require
     };

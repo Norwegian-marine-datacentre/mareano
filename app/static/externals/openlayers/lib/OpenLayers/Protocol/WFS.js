@@ -1,6 +1,6 @@
-/* Copyright (c) 2006-2011 by OpenLayers Contributors (see authors.txt for 
- * full list of contributors). Published under the Clear BSD license.  
- * See http://svn.openlayers.org/trunk/openlayers/license.txt for the
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for 
+ * full list of contributors). Published under the 2-clause BSD license.
+ * See license.txt in the OpenLayers distribution or repository for the
  * full text of the license. */
 
 /**
@@ -47,13 +47,15 @@ OpenLayers.Protocol.WFS = function(options) {
  *     
  * This function is designed to auto-configure <url>, <featureType>,
  *     <featurePrefix> and <srsName> for WFS <version> 1.1.0. Note that
- *     srsName matching with the WMS layer will not work with WFS 1.0.0..
+ *     srsName matching with the WMS layer will not work with WFS 1.0.0.
  * 
  * Parameters:
  * layer - {<OpenLayers.Layer.WMS>} WMS layer that has a matching WFS
  *     FeatureType at the same server url with the same typename.
  * options - {Object} Default properties to be set on the protocol.
  *
+ * Returns:
+ * {<OpenLayers.Protocol.WFS>}
  */
 OpenLayers.Protocol.WFS.fromWMSLayer = function(layer, options) {
     var typeName, featurePrefix;

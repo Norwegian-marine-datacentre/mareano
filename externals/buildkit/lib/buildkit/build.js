@@ -1,8 +1,14 @@
 var FS = require("fs");
 var MERGE = require("./merge");
 var CONFIG = require("./config");
-var JSMIN = require("./jsmin");
 var exit = require("system").exit;
+var compile;
+try {
+    compile = require("./closure").compile;
+} catch (e) {
+    // if Java 1.6 is not available, we can't use closure compiler
+    compile = require("./jsmin").jsmin;
+}
 
 var parser = new (require("ringo/args").Parser)();
 
@@ -11,12 +17,12 @@ parser.addOption("o", "outdir", "outdir", "output directory for scripts");
 parser.addOption("h", "help", "", "display this help message");
 
 exports.main = function main(args) {
-    
+
     var options = parser.parse(args);
-    
+
     if (options.help || args.length < 1) {
         print("Builds concatenated and minified scripts from a JavaScript library.");
-        print("build config [options]");
+        print("build [options] config");
         print(parser.help());
         exit(1);
     }
@@ -32,16 +38,24 @@ exports.main = function main(args) {
     var group, separator, ordered, concat, outfile;
     for (var section in sections) {
         group = sections[section];
-        group.root = [FS.join(FS.directory(config), group.root[0])];
+        group.root = group.root.map(function(r) {
+            return FS.join(FS.directory(config), r);
+        });
         if (options.list) {
-            ordered = MERGE.order(group);
+            ordered = MERGE.order(group).map(function(script) {
+                return script.path;
+            });
             print(section);
             print(section.replace(/./g, "-"));
             print(ordered.join("\n"));
             print();
         } else {
-            concat = MERGE.concat(group);
-            concat = JSMIN.jsmin(concat);
+            try {
+                concat = MERGE.concat(group);
+            } catch (err) {
+                throw new Error("Trouble building " + section + "\n" + err.message);
+            }
+            concat = compile(concat);
             outfile = section;
             if (options.outdir) {
                 if (!FS.isDirectory(options.outdir)) {

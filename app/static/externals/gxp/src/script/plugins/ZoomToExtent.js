@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2008-2011 The Open Planning Project
  * 
- * Published under the BSD license.
+ * Published under the GPL license.
  * See https://github.com/opengeo/gxp/raw/master/license.txt for the full text
  * of the license.
  */
@@ -45,7 +45,7 @@ gxp.plugins.ZoomToExtent = Ext.extend(gxp.plugins.Tool, {
      *  ``String``
      *  Text for zoom action tooltip (i18n).
      */
-    tooltip: "Zoom til synlig utstrekning",//"Zoom To Max Extent",
+    tooltip: "Zoom To Max Extent",
     
     /** api: config[extent]
      *  ``Array | OpenLayers.Bounds``
@@ -79,7 +79,6 @@ gxp.plugins.ZoomToExtent = Ext.extend(gxp.plugins.Tool, {
         if (this.extent instanceof Array) {
             this.extent = OpenLayers.Bounds.fromArray(this.extent);
         }
-        Ext.ComponentMgr.register(this);
     },
 
     /** api: method[addActions]

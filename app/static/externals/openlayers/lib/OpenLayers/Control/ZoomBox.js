@@ -1,6 +1,6 @@
-/* Copyright (c) 2006-2011 by OpenLayers Contributors (see authors.txt for 
- * full list of contributors). Published under the Clear BSD license.  
- * See http://svn.openlayers.org/trunk/openlayers/license.txt for the
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for 
+ * full list of contributors). Published under the 2-clause BSD license.
+ * See license.txt in the OpenLayers distribution or repository for the
  * full text of the license. */
 
 /**
@@ -31,10 +31,27 @@ OpenLayers.Control.ZoomBox = OpenLayers.Class(OpenLayers.Control, {
     out: false,
 
     /**
-     * Property: alwaysZoom
-     * {Boolean} Always zoom in/out, when box drawed 
+     * APIProperty: keyMask
+     * {Integer} Zoom only occurs if the keyMask matches the combination of 
+     *     keys down. Use bitwise operators and one or more of the
+     *     <OpenLayers.Handler> constants to construct a keyMask. Leave null if 
+     *     not used mask. Default is null.
+     */
+    keyMask: null,
+
+    /**
+     * APIProperty: alwaysZoom
+     * {Boolean} Always zoom in/out when box drawn, even if the zoom level does
+     * not change.
      */
     alwaysZoom: false,
+    
+    /**
+     * APIProperty: zoomOnClick
+     * {Boolean} Should we zoom when no box was dragged, i.e. the user only
+     * clicked? Default is true.
+     */
+    zoomOnClick: true,
 
     /**
      * Method: draw
@@ -54,10 +71,14 @@ OpenLayers.Control.ZoomBox = OpenLayers.Class(OpenLayers.Control, {
         if (position instanceof OpenLayers.Bounds) {
             var bounds;
             if (!this.out) {
-                var minXY = this.map.getLonLatFromPixel(
-                            new OpenLayers.Pixel(position.left, position.bottom));
-                var maxXY = this.map.getLonLatFromPixel(
-                            new OpenLayers.Pixel(position.right, position.top));
+                var minXY = this.map.getLonLatFromPixel({
+                    x: position.left,
+                    y: position.bottom
+                });
+                var maxXY = this.map.getLonLatFromPixel({
+                    x: position.right,
+                    y: position.top
+                });
                 bounds = new OpenLayers.Bounds(minXY.lon, minXY.lat,
                                                maxXY.lon, maxXY.lat);
             } else {
@@ -80,7 +101,7 @@ OpenLayers.Control.ZoomBox = OpenLayers.Class(OpenLayers.Control, {
             if (lastZoom == this.map.getZoom() && this.alwaysZoom == true){ 
                 this.map.zoomTo(lastZoom + (this.out ? -1 : 1)); 
             }
-        } else { // it's a pixel
+        } else if (this.zoomOnClick) { // it's a pixel
             if (!this.out) {
                 this.map.setCenter(this.map.getLonLatFromPixel(position),
                                this.map.getZoom() + 1);

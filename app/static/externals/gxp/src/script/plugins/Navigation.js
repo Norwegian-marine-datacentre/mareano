@@ -1,13 +1,14 @@
 /**
  * Copyright (c) 2008-2011 The Open Planning Project
  * 
- * Published under the BSD license.
+ * Published under the GPL license.
  * See https://github.com/opengeo/gxp/raw/master/license.txt for the full text
  * of the license.
  */
 
 /**
  * @requires plugins/Tool.js
+ * @requires OpenLayers/Kinetic.js
  */
 
 /** api: (define)
@@ -41,7 +42,7 @@ gxp.plugins.Navigation = Ext.extend(gxp.plugins.Tool, {
      *  ``String``
      *  Text for navigation action tooltip (i18n).
      */
-    tooltip: "panorere kartet", //"Pan Map",
+    tooltip: "Pan Map",
 
     /** private: method[constructor]
      */
@@ -52,8 +53,19 @@ gxp.plugins.Navigation = Ext.extend(gxp.plugins.Tool, {
     /** api: method[addActions]
      */
     addActions: function() {
-        this.controlOptions = this.controlOptions || {};
-        Ext.applyIf(this.controlOptions, {zoomWheelEnabled: false});
+        var control;
+        // If no controlOptions are configured, try to find a Navigation
+        // control on the target map.
+        if (!this.controlOptions) {
+            candidates = this.target.mapPanel.map.getControlsByClass('OpenLayers.Control.Navigation');
+            if (candidates.length) {
+                control = candidates[0];
+            }
+        } else {
+            this.controlOptions = this.controlOptions || {};
+            Ext.applyIf(this.controlOptions, {dragPanOptions: {enableKinetic: true}});
+            control = new OpenLayers.Control.Navigation(this.controlOptions);
+        }
         var actions = [new GeoExt.Action({
             tooltip: this.tooltip,
             menuText: this.menuText,
@@ -61,9 +73,10 @@ gxp.plugins.Navigation = Ext.extend(gxp.plugins.Tool, {
             enableToggle: true,
             pressed: true,
             allowDepress: false,
-            control: new OpenLayers.Control.Navigation(this.controlOptions),
-            map: this.target.mapPanel.map,
-            toggleGroup: this.toggleGroup})];
+            control: control,
+            map: control.map ? null : this.target.mapPanel.map,
+            toggleGroup: this.toggleGroup
+        })];
         return gxp.plugins.Navigation.superclass.addActions.apply(this, [actions]);
     }
         

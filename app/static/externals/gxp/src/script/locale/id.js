@@ -1,3 +1,6 @@
+/**
+ * @requires GeoExt/Lang.js
+ */
 
 GeoExt.Lang.add("id", {
 
@@ -11,7 +14,7 @@ GeoExt.Lang.add("id", {
         addServerText: "Tambahkan server baru",
         addButtonText: "Add layers",
         untitledText: "Untitled",
-        addLayerSourceErrorText: "Kesalahan mendapatkan kemampuan WMS ({msg}). \ nSilakan cek url dan coba lagi.",
+        addLayerSourceErrorText: "Kesalahan mendapatkan kemampuan WMS ({msg}). \nSilakan cek url dan coba lagi.",
         availableLayersText: "Layer tersedia",
         expanderTemplateText: "<p><b>Abstract:</b> {abstract}</p>",
         panelTitleText: "Title",
@@ -28,6 +31,9 @@ GeoExt.Lang.add("id", {
     },    
 
     "gxp.plugins.FeatureEditor.prototype": {
+        splitButtonText: "Edit",
+        createFeatureActionText: "Create",
+        editFeatureActionText: "Modify",
         createFeatureActionTip: "Membuat sebuah fitur",
         editFeatureActionTip: "Edit fitur"
     },
@@ -38,12 +44,11 @@ GeoExt.Lang.add("id", {
         previousPageTip: "Halaman sebelumnya",
         zoomPageExtentTip: "Zoom sampai batas halaman",
         nextPageTip: "Halaman berikut",
-        nextPageTip: "Halaman terakhir",
-        totalMsg: "Total: {0} records"
+        lastPageTip: "Halaman terakhir",
+        totalMsg: "Features {1} to {2} of {0}"
     },
     
     "gxp.plugins.GoogleEarth.prototype": {
-        apiKeyPrompt: "Please enter the Google API key for ",
         menuText: "3D Viewer",
         tooltip: "Switch to 3D Viewer"
     },
@@ -62,8 +67,13 @@ GeoExt.Lang.add("id", {
     },
     
     "gxp.plugins.LayerTree.prototype": {
+        shortTitle: "Layer-layer",
         rootNodeText: "Layer-layer",
         overlayNodeText: "Superimposisi",
+        baseNodeText: "Layer dasar"
+    },
+
+    "gxp.plugins.LayerManager.prototype": {
         baseNodeText: "Layer dasar"
     },
 
@@ -94,6 +104,7 @@ GeoExt.Lang.add("id", {
     },
 
     "gxp.plugins.Measure.prototype": {
+        buttonText: "Pengukuran",
         lengthMenuText: "Panjang",
         areaMenuText: "Luas",
         lengthTooltip: "Pengukuran panjang",
@@ -115,11 +126,12 @@ GeoExt.Lang.add("id", {
 
     "gxp.plugins.OSMSource.prototype": {
         title: "OpenStreetMap Layers",
-        mapnikAttribution: "Data CC-By-SA by <a href='http://openstreetmap.org/'>OpenStreetMap</a>",
+        mapnikAttribution: "&copy; <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors",
         osmarenderAttribution: "Data CC-By-SA by <a href='http://openstreetmap.org/'>OpenStreetMap</a>"
     },
 
     "gxp.plugins.Print.prototype": {
+        buttonText:"Cetak",
         menuText: "Cetak peta",
         tooltip: "Cetak peta",
         previewText: "Preview cetak",
@@ -139,8 +151,7 @@ GeoExt.Lang.add("id", {
         queryActionText: "Query",
         queryMenuText: "Queryable Layer",
         queryActionTip: "Query layer yang dipilih",
-        queryByLocationText: "Query lokasi",
-        currentTextText: "Sampai saat ini",
+        queryByLocationText: "Query by current map extent",
         queryByAttributesText: "Query atribut",
         queryMsg: "Querying...",
         cancelButtonText: "Batal",
@@ -160,13 +171,16 @@ GeoExt.Lang.add("id", {
     },
 
     "gxp.plugins.WMSGetFeatureInfo.prototype": {
+        buttonText:"Identify",
         infoActionTip: "Get Feature Info",
         popupTitle: "Info fitur"
     },
 
     "gxp.plugins.Zoom.prototype": {
+        zoomMenuText: "Zoom Box",
         zoomInMenuText: "Memperbesar",
         zoomOutMenuText: "Memperkecil",
+        zoomTooltip: "Zoom by dragging a box",
         zoomInTooltip: "Memperbesar",
         zoomOutTooltip: "Memperkecil"
     },
@@ -305,7 +319,9 @@ GeoExt.Lang.add("id", {
         transparentText: "Transparent",
         cacheText: "Cache",
         cacheFieldText: "Menggunakan versi cached",
-        stylesText: "Styles"
+        stylesText: "Styles tersedia",
+        infoFormatText: "Info format",
+        infoFormatEmptyText: "Select a format"
     },
 
     "gxp.EmbedMapDialog.prototype": {
@@ -360,10 +376,11 @@ GeoExt.Lang.add("id", {
         workspaceLabel: "Ruang Kerja",
         workspaceEmptyText: "Ruang kerja Default",
         dataStoreLabel: "Penyimpanan",
-        dataStoreEmptyText: "Penyimpanan data Default"
+        dataStoreEmptyText: "Create new store",
+        defaultDataStoreEmptyText: "Penyimpanan data Default"
     },
     
-    "gxp.NewSourceWindow.prototype": {
+    "gxp.NewSourceDialog.prototype": {
         title: "Add New Server...",
         cancelText: "Cancel",
         addServerText: "Add Server",

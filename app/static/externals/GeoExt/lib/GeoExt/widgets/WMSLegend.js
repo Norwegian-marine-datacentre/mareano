@@ -1,6 +1,6 @@
 /**
- * Copyright (c) 2008-2011 The Open Source Geospatial Foundation
- * 
+ * Copyright (c) 2008-2012 The Open Source Geospatial Foundation
+ *
  * Published under the BSD license.
  * See http://svn.geoext.org/core/trunk/geoext/license.txt for the full text
  * of the license.
@@ -9,6 +9,8 @@
 /**
  * @include GeoExt/widgets/LegendImage.js
  * @requires GeoExt/widgets/LayerLegend.js
+ * @require OpenLayers/Util.js
+ * @require OpenLayers/Layer/WMS.js
  */
 
 /** api: (define)
@@ -55,9 +57,9 @@ GeoExt.WMSLegend = Ext.extend(GeoExt.LayerLegend, {
      *  support vendor-specific parameters in a SLD WMS GetLegendGraphic
      *  request. To override the default MIME type of image/gif use the
      *  FORMAT parameter in baseParams.
-     *     
+     *
      *  .. code-block:: javascript
-     *     
+     *
      *      var legendPanel = new GeoExt.LegendPanel({
      *          map: map,
      *          title: 'Legend Panel',
@@ -68,9 +70,16 @@ GeoExt.WMSLegend = Ext.extend(GeoExt.LayerLegend, {
      *                  LEGEND_OPTIONS: 'forceLabels:on'
      *              }
      *          }
-     *      });   
+     *      });
      */
     baseParams: null,
+
+    /** api: config[itemXType]
+     *  ``String``
+     *  The xtype to be used for each item of this legend. Defaults to
+     *  `gx_legendimage`.
+     */
+    itemXType: "gx_legendimage",
     
     /** private: method[initComponent]
      *  Initializes the WMS legend. For group layers it will create multiple
@@ -83,7 +92,7 @@ GeoExt.WMSLegend = Ext.extend(GeoExt.LayerLegend, {
         layer.events.register("moveend", this, this.onLayerMoveend);
         this.update();
     },
-    
+
     /** private: method[onLayerMoveend]
      *  :param e: ``Object``
      */
@@ -138,26 +147,28 @@ GeoExt.WMSLegend = Ext.extend(GeoExt.LayerLegend, {
                 STYLE: (styleName !== '') ? styleName: null,
                 STYLES: null,
                 SRS: null,
-                FORMAT: null
+                FORMAT: null,
+                TIME: null
             });
         }
-        // add scale parameter - also if we have the url from the record's
-        // styles data field and it is actually a GetLegendGraphic request.
-        if(this.useScaleParameter === true &&
-                url.toLowerCase().indexOf("request=getlegendgraphic") != -1) {
-            var scale = layer.map.getScale();
-            url = Ext.urlAppend(url, "SCALE=" + scale);
-        }
-        var params = this.baseParams || {};
-        Ext.applyIf(params, {FORMAT: 'image/gif'});
+        var params = Ext.apply({}, this.baseParams);
         if (layer.params._OLSALT) {
             // update legend after a forced layer redraw
             params._OLSALT = layer.params._OLSALT;
         }
-        if(url.indexOf('?') > 0) {
-            url = Ext.urlEncode(params, url);
+        url = Ext.urlAppend(url, Ext.urlEncode(params));
+        if (url.toLowerCase().indexOf("request=getlegendgraphic") != -1) {
+            if (url.toLowerCase().indexOf("format=") == -1) {
+                url = Ext.urlAppend(url, "FORMAT=image%2Fgif");
+            }
+            // add scale parameter - also if we have the url from the record's
+            // styles data field and it is actually a GetLegendGraphic request.
+            if (this.useScaleParameter === true) {
+                var scale = layer.map.getScale();
+                url = Ext.urlAppend(url, "SCALE=" + scale);
+            }
         }
-        
+
         return url;
     },
 
@@ -174,13 +185,15 @@ GeoExt.WMSLegend = Ext.extend(GeoExt.LayerLegend, {
             return;
         }
         GeoExt.WMSLegend.superclass.update.apply(this, arguments);
-        
+
         var layerNames, layerName, i, len;
 
         layerNames = [layer.params.LAYERS].join(",").split(",");
 
         var destroyList = [];
-        var textCmp = this.items.get(0);
+        var textCmp = this.items.find(function(item){
+            return item.isXType('label');
+        });
         this.items.each(function(cmp) {
             i = layerNames.indexOf(cmp.itemId);
             if(i < 0 && cmp != textCmp) {
@@ -205,7 +218,7 @@ GeoExt.WMSLegend = Ext.extend(GeoExt.LayerLegend, {
             layerName = layerNames[i];
             if(!this.items || !this.getComponent(layerName)) {
                 this.add({
-                    xtype: "gx_legendimage",
+                    xtype: this.itemXType,
                     url: this.getLegendUrl(layerName, layerNames),
                     itemId: layerName
                 });
@@ -218,7 +231,7 @@ GeoExt.WMSLegend = Ext.extend(GeoExt.LayerLegend, {
      */
     beforeDestroy: function() {
         if (this.useScaleParameter === true) {
-            var layer = this.layerRecord.getLayer()
+            var layer = this.layerRecord.getLayer();
             layer && layer.events &&
                 layer.events.unregister("moveend", this, this.onLayerMoveend);
         }
@@ -231,7 +244,7 @@ GeoExt.WMSLegend = Ext.extend(GeoExt.LayerLegend, {
  *  Private override
  */
 GeoExt.WMSLegend.supports = function(layerRecord) {
-    return layerRecord.getLayer() instanceof OpenLayers.Layer.WMS;
+    return layerRecord.getLayer() instanceof OpenLayers.Layer.WMS ? 1 : 0;
 };
 
 /** api: legendtype = gx_wmslegend */

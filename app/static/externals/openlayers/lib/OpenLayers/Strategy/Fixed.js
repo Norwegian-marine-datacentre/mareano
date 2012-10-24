@@ -1,6 +1,6 @@
-/* Copyright (c) 2006-2011 by OpenLayers Contributors (see authors.txt for 
- * full list of contributors). Published under the Clear BSD license.  
- * See http://svn.openlayers.org/trunk/openlayers/license.txt for the
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for 
+ * full list of contributors). Published under the 2-clause BSD license.
+ * See license.txt in the OpenLayers distribution or repository for the
  * full text of the license. */
 
 /**
@@ -105,8 +105,9 @@ OpenLayers.Strategy.Fixed = OpenLayers.Class(OpenLayers.Strategy, {
      * Add all features to the layer.
      *
      * Parameters:
-     * mapProjection - {OpenLayers.Projection} the map projection
-     * resp - {Object} options to pass to protocol read.
+     * mapProjection - {<OpenLayers.Projection>} the map projection
+     * resp - {<OpenLayers.Protocol.Response>} The response object passed
+     *      by the protocol.
      */
     merge: function(mapProjection, resp) {
         var layer = this.layer;
@@ -124,7 +125,7 @@ OpenLayers.Strategy.Fixed = OpenLayers.Class(OpenLayers.Strategy, {
             }
             layer.addFeatures(features);
         }
-        layer.events.triggerEvent("loadend");
+        layer.events.triggerEvent("loadend", {response: resp});
     },
 
     CLASS_NAME: "OpenLayers.Strategy.Fixed"

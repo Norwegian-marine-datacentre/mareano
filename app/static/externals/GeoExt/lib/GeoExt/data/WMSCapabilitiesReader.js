@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2011 The Open Source Geospatial Foundation
+ * Copyright (c) 2008-2012 The Open Source Geospatial Foundation
  * 
  * Published under the BSD license.
  * See http://svn.geoext.org/core/trunk/geoext/license.txt for the full text
@@ -8,6 +8,10 @@
 
 /**
  * @include GeoExt/data/LayerRecord.js
+ * @require OpenLayers/Format/WMSCapabilities.js
+ * @require OpenLayers/Format/WMSCapabilities/v1_1_1.js
+ * @require OpenLayers/Util.js
+ * @require OpenLayers/Layer/WMS.js
  */
 
 /** api: (define)
@@ -31,7 +35,7 @@ Ext.namespace("GeoExt.data");
  *          name, title, abstract, queryable, opaque, noSubsets, cascaded,
  *          fixedWidth, fixedHeight, minScale, maxScale, prefix, formats,
  *          styles, srs, dimensions, bbox, llbbox, attribution, keywords,
- *          identifiers, authorityURLs, metadataURLs.
+ *          identifiers, authorityURLs, metadataURLs, infoFormats.
  *          The type of these fields is the same as for the matching fields in
  *          the object returned from
  *          ``OpenLayers.Format.WMSCapabilities::read()``.
@@ -70,7 +74,8 @@ GeoExt.data.WMSCapabilitiesReader = function(meta, recordType) {
                 {name: "keywords"}, // array
                 {name: "identifiers"}, // object
                 {name: "authorityURLs"}, // object
-                {name: "metadataURLs"} // array
+                {name: "metadataURLs"}, // array
+                {name: "infoFormats"} // array
             ]
         );
     }
@@ -164,6 +169,9 @@ Ext.extend(GeoExt.data.WMSCapabilitiesReader, Ext.data.DataReader, {
     readRecords: function(data) {
         if(typeof data === "string" || data.nodeType) {
             data = this.meta.format.read(data);
+        }
+        if (!!data.error) {
+            throw new Ext.data.DataReader.Error("invalid-response", data.error);
         }
         var version = data.version;
         var capability = data.capability || {};

@@ -1,9 +1,21 @@
 /**
- * Copyright (c) 2008-2011 The Open Source Geospatial Foundation
+ * Copyright (c) 2008-2012 The Open Source Geospatial Foundation
  * 
  * Published under the BSD license.
  * See http://svn.geoext.org/core/trunk/geoext/license.txt for the full text
  * of the license.
+ */
+
+/**
+ * @require OpenLayers/Feature/Vector.js
+ * @require OpenLayers/Geometry/Point.js
+ * @require OpenLayers/Geometry/LineString.js
+ * @require OpenLayers/Geometry/LinearRing.js
+ * @require OpenLayers/Geometry/Polygon.js
+ * @require OpenLayers/BaseTypes/Bounds.js
+ * @require OpenLayers/BaseTypes/Size.js
+ * @require OpenLayers/Renderer.js
+ * @require OpenLayers/Symbolizer.js
  */
 
 /** api: (define)
@@ -40,11 +52,17 @@ GeoExt.FeatureRenderer = Ext.extend(Ext.BoxComponent, {
 
     /** api: config[symbolType]
      *  ``String``
-     *  One of ``"Point"``, ``"Line"``, or ``"Polygon"``.  Only pertinent if 
-     *  OpenLayers.Symbolizer objects are not used.  If ``feature``
+     *  One of ``"Point"``, ``"Line"``, ``"Polygon"`` or ``"Text"``.  Only 
+     *  pertinent if OpenLayers.Symbolizer objects are not used.  If ``feature``
      *  is provided, it will be preferred.  The default is "Polygon".
      */
     symbolType: "Polygon",
+
+    /** api: config[labelText]
+     *  ``String``
+     *  Label text to display for text features.
+     */
+    labelText: null,
     
     /** private: property[resolution]
      *  ``Number``
@@ -95,6 +113,12 @@ GeoExt.FeatureRenderer = Ext.extend(Ext.BoxComponent, {
      *   Feature with Polygon geometry.  Default is a soft cornered rectangle.
      */
     polygonFeature: undefined,
+
+    /** private: property[textFeature]
+     *  ``OpenLayers.Feature.Vector``
+     *   Feature with invisible Point geometry and text label.
+     */
+    textFeature: undefined,
     
     /** private: property[renderer]
      *  ``OpenLayers.Renderer``
@@ -130,6 +154,9 @@ GeoExt.FeatureRenderer = Ext.extend(Ext.BoxComponent, {
                         new OpenLayers.Geometry.Point(-8, 4)
                     ])
                 ])
+            ),
+            textFeature: new OpenLayers.Feature.Vector(
+                new OpenLayers.Geometry.Point(0, 0)
             )
         });
         if(!this.feature) {
@@ -308,30 +335,33 @@ GeoExt.FeatureRenderer = Ext.extend(Ext.BoxComponent, {
     drawFeature: function() {
         this.renderer.clear();
         this.setRendererDimensions();
-        // TODO: remove this when OpenLayers.Symbolizer is required
-        var Symbolizer = OpenLayers.Symbolizer;
-        var Text = Symbolizer && Symbolizer.Text;
         var symbolizer, feature, geomType;
         for (var i=0, len=this.symbolizers.length; i<len; ++i) {
             symbolizer = this.symbolizers[i];
             feature = this.feature;
-            // don't render text symbolizers
-            if (!Text || !(symbolizer instanceof Text)) {
-                if (Symbolizer && (symbolizer instanceof Symbolizer)) {
-                    symbolizer = symbolizer.clone();
-                    if (!this.initialConfig.feature) {
-                        geomType = symbolizer.CLASS_NAME.split(".").pop().toLowerCase();
-                        feature = this[geomType + "Feature"];
-                    }
-                } else {
-                    // TODO: remove this when OpenLayers.Symbolizer is used everywhere
-                    symbolizer = Ext.apply({}, symbolizer);
+            if (symbolizer instanceof OpenLayers.Symbolizer) {
+                symbolizer = symbolizer.clone();
+                if (OpenLayers.Symbolizer.Text && 
+                    symbolizer instanceof OpenLayers.Symbolizer.Text &&
+                    symbolizer.graphic === false) {
+                        // hide the point geometry
+                        symbolizer.fill = symbolizer.stroke = false;
                 }
-                this.renderer.drawFeature(
-                    feature.clone(),
-                    symbolizer
-                );
+                if (!this.initialConfig.feature) {
+                    geomType = symbolizer.CLASS_NAME.split(".").pop().toLowerCase();
+                    feature = this[geomType + "Feature"];
+                }
+            } else {
+                // TODO: remove this when OpenLayers.Symbolizer is used everywhere
+                symbolizer = Ext.apply({}, symbolizer);
             }
+            if (symbolizer.label !== undefined && this.labelText !== null) {
+                symbolizer.label = this.labelText;
+            }
+            this.renderer.drawFeature(
+                feature.clone(),
+                symbolizer
+            );
         }
     },
     
