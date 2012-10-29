@@ -157,7 +157,15 @@
                                     "${kartlaget.title}",
                                     "${kartlaget.url}",
                                     {layers: "${kartlaget.layers}", format: "image/png", transparent: true},
-                                    {opacity: 0.5}
+                                    {
+                                        opacity: 0.5, 
+                                        maxExtent: [
+                                            ${kartlaget.exGeographicBoundingBoxWestBoundLongitude},
+                                            ${kartlaget.exGeographicBoundingBoxSouthBoundLatitude},
+                                            ${kartlaget.exGeographicBoundingBoxEastBoundLongitude},
+                                            ${kartlaget.exGeographicBoundingBoxNorthBoundLatitude}
+                                        ]
+                                    }
                                 ]
                             }
                         </c:forEach>

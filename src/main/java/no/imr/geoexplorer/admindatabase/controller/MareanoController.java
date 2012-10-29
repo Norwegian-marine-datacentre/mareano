@@ -151,6 +151,10 @@ public class MareanoController {
 							KartlagVisning kart = new KartlagVisning();
 							kart.setId(kartlag.getKartlagId());
 							kart.setLayers(kartlag.getLayers());
+                            kart.setExGeographicBoundingBoxEastBoundLongitude(kartlag.getExGeographicBoundingBoxEastBoundLongitude());
+                            kart.setExGeographicBoundingBoxWestBoundLongitude(kartlag.getExGeographicBoundingBoxWestBoundLongitude());
+                            kart.setExGeographicBoundingBoxNorthBoundLatitude(kartlag.getExGeographicBoundingBoxNorthBoundLatitude());
+                            kart.setExGeographicBoundingBoxSouthBoundLatitude(kartlag.getExGeographicBoundingBoxSouthBoundLatitude());
 							
 							if ( language.equals("en") ) {
 								List<KartlagEnNo> en = dao.getKartlagEn(kart.getId());

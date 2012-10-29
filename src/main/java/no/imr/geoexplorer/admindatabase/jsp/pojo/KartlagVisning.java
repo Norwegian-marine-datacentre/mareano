@@ -6,6 +6,10 @@ public class KartlagVisning {
 	private String layers;
 	private String gruppe;
 	private String url;
+    private double exGeographicBoundingBoxEastBoundLongitude;
+    private double exGeographicBoundingBoxWestBoundLongitude;
+    private double exGeographicBoundingBoxNorthBoundLatitude;
+    private double exGeographicBoundingBoxSouthBoundLatitude;
 	
 	public long getId() {
 		return id;
@@ -37,5 +41,29 @@ public class KartlagVisning {
 	public void setUrl(String url) {
 		this.url = url;
 	}
+    public double getExGeographicBoundingBoxEastBoundLongitude() {
+        return exGeographicBoundingBoxEastBoundLongitude;
+    }
+    public void setExGeographicBoundingBoxEastBoundLongitude(double exGeographicBoundingBoxEastBoundLongitude) {
+        this.exGeographicBoundingBoxEastBoundLongitude = exGeographicBoundingBoxEastBoundLongitude;
+    }
+    public double getExGeographicBoundingBoxWestBoundLongitude() {
+        return exGeographicBoundingBoxWestBoundLongitude;
+    }
+    public void setExGeographicBoundingBoxWestBoundLongitude(double exGeographicBoundingBoxWestBoundLongitude) {
+        this.exGeographicBoundingBoxWestBoundLongitude = exGeographicBoundingBoxWestBoundLongitude;
+    }
+    public double getExGeographicBoundingBoxNorthBoundLatitude() {
+        return exGeographicBoundingBoxNorthBoundLatitude;
+    }
+    public void setExGeographicBoundingBoxNorthBoundLatitude(double exGeographicBoundingBoxNorthBoundLatitude) {
+        this.exGeographicBoundingBoxNorthBoundLatitude = exGeographicBoundingBoxNorthBoundLatitude;
+    }
+    public double getExGeographicBoundingBoxSouthBoundLatitude() {
+        return exGeographicBoundingBoxSouthBoundLatitude;
+    }
+    public void setExGeographicBoundingBoxSouthBoundLatitude(double exGeographicBoundingBoxSouthBoundLatitude) {
+        this.exGeographicBoundingBoxSouthBoundLatitude = exGeographicBoundingBoxSouthBoundLatitude;
+    }
 
 }
