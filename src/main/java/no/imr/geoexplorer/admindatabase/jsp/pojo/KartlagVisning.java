@@ -10,8 +10,8 @@ public class KartlagVisning {
 	private double exGeographicBoundingBoxWestBoundLongitude;
 	private double exGeographicBoundingBoxNorthBoundLatitude;
 	private double exGeographicBoundingBoxSouthBoundLatitude;
-	private String summary;
 	private String keyword;
+	private String abstracts;
 	public long getId() {
 		return id;
 	}
@@ -24,11 +24,11 @@ public class KartlagVisning {
 	public void setTitle(String title) {
 		this.title = title;
 	}
-	public String getSummary() {
-		return summary;
+	public String getAbstracts() {
+		return abstracts;
 	}
-	public void setSummary(String summary) {
-		this.summary = summary;
+	public void setAbstracts(String abstracts) {
+		this.abstracts = abstracts;
 	}
 	public String getKeyword() {
 		return keyword;

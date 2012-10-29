@@ -163,7 +163,8 @@
                                     {
                                         opacity: 0.5,
                                         metadata: {
-                                            keyword: "${kartlaget.keyword}"
+                                            keyword: "${kartlaget.keyword}",
+                                            'abstract': '${kartlaget.abstracts}'
                                         },
                                         maxExtent: [
                                             ${kartlaget.exGeographicBoundingBoxWestBoundLongitude},

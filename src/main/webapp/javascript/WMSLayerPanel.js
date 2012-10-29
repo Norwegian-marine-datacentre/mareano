@@ -18,6 +18,11 @@ mareano.WMSLayerPanel = Ext.extend(Ext.form.FormPanel, {
         var record = this.layerRecord;
         var layer = record.getLayer();
         if (layer instanceof OpenLayers.Layer.WMS) {
+            var params = {
+                "REQUEST": "GetCapabilities"
+            };
+            var url = gxp.plugins.WMSSource.prototype.trimUrl(layer.url, params);
+            url = Ext.urlAppend(url, Ext.urlEncode(params));
             var keywords = [];
             if (layer.metadata.keyword) {
                 keywords = layer.metadata.keyword.split(",");
@@ -39,7 +44,24 @@ mareano.WMSLayerPanel = Ext.extend(Ext.form.FormPanel, {
                 readOnly: true,
                 fieldLabel: this.titleLabel,
                 value: layer.name
+            }, {
+                xtype: 'textfield',
+                width: '100%',
+                anchor: '99%',
+                readOnly: true,
+                fieldLabel: this.urlLabel,
+                value: url
             }]);
+            if (layer.metadata["abstract"]) {
+                this.add({
+                    xtype: 'textarea',
+                    width: '100%',
+                    anchor: '99%',
+                    readOnly: true,
+                    fieldLabel: this.abstractLabel,
+                    value: layer.metadata["abstract"]
+                });
+            }
             if (keywords.length > 0) {
                 this.add([{
                     xtype: 'textarea',

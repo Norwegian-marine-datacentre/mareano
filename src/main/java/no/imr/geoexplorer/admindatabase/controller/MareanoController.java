@@ -151,21 +151,25 @@ public class MareanoController {
 							KartlagVisning kart = new KartlagVisning();
 							kart.setId(kartlag.getKartlagId());
 							kart.setLayers(kartlag.getLayers());
-                            kart.setKeyword(kartlag.getKeyword());
-                            kart.setExGeographicBoundingBoxEastBoundLongitude(kartlag.getExGeographicBoundingBoxEastBoundLongitude());
-                            kart.setExGeographicBoundingBoxWestBoundLongitude(kartlag.getExGeographicBoundingBoxWestBoundLongitude());
-                            kart.setExGeographicBoundingBoxNorthBoundLatitude(kartlag.getExGeographicBoundingBoxNorthBoundLatitude());
-                            kart.setExGeographicBoundingBoxSouthBoundLatitude(kartlag.getExGeographicBoundingBoxSouthBoundLatitude());
+							kart.setKeyword(kartlag.getKeyword());
+							kart.setExGeographicBoundingBoxEastBoundLongitude(kartlag.getExGeographicBoundingBoxEastBoundLongitude());
+							kart.setExGeographicBoundingBoxWestBoundLongitude(kartlag.getExGeographicBoundingBoxWestBoundLongitude());
+							kart.setExGeographicBoundingBoxNorthBoundLatitude(kartlag.getExGeographicBoundingBoxNorthBoundLatitude());
+							kart.setExGeographicBoundingBoxSouthBoundLatitude(kartlag.getExGeographicBoundingBoxSouthBoundLatitude());
 							
 							if ( language.equals("en") ) {
 								List<KartlagEnNo> en = dao.getKartlagEn(kart.getId());
-								if ( en.size() > 0)
+								if ( en.size() > 0) {
 									kart.setTitle(en.get(0).getAlternateTitle());
+									kart.setAbstracts(en.get(0).getAbstracts());
+								}
 								else kart.setTitle(kartlag.getGenericTitle()); 
 							}else {
 								List<KartlagEnNo> norsk = dao.getKartlagNo(kart.getId());
-								if ( norsk.size() > 0)
+								if ( norsk.size() > 0) {
 									kart.setTitle(norsk.get(0).getAlternateTitle());
+									kart.setAbstracts(norsk.get(0).getAbstracts());
+								}
 								else kart.setTitle(kartlag.getGenericTitle()); 	
 							}
 							
