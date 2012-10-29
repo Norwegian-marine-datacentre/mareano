@@ -12,8 +12,8 @@ public class KartlagVisning {
 	private double exGeographicBoundingBoxSouthBoundLatitude;
 	private String keyword;
 	private String abstracts;
-    private double scalemin;
-    private double scalemax;
+	private double scalemin;
+	private double scalemax;
 	public long getId() {
 		return id;
 	}
@@ -80,17 +80,17 @@ public class KartlagVisning {
 	public void setExGeographicBoundingBoxSouthBoundLatitude(double exGeographicBoundingBoxSouthBoundLatitude) {
 		this.exGeographicBoundingBoxSouthBoundLatitude = exGeographicBoundingBoxSouthBoundLatitude;
 	}
-    public double getScalemin() {
-        return scalemin;
-    }
-    public void setScalemin(double scalemin) {
-        this.scalemin = scalemin;
-    }
-    public double getScalemax() {
-        return scalemax;
-    }
-    public void setScalemax(double scalemax) {
-        this.scalemax = scalemax;
-    }
+	public double getScalemin() {
+		return scalemin;
+	}
+	public void setScalemin(double scalemin) {
+		this.scalemin = scalemin;
+	}
+	public double getScalemax() {
+		return scalemax;
+	}
+	public void setScalemax(double scalemax) {
+		this.scalemax = scalemax;
+	}
 
 }
