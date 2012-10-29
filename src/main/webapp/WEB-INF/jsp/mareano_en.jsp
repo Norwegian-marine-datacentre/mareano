@@ -65,6 +65,8 @@
         <script type="text/javascript" src="script/GeoExplorer_en.js"></script>
         <script type="text/javascript" src="script/ux.js"></script>
 
+        <script type="text/javascript" src="javascript/WMSLayerPanel.js"></script>
+
         <!-- PrintPreview resources -->
         <link rel="stylesheet" type="text/css" href="externals/PrintPreview/resources/css/printpreview.css">
         <script type="text/javascript" src="script/PrintPreview.js"></script>
@@ -152,13 +154,17 @@
                                 type: "OpenLayers.Layer.WMS",
                                 group: "${bilde.gruppe}",
                                 visibility: false,
-                                properties:"${kartlaget.id}",
+                                properties: "mareano_wmslayerpanel",
+                                id:"${kartlaget.id}",
                                 args: [
                                     "${kartlaget.title}",
                                     "${kartlaget.url}",
                                     {layers: "${kartlaget.layers}", format: "image/png", transparent: true},
                                     {
-                                        opacity: 0.5, 
+                                        opacity: 0.5,
+                                        metadata: {
+                                            keyword: "${kartlaget.keyword}"
+                                        },
                                         maxExtent: [
                                             ${kartlaget.exGeographicBoundingBoxWestBoundLongitude},
                                             ${kartlaget.exGeographicBoundingBoxSouthBoundLatitude},
@@ -281,7 +287,7 @@
                                         url = layerRecord.getLayer().url;
                                     }
                                     cssBgImg = getLayerIcon(url);
-                                    attr.id=layerRecord.data.properties;
+                                    attr.id=layerRecord.data.id;
                                     attr.iconCls = cssBgImg;
 						           return GeoExt.tree.LayerLoader.prototype.createNode.call(this, attr);
                                 }

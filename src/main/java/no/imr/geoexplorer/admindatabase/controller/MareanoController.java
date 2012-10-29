@@ -151,6 +151,7 @@ public class MareanoController {
 							KartlagVisning kart = new KartlagVisning();
 							kart.setId(kartlag.getKartlagId());
 							kart.setLayers(kartlag.getLayers());
+                            kart.setKeyword(kartlag.getKeyword());
                             kart.setExGeographicBoundingBoxEastBoundLongitude(kartlag.getExGeographicBoundingBoxEastBoundLongitude());
                             kart.setExGeographicBoundingBoxWestBoundLongitude(kartlag.getExGeographicBoundingBoxWestBoundLongitude());
                             kart.setExGeographicBoundingBoxNorthBoundLatitude(kartlag.getExGeographicBoundingBoxNorthBoundLatitude());
