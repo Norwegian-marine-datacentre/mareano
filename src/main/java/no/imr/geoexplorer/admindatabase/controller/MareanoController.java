@@ -156,6 +156,8 @@ public class MareanoController {
 							kart.setExGeographicBoundingBoxWestBoundLongitude(kartlag.getExGeographicBoundingBoxWestBoundLongitude());
 							kart.setExGeographicBoundingBoxNorthBoundLatitude(kartlag.getExGeographicBoundingBoxNorthBoundLatitude());
 							kart.setExGeographicBoundingBoxSouthBoundLatitude(kartlag.getExGeographicBoundingBoxSouthBoundLatitude());
+							kart.setScalemin(kartlag.getScalemin());
+							kart.setScalemax(kartlag.getScalemax());
 							
 							if ( language.equals("en") ) {
 								List<KartlagEnNo> en = dao.getKartlagEn(kart.getId());

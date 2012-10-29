@@ -162,6 +162,8 @@
                                     {layers: "${kartlaget.layers}", format: "image/png", transparent: true},
                                     {
                                         opacity: 0.5,
+                                        minScale: ${kartlaget.scalemax},
+                                        maxScale: ${kartlaget.scalemin},
                                         metadata: {
                                             keyword: "${kartlaget.keyword}",
                                             'abstract': '${kartlaget.abstracts}'
