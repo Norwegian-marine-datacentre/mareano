@@ -147,10 +147,17 @@
                                     //{layers: "europa", format: "image/jpeg", transparent: true, isBaseLayer: true}
                                 ]
                             }
+                        ],
+                        center: [1088474,8089849],
+                        zoom: 2
+                    }
+                });
+
+                var layers = [];
                 <c:forEach var="hovedtema" items="${hovedtemaer}">
                     <c:forEach var="bilde" items="${hovedtema.bilder}">
                         <c:forEach var="kartlaget" items="${bilde.kart}">
-                            ,{source: "ol",
+                            layers.push(gxp.plugins.OLSource.prototype.createLayerRecord({source: "ol",
                                 type: "OpenLayers.Layer.WMS",
                                 group: "${bilde.gruppe}",
                                 visibility: false,
@@ -176,20 +183,18 @@
                                         ]
                                     }
                                 ]
-                            }
+                            }));
                         </c:forEach>
                     </c:forEach>
-                </c:forEach> 				
-                            ],
-                            center: [1088474,8089849],
-                            zoom: 2
-                        }
-                    });
+                </c:forEach>              
+                var store = new GeoExt.data.LayerStore();
+                store.add(layers);  
 
                     app.on("ready", function() {
-                        var treeRoot = Ext.ComponentMgr.all.find(function(c) {
+                        /*var treeRoot = Ext.ComponentMgr.all.find(function(c) {
                             return c instanceof Ext.tree.TreePanel;
-                        });
+                        });*/
+                        var treeRoot = Ext.getCmp('thematic_tree');
  
                         var mergedSomeHovedtema;
                         <c:forEach var="hovedtema" items="${hovedtemaer}">
@@ -205,19 +210,22 @@
                         function addLayerToGroup( gruppeNavn, gruppeText, map, mapPanel ) {
                             var indexOfWMSgruppe = [];
                             var layerName = [];
-                            for (var i = map.layers.length-1;i>=0;--i) {
-                                if ( map.layers[i].group == gruppeNavn ) {
-                                    for( var j= mapPanel.map.layers.length-1; j>=0;--j) {
+                            for (var i = layers.length-1;i>=0;--i) {
+                                if ( layers[i].get("group") == gruppeNavn ) {
+                                    // bartvde TODO not sure how to preserve this part of the code in the new setup
+                                    /*for( var j= mapPanel.map.layers.length-1; j>=0;--j) {
                                         if ( mapPanel.map.layers[j].params != null && map.layers[i].args[2].layers == mapPanel.map.layers[j].params['LAYERS'] ) {
                                             //alert("layer:"+map.layers[i].args[2].layers+" param:"+mapPanel.map.layers[j].params['LAYERS']);
                                             indexOfWMSgruppe.push( j );
                                             layerName.push( map.layers[i].args[2].layers );
                                         }
-                                    }
+                                    }*/
+                                    layerName.push(layers[i].getLayer().params.LAYERS);
                                 }
                             }
 
                             var tmpLoader = new GeoExt.tree.LayerLoader({
+                                store: store,
                                 filter: function(record) {
                                     var featureInfoEvents = [];
                                     /** Add event for getFeatureInfo */
@@ -292,7 +300,8 @@
                                     cssBgImg = getLayerIcon(url);
                                     attr.id=layerRecord.data.id;
                                     attr.iconCls = cssBgImg;
-						           return GeoExt.tree.LayerLoader.prototype.createNode.call(this, attr);
+                                    attr.autoDisable = false;
+						            return GeoExt.tree.LayerLoader.prototype.createNode.call(this, attr);
                                 }
                             });
 
@@ -307,7 +316,7 @@
                         				});
                                     }
                                 },
-                                layerStore: mapPanel.layers,
+                                layerStore: store,
                                 loader: tmpLoader
                             });
 

@@ -337,17 +337,42 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
 		
 		var westPanel2 = new Ext.Panel({
             border: true,
-            layout: "border",
+            layout: "hbox",
+            layoutConfig: {
+                align: 'stretch',
+                pack: 'start'
+            },
             region: "west",
             unstyled:true,
-            width: 250,
+            width: 400,
             split: true,
 //            height: "100%",
 //            collapsible: true,
             defaults:{ autoScroll:true },
             collapseMode: "mini",
             items: [
-                westPanelTabs
+                {
+                    xtype: 'treepanel',
+                    enableDD:true,
+                    dropConfig: {
+                        appendOnly:true
+                    },
+                    loader: new Ext.tree.TreeLoader(),
+                    root: new Ext.tree.AsyncTreeNode(),
+                    rootVisible: false,
+                    split: true,
+                    autoScroll: true,
+                    title: "Thematic tree",
+                    layout: "fit",
+                    id: "thematic_tree",
+                    flex: 1
+                }, {
+                    xtype: 'container',
+                    layout: "border",
+                    split: true,
+                    width: 200,
+                    items: westPanelTabs
+                }
             ]
         });        
 /** slutt: import fra gammel versjon */    	
