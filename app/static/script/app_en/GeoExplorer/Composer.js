@@ -47,8 +47,17 @@ GeoExplorer.Composer = Ext.extend(GeoExplorer, {
                 outputConfig: {
                     id: "layertree",
                     enableDD:true,
-                    dropConfig: {
-                        appendOnly:true
+                    listeners: {
+                        'nodedrop': function(evt) {
+                            var layer = evt.dropNode.layer;
+                            if (!layer.map) {
+                                var func = this.mapPanel.map.events.triggerEvent;
+                                this.mapPanel.map.events.triggerEvent = Ext.emptyFn;
+                                this.mapPanel.map.addLayer(layer);
+                                this.mapPanel.map.events.triggerEvent = func;
+                            }
+                        },
+                        scope: this
                     }
                 },
                 outputTarget: "tree"

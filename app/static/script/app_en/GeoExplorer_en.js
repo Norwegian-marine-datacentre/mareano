@@ -62,6 +62,7 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
     descriptionText: "Description",
     contactText: "Contact",
     aboutThisMapText: "About this Map",
+    thematicText: "Thematic tree",
     // End i18n.
     
     /**
@@ -353,16 +354,14 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
             items: [
                 {
                     xtype: 'treepanel',
-                    enableDD:true,
-                    dropConfig: {
-                        appendOnly:true
-                    },
+                    enableDrag: true,
+                    enableDrop: false,
                     loader: new Ext.tree.TreeLoader(),
                     root: new Ext.tree.AsyncTreeNode(),
                     rootVisible: false,
                     split: true,
                     autoScroll: true,
-                    title: "Thematic tree",
+                    title: this.thematicText,
                     layout: "fit",
                     id: "thematic_tree",
                     flex: 1

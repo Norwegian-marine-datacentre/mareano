@@ -169,6 +169,7 @@
                                     {layers: "${kartlaget.layers}", format: "image/png", transparent: true},
                                     {
                                         opacity: 0.5,
+                                        alwaysInRange: true, /* to force the drop layer tree to enable the node */
                                         minScale: ${kartlaget.scalemax},
                                         maxScale: ${kartlaget.scalemin},
                                         metadata: {
