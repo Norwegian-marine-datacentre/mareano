@@ -192,9 +192,23 @@
                 store.add(layers);  
 
                     app.on("ready", function() {
-                        /*var treeRoot = Ext.ComponentMgr.all.find(function(c) {
-                            return c instanceof Ext.tree.TreePanel;
-                        });*/
+                        var layertree = Ext.getCmp("layertree");   
+                        // we cannot specify this in outputConfig see: https://github.com/opengeo/gxp/issues/159   
+                        layertree.on('nodedrop', function(evt) {
+                            var group = evt.target.attributes.group || evt.target.parentNode.attributes.group;
+                            var layer = evt.dropNode.layer;
+                            var record = evt.dropNode.layerStore.getByLayer(layer);
+                            iconCls = evt.dropNode.attributes.iconCls;
+                            evt.dropNode.ui.hide();
+                            evt.tree.on('beforeinsert', function(tree, container, node) {
+                                node.attributes.iconCls = iconCls;
+                            }, this, {single: true});
+                            if (!layer.map) {
+                                record.set("group", group);
+                                this.mapPanel.layers.add(record);
+                                record.getLayer().setVisibility(true);
+                            }
+                        }, app);
                         var treeRoot = Ext.getCmp('thematic_tree');
  
                         var mergedSomeHovedtema;

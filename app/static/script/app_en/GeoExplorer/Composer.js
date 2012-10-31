@@ -46,25 +46,7 @@ GeoExplorer.Composer = Ext.extend(GeoExplorer, {
                 ptype: "gxp_layertree",
                 outputConfig: {
                     id: "layertree",
-                    enableDD:true,
-                    listeners: {
-                        'nodedrop': function(evt) {
-                            var group = evt.target.attributes.group || evt.target.parentNode.attributes.group;
-                            var layer = evt.dropNode.layer;
-                            var record = evt.dropNode.layerStore.getByLayer(layer);
-                            iconCls = evt.dropNode.attributes.iconCls;
-                            evt.dropNode.ui.hide();
-                            evt.tree.on('beforeinsert', function(tree, container, node) {
-                                node.attributes.iconCls = iconCls;
-                            }, this, {single: true});
-                            if (!layer.map) {
-                                record.set("group", group);
-                                this.mapPanel.layers.add(record);
-                                record.getLayer().setVisibility(true);
-                            }
-                        },
-                        scope: this
-                    }
+                    enableDD:true
                 },
                 outputTarget: "tree"
             }, {
