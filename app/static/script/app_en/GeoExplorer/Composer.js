@@ -49,12 +49,17 @@ GeoExplorer.Composer = Ext.extend(GeoExplorer, {
                     enableDD:true,
                     listeners: {
                         'nodedrop': function(evt) {
+                            var group = evt.target.attributes.group || evt.target.parentNode.attributes.group;
                             var layer = evt.dropNode.layer;
+                            var record = evt.dropNode.layerStore.getByLayer(layer);
+                            iconCls = evt.dropNode.attributes.iconCls;
+                            evt.dropNode.ui.hide();
+                            evt.tree.on('beforeinsert', function(tree, container, node) {
+                                node.attributes.iconCls = iconCls;
+                            }, this, {single: true});
                             if (!layer.map) {
-                                var func = this.mapPanel.map.events.triggerEvent;
-                                this.mapPanel.map.events.triggerEvent = Ext.emptyFn;
-                                this.mapPanel.map.addLayer(layer);
-                                this.mapPanel.map.events.triggerEvent = func;
+                                record.set("group", group);
+                                this.mapPanel.layers.add(record);
                             }
                         },
                         scope: this
