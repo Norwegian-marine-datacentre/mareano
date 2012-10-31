@@ -359,8 +359,6 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
                     loader: new Ext.tree.TreeLoader(),
                     root: new Ext.tree.AsyncTreeNode(),
                     rootVisible: false,
-                    split: true,
-                    autoScroll: true,
                     title: this.thematicText,
                     layout: "fit",
                     id: "thematic_tree",
@@ -368,8 +366,7 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
                 }, {
                     xtype: 'container',
                     layout: "border",
-                    split: true,
-                    width: 200,
+                    width: 250,
                     items: westPanelTabs
                 }
             ]
