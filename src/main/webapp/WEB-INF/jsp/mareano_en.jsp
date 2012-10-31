@@ -160,7 +160,7 @@
                             layers.push(gxp.plugins.OLSource.prototype.createLayerRecord({source: "ol",
                                 type: "OpenLayers.Layer.WMS",
                                 group: "${bilde.gruppe}",
-                                visibility: false,
+                                visibility: true,
                                 properties: "mareano_wmslayerpanel",
                                 id:"${kartlaget.id}",
                                 args: [
@@ -206,7 +206,6 @@
                             if (!layer.map) {
                                 record.set("group", group);
                                 this.mapPanel.layers.add(record);
-                                record.getLayer().setVisibility(true);
                             }
                         }, app);
                         var treeRoot = Ext.getCmp('thematic_tree');
