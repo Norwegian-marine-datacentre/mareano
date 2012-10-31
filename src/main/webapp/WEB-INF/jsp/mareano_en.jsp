@@ -301,6 +301,7 @@
                                     cssBgImg = getLayerIcon(url);
                                     attr.id=layerRecord.data.id;
                                     attr.iconCls = cssBgImg;
+                                    attr.checked = null;
                                     attr.autoDisable = false;
 						            return GeoExt.tree.LayerLoader.prototype.createNode.call(this, attr);
                                 }
@@ -308,15 +309,6 @@
 
                             var layerContainerGruppe = new GeoExt.tree.LayerContainer({
                                 text: gruppeText,
-                                checked: false,
-                                listeners: {
-                                    "checkchange": function(node, checked) { //routene for setting all subnodes if parent is checked
-		                            	node.expand();
-										node.eachChild(function(child){
-                         		        	child.ui.toggleCheck(checked);
-                        				});
-                                    }
-                                },
                                 layerStore: store,
                                 loader: tmpLoader
                             });

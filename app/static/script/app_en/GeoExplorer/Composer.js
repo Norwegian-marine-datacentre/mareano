@@ -60,6 +60,7 @@ GeoExplorer.Composer = Ext.extend(GeoExplorer, {
                             if (!layer.map) {
                                 record.set("group", group);
                                 this.mapPanel.layers.add(record);
+                                record.getLayer().setVisibility(true);
                             }
                         },
                         scope: this
