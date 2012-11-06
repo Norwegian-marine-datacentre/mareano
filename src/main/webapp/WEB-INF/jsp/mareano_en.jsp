@@ -201,7 +201,6 @@
                                 var layer = evt.dropNode.layer;
                                 var record = evt.dropNode.layerStore.getByLayer(layer);
                                 var iconCls = evt.dropNode.attributes.iconCls;
-                                evt.dropNode = null;
                                 evt.tree.on('beforeinsert', function(tree, container, node) {
                                     node.attributes.iconCls = iconCls;
                                 }, this, {single: true});
@@ -210,6 +209,7 @@
                                     record.getLayer().setVisibility(true);
                                     this.mapPanel.layers.add(record);
                                 }
+                                return false;
                             }
                         }, app);
                         var treeRoot = Ext.getCmp('thematic_tree');
