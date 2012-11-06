@@ -191,19 +191,25 @@
                     app.on("ready", function() {
                         var layertree = Ext.getCmp("layertree");   
                         // we cannot specify this in outputConfig see: https://github.com/opengeo/gxp/issues/159   
-                        layertree.on('nodedrop', function(evt) {
-                            var group = evt.target.attributes.group || evt.target.parentNode.attributes.group;
-                            var layer = evt.dropNode.layer;
-                            var record = evt.dropNode.layerStore.getByLayer(layer);
-                            iconCls = evt.dropNode.attributes.iconCls;
-                            evt.dropNode.ui.hide();
-                            evt.tree.on('beforeinsert', function(tree, container, node) {
-                                node.attributes.iconCls = iconCls;
-                            }, this, {single: true});
-                            if (!layer.map) {
-                                record.set("group", group);
-                                this.mapPanel.layers.add(record);
-                                record.getLayer().setVisibility(true);
+                        layertree.on('beforenodedrop', function(evt) {
+                            // prevent dragging complete folders
+                            if (!evt.dropNode.layer) {
+                                return false;
+                            }
+                            if (evt.source.tree.id === "thematic_tree") {
+                                var group = evt.target.attributes.group || evt.target.parentNode.attributes.group;
+                                var layer = evt.dropNode.layer;
+                                var record = evt.dropNode.layerStore.getByLayer(layer);
+                                var iconCls = evt.dropNode.attributes.iconCls;
+                                evt.dropNode = null;
+                                evt.tree.on('beforeinsert', function(tree, container, node) {
+                                    node.attributes.iconCls = iconCls;
+                                }, this, {single: true});
+                                if (!layer.map) {
+                                    record.set("group", group);
+                                    record.getLayer().setVisibility(true);
+                                    this.mapPanel.layers.add(record);
+                                }
                             }
                         }, app);
                         var treeRoot = Ext.getCmp('thematic_tree');
