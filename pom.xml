@@ -12,7 +12,7 @@
     </parent -->
 
     <groupId>org.opengeo</groupId>
-    <artifactId>geoexplorer2.4.3</artifactId>
+    <artifactId>geoexplorer2.4.3WithOpenGeo2.5AddOns</artifactId>
     <packaging>war</packaging>
     <name>OpenGeo Suite GeoExplorer2.4.3</name>
     <version>2.3.1</version>
@@ -133,6 +133,12 @@
             <artifactId>servlet-api</artifactId>
             <version>2.4</version>
         </dependency>
+        <dependency>
+            <groupId>javax.servlet.jsp</groupId>
+            <artifactId>jsp-api</artifactId>
+            <version>2.1</version>
+            <scope>provided</scope>
+        </dependency>        
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-core</artifactId>
