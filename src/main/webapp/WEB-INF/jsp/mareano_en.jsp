@@ -409,8 +409,8 @@
                             	} else if (c.tooltip=="til koordinat") {c.setTooltip("Go to coordinat");}
                         	}
                             if( c instanceof Ext.menu.CheckItem ) {
-            					if ( c.text=="Lengde" ) c.text = "Length";
-            					if ( c.text == "Areal" ) c.setText("Area");
+                                if ( c.text=="Lengde" ) c.text = "Length";
+            			if ( c.text == "Areal" ) c.setText("Area");
                             }  
                         });
                     });
@@ -443,193 +443,190 @@
                     });                    
 
 
-            function addAKartlag(kartlagId) {
-                displayLegendGraphics(kartlagId);
-                displaySpesialpunkt(kartlagId);
-	    }
+                    function addAKartlag(kartlagId) {
+                        displayLegendGraphics(kartlagId);
+                        displaySpesialpunkt(kartlagId);
+                    }
             
-            function displaySpesialpunkt(kartlagId) {
-                jQuery.ajax({
-                    type: 'get',
-                    url: "spring/spesialpunkt",
-                    contentType: "application/json",
-                    data: {
-                        extent : app.mapPanel.map.getExtent() + "",
-                        kartlagId: kartlagId
-                    },
-                    success:function(data){
-                        if ( data.noSpesialpunkt == false) {
-                            var layerName = "";
-                                var styleMap = new 	OpenLayers.StyleMap({
-                                        'default':{externalGraphic: "theme/imr/images/geofotoSpesialpunkt.png"}
-                                });
-                                var snitt = new OpenLayers.Layer.GML("Spesialpunkt","spring/getgml", {styleMap: styleMap});   
-                                app.mapOfGMLspesialpunkt[kartlagId] = snitt;	    
-                                snitt.events.register( "featureselected", snitt, GMLselected );
-                                app.mapPanel.map.addLayer( snitt );                                
-                                var control = new OpenLayers.Control.SelectFeature( snitt );
-                                app.mapPanel.map.addControl( control );
-                                control.activate();	 
-
-                        } 
+                    function displaySpesialpunkt(kartlagId) {
+                        jQuery.ajax({
+                            type: 'get',
+                            url: "spring/spesialpunkt",
+                            contentType: "application/json",
+                            data: {
+                                extent : app.mapPanel.map.getExtent() + "",
+                                kartlagId: kartlagId
+                            },
+                            success:function(data){
+                                if ( data.noSpesialpunkt == false) {
+                                    var layerName = "";
+                                        var styleMap = new 	OpenLayers.StyleMap({
+                                                'default':{externalGraphic: "theme/imr/images/geofotoSpesialpunkt.png"}
+                                        });
+                                        var snitt = new OpenLayers.Layer.GML("Spesialpunkt","spring/getgml", {styleMap: styleMap});   
+                                        app.mapOfGMLspesialpunkt[kartlagId] = snitt;	    
+                                        snitt.events.register( "featureselected", snitt, GMLselected );
+                                        app.mapPanel.map.addLayer( snitt );                                
+                                        var control = new OpenLayers.Control.SelectFeature( snitt );
+                                        app.mapPanel.map.addControl( control );
+                                        control.activate();	 
+                                } 
+                            }
+                        });            
                     }
-                });            
-	    }
 	    
-	    function displayLegendGraphics(kartlagId) {
-                jQuery.ajax({
-                    type: 'get',
-                    url: "spring/legend",
-                    contentType: "application/json",
-                    data: {
-                            kartlagId: kartlagId,
-                            language: "en"
-                    },
-                    success:function(data) {
-                                                    var currentLegend;
-                                    jQuery('#newLegend').children().each(function(index, value){
-                                                            jQuery(value).children().each(function(index, value){
-                                                                    currentLegend = jQuery(value).html();
+                    function displayLegendGraphics(kartlagId) {
+                        jQuery.ajax({
+                            type: 'get',
+                            url: "spring/legend",
+                            contentType: "application/json",
+                            data: {
+                                    kartlagId: kartlagId,
+                                    language: "en"
+                            },
+                            success:function(data) {
+                                var currentLegend;
+                                jQuery('#newLegend').children().each(function(index, value){
+                                jQuery(value).children().each(function(index, value){
+                                    currentLegend = jQuery(value).html();
                                 });	        
-                                    });
-                                    buildLegendGraphicsHTML( currentLegend, kartlagId, data );
-                                    visKartlagInfoHTML( kartlagId, data );                 
+                            });
+                            buildLegendGraphicsHTML( currentLegend, kartlagId, data );
+                            visKartlagInfoHTML( kartlagId, data );                 
+                            }
+                        }); 
                     }
-                }); 
-	    }
 
-	    function buildLegendGraphicsHTML( currentLegend, kartlagId, data ) {
-		    var legendGraphicsHTML = currentLegend+'<div id="'+kartlagId+'">';
-		    for ( var i=0; i < data.legends.length; i++ ) {
-		    	if ( i > 0 ) {
-			    	legendGraphicsHTML += '<div>';     
-			    }
-			    legendGraphicsHTML += '<img src="' + data.legends[i].url + '"/>' + data.legends[i].text;
-			    if ( i > 0 ) {
-			    	legendGraphicsHTML += '</div>';     
-			    }
-		    } 
-		    legendGraphicsHTML += '</div>';
-		    Ext.getCmp('newLegend').update(legendGraphicsHTML);
-	    }
+                    function buildLegendGraphicsHTML( currentLegend, kartlagId, data ) {
+                            var legendGraphicsHTML = currentLegend+'<div id="'+kartlagId+'">';
+                            for ( var i=0; i < data.legends.length; i++ ) {
+                                if ( i > 0 ) {
+                                        legendGraphicsHTML += '<div>';     
+                                    }
+                                    legendGraphicsHTML += '<img src="' + data.legends[i].url + '"/>' + data.legends[i].text;
+                                    if ( i > 0 ) {
+                                        legendGraphicsHTML += '</div>';     
+                                    }
+                            } 
+                            legendGraphicsHTML += '</div>';
+                            Ext.getCmp('newLegend').update(legendGraphicsHTML);
+                    }
 
-            function visKartlagInfoHTML(kartlagId, data) {
-	    	var infoHTML = '<div id="'+kartlagId+'tips"><b>'+data.kartlagInfo.kartlagInfoTitel+':</b>'+data.kartlagInfo.text+'</div>';
+                    function visKartlagInfoHTML(kartlagId, data) {
+                        var infoHTML = '<div id="'+kartlagId+'tips"><b>'+data.kartlagInfo.kartlagInfoTitel+':</b>'+data.kartlagInfo.text+'</div>';
 
-    		this.kartlagInfoState += infoHTML;
-	    	if ( Ext.getCmp('tips').rendered ) {
-	    		Ext.getCmp('tips').update(this.kartlagInfoState);
-	    	} else {
-	    		Ext.getCmp('tips').html = this.kartlagInfoState;
-	    	}
-	    }
-	    
-	    function GMLselected (evt) {
-	        if ( evt.feature.data.type == "bilder" ) {
-	        	Ext.MessageBox.show({
-	            	title:evt.feature.data.name, 
-	            	msg:'<a href="' + evt.feature.data.description + '" TARGET="_blank"><img src=" '+evt.feature.data.description+'" width=400 height=400 /></a>'});
-	        } else if ( evt.feature.data.type == "video" ) {
-	        	Ext.MessageBox.show({
-	            	title:evt.feature.data.name, 
-	            	msg:'<embed width="330" height="200" controls="TRUE" autoplay="TRUE" loop="FALSE" src="'+evt.feature.data.description+'">'});
-	        } else if ( evt.feature.data.type == "pdf" ) { // finnes ennå ikke
-	        	Ext.MessageBox.show({title:evt.feature.data.name,msg:'<a href="' + evt.feature.data.description + '" TARGET="_blank">' + evt.feature.data.name + '</a>'});    
-	        } else if ( evt.feature.data.type == "text" ) {
-	        	jQuery.get('/geodata/proxy?url=http://atlas.nodc.no/website/mareano/' + evt.feature.data.description, function(response) { 
-	            	Ext.MessageBox.show({title:evt.feature.data.name, msg: response}); 
-	        	});
-	
-	        }
-	    }
-
-            function removeAKartlag(mapOfGMLspesialpunkt, kartlagId) {
-			if ( app.mapOfGMLspesialpunkt[kartlagId] != null ) {
-				app.mapPanel.map.removeLayer(app.mapOfGMLspesialpunkt[kartlagId], false);
-			}
-			var legendDiv = '#'+kartlagId;
-			jQuery(legendDiv).remove();
-
-			var temp = jQuery("<div>").html(app.kartlagInfoState); //fjern kartlaginfo 
-			jQuery(temp).find(legendDiv+'tips').remove();
-			kartlagInfoState = jQuery(temp).html();			
-	    	if ( Ext.getCmp('tips').rendered ) {
-	    		Ext.getCmp('tips').update(kartlagInfoState);
-	    	} else {
-	    		Ext.getCmp('tips').html = kartlagInfoState;
-	    	}
-	    }
-
-
-
-	/**
-	 * Whenever a layer is turned on or off - send a request to local server (this server) to see
-	 * if layer also should include Spesialpunkt from Mareano.
-	 ***/
-	app.on("ready", function() {
-            var extent = this.mapPanel.map.getExtent() + ""; // hack so jQuery can access extjs/openlayers object
-            app.mapOfGMLspesialpunkt = new Object();    
-            var kartlagInfoState = "";
-            Ext.getCmp('topPanelHeading').update('${heading}');
-	    jQuery('body').change(function(event) {
-                if ( jQuery(event.target).is(':checkbox') && jQuery(event.target).is(':checked') ) {
-                    jQuery.each(jQuery(event.target).siblings(), function() {
-                        if ( jQuery(this).is("img.x-tree-elbow-plus") ) {
-                            jQuery(this).click(); //if clickbox is a kartbilde it will have img and we click it to expand child nodes (pluss sign)
+                        this.kartlagInfoState += infoHTML;
+                        if ( Ext.getCmp('tips').rendered ) {
+                                Ext.getCmp('tips').update(this.kartlagInfoState);
+                        } else {
+                                Ext.getCmp('tips').html = this.kartlagInfoState;
                         }
-                        if ( jQuery(this).text() != "" ) {
-                            var kartlagId = jQuery(this).closest("[ext\\:tree-node-id]").attr("ext:tree-node-id");
-                            if( kartlagId.match(/[^0-9]/) ) { //clicked element is kartbilde not kartlag
-                                var startForKartbilde = jQuery(this).closest("[ext\\:tree-node-id]");
-                                startForKartbilde = jQuery(startForKartbilde).parent();
-                                jQuery(startForKartbilde).find("[ext\\:tree-node-id]").each(function(index, value){
-                                    kartlagId = jQuery(value).attr("ext:tree-node-id");
-                                    if( kartlagId.match(/^[0-9]+$/) ) {			        				
+                    }
+
+                    function GMLselected (evt) {
+                        if ( evt.feature.data.type == "bilder" ) {
+                                Ext.MessageBox.show({
+                                title:evt.feature.data.name, 
+                                msg:'<a href="' + evt.feature.data.description + '" TARGET="_blank"><img src=" '+evt.feature.data.description+'" width=400 height=400 /></a>'});
+                        } else if ( evt.feature.data.type == "video" ) {
+                                Ext.MessageBox.show({
+                                title:evt.feature.data.name, 
+                                msg:'<embed width="330" height="200" controls="TRUE" autoplay="TRUE" loop="FALSE" src="'+evt.feature.data.description+'">'});
+                        } else if ( evt.feature.data.type == "pdf" ) { // finnes ennå ikke
+                                Ext.MessageBox.show({title:evt.feature.data.name,msg:'<a href="' + evt.feature.data.description + '" TARGET="_blank">' + evt.feature.data.name + '</a>'});    
+                        } else if ( evt.feature.data.type == "text" ) {
+                                jQuery.get('/geodata/proxy?url=http://atlas.nodc.no/website/mareano/' + evt.feature.data.description, function(response) { 
+                                Ext.MessageBox.show({title:evt.feature.data.name, msg: response}); 
+                                });
+
+                        }
+                    }
+
+                    function removeAKartlag(mapOfGMLspesialpunkt, kartlagId) {
+                                if ( app.mapOfGMLspesialpunkt[kartlagId] != null ) {
+                                        app.mapPanel.map.removeLayer(app.mapOfGMLspesialpunkt[kartlagId], false);
+                                }
+                                var legendDiv = '#'+kartlagId;
+                                jQuery(legendDiv).remove();
+
+                                var temp = jQuery("<div>").html(app.kartlagInfoState); //fjern kartlaginfo 
+                                jQuery(temp).find(legendDiv+'tips').remove();
+                                kartlagInfoState = jQuery(temp).html();			
+                        if ( Ext.getCmp('tips').rendered ) {
+                                Ext.getCmp('tips').update(kartlagInfoState);
+                        } else {
+                                Ext.getCmp('tips').html = kartlagInfoState;
+                        }
+                    }
+
+                /**
+                * Whenever a layer is turned on or off - send a request to local server (this server) to see
+                * if layer also should include Spesialpunkt from Mareano.
+                ***/
+                app.on("ready", function() {
+                    var extent = this.mapPanel.map.getExtent() + ""; // hack so jQuery can access extjs/openlayers object
+                    app.mapOfGMLspesialpunkt = new Object();    
+                    var kartlagInfoState = "";
+                    Ext.getCmp('topPanelHeading').update('${heading}');
+                    jQuery('body').change(function(event) {
+                        if ( jQuery(event.target).is(':checkbox') && jQuery(event.target).is(':checked') ) {
+                            jQuery.each(jQuery(event.target).siblings(), function() {
+                                if ( jQuery(this).is("img.x-tree-elbow-plus") ) {
+                                    jQuery(this).click(); //if clickbox is a kartbilde it will have img and we click it to expand child nodes (pluss sign)
+                                }
+                                if ( jQuery(this).text() != "" ) {
+                                    var kartlagId = jQuery(this).closest("[ext\\:tree-node-id]").attr("ext:tree-node-id");
+                                    if( kartlagId.match(/[^0-9]/) ) { //clicked element is kartbilde not kartlag
+                                        var startForKartbilde = jQuery(this).closest("[ext\\:tree-node-id]");
+                                        startForKartbilde = jQuery(startForKartbilde).parent();
+                                        jQuery(startForKartbilde).find("[ext\\:tree-node-id]").each(function(index, value){
+                                            kartlagId = jQuery(value).attr("ext:tree-node-id");
+                                            if( kartlagId.match(/^[0-9]+$/) ) {			        				
+                                                addAKartlag(kartlagId);
+                                            }
+                                        });
+                                    } else  {
                                         addAKartlag(kartlagId);
                                     }
-                                });
-                            } else  {
-                                addAKartlag(kartlagId);
-                            }
-                        }
-                    });	          
-                } else if (jQuery(event.target).is(':checkbox') && !jQuery(event.target).is(':checked') ) {
-                    jQuery.each(jQuery(event.target).siblings(), function() {
-                        if ( jQuery(this).is("img.x-tree-elbow-plus") ) {
-                            jQuery(this).click(); //if clickbox is a kartbilde it will have img and we click it to expand child nodes (pluss sign)
-                        }
-                        if ( jQuery(this).text() != "" ) {
-                            var kartlagId = jQuery(this).closest("[ext\\:tree-node-id]").attr("ext:tree-node-id");
-                            if( kartlagId.match(/[^0-9]/) ) { //clicked element is kartbilde not kartlag
-                                var startForKartbilde = jQuery(this).closest("[ext\\:tree-node-id]");
-                                startForKartbilde = jQuery(startForKartbilde).parent();
-                                jQuery(startForKartbilde).find("[ext\\:tree-node-id]").each(function(index, value){
-                                    kartlagId = jQuery(value).attr("ext:tree-node-id");
-                                    if( kartlagId.match(/^[0-9]+$/) ) {			        				
+                                }
+                            });	          
+                        } else if (jQuery(event.target).is(':checkbox') && !jQuery(event.target).is(':checked') ) {
+                            jQuery.each(jQuery(event.target).siblings(), function() {
+                                if ( jQuery(this).is("img.x-tree-elbow-plus") ) {
+                                    jQuery(this).click(); //if clickbox is a kartbilde it will have img and we click it to expand child nodes (pluss sign)
+                                }
+                                if ( jQuery(this).text() != "" ) {
+                                    var kartlagId = jQuery(this).closest("[ext\\:tree-node-id]").attr("ext:tree-node-id");
+                                    if( kartlagId.match(/[^0-9]/) ) { //clicked element is kartbilde not kartlag
+                                        var startForKartbilde = jQuery(this).closest("[ext\\:tree-node-id]");
+                                        startForKartbilde = jQuery(startForKartbilde).parent();
+                                        jQuery(startForKartbilde).find("[ext\\:tree-node-id]").each(function(index, value){
+                                            kartlagId = jQuery(value).attr("ext:tree-node-id");
+                                            if( kartlagId.match(/^[0-9]+$/) ) {			        				
+                                                removeAKartlag(app.mapOfGMLspesialpunkt, kartlagId);
+                                            }
+                                        });
+                                    } else {	        			
                                         removeAKartlag(app.mapOfGMLspesialpunkt, kartlagId);
                                     }
-                                });
-                            } else {	        			
-                                removeAKartlag(app.mapOfGMLspesialpunkt, kartlagId);
-                            }
+                                }
+                            }); 
                         }
-                    }); 
-                }
-	    });	   
-	 	    	  	    
-	    /**
-	    * bug: I have a panel in a tab that is not shown. 
-	    * I call update(somehtml) on that panel. The panel's html body is not updated. 
-	    * After I show the panel for the first time, all future updates() behave correctly whether it is hidden or shown
-	    * http://www.sencha.com/forum/archive/index.php/t-103797.html
-	    **/
+                    });	   
+
+                    /**
+                    * bug: I have a panel in a tab that is not shown. 
+                    * I call update(somehtml) on that panel. The panel's html body is not updated. 
+                    * After I show the panel for the first time, all future updates() behave correctly whether it is hidden or shown
+                    * http://www.sencha.com/forum/archive/index.php/t-103797.html
+                    **/
 	    
-	});
-}
+                });
+            }
                
-function openURI(uri){ // needed by GMLselected(evt)
-   	window.open(uri,'Punktdata');
-}
+            function openURI(uri){ // needed by GMLselected(evt)
+                window.open(uri,'Punktdata');
+            }
         </script>
     </head>
     <body onload="init()">
