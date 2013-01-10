@@ -259,7 +259,7 @@
                                         url = layerRecord.getLayer().url;
                                     }
                                     cssBgImg = getLayerIcon(url);
-                                    attr.id=layerRecord.data.properties;
+                                    attr.id=layerRecord.data.id;
                                     attr.iconCls = cssBgImg;
                                     return GeoExt.tree.LayerLoader.prototype.createNode.call(this, attr);
                                 }
