@@ -200,7 +200,6 @@
                     var layertree = Ext.getCmp("layertree");   
                     // we cannot specify this in outputConfig see: https://github.com/opengeo/gxp/issues/159   
                     layertree.on('beforenodedrop', function(evt) {
-                    	
                     	// prevent dragging complete folders
                         if (!evt.dropNode.layer || evt.target.text == "Base Layer" ||
                         		evt.target.parentNode.text == "Base Layer")  {
@@ -214,11 +213,11 @@
                             var kartlagId = evt.dropNode.attributes.id;
                             
                             evt.tree.on('beforeinsert', function(tree, container, node) {
-                                node.attributes.iconCls = iconCls;                                                                      
+                            	node.attributes.iconCls = iconCls;
                             }, this, {single: true});
                             if (!layer.map) {
                     			record.set("group", group);
-                    			layer.setVisibility(true);
+                    			record.getLayer().setVisibility(true);
                                 this.mapPanel.layers.add(record);
                             }
                             return false;
@@ -325,18 +324,16 @@
 
                                 attr.autoDisable = false;
                                 var node = GeoExt.tree.LayerLoader.prototype.createNode.call(this, attr);                                
-                                node.on("checkChange", function(event) {     
+                                node.on("checkChange", function(event) {
                                 	var cb = node.getUI().checkbox;
                                 	if ( cb && Ext.get(cb).getAttribute('type') === 'checkbox' ) {
                                 		var layer = layerRecord.getLayer();
                                 		if (event.ui.checkbox.checked) {
-                                			app.mapPanel.map.addLayer(layer);
                 			                displayLegendGraphics(layer.metadata['kartlagId']);   
                                 			getSpesialPunkt(app.mapPanel.map.getExtent() + "", layerRecord.getLayer().metadata['kartlagId'], layerRecord.getLayer(), event);
                                 		} else {
                                 			removeLegendAndInfo(app.mapOfGMLspesialpunkt, layer.metadata['kartlagId'], layer);
                                 		}
-                                		
                                 	}
                                 });                                    
                                 return node;
@@ -412,7 +409,7 @@
                         }
                     });                    
 
-                    function getSpesialPunkt(extent, kartlagId, layer,event) {
+                    function getSpesialPunkt(extent, kartlagId, layer, event) {
                         jQuery.ajax({
                             type: 'get',
                             url: "spring/spesialpunkt",
@@ -430,11 +427,11 @@
     		                		var snitt = new OpenLayers.Layer.GML("Spesialpunkt","spring/getgml", {styleMap: styleMap});   
     		                		app.mapOfGMLspesialpunkt[kartlagId] = snitt;	    
     		                		snitt.events.register( "featureselected", snitt, GMLselected );
-    		                		app.mapPanel.map.addLayer( snitt );   	
-    		                		                                
+    		                		app.mapPanel.map.addLayer( snitt );   	           
+    		                		
     		                		var control = new OpenLayers.Control.SelectFeature( snitt );
                                     app.mapPanel.map.addControl( control );
-                                    control.activate();	 
+                                    control.activate(); 	 
     		                	}
     		                }                
                         });
@@ -506,7 +503,7 @@
                         Ext.MessageBox.show({
                         title:evt.feature.data.name, 
                         msg:'<embed width="330" height="200" controls="TRUE" autoplay="TRUE" loop="FALSE" src="'+evt.feature.data.description+'">'});
-                    } else if ( evt.feature.data.type == "pdf" ) { // finnes ennå ikke
+                    } else if ( evt.feature.data.type == "pdf" ) { // finnes ennaa ikke
                         Ext.MessageBox.show({title:evt.feature.data.name,msg:'<a href="' + evt.feature.data.description + '" TARGET="_blank">' + evt.feature.data.name + '</a>'});    
                     } else if ( evt.feature.data.type == "text" ) {
                         jQuery.get('/geodata/proxy?url=http://atlas.nodc.no/website/mareano/' + evt.feature.data.description, function(response) { 
