@@ -84,7 +84,7 @@ public class MareanoControllerTest {
 	
 	@Test
 	public void getLegendTest() {
-		mareanoController.getLegend("287", "norsk");
+		mareanoController.getLegend("296", "norsk");
 	}
 	
 	@Test
