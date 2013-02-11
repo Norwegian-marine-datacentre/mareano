@@ -1,10 +1,12 @@
 package no.imr.geoexplorer.admindatabase.mybatis.pojo;
 
-public class Legend {
+import java.util.Comparator;
+
+public class Legend implements Comparable<Legend> {
 	private long legendsId;
 	private long kartlagId;
 	private String url;
-	private String sort;
+	private Integer sort;
 	private String genericTitle;
 	
 	public long getLegendsId() {
@@ -25,10 +27,10 @@ public class Legend {
 	public void setUrl(String url) {
 		this.url = url;
 	}
-	public String getSort() {
+	public Integer getSort() {
 		return sort;
 	}
-	public void setSort(String sort) {
+	public void setSort(Integer sort) {
 		this.sort = sort;
 	}
 	public String getGenericTitle() {
@@ -37,4 +39,15 @@ public class Legend {
 	public void setGenericTitle(String genericTitle) {
 		this.genericTitle = genericTitle;
 	}
+	public int compareTo(Legend compareLegend) {
+		Integer compareSort = ((Legend) compareLegend).getSort(); 
+		//ascending order
+		return this.sort - compareSort;
+	}	
+
+	public static Comparator<Legend> LegendComparator = new Comparator<Legend>() {
+		public int compare(Legend legend1, Legend legend2) {
+		return legend1.getSort().compareTo(legend2.getSort());
+		}
+	};	
 }

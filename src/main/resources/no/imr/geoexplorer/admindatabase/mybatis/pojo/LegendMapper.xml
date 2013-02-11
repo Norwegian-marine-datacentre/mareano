@@ -28,11 +28,13 @@
 	</select>
 	
 	<select id="getLegendNo" resultMap="LegendResult" resultType="java.util.ArrayList">
-    	SELECT no.text as generic_title FROM legends l, legends_no no WHERE l.kartlag_id=#{kartlagId} and l.legends_id=no.legends_id
+    	SELECT l.legends_id as legends_id, l.kartlag_id as kartlag_id, l.url as url, l.sort as sort, no.text as generic_title 
+    	FROM legends l, legends_no no WHERE l.kartlag_id=#{kartlagId} and l.legends_id=no.legends_id
 	</select>
 
 	<select id="getLegendEn" resultMap="LegendResult" resultType="java.util.ArrayList">
-    	SELECT en.text as generic_title FROM legends l, legends_en en WHERE l.kartlag_id=#{kartlagId} and l.legends_id=en.legends_id
+    	SELECT l.legends_id as legends_id, l.kartlag_id as kartlag_id, l.url as url, l.sort as sort, en.text as generic_title 
+    	FROM legends l, legends_en en WHERE l.kartlag_id=#{kartlagId} and l.legends_id=en.legends_id
 	</select>	
 			
 </mapper>
