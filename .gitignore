@@ -1,0 +1,17 @@
+#java specific
+*.class
+*.jar
+
+#files
+.classpath
+.project
+maven-eclipse.xml
+
+#folders
+target/*
+externals/*
+.externalToolBuilders/*
+.settings/*
+lib/*
+tests/*
+build/*
