@@ -98,7 +98,6 @@ public class MareanoAdminDbDaoImpl implements MareanoAdminDbDao {
 			legends = (List<Legend>) template.selectList("getLegendNo", id);
 		} else {
 			legends = (List<Legend>) template.selectList("getLegendEn", id);
-			System.out.println("legends:"+legends+"legends:"+legends.size());
 		}
 		return legends;
 	}
