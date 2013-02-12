@@ -199,7 +199,9 @@
                     
                     var layertree = Ext.getCmp("layertree");   
                     layertree.on('beforeinsert', function(tree, container, node) {
+                    	//alert("beforeInsert:"+node.layer.url);
                     	node.attributes.iconCls = getLayerIcon(node.layer.url);
+                    	//alert("beforeInsert:"+node.attributes.iconCls);
                     }, this, {single: true});
                     // we cannot specify this in outputConfig see: https://github.com/opengeo/gxp/issues/159   
                     layertree.on('beforenodedrop', function(evt) {
@@ -327,12 +329,14 @@
                                 	var cb = node.getUI().checkbox;
                                 	if ( cb && Ext.get(cb).getAttribute('type') === 'checkbox' ) {
                                 		var layer = layerRecord.getLayer();
+                                		var record = event.layerStore.getByLayer(layer);
                                 		if (event.ui.checkbox.checked) {
-                                            app.mapPanel.map.addLayer(layer);
+                                			app.mapPanel.layers.add(record); 
+                                			//app.mapPanel.map.addLayer(layer); //adds layer to Overlay but mareano_wmslayerpanel is missing from properties and no layer properties are shown
                 			                displayLegendGraphics(layer.metadata['kartlagId']);   
                                 			getSpesialPunkt(app.mapPanel.map.getExtent() + "", layerRecord.getLayer().metadata['kartlagId'], layerRecord.getLayer(), event);
                                 		} else {
-                                			removeLegendAndInfo(app.mapOfGMLspesialpunkt, layer.metadata['kartlagId'], layer);
+                                			removeLegendAndInfo(app.mapOfGMLspesialpunkt, layer.metadata['kartlagId'], record, layer);
                                 		}
                                 	}
                                 });                                    
@@ -515,9 +519,11 @@
                 /**
                  * Remove Legend div tag and KartlagInfo div tag associated with kartlagId
                  */
-                function removeLegendAndInfo(mapOfGMLspesialpunkt, kartlagId, layer) {
+                function removeLegendAndInfo(mapOfGMLspesialpunkt, kartlagId, record, layer) {
                 	
                 	app.mapPanel.map.removeLayer(layer);//fjern kartlag
+                	//app.mapPanel.layers.remove(record);
+
                 	
                 	if ( mapOfGMLspesialpunkt[kartlagId] != null ) { //fjern spesialpunkt                		
                     	app.mapPanel.map.removeLayer(mapOfGMLspesialpunkt[kartlagId], false);
