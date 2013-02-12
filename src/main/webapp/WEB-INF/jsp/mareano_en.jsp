@@ -198,6 +198,9 @@
                     Ext.getCmp('topPanelHeading').update('${heading}');
                     
                     var layertree = Ext.getCmp("layertree");   
+                    layertree.on('beforeinsert', function(tree, container, node) {
+                    	node.attributes.iconCls = getLayerIcon(node.layer.url);
+                    }, this, {single: true});
                     // we cannot specify this in outputConfig see: https://github.com/opengeo/gxp/issues/159   
                     layertree.on('beforenodedrop', function(evt) {
                     	// prevent dragging complete folders
@@ -212,13 +215,9 @@
                             var iconCls = evt.dropNode.attributes.iconCls;
                             var kartlagId = evt.dropNode.attributes.id;
                             
-                            evt.tree.on('beforeinsert', function(tree, container, node) {
-                            	node.attributes.iconCls = iconCls;
-                            }, this, {single: true});
                             if (!layer.map) {
                     			record.set("group", group);
                     			record.getLayer().setVisibility(true);
-                                this.mapPanel.layers.add(record);
                             }
                             return false;
                         }
@@ -329,6 +328,7 @@
                                 	if ( cb && Ext.get(cb).getAttribute('type') === 'checkbox' ) {
                                 		var layer = layerRecord.getLayer();
                                 		if (event.ui.checkbox.checked) {
+                                            app.mapPanel.map.addLayer(layer);
                 			                displayLegendGraphics(layer.metadata['kartlagId']);   
                                 			getSpesialPunkt(app.mapPanel.map.getExtent() + "", layerRecord.getLayer().metadata['kartlagId'], layerRecord.getLayer(), event);
                                 		} else {
@@ -382,60 +382,60 @@
                     });
                 });
 
-                    //Adding overviewmap and keyboard defaults
-                    app.on("ready", function() {
-                        var layerOptions = {
-                            units: "m",
-                            projection: "EPSG:32633",
-                            maxExtent: new OpenLayers.Bounds( -4101096.2210526327,5925725.768421048,4999746.221052637,9135005.768421048 ),
-                            minResolution: new OpenLayers.Bounds( -4101096.2210526327,5925725.768421048,4999746.221052637,9135005.768421048 ),
-                            bounds: new OpenLayers.Bounds( -4101096.2210526327,5925725.768421048,4999746.221052637,9135005.768421048 ),
-                            theme: null
-                        };
-                        var ol_wms2 = new OpenLayers.Layer.WMS(
-                        		"geonorge",
-                        		"http://wms.geonorge.no/skwms1/wms.europa?brukerid=EHAV_MOEEND&passord=spartakus234&VERSION=1.1.1&SERVICE=WMS",
-                        		{layers: "Land,Vmap0Land,Vmap0Kystkontur"}
-                    	);
-                        var tmpLayerOptions = {layers: [ol_wms2], mapOptions: layerOptions, maximized: false, minRatio: 48, maxRatio: 72};
-                        this.mapPanel.map.addControl(new OpenLayers.Control.OverviewMap(tmpLayerOptions));
-                        this.mapPanel.map.addControl(new OpenLayers.Control.KeyboardDefaults());
+                //Adding overviewmap and keyboard defaults
+                app.on("ready", function() {
+                    var layerOptions = {
+                        units: "m",
+                        projection: "EPSG:32633",
+                        maxExtent: new OpenLayers.Bounds( -4101096.2210526327,5925725.768421048,4999746.221052637,9135005.768421048 ),
+                        minResolution: new OpenLayers.Bounds( -4101096.2210526327,5925725.768421048,4999746.221052637,9135005.768421048 ),
+                        bounds: new OpenLayers.Bounds( -4101096.2210526327,5925725.768421048,4999746.221052637,9135005.768421048 ),
+                        theme: null
+                    };
+                    var ol_wms2 = new OpenLayers.Layer.WMS(
+                    		"geonorge",
+                    		"http://wms.geonorge.no/skwms1/wms.europa?brukerid=EHAV_MOEEND&passord=spartakus234&VERSION=1.1.1&SERVICE=WMS",
+                    		{layers: "Land,Vmap0Land,Vmap0Kystkontur"}
+                	);
+                    var tmpLayerOptions = {layers: [ol_wms2], mapOptions: layerOptions, maximized: false, minRatio: 48, maxRatio: 72};
+                    this.mapPanel.map.addControl(new OpenLayers.Control.OverviewMap(tmpLayerOptions));
+                    this.mapPanel.map.addControl(new OpenLayers.Control.KeyboardDefaults());
 
-                        /*** Fix to avoid vector layer below baselayers ***/
-                        for ( var i=this.map.layers.length-1; i>=0; --i ) {
-                            if ( this.mapPanel.map.layers[i] instanceof OpenLayers.Layer.Vector ) {
-                                this.mapPanel.map.setLayerIndex( this.mapPanel.map.layers[i], 33 );
-                            }
+                    /*** Fix to avoid vector layer below baselayers ***/
+                    for ( var i=this.map.layers.length-1; i>=0; --i ) {
+                        if ( this.mapPanel.map.layers[i] instanceof OpenLayers.Layer.Vector ) {
+                            this.mapPanel.map.setLayerIndex( this.mapPanel.map.layers[i], 33 );
                         }
-                    });                    
-
-                    function getSpesialPunkt(extent, kartlagId, layer, event) {
-                        jQuery.ajax({
-                            type: 'get',
-                            url: "spring/spesialpunkt",
-                            contentType: "application/json",
-                            data: {
-                                extent : extent,
-                                kartlagId: kartlagId
-                            },                	
-    		                success:function(data) {
-    		                	if ( data.noSpesialpunkt == false ) { 
-    		                		var layerName = "";
-    		                		var styleMap = new OpenLayers.StyleMap({
-    		                			'default':{externalGraphic: "theme/imr/images/geofotoSpesialpunkt.png"}
-    		                		});
-    		                		var snitt = new OpenLayers.Layer.GML("Spesialpunkt","spring/getgml", {styleMap: styleMap});   
-    		                		app.mapOfGMLspesialpunkt[kartlagId] = snitt;	    
-    		                		snitt.events.register( "featureselected", snitt, GMLselected );
-    		                		app.mapPanel.map.addLayer( snitt );   	           
-    		                		
-    		                		var control = new OpenLayers.Control.SelectFeature( snitt );
-                                    app.mapPanel.map.addControl( control );
-                                    control.activate(); 	 
-    		                	}
-    		                }                
-                        });
                     }
+                });                    
+
+                function getSpesialPunkt(extent, kartlagId, layer, event) {
+                    jQuery.ajax({
+                        type: 'get',
+                        url: "spring/spesialpunkt",
+                        contentType: "application/json",
+                        data: {
+                            extent : extent,
+                            kartlagId: kartlagId
+                        },                	
+		                success:function(data) {
+		                	if ( data.noSpesialpunkt == false ) { 
+		                		var layerName = "";
+		                		var styleMap = new OpenLayers.StyleMap({
+		                			'default':{externalGraphic: "theme/imr/images/geofotoSpesialpunkt.png"}
+		                		});
+		                		var snitt = new OpenLayers.Layer.GML("Spesialpunkt","spring/getgml", {styleMap: styleMap});   
+		                		app.mapOfGMLspesialpunkt[kartlagId] = snitt;	    
+		                		snitt.events.register( "featureselected", snitt, GMLselected );
+		                		app.mapPanel.map.addLayer( snitt );   	           
+		                		
+		                		var control = new OpenLayers.Control.SelectFeature( snitt );
+                                app.mapPanel.map.addControl( control );
+                                control.activate(); 	 
+		                	}
+		                }                
+                    });
+                }
             
                 function displayLegendGraphics(kartlagId) {
                     jQuery.ajax({
