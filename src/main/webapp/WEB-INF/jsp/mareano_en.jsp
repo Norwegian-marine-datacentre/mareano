@@ -11,11 +11,6 @@
         <script type="text/javascript" src="externals/ext/adapter/ext/ext-base-debug.js"></script>
         <script type="text/javascript" src="externals/ext/ext-all-debug-w-comments.js"></script>
         <style type="text/css">
-            select.fishexchange{
-                width:150px;
-                border:1px solid #000;
-                font-family:Georgia,Serif;
-            }
             .olImageLoadError { 
    				/* when OL encounters a 404, don't display the pink image */
     		display: none !important;
@@ -29,8 +24,6 @@
 
         <link href="theme/imr/imr.css" rel="stylesheet" type="text/css">
         <script type="text/javascript" src="javascript/layerIcon.js"></script>
-        <script type="text/javascript" src="javascript/combobox.js"></script>
-        <script type="text/javascript" src="javascript/controlFishexchangeDialog.js"></script>
         <script type="text/javascript" src="javascript/toNorwegianTranslateMenuButtons.js"></script>
         
         <!-- Mareano.no -->
@@ -192,9 +185,14 @@
             	var store = new GeoExt.data.LayerStore();
                 store.add(layers);  
 
+                /**
+                * Whenever a layer is turned on or off - send a request to local server (this server) to see
+                * if layer also should include Spesialpunkt from Mareano.
+                */
                 app.on("ready", function() {
+                	addOverviewMapAndKeyboardDefaults(this.mapPanel.map);
                     app.mapOfGMLspesialpunkt = new Object();    
-                    var kartlagInfoState = ""; //used by removeLegendAndInfo(mapOfGMLspesialpunkt, kartlagId)
+                    var kartlagInfoState = ""; //used by removeLayerLegendAndInfo(mapOfGMLspesialpunkt, kartlagId)
                     Ext.getCmp('topPanelHeading').update('${heading}');
                     
                     var layertree = Ext.getCmp("layertree");   
@@ -204,18 +202,18 @@
                     	//alert("beforeInsert:"+node.attributes.iconCls);
                     }, this, {single: true});
                     // we cannot specify this in outputConfig see: https://github.com/opengeo/gxp/issues/159   
-                    layertree.on('beforenodedrop', function(evt) {
+                    layertree.on('beforenodedrop', function(event) {
                     	// prevent dragging complete folders
-                        if (!evt.dropNode.layer || evt.target.text == "Base Layer" ||
-                        		evt.target.parentNode.text == "Base Layer")  {
+                        if (!event.dropNode.layer || event.target.text == "Base Layer" ||
+                        		event.target.parentNode.text == "Base Layer")  {
                             return false;
                         }
-                        if (evt.source.tree.id === "thematic_tree") {
-                            var group = evt.target.attributes.group || evt.target.parentNode.attributes.group;
-                            var layer = evt.dropNode.layer;
-                            var record = evt.dropNode.layerStore.getByLayer(layer);
-                            var iconCls = evt.dropNode.attributes.iconCls;
-                            var kartlagId = evt.dropNode.attributes.id;
+                        if (event.source.tree.id === "thematic_tree") {
+                            var group = event.target.attributes.group || event.target.parentNode.attributes.group;
+                            var layer = event.dropNode.layer;
+                            var record = event.dropNode.layerStore.getByLayer(layer);
+                            var iconCls = event.dropNode.attributes.iconCls;
+                            var kartlagId = event.dropNode.attributes.id;
                             
                             if (!layer.map) {
                     			record.set("group", group);
@@ -336,7 +334,7 @@
                 			                displayLegendGraphics(layer.metadata['kartlagId']);   
                                 			getSpesialPunkt(app.mapPanel.map.getExtent() + "", layerRecord.getLayer().metadata['kartlagId'], layerRecord.getLayer(), event);
                                 		} else {
-                                			removeLegendAndInfo(app.mapOfGMLspesialpunkt, layer.metadata['kartlagId'], record, layer);
+                                			removeLayerLegendAndInfo(app.mapOfGMLspesialpunkt, layer.metadata['kartlagId'], record, layer);
                                 		}
                                 	}
                                 });                                    
@@ -385,33 +383,6 @@
                         }  
                     });
                 });
-
-                //Adding overviewmap and keyboard defaults
-                app.on("ready", function() {
-                    var layerOptions = {
-                        units: "m",
-                        projection: "EPSG:32633",
-                        maxExtent: new OpenLayers.Bounds( -4101096.2210526327,5925725.768421048,4999746.221052637,9135005.768421048 ),
-                        minResolution: new OpenLayers.Bounds( -4101096.2210526327,5925725.768421048,4999746.221052637,9135005.768421048 ),
-                        bounds: new OpenLayers.Bounds( -4101096.2210526327,5925725.768421048,4999746.221052637,9135005.768421048 ),
-                        theme: null
-                    };
-                    var ol_wms2 = new OpenLayers.Layer.WMS(
-                    		"geonorge",
-                    		"http://wms.geonorge.no/skwms1/wms.europa?brukerid=EHAV_MOEEND&passord=spartakus234&VERSION=1.1.1&SERVICE=WMS",
-                    		{layers: "Land,Vmap0Land,Vmap0Kystkontur"}
-                	);
-                    var tmpLayerOptions = {layers: [ol_wms2], mapOptions: layerOptions, maximized: false, minRatio: 48, maxRatio: 72};
-                    this.mapPanel.map.addControl(new OpenLayers.Control.OverviewMap(tmpLayerOptions));
-                    this.mapPanel.map.addControl(new OpenLayers.Control.KeyboardDefaults());
-
-                    /*** Fix to avoid vector layer below baselayers ***/
-                    for ( var i=this.map.layers.length-1; i>=0; --i ) {
-                        if ( this.mapPanel.map.layers[i] instanceof OpenLayers.Layer.Vector ) {
-                            this.mapPanel.map.setLayerIndex( this.mapPanel.map.layers[i], 33 );
-                        }
-                    }
-                });                    
 
                 function getSpesialPunkt(extent, kartlagId, layer, event) {
                     jQuery.ajax({
@@ -497,21 +468,26 @@
                         Ext.getCmp('tips').html = this.kartlagInfoState;
                     }
                 }
-
-                function GMLselected (evt) {
-                    if ( evt.feature.data.type == "bilder" ) {
+                
+                /**
+                 * Show popup box with spesialpunkt
+                 */
+                function GMLselected (event) {
+                    if ( event.feature.data.type == "bilder" ) {
                     	Ext.MessageBox.show({
-                        title:evt.feature.data.name, 
-                        msg:'<a href="' + evt.feature.data.description + '" TARGET="_blank"><img src=" '+evt.feature.data.description+'" width=400 height=400 /></a>'});
-                    } else if ( evt.feature.data.type == "video" ) {
+                    		title:event.feature.data.name, 
+                    		msg:'<a href="' + event.feature.data.description + '" TARGET="_blank"><img src=" '+event.feature.data.description+'" width=400 height=400 /></a>'
+                    	});
+                    } else if ( event.feature.data.type == "video" ) {
                         Ext.MessageBox.show({
-                        title:evt.feature.data.name, 
-                        msg:'<embed width="330" height="200" controls="TRUE" autoplay="TRUE" loop="FALSE" src="'+evt.feature.data.description+'">'});
-                    } else if ( evt.feature.data.type == "pdf" ) { // finnes ennaa ikke
-                        Ext.MessageBox.show({title:evt.feature.data.name,msg:'<a href="' + evt.feature.data.description + '" TARGET="_blank">' + evt.feature.data.name + '</a>'});    
-                    } else if ( evt.feature.data.type == "text" ) {
-                        jQuery.get('/geodata/proxy?url=http://atlas.nodc.no/website/mareano/' + evt.feature.data.description, function(response) { 
-                            Ext.MessageBox.show({title:evt.feature.data.name, msg: response}); 
+                        	title:event.feature.data.name, 
+                        	msg:'<embed width="330" height="200" controls="TRUE" autoplay="TRUE" loop="FALSE" src="'+event.feature.data.description+'">'
+                        });
+                    } else if ( event.feature.data.type == "pdf" ) { // finnes ennaa ikke
+                        Ext.MessageBox.show({title:event.feature.data.name,msg:'<a href="' + event.feature.data.description + '" TARGET="_blank">' + event.feature.data.name + '</a>'});    
+                    } else if ( event.feature.data.type == "text" ) {
+                        jQuery.get('/geodata/proxy?url=http://atlas.nodc.no/website/mareano/' + event.feature.data.description, function(response) { 
+                            Ext.MessageBox.show({title:event.feature.data.name, msg: response}); 
                 		});
                     }
                 }
@@ -519,11 +495,10 @@
                 /**
                  * Remove Legend div tag and KartlagInfo div tag associated with kartlagId
                  */
-                function removeLegendAndInfo(mapOfGMLspesialpunkt, kartlagId, record, layer) {
+                function removeLayerLegendAndInfo(mapOfGMLspesialpunkt, kartlagId, record, layer) {
                 	
                 	app.mapPanel.map.removeLayer(layer);//fjern kartlag
                 	//app.mapPanel.layers.remove(record);
-
                 	
                 	if ( mapOfGMLspesialpunkt[kartlagId] != null ) { //fjern spesialpunkt                		
                     	app.mapPanel.map.removeLayer(mapOfGMLspesialpunkt[kartlagId], false);
@@ -540,18 +515,38 @@
                     	Ext.getCmp('tips').html = kartlagInfoState;
                     }
                 }
+                
+                /**
+                 * Adding overviewmap and keyboard defaults
+                 */
+                function addOverviewMapAndKeyboardDefaults(thisMap) {
+                    var layerOptions = {
+                        units: "m",
+                        projection: "EPSG:32633",
+                        maxExtent: new OpenLayers.Bounds( -4101096.2210526327,5925725.768421048,4999746.221052637,9135005.768421048 ),
+                        minResolution: new OpenLayers.Bounds( -4101096.2210526327,5925725.768421048,4999746.221052637,9135005.768421048 ),
+                        bounds: new OpenLayers.Bounds( -4101096.2210526327,5925725.768421048,4999746.221052637,9135005.768421048 ),
+                        theme: null
+                    };
+                    var ol_wms2 = new OpenLayers.Layer.WMS(
+                    		"geonorge",
+                    		"http://wms.geonorge.no/skwms1/wms.europa?brukerid=EHAV_MOEEND&passord=spartakus234&VERSION=1.1.1&SERVICE=WMS",
+                    		{layers: "Land,Vmap0Land,Vmap0Kystkontur"}
+                	);
+                    var tmpLayerOptions = {layers: [ol_wms2], mapOptions: layerOptions, maximized: false, minRatio: 48, maxRatio: 72};
+                    thisMap.addControl(new OpenLayers.Control.OverviewMap(tmpLayerOptions));
+                    thisMap.addControl(new OpenLayers.Control.KeyboardDefaults());
+
+                    /*** Fix to avoid vector layer below baselayers ***/
+                    for ( var i = thisMap.layers.length-1; i>=0; --i ) {
+                        if ( thisMap.layers[i] instanceof OpenLayers.Layer.Vector ) {
+                            thisMap.setLayerIndex( thisMap.layers[i], 33 );
+                        }
+                    }
+                }                
             }
-            /**
-            * Whenever a layer is turned on or off - send a request to local server (this server) to see
-            * if layer also should include Spesialpunkt from Mareano.
-            **
-            app.on("ready", function() {
-                var extent = this.mapPanel.map.getExtent() + ""; // hack so jQuery can access extjs/openlayers object
-                app.mapOfGMLspesialpunkt = new Object();    
-                var kartlagInfoState = ""; //used by removeLegendAndInfo(mapOfGMLspesialpunkt, kartlagId)
-                Ext.getCmp('topPanelHeading').update('${heading}');
-            });*/
-            function openURI(uri) { // needed by GMLselected(evt)
+            
+            function openURI(uri) { // needed by GMLselected(event)
             	window.open(uri,'Punktdata');
             }
         </script>
