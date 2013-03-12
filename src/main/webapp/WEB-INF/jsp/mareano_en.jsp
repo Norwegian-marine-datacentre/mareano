@@ -15,7 +15,6 @@
    				/* when OL encounters a 404, don't display the pink image */
     		display: none !important;
     		}
-
             #layertree .x-tree-node-cb[type="checkbox"] {
             	display: none;
             }
@@ -183,7 +182,7 @@
                             });
                             //alert("OLRecord:"+Object.keys(OLRecord.data));
                             //if (${bilde.visible} == true ) alert("bilde:"+'${bilde.gruppe}');
-                            OLRecord.data.visibility = ${bilde.visible};
+                            //OLRecord.data.visibility = ${bilde.visible};
                             layers.push(OLRecord);
                             </c:forEach>
                         </c:forEach>

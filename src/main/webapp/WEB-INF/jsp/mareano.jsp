@@ -15,6 +15,9 @@
                 /* when OL encounters a 404, don't display the pink image */
                 display: none !important;
             }
+            #layertree .x-tree-node-cb[type="checkbox"] {
+            	display: none;
+            }            
         </style>
         <meta http-equiv="X-UA-Compatible" content="IE=IE8" >
         <!--script type="text/javascript" src="javascript/googleAnalyticsStatistics.js"></script -->
@@ -131,9 +134,9 @@
                                 type: "OpenLayers.Layer.WMS",
                                 group: "background",
                                 args: [
-                                    "Europakart (gråtone)",
-                                    "http://atlas2.nodc.no/geoserver/wms",
-                                    {layers: "bakgrunnskart_nymareano", format: "image/jpeg", transparent: true, isBaseLayer: true}
+                                       "Europa",
+                                       "http://opencache.statkart.no/gatekeeper/gk/gk.open",
+                                       {layers: "europa", format: "image/jpeg", transparent: true, isBaseLayer: true}
                                 ]
                             }			
                         ],
@@ -146,7 +149,7 @@
                 <c:forEach var="hovedtema" items="${hovedtemaer}">
                     <c:forEach var="bilde" items="${hovedtema.bilder}">
                         <c:forEach var="kartlaget" items="${bilde.kart}">
-                            var x = gxp.plugins.OLSource.prototype.createLayerRecord({
+                            var OLRecord = gxp.plugins.OLSource.prototype.createLayerRecord({
                                 source: "ol",
                                 type: "OpenLayers.Layer.WMS",
                                 group: "${bilde.gruppe}",
@@ -162,7 +165,7 @@
                                         opacity: 0.5,
                                         metadata: {
                                             keyword: "${kartlaget.keyword}",
-                                            //'abstract': '${kartlaget.abstracts}',
+                                            'abstract': '${kartlaget.abstracts}',
                                             'kartlagId': '${kartlaget.id}'
                                         },
                                         maxExtent: [
@@ -174,7 +177,7 @@
                                     }
                                 ]
                             });
-                            layers.push(x);
+                            layers.push(OLRecord);
                         </c:forEach>
                     </c:forEach>
                 </c:forEach>              
@@ -187,7 +190,19 @@
                  */
                 app.on("ready", function() {
                     Ext.getCmp('topPanelHeading').update('${heading}');
+                    
                 	loadMareano( this.mapPanel, app, layers );
+                	
+                    store.each(function(record) {
+                    	if (record.getLayer().visibility === true) {
+	                    	var clone = record.clone();
+	                    	clone.set("group", "default");
+	                    	clone.getLayer().metadata['kartlagId'] = record.getLayer().metadata['kartlagId'];
+	                    	this.mapPanel.layers.add(clone);
+	                    	displayLegendGraphics(clone.getLayer().metadata['kartlagId']);
+                    	}
+                    }, this);
+                    
                     var treeRoot = Ext.getCmp('thematic_tree');
                     var mergedSomeHovedtema;
                     <c:forEach var="hovedtema" items="${hovedtemaer}">
@@ -195,7 +210,11 @@
                             text: "${hovedtema.hovedtema}"
                         });			
                         <c:forEach var="bilde" items="${hovedtema.bilder}">
-                            mergedSomeHovedtema.appendChild( addLayerToGroup("${bilde.gruppe}","${bilde.gruppe}", this.map, this.mapPanel, layers, store, app) );
+	                    	var group = addLayerToGroup("${bilde.gruppe}","${bilde.gruppe}", this.map, this.mapPanel, layers, store, app);
+	                    	if (group.attributes.expanded === true) {
+	                    		mergedSomeHovedtema.expanded = true;
+	                    	}
+	                    	mergedSomeHovedtema.appendChild( group );
                             </c:forEach>
                         treeRoot.getRootNode().appendChild( mergedSomeHovedtema );
                     </c:forEach>
