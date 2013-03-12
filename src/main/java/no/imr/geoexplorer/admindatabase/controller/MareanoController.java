@@ -78,7 +78,9 @@ public class MareanoController {
     public ModelAndView getMareanoTest(HttpServletResponse resp) {
         ModelAndView mav = new ModelAndView("mareano");
         getMareano(mav, "no");
-        mav.addObject("heading", getMareanoHeading(""));
+        
+        String heading = getMareanoHeading("");
+        mav.addObject("heading", heading);
 
         resp.setCharacterEncoding("UTF-8");
         return mav;

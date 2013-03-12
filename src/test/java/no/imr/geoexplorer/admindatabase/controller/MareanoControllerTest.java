@@ -105,6 +105,11 @@ public class MareanoControllerTest {
 		String html = mareanoController.getMareanoHeading("");
 		System.out.println(html);
 	}
+	
+	@Test
+	public void getListOrganizedToBrowser() {
+		mareanoController.listOrganizedToBrowser("en");
+	}
 
 	private String dummyGML(String boundingBox) {
 		FeatureCollection features = new FeatureCollection();

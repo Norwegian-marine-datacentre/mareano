@@ -63,6 +63,7 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
     descriptionText: "Description",
     contactText: "Contact",
     aboutThisMapText: "About this Map",
+    thematicText: "Tema tre",
     // End i18n.
     
     /**
@@ -287,13 +288,7 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
             //            collapsible: true,
             collapseMode: "mini",
             items: [
-            {
-                region: 'center', 
-                autoScroll: true, 
-                tbar: [], 
-                border: false, 
-                id: 'tree' /*title: this.layersText*/
-            },
+            {region: 'center',autoScroll: true,tbar: [],border: false,id: 'tree' /*title: this.layersText*/},
             legendContainerContainer
             ]
         });    
@@ -339,30 +334,43 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
             region: "center",
             //deferredRender: false,
             items: [westPanel, tipsPanel,
-            {
-                title:"Hjelp", 
-                html:"Hjelp", 
-                region: "center", 
-                disabled: "true"
-            }
+            {title:"Hjelp",html:"Hjelp",region: "center",disabled: "true"}
             ]
         });
 		
         var westPanel2 = new Ext.Panel({
             border: true,
-            layout: "border",
+            layout: "hbox",
+            layoutConfig: {
+                align: 'stretch',
+                pack: 'start'
+            },
             region: "west",
             unstyled:true,
-            width: 250,
+            width: 400,
             split: true,
             //            height: "100%",
             //            collapsible: true,
-            defaults:{
-                autoScroll:true
-            },
+            defaults:{autoScroll:true},
             collapseMode: "mini",
             items: [
-            westPanelTabs
+	            {
+	                xtype: 'treepanel',
+	                enableDrag: true,
+	                enableDrop: false,
+	                loader: new Ext.tree.TreeLoader(),
+	                root: new Ext.tree.AsyncTreeNode(),
+	                rootVisible: false,
+	                title: this.thematicText,
+	                layout: "fit",
+	                id: "thematic_tree",
+	                flex: 1
+	            }, {
+	                xtype: 'container',
+	                layout: "border",
+	                width: 250,
+	                items: westPanelTabs
+	            }
             ]
         });        
         /** slutt: import fra gammel versjon */    	
@@ -464,8 +472,8 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
                 border: false
             },
             items: [
-            this.mapPanel,
-            googleEarthPanel
+                this.mapPanel,
+                googleEarthPanel
             ],
             activeItem: 0
         });
@@ -529,9 +537,9 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
             layout: "border",
             //            tbar: this.toolbar,
             items: [
-            northPanel,
-            this.mapPanelContainer,
-            westPanel2
+                northPanel,
+                this.mapPanelContainer,
+                westPanel2
             ]
         }];
         
@@ -738,29 +746,29 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
         var tools = null;
         if (document.location.href.indexOf(MAREANO) != -1) {
             tools = [
-            drawPolyAction,
-            drawLineAction,               
-            gaaTilKoord,  
-            gaaTilHav,               
-            "-",
-            tmpMouseP,
-            "->",
-            norskBtn,
-            engelskMareanoBtn  			
+	            drawPolyAction,
+	            drawLineAction,               
+	            gaaTilKoord,  
+	            gaaTilHav,               
+	            "-",
+	            tmpMouseP,
+	            "->",
+	            norskBtn,
+	            engelskMareanoBtn  			
             ];
         } else {
             tools = [
-            drawPolyAction,
-            drawLineAction,
-            fishExButton,
-            //dummyFishExButton,                      
-            gaaTilKoord,  
-            gaaTilHav,               
-            "-",
-            tmpMouseP,
-            "->",
-            norskBtn,
-            engelskBtn  			
+	            drawPolyAction,
+	            drawLineAction,
+	            fishExButton,
+	            //dummyFishExButton,                      
+	            gaaTilKoord,  
+	            gaaTilHav,               
+	            "-",
+	            tmpMouseP,
+	            "->",
+	            norskBtn,
+	            engelskBtn  			
             ];
         }
         return tools;

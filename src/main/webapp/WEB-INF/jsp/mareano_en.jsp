@@ -15,6 +15,10 @@
    				/* when OL encounters a 404, don't display the pink image */
     		display: none !important;
     		}
+
+            #layertree .x-tree-node-cb[type="checkbox"] {
+            	display: none;
+            }
         </style>
         <meta http-equiv="X-UA-Compatible" content="IE=IE8" >
         <!--script type="text/javascript" src="javascript/googleAnalyticsStatistics.js"></script -->
@@ -59,6 +63,7 @@
         <script type="text/javascript" src="script/ux.js"></script>
 
         <script type="text/javascript" src="javascript/WMSLayerPanel.js"></script>
+        <script type="text/javascript" src="javascript/mareano_common.js"></script>
 
         <!-- PrintPreview resources -->
         <link rel="stylesheet" type="text/css" href="externals/PrintPreview/resources/css/printpreview.css">
@@ -91,7 +96,7 @@
                     proxy: "proxy/?url=",
                     printService: null,
                     about: {
-                        title: "Geodata from the Institute of Marine Research",
+                        title: "Mareano",
                         "abstract": "Copyright (C) 2005-2013 Mareano. Map projection WGS84, UTM 33 N",
                         contact: "For more information, contact <a href='http://www.imr.no'>Institute of Marine Research</a>."
                     },
@@ -126,7 +131,7 @@
                                     "http://opencache.statkart.no/gatekeeper/gk/gk.open",
                                     {layers: "topo2graatone", format: "image/jpeg", transparent: true, isBaseLayer: true}
                                 ]
-                            }/*, {
+                            }, {
                                 source: "ol",
                                 type: "OpenLayers.Layer.WMS",
                                 group: "background",
@@ -139,7 +144,7 @@
                                     //"http://opencache.statkart.no/gatekeeper/gk/gk.open",
                                     //{layers: "europa", format: "image/jpeg", transparent: true, isBaseLayer: true}
                                 ]
-                            }*/
+                            }
                         ],
                         center: [1088474,8089849],
                         zoom: 2
@@ -150,14 +155,12 @@
                 <c:forEach var="hovedtema" items="${hovedtemaer}">
                     <c:forEach var="bilde" items="${hovedtema.bilder}">
                         <c:forEach var="kartlaget" items="${bilde.kart}">
-                            var x = gxp.plugins.OLSource.prototype.createLayerRecord({
-                                source: "ol",
+                        var OLRecord = gxp.plugins.OLSource.prototype.createLayerRecord({
+                    		source: "ol",	
                                 type: "OpenLayers.Layer.WMS",
                                 group: "${bilde.gruppe}",
-                                visibility: false,
+                                visibility: ${bilde.visible},
                                 properties: "mareano_wmslayerpanel",           
-                                //properties: "${kartlaget.id}",
-                                //id: "${kartlaget.id}",   
                                 args: [
                                     "${kartlaget.title}",
                                     "${kartlaget.url}",
@@ -178,10 +181,13 @@
                                     }
                                 ]
                             });
-                            layers.push(x);
+                            //alert("OLRecord:"+Object.keys(OLRecord.data));
+                            //if (${bilde.visible} == true ) alert("bilde:"+'${bilde.gruppe}');
+                            OLRecord.data.visibility = ${bilde.visible};
+                            layers.push(OLRecord);
+                            </c:forEach>
                         </c:forEach>
-                    </c:forEach>
-                </c:forEach>              
+                    </c:forEach>                             
             	var store = new GeoExt.data.LayerStore();
                 store.add(layers);  
 
@@ -190,38 +196,19 @@
                 * if layer also should include Spesialpunkt from Mareano.
                 */
                 app.on("ready", function() {
-                	addOverviewMapAndKeyboardDefaults(this.mapPanel.map);
-                    app.mapOfGMLspesialpunkt = new Object();    
-                    var kartlagInfoState = ""; //used by removeLayerLegendAndInfo(mapOfGMLspesialpunkt, kartlagId)
                     Ext.getCmp('topPanelHeading').update('${heading}');
                     
-                    var layertree = Ext.getCmp("layertree");   
-                    layertree.on('beforeinsert', function(tree, container, node) {
-                    	//alert("beforeInsert:"+node.layer.url);
-                    	node.attributes.iconCls = getLayerIcon(node.layer.url);
-                    	//alert("beforeInsert:"+node.attributes.iconCls);
-                    }, this, {single: true});
-                    // we cannot specify this in outputConfig see: https://github.com/opengeo/gxp/issues/159   
-                    layertree.on('beforenodedrop', function(event) {
-                    	// prevent dragging complete folders
-                        if (!event.dropNode.layer || event.target.text == "Base Layer" ||
-                        		event.target.parentNode.text == "Base Layer")  {
-                            return false;
-                        }
-                        if (event.source.tree.id === "thematic_tree") {
-                            var group = event.target.attributes.group || event.target.parentNode.attributes.group;
-                            var layer = event.dropNode.layer;
-                            var record = event.dropNode.layerStore.getByLayer(layer);
-                            var iconCls = event.dropNode.attributes.iconCls;
-                            var kartlagId = event.dropNode.attributes.id;
-                            
-                            if (!layer.map) {
-                    			record.set("group", group);
-                    			record.getLayer().setVisibility(true);
-                            }
-                            return false;
-                        }
-                    }, app);
+                    store.each(function(record) {
+                    	if (record.getLayer().visibility === true) {
+	                    	var clone = record.clone();
+	                    	clone.set("group", "default");
+	                    	clone.getLayer().metadata['kartlagId'] = record.getLayer().metadata['kartlagId'];
+	                    	this.mapPanel.layers.add(clone);
+	                    	displayLegendGraphics(clone.getLayer().metadata['kartlagId']);
+                    	}
+                    }, this);
+
+                	loadMareano( this.mapPanel, app, layers );
                     var treeRoot = Ext.getCmp('thematic_tree');
                     var mergedSomeHovedtema;
                     <c:forEach var="hovedtema" items="${hovedtemaer}">
@@ -229,127 +216,10 @@
                             text: "${hovedtema.hovedtema}"
                         });			
                         <c:forEach var="bilde" items="${hovedtema.bilder}">
-                            mergedSomeHovedtema.appendChild( addLayerToGroup("${bilde.gruppe}","${bilde.gruppe}", this.map, this.mapPanel) );
+                            mergedSomeHovedtema.appendChild( addLayerToGroup("${bilde.gruppe}","${bilde.gruppe}", this.map, this.mapPanel, layers, store, app) );
                             </c:forEach>
                         treeRoot.getRootNode().appendChild( mergedSomeHovedtema );
-                    </c:forEach>			
-
-                    function addLayerToGroup( gruppeNavn, gruppeText, map, mapPanel ) {
-                        var indexOfWMSgruppe = [];
-                        var layerName = [];
-                        for (var i = layers.length-1;i>=0;--i) {
-                            if ( layers[i].get("group") == gruppeNavn ) {
-                                layerName.push(layers[i].getLayer().params.LAYERS);
-                            }
-                        }
-
-                        var tmpLoader = new GeoExt.tree.LayerLoader({
-                            store: store,
-                            filter: function(record) {
-                                var featureInfoEvents = [];
-                                /** Add event for getFeatureInfo */
-                                function setThisHTML(response) {
-                                    var from = response.responseText.indexOf("<body>");
-                                    var to = response.responseText.indexOf("</body>");
-                                    var bodyStr = response.responseText.substring(from, to);
-                                    /** Ugly - fix by not sending request when click outside layer */
-                                    if ( response.responseText != null && response.responseText != "" && bodyStr.length > 14 ) {
-                                        //Ext.MessageBox.show( 'Feature Info', response.responseText );
-                                        winPanel = new Ext.Window({title: 'Feature Info',autoHeight: true,width:300,html: response.responseText});
-                                        winPanel.show();
-                                        //Ext.MessageBox.show( {title: 'Feature Info', msg: response.responseText, setAutoScroll:true} );
-                                    }
-                                };
-                                var tmpMap = mapPanel.map;
-                                if (record.get("layer").url!=null && !(record.get("layer") instanceof OpenLayers.Layer.Vector) &&
-                                    record.get("layer").url.indexOf( 'http://maps.imr.no/geoserver/wms' ) != -1 ) {
-
-                                    var isRegFlag = 0;
-                                    if ( featureInfoEvents != [] ) {
-                                        for ( var i=0, len=featureInfoEvents.length; i<len; i++ ) {
-                                            if ( featureInfoEvents[i] == record.get("layer") ) {
-                                                isRegFlag = 1;
-                                            }
-                                        }
-                                    }
-
-                                    if ( isRegFlag == 0 ) {
-                                        featureInfoEvents.push( record.get("layer") );
-                                        tmpMap.events.register('click', record.get("layer"), function (e) {
-                                            if ( record.get("layer").getVisibility() ) {
-                                                var params = {
-                                                    REQUEST: "GetFeatureInfo",
-                                                    EXCEPTIONS: "application/vnd.ogc.se_xml",
-                                                    BBOX: tmpMap.getExtent().toBBOX(),
-                                                    X: e.xy.x,
-                                                    Y: e.xy.y,
-                                                    INFO_FORMAT: 'text/html',
-                                                    QUERY_LAYERS: record.get("layer").params['LAYERS'],
-                                                    FEATURE_COUNT: 50,
-                                                    Layers: record.get("layer").params['LAYERS'],
-                                                    Styles: '',
-                                                    Srs: 'EPSG:32633',
-                                                    WIDTH: tmpMap.size.w,
-                                                    HEIGHT: tmpMap.size.h,
-                                                    format: 'image/jpeg'
-                                                };
-                                                var returned = OpenLayers.loadURL("http://maps.imr.no/geoserver/wms", params, this, setThisHTML);
-                                                //returned.abort(); //to avoid two popups
-                                                OpenLayers.Event.stop(e);
-                                            }
-                                        });
-                                    }
-                                }
-                                /** adding the right layer to the right container */
-                                for( var i= layerName.length-1; i>=0; --i ) {
-                                    if ( record.get("group") == gruppeNavn ) {
-                                        return true;
-                                    }
-                                }
-                                return false;
-                            },
-                            createNode: function(attr) {
-                                var layerRecord = this.store.getByLayer(attr.layer);
-                                var cssBgImg = "";
-                                var url = "";
-                                if ( layerRecord.getLayer() instanceof OpenLayers.Layer.WMS ) {
-                                    url = layerRecord.getLayer().url;
-                                }
-                                cssBgImg = getLayerIcon(url);
-                                attr.id=layerRecord.data.id;
-                                attr.iconCls = cssBgImg;
-                                attr.checked = false;
-                                attr.id = layerRecord.data.id;
-
-                                attr.autoDisable = false;
-                                var node = GeoExt.tree.LayerLoader.prototype.createNode.call(this, attr);                                
-                                node.on("checkChange", function(event) {
-                                	var cb = node.getUI().checkbox;
-                                	if ( cb && Ext.get(cb).getAttribute('type') === 'checkbox' ) {
-                                		var layer = layerRecord.getLayer();
-                                		var record = event.layerStore.getByLayer(layer);
-                                		if (event.ui.checkbox.checked) {
-                                			app.mapPanel.layers.add(record); 
-                                			//app.mapPanel.map.addLayer(layer); //adds layer to Overlay but mareano_wmslayerpanel is missing from properties and no layer properties are shown
-                			                displayLegendGraphics(layer.metadata['kartlagId']);   
-                                			getSpesialPunkt(app.mapPanel.map.getExtent() + "", layerRecord.getLayer().metadata['kartlagId'], layerRecord.getLayer(), event);
-                                		} else {
-                                			removeLayerLegendAndInfo(app.mapOfGMLspesialpunkt, layer.metadata['kartlagId'], record, layer);
-                                		}
-                                	}
-                                });                                    
-                                return node;
-                            }
-                        });
-
-                        var layerContainerGruppe = new GeoExt.tree.LayerContainer({
-                            text: gruppeText,                                                              
-                            layerStore: store,
-                            loader: tmpLoader
-                        });
-
-                        return layerContainerGruppe;
-                    }
+                    </c:forEach>
                     /***********************************/
                     treeRoot.getRootNode().appendChild( mergedSomeHovedtema );
                     /***********************************/
@@ -383,167 +253,6 @@
                         }  
                     });
                 });
-
-                function getSpesialPunkt(extent, kartlagId, layer, event) {
-                    jQuery.ajax({
-                        type: 'get',
-                        url: "spring/spesialpunkt",
-                        contentType: "application/json",
-                        data: {
-                            extent : extent,
-                            kartlagId: kartlagId
-                        },                	
-		                success:function(data) {
-		                	if ( data.noSpesialpunkt == false ) { 
-		                		var layerName = "";
-		                		var styleMap = new OpenLayers.StyleMap({
-		                			'default':{externalGraphic: "theme/imr/images/geofotoSpesialpunkt.png"}
-		                		});
-		                		var snitt = new OpenLayers.Layer.GML("Spesialpunkt","spring/getgml", {styleMap: styleMap});   
-		                		app.mapOfGMLspesialpunkt[kartlagId] = snitt;	    
-		                		snitt.events.register( "featureselected", snitt, GMLselected );
-		                		app.mapPanel.map.addLayer( snitt );   	           
-		                		
-		                		var control = new OpenLayers.Control.SelectFeature( snitt );
-                                app.mapPanel.map.addControl( control );
-                                control.activate(); 	 
-		                	}
-		                }                
-                    });
-                }
-            
-                function displayLegendGraphics(kartlagId) {
-                    jQuery.ajax({
-                        type: 'get',
-                        url: "spring/legend",
-                        contentType: "application/json",
-                        data: {
-                            kartlagId: kartlagId,
-                            language: "en"
-                        },
-                        success:function(data) {
-                            var currentLegend;
-                            jQuery('#newLegend').children().each(function(index, value){
-                                jQuery(value).children().each(function(index, value){
-                                    currentLegend = jQuery(value).html();
-                                });	        
-                            });
-                            buildLegendGraphicsHTML( currentLegend, kartlagId, data );
-                            visKartlagInfoHTML( kartlagId, data );                 
-                        }
-                    }); 
-                }
-
-                function buildLegendGraphicsHTML( currentLegend, kartlagId, data ) {
-                    var legendGraphicsHTML = currentLegend+'<div id="'+kartlagId+'">';
-                    for ( var i=0; i < data.legends.length; i++ ) {
-                    	if ( i > 0 ) {
-                    		legendGraphicsHTML += '<div>';     
-                    	}
-                    	if ( data.legends[i].url != '') {
-                    		legendGraphicsHTML += '<img src="' + data.legends[i].url + '"/>';
-                    	}
-                    	legendGraphicsHTML += data.legends[i].text;
-                    	if ( i > 0 ) {
-                    		legendGraphicsHTML += '</div>';     
-                    	}
-                    } 
-                    legendGraphicsHTML += '</div>';
-                    Ext.getCmp('newLegend').update(legendGraphicsHTML);
-                }
-
-                /**
-                 * bug: I have a panel in a tab that is not shown. 
-                 * I call update(somehtml) on that panel. The panel's html body is not updated. 
-                 * After I show the panel for the first time, all future updates() behave correctly whether it is hidden or shown
-                 * http://www.sencha.com/forum/archive/index.php/t-103797.html
-                 **/
-                function visKartlagInfoHTML(kartlagId, data) {
-                    var infoHTML = '<div id="'+kartlagId+'tips"><b>'+data.kartlagInfo.kartlagInfoTitel+':</b>'+data.kartlagInfo.text+'</div>';
-
-                    this.kartlagInfoState += infoHTML;
-                    if ( Ext.getCmp('tips').rendered ) {
-                        Ext.getCmp('tips').update(this.kartlagInfoState);
-                    } else {
-                        Ext.getCmp('tips').html = this.kartlagInfoState;
-                    }
-                }
-                
-                /**
-                 * Show popup box with spesialpunkt
-                 */
-                function GMLselected (event) {
-                    if ( event.feature.data.type == "bilder" ) {
-                    	Ext.MessageBox.show({
-                    		title:event.feature.data.name, 
-                    		msg:'<a href="' + event.feature.data.description + '" TARGET="_blank"><img src=" '+event.feature.data.description+'" width=400 height=400 /></a>'
-                    	});
-                    } else if ( event.feature.data.type == "video" ) {
-                        Ext.MessageBox.show({
-                        	title:event.feature.data.name, 
-                        	msg:'<embed width="330" height="200" controls="TRUE" autoplay="TRUE" loop="FALSE" src="'+event.feature.data.description+'">'
-                        });
-                    } else if ( event.feature.data.type == "pdf" ) { // finnes ennaa ikke
-                        Ext.MessageBox.show({title:event.feature.data.name,msg:'<a href="' + event.feature.data.description + '" TARGET="_blank">' + event.feature.data.name + '</a>'});    
-                    } else if ( event.feature.data.type == "text" ) {
-                        jQuery.get('/geodata/proxy?url=http://atlas.nodc.no/website/mareano/' + event.feature.data.description, function(response) { 
-                            Ext.MessageBox.show({title:event.feature.data.name, msg: response}); 
-                		});
-                    }
-                }
-
-                /**
-                 * Remove Legend div tag and KartlagInfo div tag associated with kartlagId
-                 */
-                function removeLayerLegendAndInfo(mapOfGMLspesialpunkt, kartlagId, record, layer) {
-                	
-                	app.mapPanel.map.removeLayer(layer);//fjern kartlag
-                	//app.mapPanel.layers.remove(record);
-                	
-                	if ( mapOfGMLspesialpunkt[kartlagId] != null ) { //fjern spesialpunkt                		
-                    	app.mapPanel.map.removeLayer(mapOfGMLspesialpunkt[kartlagId], false);
-                    }
-                    var legendDiv = '#'+kartlagId; //fjern legend 
-                    jQuery(legendDiv).remove();
-                    
-                    var temp = jQuery("<div>").html(app.kartlagInfoState); //fjern kartlaginfo 
-                    jQuery(temp).find(legendDiv+'tips').remove();
-                    kartlagInfoState = jQuery(temp).html();			
-                    if ( Ext.getCmp('tips').rendered ) {
-                    	Ext.getCmp('tips').update(kartlagInfoState);
-                    } else {
-                    	Ext.getCmp('tips').html = kartlagInfoState;
-                    }
-                }
-                
-                /**
-                 * Adding overviewmap and keyboard defaults
-                 */
-                function addOverviewMapAndKeyboardDefaults(thisMap) {
-                    var layerOptions = {
-                        units: "m",
-                        projection: "EPSG:32633",
-                        maxExtent: new OpenLayers.Bounds( -4101096.2210526327,5925725.768421048,4999746.221052637,9135005.768421048 ),
-                        minResolution: new OpenLayers.Bounds( -4101096.2210526327,5925725.768421048,4999746.221052637,9135005.768421048 ),
-                        bounds: new OpenLayers.Bounds( -4101096.2210526327,5925725.768421048,4999746.221052637,9135005.768421048 ),
-                        theme: null
-                    };
-                    var ol_wms2 = new OpenLayers.Layer.WMS(
-                    		"geonorge",
-                    		"http://wms.geonorge.no/skwms1/wms.europa?brukerid=EHAV_MOEEND&passord=spartakus234&VERSION=1.1.1&SERVICE=WMS",
-                    		{layers: "Land,Vmap0Land,Vmap0Kystkontur"}
-                	);
-                    var tmpLayerOptions = {layers: [ol_wms2], mapOptions: layerOptions, maximized: false, minRatio: 48, maxRatio: 72};
-                    thisMap.addControl(new OpenLayers.Control.OverviewMap(tmpLayerOptions));
-                    thisMap.addControl(new OpenLayers.Control.KeyboardDefaults());
-
-                    /*** Fix to avoid vector layer below baselayers ***/
-                    for ( var i = thisMap.layers.length-1; i>=0; --i ) {
-                        if ( thisMap.layers[i] instanceof OpenLayers.Layer.Vector ) {
-                            thisMap.setLayerIndex( thisMap.layers[i], 33 );
-                        }
-                    }
-                }                
             }
             
             function openURI(uri) { // needed by GMLselected(event)

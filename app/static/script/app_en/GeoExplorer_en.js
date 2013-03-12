@@ -366,7 +366,7 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
                 }, {
                     xtype: 'container',
                     layout: "border",
-                    width: 250,
+                    width: 230,
                     items: westPanelTabs
                 }
             ]

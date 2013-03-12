@@ -104,8 +104,10 @@ gxp.plugins.OLSource = Ext.extend(gxp.plugins.LayerSource, {
                 {name: "fixed", type: "boolean"},
                 {name: "selected", type: "boolean"},
                 {name: "type", type: "string"},
+                {name: "visibility", type: "boolean"},
                 {name: "args"}
             ]);
+            
             var data = {
                 layer: layer,
                 title: layer.name,
@@ -115,6 +117,7 @@ gxp.plugins.OLSource = Ext.extend(gxp.plugins.LayerSource, {
                 fixed: ("fixed" in config) ? config.fixed : false,
                 selected: ("selected" in config) ? config.selected : false,
                 type: config.type,
+                visibility: config.visibility,
                 args: config.args,
                 properties: ("properties" in config) ? config.properties : undefined
             };

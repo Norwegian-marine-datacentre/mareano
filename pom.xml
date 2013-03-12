@@ -12,7 +12,7 @@
     </parent -->
 
     <groupId>org.opengeo</groupId>
-    <artifactId>geoexplorer2.4.3WithOpenGeo2.5AddOns</artifactId>
+    <artifactId>Mareano</artifactId>
     <packaging>war</packaging>
     <name>OpenGeo Suite GeoExplorer2.4.3</name>
     <version>2.3.1</version>
