@@ -35,12 +35,19 @@ function loadMareano(mapPanel, app) {
 function addLayerToGroup( gruppeNavn, gruppeText, map, mapPanel, layers, store, app ) {
     var indexOfWMSgruppe = [];
     var layerName = [];
+    var childrenVisible = 0;
+    var count = 0;    
     for (var i = layers.length-1;i>=0;--i) {
         if ( layers[i].get("group") == gruppeNavn ) {
+        	count++;
+        	if (layers[i].getLayer().visibility === true) {
+        		childrenVisible++;
+        	} 
             layerName.push(layers[i].getLayer().params.LAYERS);
         }
     }
 
+    var groupChecked = (childrenVisible === count);
     var tmpLoader = new GeoExt.tree.LayerLoader({
         store: store,
         filter: function(record) {
@@ -150,7 +157,8 @@ function addLayerToGroup( gruppeNavn, gruppeText, map, mapPanel, layers, store, 
     
 
     var layerContainerGruppe = new GeoExt.tree.LayerContainer({
-    	checked: false,
+    	checked: groupChecked,
+        expanded: groupChecked,    	
         text: gruppeText,   
         listeners: {
             "checkchange": function(node, checked) { //routene for setting all subnodes if parent is checked

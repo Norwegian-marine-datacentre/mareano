@@ -136,13 +136,13 @@
                                 type: "OpenLayers.Layer.WMS",
                                 group: "background",
                                 args: [
-                                   	"Europa (grayscale)",
-                                	"http://atlas2.nodc.no/geoserver/wms",
-                                	{layers: "bakgrunnskart_nymareano", format: "image/jpeg", transparent: true, isBaseLayer: true}
+                                   	//"Europa (grayscale)",
+                                	//"http://atlas2.nodc.no/geoserver/wms",
+                                	//{layers: "bakgrunnskart_nymareano", format: "image/jpeg", transparent: true, isBaseLayer: true}
                                 	
-                                    //"Europa",
-                                    //"http://opencache.statkart.no/gatekeeper/gk/gk.open",
-                                    //{layers: "europa", format: "image/jpeg", transparent: true, isBaseLayer: true}
+                                    "Europa",
+                                    "http://opencache.statkart.no/gatekeeper/gk/gk.open",
+                                    {layers: "europa", format: "image/jpeg", transparent: true, isBaseLayer: true}
                                 ]
                             }
                         ],
@@ -197,7 +197,9 @@
                 */
                 app.on("ready", function() {
                     Ext.getCmp('topPanelHeading').update('${heading}');
-                    
+
+                	loadMareano( this.mapPanel, app, layers );
+
                     store.each(function(record) {
                     	if (record.getLayer().visibility === true) {
 	                    	var clone = record.clone();
@@ -207,8 +209,7 @@
 	                    	displayLegendGraphics(clone.getLayer().metadata['kartlagId']);
                     	}
                     }, this);
-
-                	loadMareano( this.mapPanel, app, layers );
+                    
                     var treeRoot = Ext.getCmp('thematic_tree');
                     var mergedSomeHovedtema;
                     <c:forEach var="hovedtema" items="${hovedtemaer}">
@@ -216,8 +217,12 @@
                             text: "${hovedtema.hovedtema}"
                         });			
                         <c:forEach var="bilde" items="${hovedtema.bilder}">
-                            mergedSomeHovedtema.appendChild( addLayerToGroup("${bilde.gruppe}","${bilde.gruppe}", this.map, this.mapPanel, layers, store, app) );
-                            </c:forEach>
+                        	var group = addLayerToGroup("${bilde.gruppe}","${bilde.gruppe}", this.map, this.mapPanel, layers, store, app);
+                        	if (group.attributes.expanded === true) {
+                        		mergedSomeHovedtema.expanded = true;
+                        	}
+                        	mergedSomeHovedtema.appendChild( group );
+                        </c:forEach>
                         treeRoot.getRootNode().appendChild( mergedSomeHovedtema );
                     </c:forEach>
                     /***********************************/
