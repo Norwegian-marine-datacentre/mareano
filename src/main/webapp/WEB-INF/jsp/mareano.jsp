@@ -112,13 +112,21 @@
                         numZoomLevels: 18,
                         layers: [
                             {
+                            	/*
+                            	 * Kartløsninger fra geonorge.
+                            	 * 1. http://wms.geonorge.no - ubegrenset tilgang for HI (fordi de har IP rangen vår) men en begrensning på ca 3 kall i sekundet. Kjører raskest med singleTile
+                            	 * 2. opencache.statkart.no/gatekeeper - åpen løsning men begresning på 10 000 kall pr dag. Tilet løsning
+                            	 * 3. gatekeeper1.geonorge.no - ubegrenset med tilet tilgang men hver request krever en token som krever pålogging og som har timeout. Så token forrandrer seg over tid
+                            	 */
                                 source: "ol",
                                 type: "OpenLayers.Layer.WMS",
                                 group: "background",
                                 args: [
                                     "Norgeskart",
+                                    //"http://wms.geonorge.no/skwms1/wms.toporaster2",
                                     "http://opencache.statkart.no/gatekeeper/gk/gk.open",
                                     {layers: "toporaster2", format: "image/jpeg", transparent: true, isBaseLayer: true}
+                                    //,{singleTile:true}
                                 ]
                             }, {
                                 source: "ol",
@@ -126,17 +134,22 @@
                                 group: "background",
                                 args: [
                                     "Norgeskart (gr\u00e5tone)",
+                                    //"http://wms.geonorge.no/skwms1/wms.topo2graatone",
                                     "http://opencache.statkart.no/gatekeeper/gk/gk.open",
                                     {layers: "topo2graatone", format: "image/jpeg", transparent: true, isBaseLayer: true}
+                                    //,{singleTile:true}
                                 ]
                             }, {
                                 source: "ol",
                                 type: "OpenLayers.Layer.WMS",
                                 group: "background",
                                 args: [
-                                       "Europa",
-                                       "http://opencache.statkart.no/gatekeeper/gk/gk.open",
-                                       {layers: "europa", format: "image/jpeg", transparent: true, isBaseLayer: true}
+                                      	"Europa",
+                                      	//"http://wms.geonorge.no/skwms1/wms.europa",
+                                      	"http://opencache.statkart.no/gatekeeper/gk/gk.open",
+                                    	//{layers: "europa_wms", format: "image/jpeg", transparent: true, isBaseLayer: true}
+                                      	{layers: "europa", format: "image/jpeg", transparent: true, isBaseLayer: true}
+                                    	//,{singleTile:true}
                                 ]
                             }			
                         ],
@@ -162,10 +175,10 @@
                                     "${kartlaget.url}",
                                     {layers: "${kartlaget.layers}", format: "image/png", transparent: true},
                                     {
-                                        opacity: 0.5,
+                                        opacity: 0.5
                                         metadata: {
                                             keyword: "${kartlaget.keyword}",
-                                            'abstract': '${kartlaget.abstracts}',
+                                            //'abstract': '${kartlaget.abstracts}', //causes error: missing } after property list genereres daglig fra OD's operasjonelle databaser. Detaljeringsg...
                                             'kartlagId': '${kartlaget.id}'
                                         },
                                         maxExtent: [

@@ -127,7 +127,12 @@ function addLayerToGroup( gruppeNavn, gruppeText, map, mapPanel, layers, store, 
             attr.id = layerRecord.data.id;
 
             attr.autoDisable = false;
-            var node = GeoExt.tree.LayerLoader.prototype.createNode.call(this, attr);                                
+            var node = GeoExt.tree.LayerLoader.prototype.createNode.call(this, attr);       
+            app.mapPanel.layers.on("remove", function(store, record) {
+            	if (record.getLayer().metadata['kartlagId'] === attr.layer.metadata['kartlagId']) {
+            		node.ui.toggleCheck(false);
+            	}
+            });            
             node.on("checkChange", function(event) {
             	var cb = node.getUI().checkbox;
             	if ( cb && Ext.get(cb).getAttribute('type') === 'checkbox' ) {

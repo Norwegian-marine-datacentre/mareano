@@ -113,37 +113,40 @@
                         numZoomLevels: 18,
                         layers: [
                             {
-                                source: "ol",
+                            	source: "ol",
                                 type: "OpenLayers.Layer.WMS",
                                 group: "background",
                                 args: [
-                                    "Norway",
+                                    "Norgeskart",
+                                    //"http://wms.geonorge.no/skwms1/wms.toporaster2",
                                     "http://opencache.statkart.no/gatekeeper/gk/gk.open",
                                     {layers: "toporaster2", format: "image/jpeg", transparent: true, isBaseLayer: true}
+                                    //,{singleTile:true}
                                 ]
                             }, {
                                 source: "ol",
                                 type: "OpenLayers.Layer.WMS",
                                 group: "background",
                                 args: [
-                                    "Norway (grayscale)",
+                                    "Norgeskart (gr\u00e5tone)",
+                                    //"http://wms.geonorge.no/skwms1/wms.topo2graatone",
                                     "http://opencache.statkart.no/gatekeeper/gk/gk.open",
                                     {layers: "topo2graatone", format: "image/jpeg", transparent: true, isBaseLayer: true}
+                                    //,{singleTile:true}
                                 ]
                             }, {
                                 source: "ol",
                                 type: "OpenLayers.Layer.WMS",
                                 group: "background",
                                 args: [
-                                   	//"Europa (grayscale)",
-                                	//"http://atlas2.nodc.no/geoserver/wms",
-                                	//{layers: "bakgrunnskart_nymareano", format: "image/jpeg", transparent: true, isBaseLayer: true}
-                                	
-                                    "Europa",
-                                    "http://opencache.statkart.no/gatekeeper/gk/gk.open",
-                                    {layers: "europa", format: "image/jpeg", transparent: true, isBaseLayer: true}
+                                      	"Europa",
+                                      	//"http://wms.geonorge.no/skwms1/wms.europa",
+                                      	"http://opencache.statkart.no/gatekeeper/gk/gk.open",
+                                    	//{layers: "europa_wms", format: "image/jpeg", transparent: true, isBaseLayer: true}
+                                      	{layers: "europa", format: "image/jpeg", transparent: true, isBaseLayer: true}
+                                    	//,{singleTile:true}
                                 ]
-                            }
+                            }			
                         ],
                         center: [1088474,8089849],
                         zoom: 2
@@ -176,7 +179,8 @@
                                             ${kartlaget.exGeographicBoundingBoxSouthBoundLatitude},
                                             ${kartlaget.exGeographicBoundingBoxEastBoundLongitude},
                                             ${kartlaget.exGeographicBoundingBoxNorthBoundLatitude}
-                                        ]
+                                        ],
+                                        singleTile: true
                                     }
                                 ]
                             });
