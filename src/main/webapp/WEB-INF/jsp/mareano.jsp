@@ -175,7 +175,7 @@
                                     "${kartlaget.url}",
                                     {layers: "${kartlaget.layers}", format: "image/png", transparent: true},
                                     {
-                                        opacity: 0.5
+                                        opacity: 0.5,
                                         metadata: {
                                             keyword: "${kartlaget.keyword}",
                                             //'abstract': '${kartlaget.abstracts}', //causes error: missing } after property list genereres daglig fra OD's operasjonelle databaser. Detaljeringsg...
