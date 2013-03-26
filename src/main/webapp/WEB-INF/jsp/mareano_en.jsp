@@ -1,8 +1,9 @@
+<!DOCTYPE HTML SYSTEM>
 <%@page pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> 
 <html>
     <head>
-        <title id="page-title">Mareano</title>
+        <title>Mareano</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <link rel="shortcut icon" href="theme/app/img/favicon.ico">
         <!-- Ext resources -->
@@ -180,7 +181,9 @@
                                             ${kartlaget.exGeographicBoundingBoxEastBoundLongitude},
                                             ${kartlaget.exGeographicBoundingBoxNorthBoundLatitude}
                                         ],
-                                        singleTile: true
+                                        singleTile:true,
+                                        buffer: 0, 
+                                        ratio: 1
                                     }
                                 ]
                             });

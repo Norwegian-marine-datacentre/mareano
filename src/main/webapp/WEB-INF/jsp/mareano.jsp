@@ -1,8 +1,9 @@
+<!DOCTYPE HTML SYSTEM>
 <%@page pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> 
 <html>
     <head>
-        <title id="page-title">Mareano</title>
+        <title>Mareano</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <link rel="shortcut icon" href="theme/app/img/favicon.ico">
         <!-- Ext resources -->
@@ -115,7 +116,7 @@
                             	/*
                             	 * Kartløsninger fra geonorge.
                             	 * 1. http://wms.geonorge.no - ubegrenset tilgang for HI (fordi de har IP rangen vår) men en begrensning på ca 3 kall i sekundet. Kjører raskest med singleTile
-                            	 * 2. opencache.statkart.no/gatekeeper - åpen løsning men begresning på 10 000 kall pr dag. Tilet løsning
+//                            	 * 2. opencache.statkart.no/gatekeeper - åpen løsning men begresning på 10 000 kall pr dag. Tilet løsning
                             	 * 3. gatekeeper1.geonorge.no - ubegrenset med tilet tilgang men hver request krever en token som krever pålogging og som har timeout. Så token forrandrer seg over tid
                             	 */
                                 source: "ol",
@@ -147,9 +148,9 @@
                                       	"Europa",
                                       	//"http://wms.geonorge.no/skwms1/wms.europa",
                                       	"http://opencache.statkart.no/gatekeeper/gk/gk.open",
-                                    	//{layers: "europa_wms", format: "image/jpeg", transparent: true, isBaseLayer: true}
+                                      	//{layers: "europa_wms", format: "image/jpeg", transparent: true, isBaseLayer: true}
                                       	{layers: "europa", format: "image/jpeg", transparent: true, isBaseLayer: true}
-                                    	//,{singleTile:true}
+                                      	//,{singleTile:true}
                                 ]
                             }			
                         ],
@@ -186,7 +187,10 @@
                                             ${kartlaget.exGeographicBoundingBoxSouthBoundLatitude},
                                             ${kartlaget.exGeographicBoundingBoxEastBoundLongitude},
                                             ${kartlaget.exGeographicBoundingBoxNorthBoundLatitude}
-                                        ]
+                                        ],
+                                        singleTile:true,
+                                        buffer: 0, //getting no boarder around image - so panning will get a new image.
+                                        ratio: 1 //http://dev.openlayers.org/releases/OpenLayers-2.12/doc/apidocs/files/OpenLayers/Layer/Grid-js.html#OpenLayers.Layer.Grid.ratio                                        
                                     }
                                 ]
                             });
