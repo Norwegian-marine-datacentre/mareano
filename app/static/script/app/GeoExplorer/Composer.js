@@ -48,11 +48,11 @@ GeoExplorer.Composer = Ext.extend(GeoExplorer, {
                     id: "layertree"
                 },
                 outputTarget: "tree"
-            }, {
+            }/*, {
                 ptype: "gxp_legend",
                 outputTarget: 'legend',
                 outputConfig: {autoScroll: true}
-            }, {
+            }*/, {
                 ptype: "gxp_addlayers",
                 actionTarget: "tree.tbar",
                 upload: true

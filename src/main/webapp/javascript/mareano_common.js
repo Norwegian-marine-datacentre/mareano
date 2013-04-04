@@ -1,9 +1,19 @@
+var silent = false;
+
 function loadMareano(mapPanel, app) {
 	addOverviewMapAndKeyboardDefaults(mapPanel.map);
     app.mapOfGMLspesialpunkt = new Object();    
     var kartlagInfoState = ""; //used by removeLayerLegendAndInfo(mapOfGMLspesialpunkt, kartlagId)
     
-    var layertree = Ext.getCmp("layertree");     
+    var layertree = Ext.getCmp("layertree");
+    
+    layertree.on('startdrag', function() {
+    	silent = true;
+	});
+	layertree.on('dragdrop', function() {
+    	silent = false;
+	});
+    	
     layertree.on('beforeinsert', function(tree, container, node) {
     	//alert("beforeInsert:"+node.layer.url);
     	node.attributes.iconCls = getLayerIcon(node.layer.url);
@@ -129,7 +139,7 @@ function addLayerToGroup( gruppeNavn, gruppeText, map, mapPanel, layers, store, 
             attr.autoDisable = false;
             var node = GeoExt.tree.LayerLoader.prototype.createNode.call(this, attr);       
             app.mapPanel.layers.on("remove", function(store, record) {
-            	if (record.getLayer().metadata['kartlagId'] === attr.layer.metadata['kartlagId']) {
+            	if (silent !== true && record.getLayer().metadata['kartlagId'] === attr.layer.metadata['kartlagId']) {
             		node.ui.toggleCheck(false);
             	}
             });            
