@@ -111,23 +111,24 @@
                         maxResolution: 10832.0,
                         maxExtent: [-2500000.0,3500000.0,3045984.0,9045984.0],
                         numZoomLevels: 18,
-                        layers: [
+                        wrapDateLine: false,
+                        layers: [                             
                             {
                             	/*
-                            	 * Kartløsninger fra geonorge.
-                            	 * 1. http://wms.geonorge.no - ubegrenset tilgang for HI (fordi de har IP rangen vår) men en begrensning på ca 3 kall i sekundet. Kjører raskest med singleTile
-//                            	 * 2. opencache.statkart.no/gatekeeper - åpen løsning men begresning på 10 000 kall pr dag. Tilet løsning
-                            	 * 3. gatekeeper1.geonorge.no - ubegrenset med tilet tilgang men hver request krever en token som krever pålogging og som har timeout. Så token forrandrer seg over tid
+                            	 * Kartlï¿½sninger fra geonorge.
+                            	 * 1. http://wms.geonorge.no - ubegrenset tilgang for HI (fordi de har IP rangen vï¿½r) men en begrensning pï¿½ ca 3 kall i sekundet. Kjï¿½rer raskest med singleTile
+//                            	 * 2. opencache.statkart.no/gatekeeper - ï¿½pen lï¿½sning men begresning pï¿½ 10 000 kall pr dag. Tilet lï¿½sning
+                            	 * 3. gatekeeper1.geonorge.no - ubegrenset med tilet tilgang men hver request krever en token som krever pï¿½logging og som har timeout. Sï¿½ token forrandrer seg over tid
                             	 */
                                 source: "ol",
                                 type: "OpenLayers.Layer.WMS",
                                 group: "background",
                                 args: [
                                     "Norgeskart",
-                                    //"http://wms.geonorge.no/skwms1/wms.toporaster2",
-                                    "http://opencache.statkart.no/gatekeeper/gk/gk.open",
-                                    {layers: "toporaster2", format: "image/jpeg", transparent: true, isBaseLayer: true}
-                                    //,{singleTile:true}
+                                    "http://wms.geonorge.no/skwms1/wms.toporaster2",
+                                    //"http://opencache.statkart.no/gatekeeper/gk/gk.open",
+                                    {layers: "toporaster", format: "image/png", transparent: true, isBaseLayer: true}
+                                    ,{singleTile:true}
                                 ]
                             }, {
                                 source: "ol",
@@ -135,10 +136,10 @@
                                 group: "background",
                                 args: [
                                     "Norgeskart (gr\u00e5tone)",
-                                    //"http://wms.geonorge.no/skwms1/wms.topo2graatone",
-                                    "http://opencache.statkart.no/gatekeeper/gk/gk.open",
-                                    {layers: "topo2graatone", format: "image/jpeg", transparent: true, isBaseLayer: true}
-                                    //,{singleTile:true}
+                                    "http://wms.geonorge.no/skwms1/wms.topo2.graatone",
+                                    //"http://opencache.statkart.no/gatekeeper/gk/gk.open",
+                                    {layers: "topo2_graatone_WMS", format: "image/png", transparent: true, isBaseLayer: true}
+                                    ,{singleTile:true}
                                 ]
                             }, {
                                 source: "ol",
@@ -146,13 +147,13 @@
                                 group: "background",
                                 args: [
                                       	"Europa",
-                                      	//"http://wms.geonorge.no/skwms1/wms.europa",
-                                      	"http://opencache.statkart.no/gatekeeper/gk/gk.open",
-                                      	//{layers: "europa_wms", format: "image/jpeg", transparent: true, isBaseLayer: true}
-                                      	{layers: "europa", format: "image/jpeg", transparent: true, isBaseLayer: true}
-                                      	//,{singleTile:true}
+                                      	"http://wms.geonorge.no/skwms1/wms.europa",
+                                      	//"http://opencache.statkart.no/gatekeeper/gk/gk.open",
+                                      	{layers: "europa_wms", format: "image/jpeg", transparent: true, isBaseLayer: true}
+                                      	//{layers: "europa", format: "image/jpeg", transparent: true, isBaseLayer: true}
+                                      	,{singleTile:true}
                                 ]
-                            }			
+                            }				
                         ],
                         center: [1088474,8089849],
                         zoom: 2

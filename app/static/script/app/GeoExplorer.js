@@ -63,7 +63,7 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
     descriptionText: "Description",
     contactText: "Contact",
     aboutThisMapText: "About this Map",
-    thematicText: "Tema tre",
+    thematicText: "Tematre",
     // End i18n.
     
     /**
@@ -140,13 +140,15 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
                 checked: true, 
                 iconCls: "gxp-icon-legend",
                 ptype: "gxp_legend"
-            }, {
-                leaf: true,
-                text: gxp.plugins.GoogleEarth.prototype.tooltip,
-                checked: true,
-                iconCls: "gxp-icon-googleearth",
-                ptype: "gxp_googleearth"
-        }];
+            }
+            //, {
+            //    leaf: true,
+            //    text: gxp.plugins.GoogleEarth.prototype.tooltip,
+            //    checked: true,
+            //    iconCls: "gxp-icon-googleearth",
+            //    ptype: "gxp_googleearth"
+            //}
+            ];
         globalconfig = config.viewerTools;
 
         GeoExplorer.superclass.constructor.apply(this, arguments);
@@ -285,10 +287,11 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
             region: "center",
             width: 250,
             split: true,
-            //            collapsible: true,
+          //collapsible: true,
             collapseMode: "mini",
+            resizable: true,
             items: [
-            {region: 'center',autoScroll: true,tbar: [],border: false,id: 'tree' /*title: this.layersText*/},
+            {region: 'center',autoScroll: true,tbar: [],border: false,id: 'tree', resizable: true /*title: this.layersText*/},
             legendContainerContainer
             ]
         });    
@@ -332,9 +335,9 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
         var westPanelTabs = new Ext.TabPanel({
             activeTab: 0,
             region: "center",
-            //deferredRender: false,
+          //deferredRender: false,
             items: [westPanel, tipsPanel,
-            {title:"Hjelp",html:"Hjelp",region: "center",disabled: "true"}
+            {title:"Hjelp", html:"Hjelp", region: "center", disabled: "true"}
             ]
         });
 		
@@ -349,8 +352,8 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
             unstyled:true,
             width: 400,
             split: true,
-            //            height: "100%",
-            //            collapsible: true,
+          //height: "100%",
+          //collapsible: true,
             defaults:{autoScroll:true},
             collapseMode: "mini",
             items: [
@@ -362,13 +365,15 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
 	                root: new Ext.tree.AsyncTreeNode(),
 	                rootVisible: false,
 	                title: this.thematicText,
+	                resizable: true,
 	                layout: "fit",
 	                id: "thematic_tree",
 	                flex: 1
 	            }, {
 	                xtype: 'container',
+	                resizable: true,
 	                layout: "border",
-	                width: 250,
+	                width: 200,
 	                items: westPanelTabs
 	            }
             ]
@@ -406,22 +411,22 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
             });
         });
 
-        var googleEarthPanel = new gxp.GoogleEarthPanel({
+        /*var googleEarthPanel = new gxp.GoogleEarthPanel({
             mapPanel: this.mapPanel,
             listeners: {
                 beforeadd: function(record) {
                     return record.get("group") !== "background";
                 }
             }
-        });
+        });*/
         
         // TODO: continue making this Google Earth Panel more independent
         // Currently, it's too tightly tied into the viewer.
         // In the meantime, we keep track of all items that the were already
         // disabled when the panel is shown.
-        var preGoogleDisabled = [];
+        //var preGoogleDisabled = [];
 
-        googleEarthPanel.on("show", function() {
+        /*googleEarthPanel.on("show", function() {
             preGoogleDisabled.length = 0;
             this.toolbar.items.each(function(item) {
                 if (item.disabled) {
@@ -446,9 +451,9 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
                 });
                 layersToolbar.disable();
             }
-        }, this);
+        }, this); */
 
-        googleEarthPanel.on("hide", function() {
+        /*googleEarthPanel.on("hide", function() {
             // re-enable all tools
             this.toolbar.enable();
             
@@ -462,7 +467,8 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
                 preGoogleDisabled[i].disable();
             }
 
-        }, this);
+        }, this); */
+        this.toolbar.enable();
 
         this.mapPanelContainer = new Ext.Panel({
             layout: "card",
@@ -472,8 +478,9 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
                 border: false
             },
             items: [
-                this.mapPanel,
-                googleEarthPanel
+                this.mapPanel
+                /*,
+                googleEarthPanel*/
             ],
             activeItem: 0
         });
@@ -535,7 +542,7 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
         this.portalItems = [{
             region: "center",
             layout: "border",
-            //            tbar: this.toolbar,
+          //tbar: this.toolbar,
             items: [
                 northPanel,
                 this.mapPanelContainer,
@@ -609,47 +616,6 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
         var tmpMouseP = new MousePositionBox( {
             map: this.mapPanel.map
             } );
-    		
-
-        var fishExButton = new Ext.Button({
-            tooltip: "FishExchange",
-            handler: function(){
-                Ext.Ajax.request({
-                    url: 'spring/parameter.html?language=no&grid=gridname&grid_value=FishExChange',
-                    success: function(objServerResponse) {
-                        var responseText = objServerResponse.responseText;
-                        Ext.MessageBox.show({
-                            title:'FishExchange', 
-                            msg: responseText
-                        }); 
-                    }
-                });
-            },
-            iconCls: "icon-yellow-db",
-            text: "FishExchange",
-            scope: this,
-            disabled: false
-        }); 
-    	
-        var dummyFishExButton = new Ext.Button({
-            tooltip: "FishExchange dummy",
-            handler: function(){
-                Ext.Ajax.request({
-                    url: 'http://www.imr.no/geodata/spring/parameterdummy.html?language=no&grid=gridname&grid_value=FishExChange',
-                    success: function(objServerResponse) {
-                        var responseText = objServerResponse.responseText;
-                        Ext.MessageBox.show({
-                            title:'FishExchange', 
-                            msg: responseText
-                        }); 
-                    }
-                });
-            },
-            iconCls: "icon-yellow-db",
-            text: "FishExchange dummy",
-            scope: this,
-            disabled: false
-        });
     	
         var gaaTilKoord = new Ext.Button({
             tooltip: "G&aring; til koordinat",
@@ -716,20 +682,8 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
         var norskBtn = new Ext.Button({
             tooltip: "Norsk",
             buttonAlign: "center",
-            handler: function(){
-            //location.href = location.href.substring(0,location.href.lastIndexOf('/')) + "/geodataHI.html"; 
-            },
+            handler: function(){},
             iconCls: "icon-norsk",
-            scope: this
-        });
-    	
-        var engelskBtn = new Ext.Button({
-            tooltip: "English",
-            buttonAlign: "right", 
-            handler: function(){
-                location.href = location.href.substring(0,location.href.lastIndexOf('/')) + "/geodataHI_en.html"; 
-            },
-            iconCls: "icon-english",
             scope: this
         });
     	
@@ -744,33 +698,17 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
         });    	
     	
         var tools = null;
-        if (document.location.href.indexOf(MAREANO) != -1) {
-            tools = [
-	            drawPolyAction,
-	            drawLineAction,               
-	            gaaTilKoord,  
-	            gaaTilHav,               
-	            "-",
-	            tmpMouseP,
-	            "->",
-	            norskBtn,
-	            engelskMareanoBtn  			
+        tools = [
+                 drawPolyAction,
+                 drawLineAction,               
+                 gaaTilKoord,  
+                 gaaTilHav,               
+                 "-",
+                 tmpMouseP,
+                 "->",
+                 norskBtn,
+                 engelskMareanoBtn  			
             ];
-        } else {
-            tools = [
-	            drawPolyAction,
-	            drawLineAction,
-	            fishExButton,
-	            //dummyFishExButton,                      
-	            gaaTilKoord,  
-	            gaaTilHav,               
-	            "-",
-	            tmpMouseP,
-	            "->",
-	            norskBtn,
-	            engelskBtn  			
-            ];
-        }
         return tools;
     },
     

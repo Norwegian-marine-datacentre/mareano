@@ -118,34 +118,34 @@
                                 type: "OpenLayers.Layer.WMS",
                                 group: "background",
                                 args: [
-                                    "Norgeskart",
-                                    //"http://wms.geonorge.no/skwms1/wms.toporaster2",
-                                    "http://opencache.statkart.no/gatekeeper/gk/gk.open",
-                                    {layers: "toporaster2", format: "image/jpeg", transparent: true, isBaseLayer: true}
-                                    //,{singleTile:true}
+                                       "Norgeskart",
+                                       "http://wms.geonorge.no/skwms1/wms.toporaster2",
+                                       //"http://opencache.statkart.no/gatekeeper/gk/gk.open",
+                                       {layers: "toporaster", format: "image/png", transparent: true, isBaseLayer: true}
+                                       ,{singleTile:true}
                                 ]
                             }, {
                                 source: "ol",
                                 type: "OpenLayers.Layer.WMS",
                                 group: "background",
                                 args: [
-                                    "Norgeskart (gr\u00e5tone)",
-                                    //"http://wms.geonorge.no/skwms1/wms.topo2graatone",
-                                    "http://opencache.statkart.no/gatekeeper/gk/gk.open",
-                                    {layers: "topo2graatone", format: "image/jpeg", transparent: true, isBaseLayer: true}
-                                    //,{singleTile:true}
+                                       "Norgeskart (gr\u00e5tone)",
+                                       "http://wms.geonorge.no/skwms1/wms.topo2.graatone",
+                                       //"http://opencache.statkart.no/gatekeeper/gk/gk.open",
+                                       {layers: "topo2_graatone_WMS", format: "image/png", transparent: true, isBaseLayer: true}
+                                       ,{singleTile:true}
                                 ]
                             }, {
                                 source: "ol",
                                 type: "OpenLayers.Layer.WMS",
                                 group: "background",
                                 args: [
-                                      	"Europa",
-                                      	//"http://wms.geonorge.no/skwms1/wms.europa",
-                                      	"http://opencache.statkart.no/gatekeeper/gk/gk.open",
-                                    	//{layers: "europa_wms", format: "image/jpeg", transparent: true, isBaseLayer: true}
-                                      	{layers: "europa", format: "image/jpeg", transparent: true, isBaseLayer: true}
-                                    	//,{singleTile:true}
+                                     	"Europa",
+                                      	"http://wms.geonorge.no/skwms1/wms.europa",
+                                      	//"http://opencache.statkart.no/gatekeeper/gk/gk.open",
+                                      	{layers: "europa_wms", format: "image/jpeg", transparent: true, isBaseLayer: true}
+                                      	//{layers: "europa", format: "image/jpeg", transparent: true, isBaseLayer: true}
+                                      	,{singleTile:true}
                                 ]
                             }			
                         ],
