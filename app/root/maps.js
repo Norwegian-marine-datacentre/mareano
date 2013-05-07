@@ -3,10 +3,12 @@ var Request = require("ringo/webapp/request").Request;
 var FILE = require("fs");
 var auth = require("../auth");
 
+
 var System = Packages.java.lang.System;
 
 var getDb = exports.getDb = function(request) {
     var dataDir;
+    
     if (request) {
         dataDir = request.env.servlet.getServletConfig().getInitParameter("GEOEXPLORER_DATA");
     }
@@ -14,9 +16,9 @@ var getDb = exports.getDb = function(request) {
         dataDir = String(
             System.getProperty("GEOEXPLORER_DATA") || 
             System.getenv("GEOEXPLORER_DATA") || "."
-        );
+        );           
     }
-    var db = FILE.join(dataDir, "geoexplorer.db");
+    var db = FILE.join(dataDir, "mareano.db");
 
     // set up maps table
     try {
