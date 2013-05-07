@@ -79,7 +79,11 @@
                 gxp.plugins.AddLayers.prototype.availableLayersText = "Tilgjengelige kartlag";
                 gxp.plugins.AddLayers.prototype.layerSelectionText = "Se tilgjengelig data fra:";
                 gxp.plugins.AddLayers.prototype.doneText = "Ferdig";
-                gxp.plugins.AddLayers.prototype.addButtonText = "Legg til kartlag";                
+                gxp.plugins.AddLayers.prototype.addButtonText = "Legg til kartlag";
+                gxp.plugins.Navigation.prototype.tooltip = "Panorer kart";    
+                gxp.plugins.NavigationHistory.prototype.previousTooltip = "Zoom til forrige utstrekning";
+                gxp.plugins.NavigationHistory.prototype.nextTooltip = "Zoom til neste utstrekning";   
+                gxp.plugins.ZoomToExtent.prototype.tooltip = "Zoom til synlig utstrekning";         
                 // optionally set locale based on query string parameter
                 if (GeoExt.Lang) {
                     GeoExt.Lang.set(OpenLayers.Util.getParameters()["locale"] || GeoExt.Lang.locale);
@@ -260,7 +264,6 @@
                             } else if (c.tooltip=="Zoom to next extent") {c.setTooltip("Zoom til neste utstrekning");
                             } else if (c.tooltip=="Zoom to visible extent") {c.setTooltip("Zoom til synlig utstrekning");
                             } else if (c.tooltip=="Print map") {c.setTooltip("Skriv ut kartet");
-                            } else if (c.tooltip=="Show Google Earth") {c.setTooltip("Vis Google Earth");
                             } else if (c.tooltip=="Go to coordinat") {c.setTooltip("til koordinat");}
                         }
                         if(c instanceof Ext.menu.CheckItem) {
