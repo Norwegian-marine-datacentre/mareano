@@ -119,10 +119,10 @@
                         layers: [                             
                             {
                             	/*
-                            	 * Kartl�sninger fra geonorge.
-                            	 * 1. http://wms.geonorge.no - ubegrenset tilgang for HI (fordi de har IP rangen v�r) men en begrensning p� ca 3 kall i sekundet. Kj�rer raskest med singleTile
-//                            	 * 2. opencache.statkart.no/gatekeeper - �pen l�sning men begresning p� 10 000 kall pr dag. Tilet l�sning
-                            	 * 3. gatekeeper1.geonorge.no - ubegrenset med tilet tilgang men hver request krever en token som krever p�logging og som har timeout. S� token forrandrer seg over tid
+                            	 * Kartloesninger fra geonorge.
+                            	 * 1. http://wms.geonorge.no - ubegrenset tilgang for HI (fordi de har IP rangen vaar) men en begrensning paa ca 3 kall i sekundet. Kjoerer raskest med singleTile
+//                            	 * 2. opencache.statkart.no/gatekeeper - open loesning men begresning paa 10 000 kall pr dag. Tilet loesning
+                            	 * 3. gatekeeper1.geonorge.no - ubegrenset med tilet tilgang men hver request krever en token som krever paalogging og som har timeout. Saa token forrandrer seg over tid
                             	 */
                                 source: "ol",
                                 type: "OpenLayers.Layer.WMS",
