@@ -9,7 +9,6 @@ Ext.USE_NATIVE_JSON = true;
     // these source plugins were renamed after 2.3.2
     Ext.preg("gx_wmssource", gxp.plugins.WMSSource);
     Ext.preg("gx_olsource", gxp.plugins.OLSource);
-    Ext.preg("gx_googlesource", gxp.plugins.GoogleSource);
     Ext.preg("gx_bingsource", gxp.plugins.BingSource);
     Ext.preg("gx_osmsource", gxp.plugins.OSMSource);
 })();

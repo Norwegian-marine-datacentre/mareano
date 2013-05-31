@@ -276,11 +276,12 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
             height: 250,
             split: true,
             collapsible: true,
+            CollapseMode: 'header', //PlaceHolder
             items: legendContainerContainerItems
         });
 
         /** westpanel *****/        
-        var westPanel = new Ext.Panel({
+        var westPanel = new Ext.Container({
             border: true,
             title: "Kartlag",
             layout: "border",

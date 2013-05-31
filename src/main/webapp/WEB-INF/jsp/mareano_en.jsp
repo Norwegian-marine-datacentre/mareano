@@ -118,7 +118,7 @@
                                 type: "OpenLayers.Layer.WMS",
                                 group: "background",
                                 args: [
-                                       "Norgeskart",
+                                       "Norway",
                                        "http://wms.geonorge.no/skwms1/wms.toporaster2",
                                        //"http://opencache.statkart.no/gatekeeper/gk/gk.open",
                                        {layers: "toporaster", format: "image/png", transparent: true, isBaseLayer: true}
@@ -129,7 +129,7 @@
                                 type: "OpenLayers.Layer.WMS",
                                 group: "background",
                                 args: [
-                                       "Norgeskart (gr\u00e5tone)",
+                                       "Norway (gray scale)",
                                        "http://wms.geonorge.no/skwms1/wms.topo2.graatone",
                                        //"http://opencache.statkart.no/gatekeeper/gk/gk.open",
                                        {layers: "topo2_graatone_WMS", format: "image/png", transparent: true, isBaseLayer: true}
@@ -255,7 +255,6 @@
                         	} else if (c.tooltip=="Zoom til neste utstrekning") {c.setTooltip("Zoom to next extent");
                         	} else if (c.tooltip=="Zoom til synlig utstrekning") {c.setTooltip("Zoom to visible extent");
                         	} else if (c.tooltip=="Skriv ut kartet") {c.setTooltip("Print map");
-                        	} else if (c.tooltip=="Vis Google Earth") {c.setTooltip("Show Google Earth");
                         	} else if (c.tooltip=="til koordinat") {c.setTooltip("Go to coordinat");}
                     	}
                         if( c instanceof Ext.menu.CheckItem ) {
