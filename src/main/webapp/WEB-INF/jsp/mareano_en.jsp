@@ -112,6 +112,7 @@
                         maxResolution: 10832.0,
                         maxExtent: [-2500000.0,3500000.0,3045984.0,9045984.0],
                         numZoomLevels: 18,
+                        wrapDateLine: false,
                         layers: [
                             {
                             	source: "ol",
