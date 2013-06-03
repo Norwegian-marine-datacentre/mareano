@@ -15,9 +15,7 @@ function loadMareano(mapPanel, app) {
 	});
     	
     layertree.on('beforeinsert', function(tree, container, node) {
-    	//alert("beforeInsert:"+node.layer.url);
     	node.attributes.iconCls = getLayerIcon(node.layer.url);
-    	//alert("beforeInsert:"+node.attributes.iconCls);
     }, this, {single: false});
     // we cannot specify this in outputConfig see: https://github.com/opengeo/gxp/issues/159   
     layertree.on('beforenodedrop', function(event) {
@@ -70,7 +68,7 @@ function addLayerToGroup( gruppeNavn, gruppeText, map, mapPanel, layers, store, 
                 /** Ugly - fix by not sending request when click outside layer */
                 if ( response.responseText != null && response.responseText != "" && bodyStr.length > 14 ) {
                     //Ext.MessageBox.show( 'Feature Info', response.responseText );
-                    winPanel = new Ext.Window({title: 'Feature Info',autoHeight: true,width:300,html: response.responseText});
+                	winPanel = new Ext.Window({title: 'Feature Info',autoHeight: true,width:300,html: response.responseText});
                     winPanel.show();
                     //Ext.MessageBox.show( {title: 'Feature Info', msg: response.responseText, setAutoScroll:true} );
                 }
@@ -150,7 +148,7 @@ function addLayerToGroup( gruppeNavn, gruppeText, map, mapPanel, layers, store, 
             		var record = event.layerStore.getByLayer(layer);
             		if (event.ui.checkbox.checked) {
             			//app.mapPanel.layers.add(record);
-            			/** bart code*/
+            			/** bart code */
             			var clone = record.clone(); 
             			clone.set("group", "default"); 
             			clone.getLayer().setVisibility(true);
@@ -159,6 +157,7 @@ function addLayerToGroup( gruppeNavn, gruppeText, map, mapPanel, layers, store, 
             			/**/
             			
             			//app.mapPanel.map.addLayer(layer); //adds layer to Overlay but mareano_wmslayerpanel is missing from properties and no layer properties are shown
+            			
 		                displayLegendGraphics(layer.metadata['kartlagId']);   
             			getSpesialPunkt(app.mapPanel.map.getExtent() + "", layerRecord.getLayer().metadata['kartlagId'], layerRecord.getLayer(), event, app);
             		} else {
@@ -176,8 +175,12 @@ function addLayerToGroup( gruppeNavn, gruppeText, map, mapPanel, layers, store, 
         expanded: groupChecked,    	
         text: gruppeText,   
         listeners: {
-            "checkchange": function(node, checked) { //routene for setting all subnodes if parent is checked
+            "checkchange": function(node, checked) { //setting all subnodes if parent is checked
             	node.expand();
+            	var cs = node.childNodes;
+            	for(var c = cs.length-1; c >= 0; c--) { //add layers in reverse of reverse order - so in the right order
+            		cs[c].ui.toggleCheck(checked);
+            	} 
 				node.eachChild(function(child){
  		        	child.ui.toggleCheck(checked);
 				});
