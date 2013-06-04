@@ -169,11 +169,11 @@ function addLayerToGroup( gruppeNavn, gruppeText, map, mapPanel, layers, store, 
                             }
                         });
                         if (doAdd) {
-            			    var clone = record.clone(); 
-            			    clone.set("group", "default"); 
-            			    clone.getLayer().setVisibility(true);
-            			    clone.getLayer().metadata['kartlagId'] = id;
-            			    app.mapPanel.layers.add(clone);
+                            var clone = record.clone(); 
+                            clone.set("group", "default"); 
+                            clone.getLayer().setVisibility(true);
+                            clone.getLayer().metadata['kartlagId'] = id;
+                            app.mapPanel.layers.add(clone);
                         }
             			/**/
             			
