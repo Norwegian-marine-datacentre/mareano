@@ -160,11 +160,21 @@ function addLayerToGroup( gruppeNavn, gruppeText, map, mapPanel, layers, store, 
             		if (event.ui.checkbox.checked) {
             			//app.mapPanel.layers.add(record);
             			/** bart code */
-            			var clone = record.clone(); 
-            			clone.set("group", "default"); 
-            			clone.getLayer().setVisibility(true);
-            			clone.getLayer().metadata['kartlagId'] = layer.metadata['kartlagId'];
-            			app.mapPanel.layers.add(clone);
+                        var id = layer.metadata['kartlagId'];
+                        var doAdd = true;
+                        app.mapPanel.layers.each(function(record) {
+                            if (record.getLayer().metadata['kartlagId'] === id) {
+                                doAdd = false;
+                                return false;
+                            }
+                        });
+                        if (doAdd) {
+            			    var clone = record.clone(); 
+            			    clone.set("group", "default"); 
+            			    clone.getLayer().setVisibility(true);
+            			    clone.getLayer().metadata['kartlagId'] = id;
+            			    app.mapPanel.layers.add(clone);
+                        }
             			/**/
             			
             			//app.mapPanel.map.addLayer(layer); //adds layer to Overlay but mareano_wmslayerpanel is missing from properties and no layer properties are shown
