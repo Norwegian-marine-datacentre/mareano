@@ -89,7 +89,14 @@ function addLayerToGroup( gruppeNavn, gruppeText, map, mapPanel, layers, store, 
                 if ( isRegFlag == 0 ) {
                     featureInfoEvents.push( record.get("layer") );
                     tmpMap.events.register('click', record.get("layer"), function (e) {
-                        if ( record.get("layer").getVisibility() ) {
+                        var pressed = false;
+                        for (var key in app.tools) {
+                            if (app.tools[key].ptype === 'gxp_wmsgetfeatureinfo') {
+                                pressed = app.tools[key].actions[0].items[0].pressed;
+                                break;
+                            }
+                        }
+                        if (pressed && record.get("layer").getVisibility() ) {
                             var params = {
                                 REQUEST: "GetFeatureInfo",
                                 EXCEPTIONS: "application/vnd.ogc.se_xml",
