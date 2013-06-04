@@ -40,6 +40,8 @@ function loadMareano(mapPanel, app) {
     }, app);
 }
 
+var gfiCache = {};
+
 function addLayerToGroup( gruppeNavn, gruppeText, map, mapPanel, layers, store, app ) {
     var indexOfWMSgruppe = [];
     var layerName = [];
@@ -72,6 +74,7 @@ function addLayerToGroup( gruppeNavn, gruppeText, map, mapPanel, layers, store, 
                     winPanel.show();
                     //Ext.MessageBox.show( {title: 'Feature Info', msg: response.responseText, setAutoScroll:true} );
                 }
+                gfiCache = {};
             };
             var tmpMap = mapPanel.map;
             if (record.get("layer").url!=null && !(record.get("layer") instanceof OpenLayers.Layer.Vector) &&
@@ -96,7 +99,8 @@ function addLayerToGroup( gruppeNavn, gruppeText, map, mapPanel, layers, store, 
                                 break;
                             }
                         }
-                        if (pressed && record.get("layer").getVisibility() ) {
+                        if (pressed && !gfiCache[record.get("layer").id] && record.get("layer").getVisibility() ) {
+                            gfiCache[record.get("layer").id] = true;
                             var params = {
                                 REQUEST: "GetFeatureInfo",
                                 EXCEPTIONS: "application/vnd.ogc.se_xml",
