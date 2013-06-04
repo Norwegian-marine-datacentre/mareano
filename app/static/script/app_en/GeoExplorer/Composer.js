@@ -53,20 +53,20 @@ GeoExplorer.Composer = Ext.extend(GeoExplorer, {
                 ptype: "gxp_legend",
                 outputTarget: 'legend',
                 outputConfig: {autoScroll: true}
-            }*/, {
+            }, {
                 ptype: "gxp_addlayers",
                 actionTarget: "tree.tbar",
                 upload: true
-            }, {
+            }*/, {
                 ptype: "gxp_removelayer",
                 actionTarget: ["tree.tbar", "layertree.contextMenu"]
             }, {
                 ptype: "gxp_layerproperties",
                 actionTarget: ["tree.tbar", "layertree.contextMenu"]
-            }, {
+            }/*, {
                 ptype: "gxp_styler",
                 actionTarget: ["tree.tbar", "layertree.contextMenu"]
-            }, {
+            }*/, {
                 ptype: "gxp_zoomtolayerextent",
                 actionTarget: {target: "layertree.contextMenu", index: 0}
             }, {
