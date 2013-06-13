@@ -55,7 +55,7 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
     saveErrorText: "Trouble saving: ",
     bookmarkText: "Bookmark URL",
     permakinkText: 'Permalink',
-    appInfoText: "GeoData",
+    appInfoText: "Mareano",
     aboutText: "About GeoExplorer",
     mapInfoText: "Map Info",
     descriptionText: "Description",
