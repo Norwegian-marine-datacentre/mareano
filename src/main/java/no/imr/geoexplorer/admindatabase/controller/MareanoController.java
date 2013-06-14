@@ -286,7 +286,7 @@ public class MareanoController {
                 String text = aLegend.getGenericTitle();
                 if (aLegend.getUrl() != null) {
                     String legendUrl = aLegend.getUrl().trim();
-                    if (!legendUrl.startsWith("http://")) {
+                    if (!legendUrl.toLowerCase().startsWith("http://")) {
                         spesialpunktJSON.addLegendsInfo(new LegendsInfo(baseUrlForLegend + legendUrl, text));
                     } else {
                         spesialpunktJSON.addLegendsInfo(new LegendsInfo(legendUrl, text));

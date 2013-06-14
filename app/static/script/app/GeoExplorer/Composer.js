@@ -45,7 +45,8 @@ GeoExplorer.Composer = Ext.extend(GeoExplorer, {
             {
                 ptype: "gxp_layertree",
                 outputConfig: {
-                    id: "layertree"
+                    id: "layertree",
+                    enableDD:true
                 },
                 outputTarget: "tree"
             }/*, {

@@ -14,7 +14,7 @@
         <style type="text/css">
             .olImageLoadError { 
    				/* when OL encounters a 404, don't display the pink image */
-    		display: none !important;
+            	display: none !important;
     		}
             #layertree .x-tree-node-cb[type="checkbox"] {
             	display: none;
@@ -73,13 +73,13 @@
             function init() {
                 gxp.plugins.LayerTree.prototype.baseNodeText = "Base Layer";
                 gxp.plugins.LayerTree.prototype.overlayNodeText = "Overlays";
-                gxp.plugins.AddLayers.prototype.addActionTip = "Add layers";
+                /*gxp.plugins.AddLayers.prototype.addActionTip = "Add layers";
                 gxp.plugins.AddLayers.prototype.addServerText = "Add a New Server";
                 gxp.plugins.AddLayers.prototype.addButtonText = "Legg til kartlag";
                 gxp.plugins.AddLayers.prototype.availableLayersText = "Available Layers";
                 gxp.plugins.AddLayers.prototype.layerSelectionText = "View available data from:";
                 gxp.plugins.AddLayers.prototype.doneText = "Done";
-                gxp.plugins.AddLayers.prototype.addButtonText = "Add layers";
+                gxp.plugins.AddLayers.prototype.addButtonText = "Add layers"; */
                                 
                 // optionally set locale based on query string parameter
                 if (GeoExt.Lang) {
