@@ -660,7 +660,7 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
 			typeAhead: true,
 			mode: 'local',
 			triggerAction: 'all',
-			emptyText: "Go to area",
+			emptyText: "Go to Sea",
 			selectOnFocus:true,
 			listeners: {
     			select: {

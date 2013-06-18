@@ -657,7 +657,7 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
             typeAhead: true,
             mode: 'local',
             triggerAction: 'all',
-            emptyText: "G\u00e5 til omr\u00e5de",
+            emptyText: "G\u00e5 til havomr\u00e5de",
             selectOnFocus:true,
             listeners: {
                 select: {
