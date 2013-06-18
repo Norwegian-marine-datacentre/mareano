@@ -717,7 +717,8 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
         if (document.location.href.indexOf(MAREANO_EN) != -1) {
 	        tools = [
 	            drawPolyAction,
-	            drawLineAction,               
+	            drawLineAction,
+	            "-",
 	            gaaTilKoord,  
 				gaaTilHav,               
 	            "-",
@@ -731,6 +732,7 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
 	            drawPolyAction,
 	            drawLineAction,
 	            fishExBtn,
+	            "-",
 	            gaaTilKoord,
 	        	gaaTilHav,
 	            "-",

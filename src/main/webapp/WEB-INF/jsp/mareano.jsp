@@ -165,7 +165,7 @@
                                 type: "OpenLayers.Layer.WMS",
                                 group: "background",
                                 args: [
-                                      	"Europa -hvit sj\u00F8",
+                                      	"Europa -hvit bakgrunn",
                                       	"http://wms.geonorge.no/skwms1/wms.europa",
                                       	//"http://opencache.statkart.no/gatekeeper/gk/gk.open",
                                       	{layers: "Land,Vmap0Land,Vmap0Bebyggelse,Vmap0Skog,Vmap0Dyrketmark,Vmap0Sletteland,Vmap0Innsjo,Vmap0MyrSump,Vmap0Isbre,Vmap0Hoydekontur,Vmap0Kystkontur,Vmap0Elver,Vmap0AdministrativeGrenser,Vmap0Hoydepunkt", format: "image/jpeg", transparent: true, isBaseLayer: true}

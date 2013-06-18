@@ -701,7 +701,8 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
         var tools = null;
         tools = [
                  drawPolyAction,
-                 drawLineAction,               
+                 drawLineAction,    
+                 "-",
                  gaaTilKoord,  
                  gaaTilHav,               
                  "-",
