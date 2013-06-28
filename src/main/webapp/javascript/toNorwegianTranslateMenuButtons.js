@@ -8,7 +8,7 @@ jQuery(document).ready(function() {
 	        }
 		});
 	    jQuery(".x-form-field").each(function(index) {
-	    	jQuery(this).val("G\u00e5 til omr\u00e5de");
+	    	jQuery(this).val("G\u00e5 til havomr\u00e5de");
 		});
 	    jQuery(".x-combo-list-item").each(function(index) {
 	    	 if ( jQuery(this).text() == "Barent Sea") {

@@ -8,7 +8,7 @@ jQuery(document).ready(function() {
 	    	}
 	    });
 	    jQuery(".x-form-field").each(function(index) {
-	    	jQuery(this).val("Go to area");
+	    	jQuery(this).val("Go to Sea");
 		});
 	    jQuery(".x-combo-list-item").each(function(index) {
 	    	if ( jQuery(this).text() == "Barentshavet") {

@@ -243,13 +243,17 @@ function getSpesialPunkt(extent, kartlagId, layer, event, app) {
 }
 
 function displayLegendGraphics(kartlagId) {
+	var languageChoosen = "en";
+	if (document.location.href.indexOf("mareano.html") != -1) {
+		languageChoosen = "norsk";
+	}
     jQuery.ajax({
         type: 'get',
         url: "spring/legend",
         contentType: "application/json",
         data: {
             kartlagId: kartlagId,
-            language: "en"
+            language: languageChoosen
         },
         success:function(data) {
             var currentLegend;

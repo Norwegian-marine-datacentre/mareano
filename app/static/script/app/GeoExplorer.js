@@ -341,44 +341,39 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
             {title:"Hjelp", html:"Hjelp", region: "center", disabled: "true"}
             ]
         });
-		
+      
         var westPanel2 = new Ext.Panel({
             border: true,
-            layout: "hbox",
-            layoutConfig: {
-                align: 'stretch',
-                pack: 'start'
-            },
+            layout: "border",
             region: "west",
             unstyled:true,
             width: 400,
             split: true,
-          //height: "100%",
-          //collapsible: true,
-            defaults:{autoScroll:true},
+            defaults:{ autoScroll:true },
             collapseMode: "mini",
-            items: [
-	            {
-	                xtype: 'treepanel',
-	                enableDrag: true,
-	                enableDrop: false,
-	                loader: new Ext.tree.TreeLoader(),
-	                root: new Ext.tree.AsyncTreeNode(),
-	                rootVisible: false,
-	                title: this.thematicText,
-	                resizable: true,
-	                layout: "fit",
-	                id: "thematic_tree",
-	                flex: 1
-	            }, {
-	                xtype: 'container',
-	                resizable: true,
-	                layout: "border",
-	                width: 200,
-	                items: westPanelTabs
-	            }
-            ]
-        });        
+            items: [{
+			    xtype: 'treepanel',
+			    enableDrag: true,
+			    enableDrop: false,
+			    loader: new Ext.tree.TreeLoader(),
+			    root: new Ext.tree.AsyncTreeNode(),
+			    rootVisible: false,
+			    title: this.thematicText,
+			    layout: "fit",
+			    id: "thematic_tree",
+			    flex: 1,
+			    split: true,
+			    width: 200,
+			    region: "west"
+		    }, {
+			    xtype: 'container',
+			    layout: "border",
+			    width: 200,
+			    region: "center",
+			    items: westPanelTabs
+		    }]
+        }); 
+        
         /** slutt: import fra gammel versjon */    	
         
         /*var westPanel = new Ext.Panel({
