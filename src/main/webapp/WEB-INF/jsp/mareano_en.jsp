@@ -285,7 +285,5 @@
         </script>
     </head>
     <body onload="init()">
-        <div id="choises" style="display:none"></div>
-        <form id="hidden_pdf" method="post"></form>
     </body>
 </html>
