@@ -673,7 +673,7 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
         				else if ( combo.getValue() == "Skagerrak" )
         					thisMapPanel.map.panTo( new OpenLayers.LonLat( -1644,6434116 ) );    
 						else if ( combo.getValue() == "Polhavet" )
-        					thisMapPanel.map.panTo( new OpenLayers.LonLat( 1088474,8089849 ) );            					
+        					thisMapPanel.map.panTo( new OpenLayers.LonLat( 1000000,8999999 ) );            					
         			}
     			}
 			}
