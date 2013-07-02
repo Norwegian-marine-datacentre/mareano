@@ -73,13 +73,6 @@
             function init() {
                 gxp.plugins.LayerTree.prototype.baseNodeText = "Bakgrunnskart";
                 gxp.plugins.LayerTree.prototype.overlayNodeText = "Kartlag";
-                /*gxp.plugins.AddLayers.prototype.addActionTip = "Legg til kartlag";
-                gxp.plugins.AddLayers.prototype.addServerText = "Legg til ny server";
-                gxp.plugins.AddLayers.prototype.addButtonText = "Legg til kartlag";
-                gxp.plugins.AddLayers.prototype.availableLayersText = "Tilgjengelige kartlag";
-                gxp.plugins.AddLayers.prototype.layerSelectionText = "Se tilgjengelig data fra:";
-                gxp.plugins.AddLayers.prototype.doneText = "Ferdig";
-                gxp.plugins.AddLayers.prototype.addButtonText = "Legg til kartlag";*/
                 gxp.plugins.Navigation.prototype.tooltip = "Panorer kart";    
                 gxp.plugins.NavigationHistory.prototype.previousTooltip = "Zoom til forrige utstrekning";
                 gxp.plugins.NavigationHistory.prototype.nextTooltip = "Zoom til neste utstrekning";   

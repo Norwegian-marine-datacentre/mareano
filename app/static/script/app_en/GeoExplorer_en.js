@@ -13,7 +13,6 @@ Ext.USE_NATIVE_JSON = true;
     Ext.preg("gx_osmsource", gxp.plugins.OSMSource);
 })();
 
-var MAREANO_EN = "mareano_en.html";
 /**
  * api: (define)
  * module = GeoExplorer
@@ -227,40 +226,26 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
             	"<img src=\"/geodata/theme/app/img/geosilk/kilder/SK_lite.png\" title=\"Statens kartverk\"/>"
         });
         
-		var geoExplorerOrMareanoLegendContainer;
-		var legendContainerContainerItems;
-		if (document.location.href.indexOf(MAREANO_EN) != -1) {
-			geoExplorerOrMareanoLegendContainer = new Ext.Panel({
-				region: 'center', 
-				layout: 'fit', 
-				border: false, 
-				autoScroll: true,
-				height: 200, 
-				html: '',
-				id: 'newLegend'
-			});
-			var dummyLegendContainer = new Ext.Panel({ 
-				region: 'center', 
-				xtype: 'container', 
-				layout: "fit", 
-				border: false, 
-				height:0, 
-				width:0, 
-				id: 'legend', 
-				'visible':false 
-			});
-			legendContainerContainerItems = [dummyLegendContainer, geoExplorerOrMareanoLegendContainer];
-		} else {
-			geoExplorerOrMareanoLegendContainer = new Ext.Panel({
-				region: 'center', 
-				xtype: 'container', 
-				layout: 'fit', 
-				border: false, 
-				height: 200 , 
-				id: 'legend'
-			});
-			legendContainerContainerItems = [geoExplorerOrMareanoLegendContainer, dataLevertPanel];
-		}
+		var	mareanoLegendContainer = new Ext.Panel({
+			region: 'center', 
+			layout: 'fit', 
+			border: false, 
+			autoScroll: true,
+			height: 200, 
+			html: '',
+			id: 'newLegend'
+		});
+		var dummyLegendContainer = new Ext.Panel({ 
+			region: 'center', 
+			xtype: 'container', 
+			layout: "fit", 
+			border: false, 
+			height:0, 
+			width:0, 
+			id: 'legend', 
+			'visible':false 
+		});
+		var legendContainerContainerItems = [dummyLegendContainer, mareanoLegendContainer];
 		
         var legendContainerContainer = new Ext.Panel({
             border: false,
@@ -290,48 +275,21 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
             ]
         });    
         
-        var tipsPanel;
-        if (document.location.href.indexOf(MAREANO_EN) != -1) {
-        	tipsPanel = new Ext.Panel({
-				title: 'Info about layers', 
-	    		html:  "", 
-	    		region: 'center', 
-	    		id: 'tips', 
-	    		preventBodyReset: true,
-	    		autoHeight: true
-	        });        	
-        } else {
-	        	tipsPanel = new Ext.Panel({
-				title: 'about WMS/WFS', 
-	    		html:
-	    			"<p style='font-size:10pt'>IMR provides access to subject data by mapping the standard" +
-	    			"Web Map Services (WMS) and Web Features Services (WFS). Services makes it easy to include" +
-	    			"topic maps in their own mapping solutions or tools for geographical information systems (GIS).</p>" +
-	
-	        			"<p style='font-size:10pt'>Services may be used freely under the following conditions:" +
-	        			"<ul>" +
-	        				"<li style='font-size:10pt'>fill in a registration form so that we can inform our users of any changes, maintenance etc.</li>" +
-	        				"<li style='font-size:10pt'>reference IMR as your source on the page where our WMS is being used</li>" + 
-	        				"<li style='font-size:10pt'>contact IMR if the WMS is to be used in a commercial context</li></ul></p>" + 
-	        			
-	        			"<p style='font-size:10pt'><a href='http://maps.imr.no/geoserver/web/'>" +
-	        			"URL to the WMS and WFS server: http://maps.imr.no/geoserver/web/</a></p>"    		
-		, 
-	    		region: 'center', 
-	//    		bodyStyle: "background-image:url('theme/app/img/background_body_None.jpg')",
-	    		id: 'tips', 
-	//    		contentEl: 'tips', 
-	//    		autoScroll: true, 
-	    		preventBodyReset: true,
-	    		autoHeight: true
-	        });
-        }
+        var	tipsPanel = new Ext.Panel({
+			title: 'Info about layers', 
+    		html:  "", 
+    		region: 'center', 
+    		id: 'tips', 
+    		preventBodyReset: true,
+    		autoHeight: true
+        });        	
+
         var westPanelTabs = new Ext.TabPanel({
     		activeTab: 0,
     		region: "center",
 //    		deferredRender: false,
     		items: [westPanel, tipsPanel,
-    			{title:"Hjelp", html:"Help", region: "center", disabled: "true"}
+    			{title:"Hjelp", html:"", region: "center", disabled: "false"}
     				]
 		});
 		
@@ -471,48 +429,23 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
             activeItem: 0
         });
 
-        var innerNorthPanel = null;
-        if (document.location.href.indexOf(MAREANO_EN) != -1) {
-        	innerNorthPanel = new Ext.Panel({
-	            border: true,
-	            region: "north",
-	            split: true,
-	            id: "topPanelHeading",
-	            collapseMode: "mini",
-	            bodyStyle: "background-image:url('http://www.mareano.no/kart/images/nav-main-background.jpg')",
-	            html:'<table width="100%"><tr height="45"> ' +
-	            '<td valign="middle" height="45" style="background-image:url(http://www.mareano.no/kart/images/top/ny_heading_397.gif); background-repeat: repeat;"> ' +
-	            '<a style="text-decoration: none" target="_top" href="http://www.mareano.no"> ' +
-	            '<img border="0" alt="MAREANO<br>samler kunnskap om havet" src="http://www.mareano.no/kart/images/top/ny_logo.gif"> ' +
-	            '</a> ' +
-	            '</td> ' +
-	            '<td width="627" align="right" height="45" style="background-image:url(http://www.mareano.no/kart/images/top/ny_heading_627.gif);"> </td> ' +
-	            '</tr></table> '+
-	            '<div id="nav-main"><ul id="nav"><li><a href="/start">Startsiden</a></li></ul></div>'
-        	});
-        } else {
-	        	innerNorthPanel = new Ext.Panel({
-		            border: true,
-		            region: "north",
-		            split: true,
-		//            collapsible: true,
-		            collapseMode: "mini",
-		            bodyStyle: "background-image:url('theme/app/img/background_body_None.jpg')",
-		            html:"" +
-"<table width=\"100%\" border=\"0\">" +
-"<tr>" +
-"<td>" +
-"	<div id=\"pageheading\" style=\"display:inline-block;\">" +
-"		<a href=\"http://www.imr.no\"><img src=\"theme/imr/logo_imr.png\" height=\"67px\" width=\"461\" /></a>" +
-"	</div>" +
-"</td>" +
-"<td>" +	
-"	<span style=\"float:right;\">"+
-"   <img src=\"theme/imr/background_top_trans.jpg\" alt=\"IMR\" height=\"118px\" width=\"490\" ></span>" +
-"</td>" +
-"</tr></table>"            
-	        	});
-        }
+        var innerNorthPanel = new Ext.Panel({
+            border: true,
+            region: "north",
+            split: true,
+            id: "topPanelHeading",
+            collapseMode: "mini",
+            bodyStyle: "background-image:url('http://www.mareano.no/kart/images/nav-main-background.jpg')",
+            html:'<table width="100%" cellspacing="0"><tr height="45"> ' + //content reloaded with content from MareanoController
+            '<td valign="middle" height="45" style="background-image:url(http://www.mareano.no/kart/images/top/ny_heading_397.gif); background-repeat: repeat;"> ' +
+            '<a style="text-decoration: none" target="_top" href="http://www.mareano.no"> ' +
+            '<img border="0" alt="MAREANO<br>samler kunnskap om havet" src="http://www.mareano.no/kart/images/top/ny_logo.gif"> ' +
+            '</a> ' +
+            '</td> ' +
+            '<td width="627" align="right" height="45" style="background-image:url(http://www.mareano.no/kart/images/top/ny_heading_627.gif);"> </td> ' +
+            '</tr></table> '+
+            '<div id="nav-main"><ul id="nav"><li><a href="/start">Startsiden</a></li></ul></div>'
+    	});
         
         var northPanel = new Ext.Panel({
             height: "40%",
@@ -709,35 +642,18 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
             scope: this
         });
 		
-    	var tools = null;
-        if (document.location.href.indexOf(MAREANO_EN) != -1) {
-	        tools = [
-	            drawPolyAction,
-	            drawLineAction,
-	            "-",
-	            gaaTilKoord,  
-				gaaTilHav,               
-	            "-",
-				tmpMouseP,
-	            "->",
-				mareanoNorskBtn,
-				engelskBtn  			
-	        ];
-        } else {
-	        tools = [
-	            drawPolyAction,
-	            drawLineAction,
-	            fishExBtn,
-	            "-",
-	            gaaTilKoord,
-	        	gaaTilHav,
-	            "-",
-				tmpMouseP,
-	            "->",
-	            norskBtn,
-	            engelskBtn
-	        ];
-        }
+	    var tools = [
+            drawPolyAction,
+            drawLineAction,
+            "-",
+            gaaTilKoord,  
+			gaaTilHav,               
+            "-",
+			tmpMouseP,
+            "->",
+			mareanoNorskBtn,
+			engelskBtn  			
+        ];
         return tools;
     },
     

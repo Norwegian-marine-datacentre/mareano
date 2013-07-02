@@ -15,7 +15,6 @@ Ext.USE_NATIVE_JSON = true;
 })();
 var globalconfig;
 
-var MAREANO = "mareano.html";
 /**
  * api: (define)
  * module = GeoExplorer
@@ -232,40 +231,26 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
         "<img src=\"/geodata/theme/app/img/geosilk/kilder/SK_lite.png\" title=\"Statens kartverk\"/>"
         });        
 		
-        var geoExplorerOrMareanoLegendContainer;
-        var legendContainerContainerItems;
-        if (document.location.href.indexOf(MAREANO) != -1) {
-            geoExplorerOrMareanoLegendContainer = new Ext.Panel({
-                region: 'center', 
-                layout: 'fit', 
-                autoScroll: true,
-                border: false, 
-                height: 200, 
-                html: '',
-                id: 'newLegend'
-            });
-            var dummyLegendContainer = new Ext.Panel({ 
-                region: 'center', 
-                xtype: 'container', 
-                layout: "fit", 
-                border: false, 
-                height:0, 
-                width:0, 
-                id: 'legend', 
-                'visible':false 
-            });
-            legendContainerContainerItems = [dummyLegendContainer, geoExplorerOrMareanoLegendContainer];
-        } else {
-            geoExplorerOrMareanoLegendContainer = new Ext.Panel({
-                region: 'center', 
-                xtype: 'container', 
-                layout: 'fit', 
-                border: false, 
-                height: 200 , 
-                id: 'legend'
-            });
-            legendContainerContainerItems = [geoExplorerOrMareanoLegendContainer, dataLevertPanel];
-        }
+	    var mareanoLegendContainer = new Ext.Panel({
+	        region: 'center', 
+	        layout: 'fit', 
+	        autoScroll: true,
+	        border: false, 
+	        height: 200, 
+	        html: '',
+	        id: 'newLegend'
+	    });
+	    var dummyLegendContainer = new Ext.Panel({ 
+	        region: 'center', 
+	        xtype: 'container', 
+	        layout: "fit", 
+	        border: false, 
+	        height:0, 
+	        width:0, 
+	        id: 'legend', 
+	        'visible':false 
+	    });
+	    var legendContainerContainerItems = [dummyLegendContainer, mareanoLegendContainer];
 		
         var legendContainerContainer = new Ext.Panel({
             border: false,
@@ -297,48 +282,28 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
             ]
         });    
         
-        var tipsPanel;
-        if (document.location.href.indexOf(MAREANO) != -1) {
-            tipsPanel = new Ext.Panel({
-                title: 'Info om kartlag', 
-                html:  "", 
-                region: 'center', 
-                id: 'tips', 
-                preventBodyReset: true,
-                autoHeight: true
-            });        	
-        } else {
-            tipsPanel = new Ext.Panel({
-                title: 'om WMS/WFS', 
-                html:
-                "<p style='font-size:10pt'>Havforskningsinstituttet gir tilgang til temadatasett gjennom karttjenester etter standarden " +
-                "Web Map Services (WMS) og Web Features Services (WFS). Tjenestene gj&oslash;r det enkelt &aring; inkludere " +
-                "temakartene i egne kartl&oslash;sninger eller verkt&oslash;y for geografiske informasjonssystemer (GIS).</p>" +
-	
-                "<p style='font-size:10pt'>Tjenestene kan fritt brukes under f&oslash;lgende vilk&aring;r:" +
-                "<ul>" +
-                "<li style='font-size:10pt'>&Oslash;nsker kunden/brukeren &aring; inkludere Havforskningsinstituttet karttjenester i egne l&oslash;sninger skal de tilrettelagte karttjenestene benyttes direkte. Registreringsskjema b&oslash;r ogs&aring; fylles ut.</li>" +
-                "<li style='font-size:10pt'>Ved bruk av v&aring;re karttjenester skal kilde alltid oppgis.</li>" + 
-                "<li style='font-size:10pt'>Dersom karttjenestene &oslash;nskes brukt til kommersielle form&aring;l, m&aring; Havforskningsinstituttet kontaktes.</li></ul></p>" + 
-	    			
-                "<p style='font-size:10pt'><a href='http://maps.imr.no/geoserver/web/'>" +
-                "URL til WMS og WFS server: http://maps.imr.no/geoserver/web/</a></p>", 
-                region: 'center', 
-                //    		bodyStyle: "background-image:url('theme/app/img/background_body_None.jpg')",
-                id: 'tips', 
-                //    		contentEl: 'tips', 
-                //    		autoScroll: true, 
-                preventBodyReset: true,
-                autoHeight: true
-            }); 
-        }
+        var tipsPanel = new Ext.Panel({
+            title: 'Info om kartlag', 
+            html:  "", 
+            region: 'center', 
+            id: 'tips', 
+            preventBodyReset: true,
+            autoHeight: true
+        });        	
         
         var westPanelTabs = new Ext.TabPanel({
             activeTab: 0,
             region: "center",
           //deferredRender: false,
             items: [westPanel, tipsPanel,
-            {title:"Hjelp", html:"Hjelp", region: "center", disabled: "true"}
+            {title:"Hjelp", 
+            	html:"Der er to panel med kartlag. Den til venstre heter tematre og inneholder alle kartlag man kan velge \u00e5 sl\u00e5 p\u00e5." +
+            		"Den er organisert i hovedtema, under hovedtema er kartbilder som man kan velge \u00e5 sl\u00e5 p\u00e5, og p\u00e5 det nederste niv\u00e5et er kartlag " +
+            		"som man ogs\u00e5 kan sl\u00e5 p\u00e5. Viss man sl\u00e5r p\u00e5 kartbilde s\u00e5 sl\u00e5r man p\u00e5 alle kartlag som liggger under kartlaget. N\u00e5r man sl\u00e5r p\u00e5 et " +
+            		"kartbilde eller et kartlag s\u00e5 vil det/de kartlag(ene) bli synlig under kartlag i det h\u00f8yre kartpanelet. Her kan man dra p\u00e5" +
+            		"kartlagene for \u00e5 endre tegningsrekkef\u00f8lge. Man kan ogs\u00e5 h\u00f8yreklikke p\u00e5 kartlaget for \u00e5 zoome til kartlagsutstrekning. Dette kan" +
+            		"v\u00E6re nyttig for kartlag som er mer synlig viss man zoomer inn p\u00e5 dem. For sp\u00f8rsmål send mail til gis@nmd.no"
+            	, region: "center"}
             ]
         });
       
@@ -481,16 +446,14 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
             activeItem: 0
         });
 
-        var innerNorthPanel = null;
-        if (document.location.href.indexOf(MAREANO) != -1) {
-            innerNorthPanel = new Ext.Panel({
-                border: true,
-                region: "north",
-                split: true,
-                id: "topPanelHeading",
-                collapseMode: "mini",
-                bodyStyle: "background-image:url('http://www.mareano.no/kart/images/nav-main-background.jpg')",
-                html:'<table width="100%"><tr height="45"> ' +
+        var innerNorthPanel = new Ext.Panel({
+            border: true,
+            region: "north",
+            split: true,
+            id: "topPanelHeading",
+            collapseMode: "mini",
+            bodyStyle: "background-image:url('http://www.mareano.no/kart/images/nav-main-background.jpg')",
+            html:'<table width="100%" cellspacing="0"><tr height="45"> ' + //content reloaded with content from MareanoController
             '<td valign="middle" height="45" style="background-image:url(http://www.mareano.no/kart/images/top/ny_heading_397.gif); background-repeat: repeat;"> ' +
             '<a style="text-decoration: none" target="_top" href="http://www.mareano.no"> ' +
             '<img border="0" alt="MAREANO<br>samler kunnskap om havet" src="http://www.mareano.no/kart/images/top/ny_logo.gif"> ' +
@@ -499,31 +462,7 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
             '<td width="627" align="right" height="45" style="background-image:url(http://www.mareano.no/kart/images/top/ny_heading_627.gif);"> </td> ' +
             '</tr></table> '+
             '<div id="nav-main"><ul id="nav"><li><a href="/start">Startsiden</a></li></ul></div>'
-            });
-        } else {
-            innerNorthPanel = new Ext.Panel({
-                border: true,
-                region: "north",
-                split: true,
-                id: "topPanelHeading",
-                //            collapsible: true,
-                collapseMode: "mini",
-                bodyStyle: "background-image:url('theme/app/img/background_body_None.jpg')",
-                html:"" +
-            "<table width=\"100%\" border=\"0\">" +
-            "<tr>" +
-            "<td>" +
-            "	<div id=\"pageheading\" style=\"display:inline-block;\">" +
-            "		<a href=\"http://www.imr.no\"><img src=\"theme/imr/logo_imr.png\" height=\"67px\" width=\"461\" /></a>" +
-            "	</div>" +
-            "</td>" +
-            "<td>" +	
-            "	<span style=\"float:right;\">"+
-            "   <img src=\"theme/imr/background_top_trans.jpg\" alt=\"Havforskningsinstituttet\" height=\"118px\" width=\"490\" ></span>" +
-            "</td>" +
-            "</tr></table>"            
-            });
-        }
+        });
         
         var northPanel = new Ext.Panel({
             height: "40%",
@@ -645,7 +584,7 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
             hiddenName: 'number',
             store: new Ext.data.SimpleStore({
                 fields: ['number'],
-                data : [ ['Barentshavet'], ['Norskehavet'], [ 'Nordsj\u00f8en' ], ['Skagerrak'] ]
+                data : [ ['Barentshavet'], ['Norskehavet'], [ 'Nordsj\u00f8en' ], ['Skagerrak'], ['Polhavet'] ]
             }),
             displayField: 'number',
             height: 10,

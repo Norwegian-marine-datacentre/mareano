@@ -227,7 +227,7 @@ public class MareanoController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        String someHeading = "<table width=\"100%\"><tr height=\"45\"> "
+        String someHeading = "<table width=\"100%\" cellspacing=\"0\"><tr height=\"45\"> "
                 + "<td valign=\"middle\" height=\"45\" style=\"background-image:url(http://www.mareano.no/kart/images/top/ny_heading_397.gif); background-repeat: repeat;\"> "
                 + "<a style=\"text-decoration: none\" target=\"_top\" href=\"http://www.mareano.no\"> "
                 + "<img border=\"0\" alt=\"MAREANO<br>samler kunnskap om havet\" src=\"http://www.mareano.no/kart/images/top/ny_logo.gif\"> "
