@@ -326,21 +326,6 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
         });      
 /** slutt: import fra gammel versjon */    	
         
-         /*var westPanel = new Ext.Panel({
-            border: false,
-            layout: "border",
-            region: "west",
-            width: 250,
-            split: true,
-            collapsible: true,
-            collapseMode: "mini",
-            header: false,
-            items: [
-                {region: 'center', autoScroll: true, tbar: [], border: false, id: 'tree', title: this.layersText}, 
-                {region: 'south', xtype: "container", layout: "fit", border: false, height: 200, id: 'legend'}
-            ]
-        }); */ 
-        
         this.toolbar = new Ext.Toolbar({
             disabled: true,
             id: 'paneltbar',
@@ -481,7 +466,6 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
     	var vector = new OpenLayers.Layer.Vector("Polygon");
     	this.mapPanel.map.addLayer( vector );    
     	var drawPolyAction = new GeoExt.Action({
-        	//text: "tegn polygon",
             control: new OpenLayers.Control.DrawFeature(
             	vector, OpenLayers.Handler.Polygon
     		),
@@ -489,10 +473,8 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
             map: this.mapPanel.map,
             toggleGroup: "draw",
             tooltip: "Draw polygon"
-//            toggleGroup: toolGroup
     	}); 
         var drawLineAction = new GeoExt.Action({
-            //text: "tegn linje",
             control: new OpenLayers.Control.DrawFeature(
                 vector, OpenLayers.Handler.Path
             ),
@@ -500,8 +482,15 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
             map: this.mapPanel.map,
             toggleGroup: "draw",
             tooltip: "Draw line"
-//            toggleGroup: toolGroup
-        });	
+        });
+        var zoomBoxAction = new GeoExt.Action({
+            control: new OpenLayers.Control.ZoomBox({alwaysZoom:true}),
+            iconCls: "icon-zoom-to", //app\static\externals\openlayers\img\drag-rectangle-on.png
+            map: this.mapPanel.map,
+            toggleGroup: "draw",
+            tooltip: "Zoombox"
+        });	        
+         
     	
     	Proj4js.defs["EPSG:32633"] = "+proj=utm +zone=33 +ellps=WGS84 +datum=WGS84 +units=m +no_defs";
     	var oSrcPrj = new Proj4js.Proj('WGS84');
@@ -645,6 +634,7 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
 	    var tools = [
             drawPolyAction,
             drawLineAction,
+            zoomBoxAction,
             "-",
             gaaTilKoord,  
 			gaaTilHav,               
