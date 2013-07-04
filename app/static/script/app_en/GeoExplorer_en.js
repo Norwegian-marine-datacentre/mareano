@@ -12,6 +12,7 @@ Ext.USE_NATIVE_JSON = true;
     Ext.preg("gx_bingsource", gxp.plugins.BingSource);
     Ext.preg("gx_osmsource", gxp.plugins.OSMSource);
 })();
+var globalconfig;
 
 /**
  * api: (define)
@@ -137,13 +138,8 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
                 checked: true, 
                 iconCls: "gxp-icon-legend",
                 ptype: "gxp_legend"
-            }, {
-                leaf: true,
-                text: gxp.plugins.GoogleEarth.prototype.tooltip,
-                checked: true,
-                iconCls: "gxp-icon-googleearth",
-                ptype: "gxp_googleearth"
-        }];
+            }];
+        globalconfig = config.viewerTools;
 
         GeoExplorer.superclass.constructor.apply(this, arguments);
     }, 
@@ -206,7 +202,7 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
      * Create the various parts that compose the layout.
      */
     initPortal: function() {
-/** import fra gammel versjon  */
+    	/** import fra gammel versjon  */
 		var dataLevertPanel = new Ext.Panel({
             border: true,
             unstyled: true,
@@ -229,8 +225,8 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
 		var	mareanoLegendContainer = new Ext.Panel({
 			region: 'center', 
 			layout: 'fit', 
-			border: false, 
 			autoScroll: true,
+			border: false, 
 			height: 200, 
 			html: '',
 			id: 'newLegend'
@@ -267,10 +263,10 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
             region: "center",
             width: 250,
             split: true,
-//            collapsible: true,
             collapseMode: "mini",
+            resizable: true,
             items: [
-                 {region: 'center', autoScroll: true, tbar: [], border: false, id: 'tree' /*title: this.layersText*/},
+                 {region: 'center', autoScroll: true, tbar: [], border: false, id: 'tree', resizable: true},
                  legendContainerContainer
             ]
         });    
@@ -287,7 +283,6 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
         var westPanelTabs = new Ext.TabPanel({
     		activeTab: 0,
     		region: "center",
-//    		deferredRender: false,
     		items: [westPanel, tipsPanel,
     			{title:"Hjelp", html:"", region: "center", disabled: "false"}
     				]
@@ -324,7 +319,7 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
 			    items: westPanelTabs
 		    }]
         });      
-/** slutt: import fra gammel versjon */    	
+    	/** slutt: import fra gammel versjon */    	
         
         this.toolbar = new Ext.Toolbar({
             disabled: true,
@@ -342,75 +337,14 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
             });
         });
 
-        var googleEarthPanel = new gxp.GoogleEarthPanel({
-            mapPanel: this.mapPanel,
-            listeners: {
-                beforeadd: function(record) {
-                    return record.get("group") !== "background";
-                }
-            }
-        });
-        
-        // TODO: continue making this Google Earth Panel more independent
-        // Currently, it's too tightly tied into the viewer.
-        // In the meantime, we keep track of all items that the were already
-        // disabled when the panel is shown.
-        var preGoogleDisabled = [];
-
-        googleEarthPanel.on("show", function() {
-            preGoogleDisabled.length = 0;
-            this.toolbar.items.each(function(item) {
-                if (item.disabled) {
-                    preGoogleDisabled.push(item);
-                }
-            })
-            this.toolbar.disable();
-            // loop over all the tools and remove their output
-            for (var key in this.tools) {
-                var tool = this.tools[key];
-                if (tool.outputTarget === "map") {
-                    tool.removeOutput();
-                }
-            }
-            var layersContainer = Ext.getCmp("tree");
-            var layersToolbar = layersContainer && layersContainer.getTopToolbar();
-            if (layersToolbar) {
-                layersToolbar.items.each(function(item) {
-                    if (item.disabled) {
-                        preGoogleDisabled.push(item);
-                    }
-                });
-                layersToolbar.disable();
-            }
-        }, this);
-
-        googleEarthPanel.on("hide", function() {
-            // re-enable all tools
-            this.toolbar.enable();
-            
-            var layersContainer = Ext.getCmp("tree");
-            var layersToolbar = layersContainer && layersContainer.getTopToolbar();
-            if (layersToolbar) {
-                layersToolbar.enable();
-            }
-            // now go back and disable all things that were disabled previously
-            for (var i=0, ii=preGoogleDisabled.length; i<ii; ++i) {
-                preGoogleDisabled[i].disable();
-            }
-
-        }, this);
+        this.toolbar.enable();
 
         this.mapPanelContainer = new Ext.Panel({
             layout: "card",
             region: "center",
             height: "60%",
-            defaults: {
-                border: false
-            },
-            items: [
-                this.mapPanel,
-                googleEarthPanel
-            ],
+            defaults: {border: false},
+            items: [this.mapPanel],
             activeItem: 0
         });
 
@@ -435,7 +369,6 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
         var northPanel = new Ext.Panel({
             height: "40%",
             split: true,
-//            collapsible: true,
             unstyled:true,
             collapseMode: "mini",
         	region: "north",
@@ -445,7 +378,6 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
         this.portalItems = [{
             region: "center",
             layout: "border",
-//            tbar: this.toolbar,
             items: [
                 northPanel,
                 this.mapPanelContainer,
@@ -491,7 +423,6 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
             tooltip: "Zoombox"
         });	        
          
-    	
     	Proj4js.defs["EPSG:32633"] = "+proj=utm +zone=33 +ellps=WGS84 +datum=WGS84 +units=m +no_defs";
     	var oSrcPrj = new Proj4js.Proj('WGS84');
         var oDestPrj = new Proj4js.Proj('EPSG:32633');
@@ -516,42 +447,24 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
     				prefix: "",
     				formatOutput: formatLonlats
     			});
-    		this.map.addControl(control);
-    		MousePositionBox.superclass.afterRender.apply(this, arguments);
+	    		this.map.addControl(control);
+	    		MousePositionBox.superclass.afterRender.apply(this, arguments);
     		}
     	});     
     	var tmpMouseP = new MousePositionBox( {map: this.mapPanel.map} );
-
-    	var fishExBtn = new Ext.Button({
-            tooltip: "FishExchange",
-            handler: function(){
-            	Ext.Ajax.request({
-            	    url: 'spring/parameter.html?language=en&grid=gridname&grid_value=FishExChange',
-            	    success: function(objServerResponse) {
-            	        var responseText = objServerResponse.responseText;
-            	        Ext.MessageBox.show({title:'FishExchange', msg: responseText}); 
-            	    }
-            	});
-            },
-            iconCls: "icon-yellow-db",
-            text: "FishExchange",
-            scope: this,
-            disabled: false
-        });
     	
     	var gaaTilKoord = new Ext.Button({
             tooltip: "Go to coordinate",
             text: "Go to coordinate",
             handler: function(){
 				Ext.MessageBox.prompt('Name', 'Position in WGS84 (Latitude, Longitude - eg. - 60.2,1.5):', showResultText);
-        		//this.mapPanel.map.panTo( new OpenLayers.LonLat( showResultText ) ); // -1644,6934116 ) );
     			function showResultText(btn, text){
     				var thisMapPanel = Ext.ComponentMgr.all.find(function(c) {
                 		return c instanceof GeoExt.MapPanel;
             		});
 					var bar = text.split(",");
 					for(var i = 0;i<bar.length;i++){
-							bar[i] = bar[i].split(",");
+						bar[i] = bar[i].split(",");
 					}
 					var x = bar[0];
 					var y = bar[1];
@@ -562,7 +475,6 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
     				thisMapPanel.map.panTo( new OpenLayers.LonLat( newPoint.y, newPoint.x ) ); // -1644,6934116 ) );
 				};    				
             },
-            //iconCls: "icon-zoom-out",
             scope: this
         });
     	
@@ -601,16 +513,6 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
 			}
 		});
     	
-    	var norskBtn = new Ext.Button({
-            tooltip: "Norsk",
-            buttonAlign: "center",
-            handler: function(){
-				location.href = location.href.substring(0,location.href.lastIndexOf('/')) + "/geodataHI.html"; 				
-			},
-            iconCls: "icon-norsk",
-            scope: this
-        });
-    	
     	var mareanoNorskBtn = new Ext.Button({
             tooltip: "Norsk",
             buttonAlign: "center",
@@ -621,12 +523,10 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
             scope: this
         });
     	
-		var engelskBtn = new Ext.Button({
+		var mareanoEngelskBtn = new Ext.Button({
             tooltip: "English",
             buttonAlign: "right", 
-            handler: function(){
-//				location.href = location.href.substring(0,location.href.lastIndexOf('/')) + "/geodataHI_en.html"; 
-			},
+            handler: function(){},
             iconCls: "icon-english",
             scope: this
         });
@@ -642,7 +542,7 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
 			tmpMouseP,
             "->",
 			mareanoNorskBtn,
-			engelskBtn  			
+			mareanoEngelskBtn  			
         ];
         return tools;
     },

@@ -9,7 +9,6 @@ Ext.USE_NATIVE_JSON = true;
     // these source plugins were renamed after 2.3.2
     Ext.preg("gx_wmssource", gxp.plugins.WMSSource);
     Ext.preg("gx_olsource", gxp.plugins.OLSource);
-    //Ext.preg("gx_googlesource", gxp.plugins.GoogleSource);
     Ext.preg("gx_bingsource", gxp.plugins.BingSource);
     Ext.preg("gx_osmsource", gxp.plugins.OSMSource);
 })();
@@ -215,13 +214,13 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
             collapsible: true,
             collapseMode: "mini",
             html:"Data levert av:" +
-        "<img src=\"/geodata/theme/app/img/geosilk/kilder/DN_lite.png\" title=\"Direktoratet for naturforvaltning\"/>"+
-        "<img src=\"/geodata/theme/app/img/geosilk/kilder/FD_lite.png\" title=\"Fiskeridirektoratet\"/>"+
-        "<img src=\"/geodata/theme/app/img/geosilk/kilder/HI_lite.png\" title=\"Havforskningsinstituttet\"/>"+
-        "<img src=\"/geodata/theme/app/img/geosilk/kilder/NGU_lite.png\" title=\"Norges geologiske unders&oslash;kelse\"/>"+
-        "<img src=\"/geodata/theme/app/img/geosilk/kilder/OD_lite.png\" title=\"Oljedirektoratet\"/>"+
-        "<img src=\"/geodata/theme/app/img/geosilk/kilder/kystverket_lite.jpg\" title=\"Kystverket\"/>"+
-        "<img src=\"/geodata/theme/app/img/geosilk/kilder/SK_lite.png\" title=\"Statens kartverk\"/>"
+		        "<img src=\"/geodata/theme/app/img/geosilk/kilder/DN_lite.png\" title=\"Direktoratet for naturforvaltning\"/>"+
+		        "<img src=\"/geodata/theme/app/img/geosilk/kilder/FD_lite.png\" title=\"Fiskeridirektoratet\"/>"+
+		        "<img src=\"/geodata/theme/app/img/geosilk/kilder/HI_lite.png\" title=\"Havforskningsinstituttet\"/>"+
+		        "<img src=\"/geodata/theme/app/img/geosilk/kilder/NGU_lite.png\" title=\"Norges geologiske unders&oslash;kelse\"/>"+
+		        "<img src=\"/geodata/theme/app/img/geosilk/kilder/OD_lite.png\" title=\"Oljedirektoratet\"/>"+
+		        "<img src=\"/geodata/theme/app/img/geosilk/kilder/kystverket_lite.jpg\" title=\"Kystverket\"/>"+
+		        "<img src=\"/geodata/theme/app/img/geosilk/kilder/SK_lite.png\" title=\"Statens kartverk\"/>"
         });        
 		
 	    var mareanoLegendContainer = new Ext.Panel({
@@ -259,19 +258,18 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
         });
 
         /** westpanel *****/        
-        var westPanel = new Ext.Container({
+        var westPanel = new Ext.Panel({
             border: true,
             title: "Kartlag",
             layout: "border",
             region: "center",
             width: 250,
             split: true,
-          //collapsible: true,
             collapseMode: "mini",
             resizable: true,
             items: [
-            {region: 'center',autoScroll: true,tbar: [],border: false,id: 'tree', resizable: true /*title: this.layersText*/},
-            legendContainerContainer
+	            {region: 'center',autoScroll: true,tbar: [],border: false,id: 'tree', resizable: true},
+	            legendContainerContainer
             ]
         });    
         
@@ -287,7 +285,6 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
         var westPanelTabs = new Ext.TabPanel({
             activeTab: 0,
             region: "center",
-          //deferredRender: false,
             items: [westPanel, tipsPanel,
             {title:"Hjelp", 
             	html:"Der er to panel med kartlag. Den til venstre heter tematre og inneholder alle kartlag man kan velge \u00e5 sl\u00e5 p\u00e5." +
@@ -331,7 +328,6 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
 			    items: westPanelTabs
 		    }]
         }); 
-        
         /** slutt: import fra gammel versjon */    	
         
         this.toolbar = new Ext.Toolbar({
@@ -356,14 +352,8 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
             layout: "card",
             region: "center",
             height: "60%",
-            defaults: {
-                border: false
-            },
-            items: [
-                this.mapPanel
-                /*,
-                googleEarthPanel*/
-            ],
+            defaults: {border: false},
+            items: [this.mapPanel],
             activeItem: 0
         });
 
@@ -388,7 +378,6 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
         var northPanel = new Ext.Panel({
             height: "40%",
             split: true,
-            //            collapsible: true,
             unstyled:true,
             collapseMode: "mini",
             region: "north",
@@ -398,7 +387,6 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
         this.portalItems = [{
             region: "center",
             layout: "border",
-          //tbar: this.toolbar,
             items: [
                 northPanel,
                 this.mapPanelContainer,
@@ -421,7 +409,7 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
         var drawPolyAction = new GeoExt.Action({
             control: new OpenLayers.Control.DrawFeature(
                 vector, OpenLayers.Handler.Polygon
-                ),
+            ),
             iconCls: "icon-square",
             map: this.mapPanel.map,
             toggleGroup: "draw",
@@ -430,7 +418,7 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
         var drawLineAction = new GeoExt.Action({
             control: new OpenLayers.Control.DrawFeature(
                 vector, OpenLayers.Handler.Path
-                ),
+            ),
             iconCls: "icon-line",
             map: this.mapPanel.map,
             toggleGroup: "draw",
@@ -457,7 +445,7 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
             var ew = OpenLayers.Util.getFormattedLonLat(aPoint.x,'lon');
             
             return 'Koordinater (WGS84): ' + ns + ', ' + ew;
-        // + ' - EPSG:32633: (' + lat + ', ' + longi + ')';
+            // + ' - EPSG:32633: (' + lat + ', ' + longi + ')';
         }	
         MousePositionBox = Ext.extend(Ext.BoxComponent, {
             map: null,
@@ -472,16 +460,13 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
                 MousePositionBox.superclass.afterRender.apply(this, arguments);
             }
         });     
-        var tmpMouseP = new MousePositionBox( {
-            map: this.mapPanel.map
-            } );
+        var tmpMouseP = new MousePositionBox( {map: this.mapPanel.map} );
     	
         var gaaTilKoord = new Ext.Button({
             tooltip: "G&aring; til koordinat",
             text: "G&aring; til koordinat",
             handler: function(){
                 Ext.MessageBox.prompt('Name', 'Posisjon i WGS84 (Breddegrad, Lengdegrad - for eksempel: 60.2,1.5):', showResultText);
-                //this.mapPanel.map.panTo( new OpenLayers.LonLat( showResultText ) ); // -1644,6934116 ) );
                 function showResultText(btn, text){
                     var thisMapPanel = Ext.ComponentMgr.all.find(function(c) {
                         return c instanceof GeoExt.MapPanel;
@@ -499,7 +484,6 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
                     thisMapPanel.map.panTo( new OpenLayers.LonLat( newPoint.y, newPoint.x ) ); // -1644,6934116 ) );
                 };    				
             },
-            //iconCls: "icon-zoom-out",
             scope: this
         });
     	
@@ -538,7 +522,7 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
             }
         });
     	
-        var norskBtn = new Ext.Button({
+        var mareanoNorskBtn = new Ext.Button({
             tooltip: "Norsk",
             buttonAlign: "center",
             handler: function(){},
@@ -546,7 +530,7 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
             scope: this
         });
     	
-        var engelskMareanoBtn = new Ext.Button({
+        var mareanoEngelskBtn = new Ext.Button({
             tooltip: "English",
             buttonAlign: "right", 
             handler: function(){
@@ -556,20 +540,19 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
             scope: this
         });    	
     	
-        var tools = null;
-        tools = [
-                 drawPolyAction,
-                 drawLineAction, 
-                 zoomBoxAction,
-                 "-",
-                 gaaTilKoord,  
-                 gaaTilHav,               
-                 "-",
-                 tmpMouseP,
-                 "->",
-                 norskBtn,
-                 engelskMareanoBtn  			
-            ];
+        var tools = [
+             drawPolyAction,
+             drawLineAction, 
+             zoomBoxAction,
+             "-",
+             gaaTilKoord,  
+             gaaTilHav,               
+             "-",
+             tmpMouseP,
+             "->",
+             mareanoNorskBtn,
+             mareanoEngelskBtn  			
+        ];
         return tools;
     },
     
