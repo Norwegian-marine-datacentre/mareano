@@ -236,6 +236,12 @@
             <artifactId>jackson-mapper-asl</artifactId>
             <version>1.4.2</version>
         </dependency>
+		<dependency>
+			<groupId>org.apache.tomcat</groupId>
+			<artifactId>catalina</artifactId>
+			<version>6.0.29</version>
+			<scope>test</scope>
+		</dependency>       
     </dependencies>
     <build>
         <sourceDirectory>src/main/java</sourceDirectory>
@@ -373,5 +379,13 @@
                 <targetPath>WEB-INF/app/static/theme/imr/images</targetPath>      
             </resource>									
         </resources>
+	    <testResources>
+	        <testResource>
+	            <directory>${project.basedir}/src/main/resources</directory>
+	        </testResource>
+	        <testResource>
+	            <directory>${project.basedir}/src/test/resources</directory>
+	        </testResource>
+	    </testResources>        
     </build>    
 </project>

@@ -5,7 +5,7 @@
     <head>
         <title>Mareano</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <link rel="shortcut icon" href="theme/app/img/favicon.ico">
+        <link rel="shortcut icon" href="theme/app/img/mareanoLogo.png">
         <!-- Ext resources -->
         <link rel="stylesheet" type="text/css" href="externals/ext/resources/css/ext-all.css">
         <link rel="stylesheet" type="text/css" href="externals/ext/resources/css/xtheme-gray.css">
@@ -167,7 +167,8 @@
                                 ]
                             }	                            
                         ],
-                        center: [1088474,8089849],
+                        //center: [1088474,8089849],
+                        center: [1088474,7689849],
                         zoom: 2
                     }
                 });

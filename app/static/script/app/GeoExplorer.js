@@ -61,7 +61,7 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
     descriptionText: "Description",
     contactText: "Contact",
     aboutThisMapText: "About this Map",
-    thematicText: "Tematre",
+    thematicText: "Temakart",
     // End i18n.
     
     /**
@@ -287,7 +287,7 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
             region: "center",
             items: [westPanel, tipsPanel,
             {title:"Hjelp", 
-            	html:"Der er to panel med kartlag. Den til venstre heter tematre og inneholder alle kartlag man kan velge \u00e5 sl\u00e5 p\u00e5." +
+            	html:"Der er to panel med kartlag. Den til venstre heter temakart og inneholder alle kartlag man kan velge \u00e5 sl\u00e5 p\u00e5." +
             		"Den er organisert i hovedtema, under hovedtema er kartbilder som man kan velge \u00e5 sl\u00e5 p\u00e5, og p\u00e5 det nederste niv\u00e5et er kartlag " +
             		"som man ogs\u00e5 kan sl\u00e5 p\u00e5. Viss man sl\u00e5r p\u00e5 kartbilde s\u00e5 sl\u00e5r man p\u00e5 alle kartlag som liggger under kartlaget. N\u00e5r man sl\u00e5r p\u00e5 et " +
             		"kartbilde eller et kartlag s\u00e5 vil det/de kartlag(ene) bli synlig under kartlag i det h\u00f8yre kartpanelet. Her kan man dra p\u00e5" +

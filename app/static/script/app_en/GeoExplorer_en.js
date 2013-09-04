@@ -61,7 +61,7 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
     descriptionText: "Description",
     contactText: "Contact",
     aboutThisMapText: "About this Map",
-    thematicText: "Thematic tree",
+    thematicText: "Thematic maps",
     // End i18n.
     
     /**
@@ -284,7 +284,7 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
     		activeTab: 0,
     		region: "center",
     		items: [westPanel, tipsPanel,
-    			{title:"Hjelp", html:"", region: "center", disabled: "false"}
+    			{title:"Help", html:"", region: "center", disabled: "false"}
     				]
 		});
 		

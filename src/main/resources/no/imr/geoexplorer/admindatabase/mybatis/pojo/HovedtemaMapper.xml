@@ -22,7 +22,7 @@
 	
 	<select id="getHovedtemaer" resultMap="HovedtemaResult" resultType="java.util.ArrayList">
     	<include refid="hovedtemaSelect" />
-    	FROM hovedtemaer
+    	FROM hovedtemaer order by sort
 	</select>
 
 	<select id="selectKartbilderFromHovedtema" parameterType="long" 
@@ -31,7 +31,7 @@
     		k.type as type, k.startextent_minx as startextentMinx, k.startextent_maxx as startextentMaxx, 
     		k.startextent_miny as startextentMiny, k.startextent_maxy as startextentMaxy, k.sort as sort, 
     		k.generic_title as genericTitle, k.modified as modified   
-    	FROM kartbilder as k WHERE k.hovedtemaer_id=#{hovedtemaer_id}
+    	FROM kartbilder as k WHERE k.hovedtemaer_id=#{hovedtemaer_id} order by k.sort
 	</select>
 	
 </mapper>

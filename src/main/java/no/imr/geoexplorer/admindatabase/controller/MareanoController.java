@@ -44,6 +44,7 @@ import no.imr.geoexplorer.admindatabase.mybatis.pojo.Legend;
 import no.imr.geoexplorer.admindatabase.mybatis.pojo.Spesialpunkt;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Controller;
@@ -111,7 +112,7 @@ public class MareanoController {
         List<HovedtemaVisning> hovedtemaVisninger = new ArrayList<HovedtemaVisning>();
 
         for (Hovedtema hovedtema : hovedtemaer) {
-            if (!hovedtema.getGenericTitle().equals("Under utvikling")) {
+//            if (!hovedtema.getGenericTitle().equals("Under utvikling")) {
                 HovedtemaVisning hovedtemaVisning = new HovedtemaVisning();
                 if (language.equals("en")) {
                     List<HovedtemaEnNo> en = dao.getHovedtemaEn(hovedtema.getHovedtemaerId());
@@ -192,7 +193,7 @@ public class MareanoController {
                 if (hovedtemaVisning.getBilder().size() > 0) {
                     hovedtemaVisninger.add(hovedtemaVisning);
                 }
-            }
+            //} //Under utvikling hovedtema
         }
         return hovedtemaVisninger;
     }
@@ -227,6 +228,7 @@ public class MareanoController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+//        System.out.println("test:"+test);
         String someHeading = "<table width=\"100%\" cellspacing=\"0\"><tr height=\"45\"> "
                 + "<td valign=\"middle\" height=\"45\" style=\"background-image:url(http://www.mareano.no/kart/images/top/ny_heading_397.gif); background-repeat: repeat;\"> "
                 + "<a style=\"text-decoration: none\" target=\"_top\" href=\"http://www.mareano.no\"> "
@@ -240,6 +242,9 @@ public class MareanoController {
         newHeading = newHeading.replaceAll("href=\"/", "href=\"http://www.mareano.no/");
         return someHeading + newHeading;
     }
+    
+//    @Value("${propertiesMsg_no.advanced}") 
+//    private String test;
 
     @RequestMapping("/spesialpunkt")
     public @ResponseBody

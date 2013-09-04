@@ -55,7 +55,7 @@
    			k.ex_geographic_bounding_box_south_bound_latitude, 
    			k.ex_geographic_bounding_box_north_bound_latitude,
    			k.keyword, k.queryable, k.sort, k.available, k.generic_title, k.modified, k.info_format
-    	FROM kartlag k, kartbilder_kartlag kk WHERE kk.kartbilder_id=#{kartbilder_id} and k.kartlag_id=kk.kartlag_id
+    	FROM kartlag k, kartbilder_kartlag kk WHERE kk.kartbilder_id=#{kartbilder_id} and k.kartlag_id=kk.kartlag_id order by k.sort
 	</select>
 	
 	<select id="selectKartbilderFromKartlag" parameterType="long" 
