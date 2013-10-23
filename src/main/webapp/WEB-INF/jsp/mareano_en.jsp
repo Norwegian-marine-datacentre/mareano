@@ -160,8 +160,17 @@
                                       	//{layers: "europa", format: "image/jpeg", transparent: true, isBaseLayer: true}
                                       	,{singleTile:true}
                                 ]
+                            }, {
+                                source: "ol",
+                                type: "OpenLayers.Layer.WMS",
+                                group: "background",
+                                args: [
+                                      	"Europa og Gebco",
+                                      	"http://wms.geonorge.no/skwms1/wms.barents_watch",
+                                      	{layers: "barents_watch_WMS", format: "image/jpeg", transparent: true, isBaseLayer: true}
+                                      	,{singleTile:true}
+                                ]
                             }	      
-                            
                         ],
                         center: [1088474,7689849],
                         zoom: 2
@@ -183,7 +192,7 @@
                                     "${kartlaget.url}",
                                     {layers: "${kartlaget.layers}", format: "image/png", transparent: true},
                                     {
-                                        opacity: 0.5,
+                                        opacity: 1,
                                         metadata: {
                                             keyword: "${kartlaget.keyword}",
                                             'abstract': '${kartlaget.abstracts}',

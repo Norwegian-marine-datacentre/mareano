@@ -287,12 +287,22 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
             region: "center",
             items: [westPanel, tipsPanel,
             {title:"Hjelp", 
-            	html:"Der er to panel med kartlag. Den til venstre heter temakart og inneholder alle kartlag man kan velge \u00e5 sl\u00e5 p\u00e5." +
+            	/*html:"Der er to panel med kartlag. Den til venstre heter temakart og inneholder alle kartlag man kan velge \u00e5 sl\u00e5 p\u00e5." +
             		"Den er organisert i hovedtema, under hovedtema er kartbilder som man kan velge \u00e5 sl\u00e5 p\u00e5, og p\u00e5 det nederste niv\u00e5et er kartlag " +
             		"som man ogs\u00e5 kan sl\u00e5 p\u00e5. Viss man sl\u00e5r p\u00e5 kartbilde s\u00e5 sl\u00e5r man p\u00e5 alle kartlag som liggger under kartlaget. N\u00e5r man sl\u00e5r p\u00e5 et " +
             		"kartbilde eller et kartlag s\u00e5 vil det/de kartlag(ene) bli synlig under kartlag i det h\u00f8yre kartpanelet. Her kan man dra p\u00e5" +
             		"kartlagene for \u00e5 endre tegningsrekkef\u00f8lge. Man kan ogs\u00e5 h\u00f8yreklikke p\u00e5 kartlaget for \u00e5 zoome til kartlagsutstrekning. Dette kan" +
-            		"v\u00E6re nyttig for kartlag som er mer synlig viss man zoomer inn p\u00e5 dem. For sp\u00f8rsmål send mail til gis@nmd.no"
+            		"v\u00E6re nyttig for kartlag som er mer synlig viss man zoomer inn p\u00e5 dem. For sp\u00f8rsm\u00e5l send mail til gis@nmd.no"
+            	*/
+            	html:"For \u00e5 gj\u00f8re det enklere \u00e5 navigere og endre p\u00e5 hva kartene viser, er det laget to ulike paneler for \u00e5 styre dette. " +
+            			"I &#34;Temakart&#34; til venstre ligger alle ferdige kart og kartlag som man kan velge \u00e5 sl\u00e5 p\u00e5. De er organisert i hovedtema, under " +
+            			"hovedtema er kartbilder som man kan velge \u00e5 sl\u00e5 av/p\u00e5, og p\u00e5 det nederste niv\u00e5et er kartlag som man ogs\u00e5 " +
+            			"kan sl\u00e5s av/p\u00e5. N\u00e5r man \u00e5pner et temakart, blir et p\u00e5 forh\u00e5nd definert utvalg av kartlag \u00e5pnet. " +
+            			"Disse kartlagene blir synlige under &#34;Kartlag&#34; i det h\u00f8yre kartpanelet. Her kan rekkef\u00f8lgen p\u00e5 kartlagene endres ved " +
+            			"\u00e5 flytte p\u00e5 de ulike kartlagene, dette kan p\u00e5 enkelte kartlag for eksempel brukes til \u00e5 velge hvilke punkt som skal" +
+            			" v\u00E6re mest synlige. Man kan ogs\u00e5 h\u00f8yreklikke p\u00e5 tittelen p\u00e5 hvert kartlag for \u00e5 bl.a. zoome til " +
+            			"kartlagsutstrekning, det kan v\u00E6re nyttig for kartlag som har innhold som er mer synlig viss man zoomer inn p\u00e5 dem. " +
+            			"For sp\u00f8rsm\u00e5l send mail til <a href='gis@nmd.no'>gis@nmd.no</a>"
             	, region: "center"}
             ]
         });
@@ -404,26 +414,6 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
      */
     createTools: function() {
 
-        var vector = new OpenLayers.Layer.Vector("Polygon");
-        this.mapPanel.map.addLayer( vector );    
-        var drawPolyAction = new GeoExt.Action({
-            control: new OpenLayers.Control.DrawFeature(
-                vector, OpenLayers.Handler.Polygon
-            ),
-            iconCls: "icon-square",
-            map: this.mapPanel.map,
-            toggleGroup: "draw",
-            tooltip: "tegn polygon"
-        }); 
-        var drawLineAction = new GeoExt.Action({
-            control: new OpenLayers.Control.DrawFeature(
-                vector, OpenLayers.Handler.Path
-            ),
-            iconCls: "icon-line",
-            map: this.mapPanel.map,
-            toggleGroup: "draw",
-            tooltip: "tegn linje"
-        });	
         var zoomBoxAction = new GeoExt.Action({
             control: new OpenLayers.Control.ZoomBox({alwaysZoom:true}),
             iconCls: "icon-zoom-to", //app\static\externals\openlayers\img\drag-rectangle-on.png
@@ -534,15 +524,14 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
             tooltip: "English",
             buttonAlign: "right", 
             handler: function(){
-                location.href = location.href.substring(0,location.href.lastIndexOf('/')) + "/mareano_en.html"; 
+                location.href = location.href.substring(0,location.href.lastIndexOf('/mareano.html')) + "/mareano_en.html"; 
             },
             iconCls: "icon-english",
             scope: this
         });    	
     	
         var tools = [
-             drawPolyAction,
-             drawLineAction, 
+             "", 
              zoomBoxAction,
              "-",
              gaaTilKoord,  

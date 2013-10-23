@@ -14591,6 +14591,7 @@ Ext.layout.BorderLayout.Region.prototype = {
             }
             this.collapsedEl = this.targetEl.createChild({
                 cls: "x-layout-collapsed x-layout-collapsed-"+this.position,
+                cn: this.panel.title,
                 id: this.panel.id + '-xcollapsed'
             });
             this.collapsedEl.enableDisplayMode('block');

@@ -165,7 +165,18 @@
                                       	//{layers: "europa", format: "image/jpeg", transparent: true, isBaseLayer: true}
                                       	,{singleTile:true}
                                 ]
-                            }	                            
+                            }	  
+                           	, {
+                               source: "ol",
+                               type: "OpenLayers.Layer.WMS",
+                               group: "background",
+                               args: [
+                                     	"Europa og Gebco",
+                                     	"http://wms.geonorge.no/skwms1/wms.barents_watch",
+                                     	{layers: "barents_watch_WMS", format: "image/jpeg", transparent: true, isBaseLayer: true}
+                                     	,{singleTile:true}
+                               ]
+                           }                                                          
                         ],
                         //center: [1088474,8089849],
                         center: [1088474,7689849],
@@ -190,7 +201,7 @@
                                     "${kartlaget.url}",
                                     {layers: "${kartlaget.layers}", format: "image/png", transparent: true},
                                     {
-                                        opacity: 0.5,
+                                        opacity: 1,
                                         metadata: {
                                             keyword: "${kartlaget.keyword}",
                                             //'abstract': '${kartlaget.abstracts}', //causes error: missing } after property list genereres daglig fra OD's operasjonelle databaser. Detaljeringsg...
@@ -221,6 +232,14 @@
                  */
                 app.on("ready", function() {
                     Ext.getCmp('topPanelHeading').update('${heading}');
+                    
+                    var newLegend = Ext.getCmp('newLegend');
+//root:      initialConfig,region,layout,autoScroll,border,height,html,id,events,toolbars,ownerCt,collapsed,container,rendered,el,headerCls,headerTextCls,bwrapCls,tbarCls,bodyCls,bbarCls,footerCls,tools,bwrap,body,boxReady,lastSize,items,getState,x,y,hasLayout                    
+//layout:    id,container                    
+//container: initialConfig,region,layout,autoScroll,border,height,html,id,events,toolbars,ownerCt,collapsed,container,rendered,el,headerCls,headerTextCls,bwrapCls,tbarCls,bodyCls,bbarCls,footerCls,tools,bwrap,body,boxReady,lastSize,items,getState,x,y,hasLayout                    
+                    //alert( Object.keys(newLegend) );
+                    //alert( Object.keys(newLegend) );
+                    //Ext.getCmp('newLegend').layout.south.getCollapsedEl().titleEl.dom.innerHTML = 'Tegnforklaring editert';
                     
                 	loadMareano( this.mapPanel, app, layers );
                 	
