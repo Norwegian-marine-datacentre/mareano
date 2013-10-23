@@ -284,8 +284,7 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
     		activeTab: 0,
     		region: "center",
     		items: [westPanel, tipsPanel,
-    			{title:"Help", html:"", region: "center", disabled: "false"}
-    				]
+    		        {title:"Help", html:"", region: "center", disabled: "false"}]
 		});
 		
         var westPanel2 = new Ext.Panel({
@@ -395,26 +394,6 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
      */
     createTools: function() {
 
-    	var vector = new OpenLayers.Layer.Vector("Polygon");
-    	this.mapPanel.map.addLayer( vector );    
-    	var drawPolyAction = new GeoExt.Action({
-            control: new OpenLayers.Control.DrawFeature(
-            	vector, OpenLayers.Handler.Polygon
-    		),
-    		iconCls: "icon-square",
-            map: this.mapPanel.map,
-            toggleGroup: "draw",
-            tooltip: "Draw polygon"
-    	}); 
-        var drawLineAction = new GeoExt.Action({
-            control: new OpenLayers.Control.DrawFeature(
-                vector, OpenLayers.Handler.Path
-            ),
-            iconCls: "icon-line",
-            map: this.mapPanel.map,
-            toggleGroup: "draw",
-            tooltip: "Draw line"
-        });
         var zoomBoxAction = new GeoExt.Action({
             control: new OpenLayers.Control.ZoomBox({alwaysZoom:true}),
             iconCls: "icon-zoom-to", //app\static\externals\openlayers\img\drag-rectangle-on.png
@@ -517,7 +496,7 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
             tooltip: "Norsk",
             buttonAlign: "center",
             handler: function(){
-				location.href = location.href.substring(0,location.href.lastIndexOf('/')) + "/mareano.html"; 				
+				location.href = location.href.substring(0,location.href.lastIndexOf('/mareano_en.html')) + "/mareano.html"; 				
 			},
             iconCls: "icon-norsk",
             scope: this
@@ -532,8 +511,7 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
         });
 		
 	    var tools = [
-            drawPolyAction,
-            drawLineAction,
+            "",
             zoomBoxAction,
             "-",
             gaaTilKoord,  
