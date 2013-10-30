@@ -289,7 +289,7 @@ public class MareanoController {
             Arrays.sort(legendsArray, Legend.LegendComparator);
             for (Legend aLegend : legendsArray) {
                 String text = aLegend.getGenericTitle();
-                if (aLegend.getUrl() != null) {
+                if (aLegend.getUrl() != null  && !aLegend.getUrl().equals("")) {
                     String legendUrl = aLegend.getUrl().trim();
                     if (!legendUrl.toLowerCase().startsWith("http://")) {
                         spesialpunktJSON.addLegendsInfo(new LegendsInfo(baseUrlForLegend + legendUrl, text));
