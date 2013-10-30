@@ -216,7 +216,8 @@ gxp.plugins.LayerTree = Ext.extend(gxp.plugins.Tool, {
             if (record) {
                 attr.qtip = record.get('abstract');
                 if (!record.get("queryable") && !attr.iconCls) {
-                    attr.iconCls = "gxp-tree-rasterlayer-icon";
+//                    attr.iconCls = "gxp-tree-rasterlayer-icon";
+                	attr.iconCls = getLayerIcon(layer.url);
                 }
                 if (record.get("fixed")) {
                     attr.allowDrag = false;
