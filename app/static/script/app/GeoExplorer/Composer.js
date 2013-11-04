@@ -254,7 +254,8 @@ GeoExplorer.Composer = Ext.extend(GeoExplorer, {
         tools.unshift("-");
         tools.unshift(new Ext.Button({
             tooltip: this.exportMapText,
-            needsAuthorization: true,
+//            needsAuthorization: true,
+            needsAuthorization: false,
             disabled: !this.isAuthorized(),
             handler: function() {
                 this.save(this.showEmbedWindow);

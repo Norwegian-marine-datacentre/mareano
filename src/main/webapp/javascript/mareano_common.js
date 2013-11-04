@@ -1,9 +1,9 @@
 var silent = false;
+var kartlagInfoState = ""; //used by removeLayerLegendAndInfo(mapOfGMLspesialpunkt, kartlagId)
 
 function loadMareano(mapPanel, app) {
 	addOverviewMapAndKeyboardDefaults(mapPanel.map);
-    app.mapOfGMLspesialpunkt = new Object();    
-    var kartlagInfoState = ""; //used by removeLayerLegendAndInfo(mapOfGMLspesialpunkt, kartlagId)
+    app.mapOfGMLspesialpunkt = new Object();        
     
     var layertree = Ext.getCmp("layertree");
     
@@ -124,7 +124,7 @@ function addLayerToGroup( gruppeNavn, gruppeText, map, mapPanel, layers, store, 
                     });
                 }
             }
-            /** adding the right layer to the right container */
+            /** adding matching layer to matching container group */
             for( var i= layerName.length-1; i>=0; --i ) {
                 if ( record.get("group") == gruppeNavn ) {
                     return true;
@@ -140,8 +140,8 @@ function addLayerToGroup( gruppeNavn, gruppeText, map, mapPanel, layers, store, 
                 url = layerRecord.getLayer().url;
             }
             cssBgImg = getLayerIcon(url);
-            attr.id = layerRecord.data.id;
             attr.iconCls = cssBgImg;
+            attr.id = layerRecord.data.id;
             attr.checked = layerRecord.getLayer().visibility;
             attr.id = layerRecord.data.id;
 
@@ -175,12 +175,9 @@ function addLayerToGroup( gruppeNavn, gruppeText, map, mapPanel, layers, store, 
                             clone.getLayer().metadata['kartlagId'] = id;
                             app.mapPanel.layers.add(clone);
                         }
-            			/**/
-            			
-            			//app.mapPanel.map.addLayer(layer); //adds layer to Overlay but mareano_wmslayerpanel is missing from properties and no layer properties are shown
-            			
-		                displayLegendGraphics(layer.metadata['kartlagId']);   
-            			getSpesialPunkt(app.mapPanel.map.getExtent() + "", layerRecord.getLayer().metadata['kartlagId'], layerRecord.getLayer(), event, app);
+            			//app.mapPanel.map.addLayer(layer); //adds layer to Overlay but mareano_wmslayerpanel is missing from properties and no layer properties are shown                        
+		                displayLegendGraphicsAndSpesialpunkt(app.mapPanel.map.getExtent() + "", layer.metadata['kartlagId'], layerRecord.getLayer(), event, app);   
+            			//getSpesialPunkt(app.mapPanel.map.getExtent() + "", layerRecord.getLayer().metadata['kartlagId'], layerRecord.getLayer(), event, app);
             		} else {
             			removeLayerLegendAndInfo(app.mapOfGMLspesialpunkt, layer.metadata['kartlagId'], record, layer, app);
             		}
@@ -199,12 +196,13 @@ function addLayerToGroup( gruppeNavn, gruppeText, map, mapPanel, layers, store, 
             "checkchange": function(node, checked) { //setting all subnodes if parent is checked
             	node.expand();
             	var cs = node.childNodes;
-            	for(var c = cs.length-1; c >= 0; c--) { //add layers in reverse of reverse order - so in the right order
+//            	for(var c = cs.length-1; c >= 0; c--) { //add layers in reverse of reverse order - so in the right order
+            	for(var c=0;c<cs.length;c++) {
             		cs[c].ui.toggleCheck(checked);
             	} 
-				node.eachChild(function(child){
- 		        	child.ui.toggleCheck(checked);
-				});
+//				node.eachChild(function(child){
+// 		        	child.ui.toggleCheck(checked);
+//				});
             }
         },                            
         layerStore: store,
@@ -224,22 +222,30 @@ function getSpesialPunkt(extent, kartlagId, layer, event, app) {
             kartlagId: kartlagId
         },                	
         success:function(data) {
-        	if ( data.noSpesialpunkt == false ) { 
-        		var layerName = "";
-        		var styleMap = new OpenLayers.StyleMap({
-        			'default':{externalGraphic: "theme/imr/images/geofotoSpesialpunkt.png"}
-        		});
-        		var snitt = new OpenLayers.Layer.GML("Spesialpunkt","spring/getgml", {styleMap: styleMap});   
-        		app.mapOfGMLspesialpunkt[kartlagId] = snitt;	    
-        		snitt.events.register( "featureselected", snitt, GMLselected );
-        		app.mapPanel.map.addLayer( snitt );   	           
-        		
-        		var control = new OpenLayers.Control.SelectFeature( snitt );
-                app.mapPanel.map.addControl( control );
-                control.activate(); 	 
-        	}
+
         }                
     });
+}
+
+function displayLegendGraphicsAndSpesialpunkt(extent, kartlagId, layer, event, app) {
+	var languageChoosen = "en";
+	if (document.location.href.indexOf("mareano.html") != -1) {
+		languageChoosen = "norsk";
+	}
+    jQuery.ajax({
+        type: 'get',
+        url: "spring/legendAndSpesialpunkt",
+        contentType: "application/json",
+        data: {
+            kartlagId: kartlagId,
+            language: languageChoosen,
+            extent: extent
+        },
+        success:function(data) {
+        	addLegendGraphics(kartlagId, data);
+        	addSpesialpunkt(extent, kartlagId, layer, event, app, data);
+        }
+    }); 
 }
 
 function displayLegendGraphics(kartlagId) {
@@ -256,16 +262,37 @@ function displayLegendGraphics(kartlagId) {
             language: languageChoosen
         },
         success:function(data) {
-            var currentLegend;
-            jQuery('#newLegend').children().each(function(index, value){
-                jQuery(value).children().each(function(index, value){
-                    currentLegend = jQuery(value).html();
-                });	        
-            });
-            buildLegendGraphicsHTML( currentLegend, kartlagId, data );
-            visKartlagInfoHTML( kartlagId, data );                 
+        	addLegendGraphics(kartlagId, data);
         }
     }); 
+}
+
+function addLegendGraphics(kartlagId, data) {
+    var currentLegend;
+    jQuery('#newLegend').children().each(function(index, value){
+        jQuery(value).children().each(function(index, value){
+            currentLegend = jQuery(value).html();
+        });	        
+    });
+    buildLegendGraphicsHTML( currentLegend, kartlagId, data );
+    visKartlagInfoHTML( kartlagId, data ); 
+}
+
+function addSpesialpunkt(extent, kartlagId, layer, event, app, data) {
+	if ( data.noSpesialpunkt == false ) { 
+		var layerName = "";
+		var styleMap = new OpenLayers.StyleMap({
+			'default':{externalGraphic: "theme/imr/images/geofotoSpesialpunkt.png"}
+		});
+		var snitt = new OpenLayers.Layer.GML("Spesialpunkt","spring/getgml", {styleMap: styleMap});   
+		app.mapOfGMLspesialpunkt[kartlagId] = snitt;	    
+		snitt.events.register( "featureselected", snitt, GMLselected );
+		app.mapPanel.map.addLayer( snitt );   	           
+		
+		var control = new OpenLayers.Control.SelectFeature( snitt );
+        app.mapPanel.map.addControl( control );
+        control.activate(); 	 
+	}
 }
 
 function buildLegendGraphicsHTML( currentLegend, kartlagId, data ) {
@@ -275,9 +302,12 @@ function buildLegendGraphicsHTML( currentLegend, kartlagId, data ) {
     		legendGraphicsHTML += '<div>';     
     	}
     	if ( data.legends[i].url != '') {
-    		legendGraphicsHTML += '<img src="' + data.legends[i].url + '"/>';
+    		legendGraphicsHTML += '<table><tr><td><img src="' + data.legends[i].url + '"/></td>';
+    		legendGraphicsHTML += '<td>' + data.legends[i].text + '</td></tr></table>';
+    	} else {
+    		legendGraphicsHTML += data.legends[i].text;
     	}
-    	legendGraphicsHTML += data.legends[i].text;
+    	
     	if ( i > 0 ) {
     		legendGraphicsHTML += '</div>';     
     	}
@@ -293,14 +323,45 @@ function buildLegendGraphicsHTML( currentLegend, kartlagId, data ) {
  * http://www.sencha.com/forum/archive/index.php/t-103797.html
  **/
 function visKartlagInfoHTML(kartlagId, data) {
-    var infoHTML = '<div id="'+kartlagId+'tips"><b>'+data.kartlagInfo.kartlagInfoTitel+':</b>'+data.kartlagInfo.text+'</div>';
+    var infoHTML = '<div id="'+kartlagId+'tips"><font style="font-size: 12px;"><b>'+ 
+    	data.kartlagInfo.kartlagInfoTitel+'</b>' + ':' + 
+    	data.kartlagInfo.text + '</font></div>';
 
-    this.kartlagInfoState += infoHTML;
-    if ( Ext.getCmp('tips').rendered ) {
-        Ext.getCmp('tips').update(this.kartlagInfoState);
-    } else {
-        Ext.getCmp('tips').html = this.kartlagInfoState;
+    kartlagInfoState += infoHTML;
+    updateOrSetKartlagInfo(kartlagInfoState);
+}
+
+/**
+ * Remove Legend div tag and KartlagInfo div tag associated with kartlagId
+ */
+function removeLayerLegendAndInfo(mapOfGMLspesialpunkt, kartlagId, record, layer, app) {
+	
+	app.mapPanel.layers.each(function(record) {
+		if (record.getLayer().metadata['kartlagId'] === kartlagId) {
+			this.remove(record);
+			return false;
+		}
+	}, app.mapPanel.layers);
+	
+	if ( mapOfGMLspesialpunkt[kartlagId] != null ) { //fjern spesialpunkt     
+    	app.mapPanel.map.removeLayer(mapOfGMLspesialpunkt[kartlagId], false);
+    	mapOfGMLspesialpunkt[kartlagId] = null;
     }
+    var legendDiv = '#'+kartlagId; //fjern legend 
+    jQuery(legendDiv).remove();
+    
+    var temp = jQuery("<div>").html(kartlagInfoState); //fjern kartlaginfo 
+    jQuery(temp).find(legendDiv+'tips').remove();
+    kartlagInfoState = jQuery(temp).html();			
+    updateOrSetKartlagInfo(kartlagInfoState);
+}
+
+function updateOrSetKartlagInfo(kartlagInfoState) {
+    if ( Ext.getCmp('tips').rendered ) {
+    	Ext.getCmp('tips').update(kartlagInfoState);
+    } else {
+    	Ext.getCmp('tips').html = kartlagInfoState;
+    }	
 }
 
 /**
@@ -323,36 +384,6 @@ function GMLselected (event) {
         jQuery.get('/geodata/proxy?url=http://atlas.nodc.no/website/mareano/' + event.feature.data.description, function(response) { 
             Ext.MessageBox.show({title:event.feature.data.name, msg: response}); 
 		});
-    }
-}
-
-/**
- * Remove Legend div tag and KartlagInfo div tag associated with kartlagId
- */
-function removeLayerLegendAndInfo(mapOfGMLspesialpunkt, kartlagId, record, layer, app) {
-	
-	//app.mapPanel.map.removeLayer(layer);//fjern kartlag
-	//app.mapPanel.layers.remove(record);
-	app.mapPanel.layers.each(function(record) {
-		if (record.getLayer().metadata['kartlagId'] === kartlagId) {
-			this.remove(record);
-			return false;
-		}
-	}, app.mapPanel.layers);
-	
-	if ( mapOfGMLspesialpunkt[kartlagId] != null ) { //fjern spesialpunkt                		
-    	app.mapPanel.map.removeLayer(mapOfGMLspesialpunkt[kartlagId], false);
-    }
-    var legendDiv = '#'+kartlagId; //fjern legend 
-    jQuery(legendDiv).remove();
-    
-    var temp = jQuery("<div>").html(app.kartlagInfoState); //fjern kartlaginfo 
-    jQuery(temp).find(legendDiv+'tips').remove();
-    kartlagInfoState = jQuery(temp).html();			
-    if ( Ext.getCmp('tips').rendered ) {
-    	Ext.getCmp('tips').update(kartlagInfoState);
-    } else {
-    	Ext.getCmp('tips').html = kartlagInfoState;
     }
 }
 

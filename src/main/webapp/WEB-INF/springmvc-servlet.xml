@@ -14,21 +14,7 @@
            http://www.springframework.org/schema/jee
            http://www.springframework.org/schema/jee/spring-jee.xsd" >
 	
-	<jee:jndi-lookup id="dataSource" jndi-name="jdbc/mareanoweb"/>
-
-	<!--bean id="applicationServerEnviromentProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
-		<property name="properties">
-		    <props>
-		        <prop key="java.naming.factory.initial">org.apache.naming.java.javaURLContextFactory</prop>
-		        <prop key="java.naming.provider.url">http://localhost:8080</prop>
-		    </props>
-		</property>
-	</bean>
-	
-	<bean id="dataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
-		<property name="jndiName"><value>jdbc/mareanoweb</value></property>
-		<property name="jndiEnvironment"><ref local="applicationServerEnviromentProperties"/></property>
-	</bean -->
+	<jee:jndi-lookup id="dataSource" jndi-name="java:comp/env/jdbc/mareanoweb"/>
 		
 	<bean id="txManager"
 		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">

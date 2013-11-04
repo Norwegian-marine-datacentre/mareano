@@ -97,7 +97,7 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
                 iconCls: "gxp-icon-pan",
                 ptype: "gxp_navigation", 
                 toggleGroup: this.toggleGroup
-            }, {
+            },{
                 leaf: true, 
                 text: gxp.plugins.WMSGetFeatureInfo.prototype.infoActionTip, 
                 checked: true, 
@@ -268,7 +268,7 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
             collapseMode: "mini",
             resizable: true,
             items: [
-	            {region: 'center',autoScroll: true,tbar: [],border: false,id: 'tree', resizable: true},
+	            {region: 'center',autoScroll: true,tbar: [],border: false,id:'tree', resizable: true},
 	            legendContainerContainer
             ]
         });    
@@ -287,13 +287,6 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
             region: "center",
             items: [westPanel, tipsPanel,
             {title:"Hjelp", 
-            	/*html:"Der er to panel med kartlag. Den til venstre heter temakart og inneholder alle kartlag man kan velge \u00e5 sl\u00e5 p\u00e5." +
-            		"Den er organisert i hovedtema, under hovedtema er kartbilder som man kan velge \u00e5 sl\u00e5 p\u00e5, og p\u00e5 det nederste niv\u00e5et er kartlag " +
-            		"som man ogs\u00e5 kan sl\u00e5 p\u00e5. Viss man sl\u00e5r p\u00e5 kartbilde s\u00e5 sl\u00e5r man p\u00e5 alle kartlag som liggger under kartlaget. N\u00e5r man sl\u00e5r p\u00e5 et " +
-            		"kartbilde eller et kartlag s\u00e5 vil det/de kartlag(ene) bli synlig under kartlag i det h\u00f8yre kartpanelet. Her kan man dra p\u00e5" +
-            		"kartlagene for \u00e5 endre tegningsrekkef\u00f8lge. Man kan ogs\u00e5 h\u00f8yreklikke p\u00e5 kartlaget for \u00e5 zoome til kartlagsutstrekning. Dette kan" +
-            		"v\u00E6re nyttig for kartlag som er mer synlig viss man zoomer inn p\u00e5 dem. For sp\u00f8rsm\u00e5l send mail til gis@nmd.no"
-            	*/
             	html:"For \u00e5 gj\u00f8re det enklere \u00e5 navigere og endre p\u00e5 hva kartene viser, er det laget to ulike paneler for \u00e5 styre dette. " +
             			"I &#34;Temakart&#34; til venstre ligger alle ferdige kart og kartlag som man kan velge \u00e5 sl\u00e5 p\u00e5. De er organisert i hovedtema, under " +
             			"hovedtema er kartbilder som man kan velge \u00e5 sl\u00e5 av/p\u00e5, og p\u00e5 det nederste niv\u00e5et er kartlag som man ogs\u00e5 " +
@@ -331,7 +324,7 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
 			    width: 200,
 			    region: "west"
 		    }, {
-			    xtype: 'container',
+			    xtype: 'panel',
 			    layout: "border",
 			    width: 200,
 			    region: "center",

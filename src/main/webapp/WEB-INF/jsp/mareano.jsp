@@ -65,9 +65,9 @@
         <script type="text/javascript" src="javascript/WMSLayerPanel.js"></script>
         <script type="text/javascript" src="javascript/mareano_common.js"></script>        
 
-        <!-- PrintPreview resources -->
-        <link rel="stylesheet" type="text/css" href="externals/PrintPreview/resources/css/printpreview.css">
-        <script type="text/javascript" src="script/PrintPreview.js"></script>
+        <!-- PrintPreview resources We need to install printing service on maps.imr.no/geoserver for this to work -->
+        <!-- link rel="stylesheet" type="text/css" href="externals/PrintPreview/resources/css/printpreview.css">
+        <script type="text/javascript" src="script/PrintPreview.js"></script -->
 
         <script>
             function init() {
@@ -176,9 +176,19 @@
                                      	{layers: "barents_watch_WMS", format: "image/jpeg", transparent: true, isBaseLayer: true}
                                      	,{singleTile:true}
                                ]
-                           }                                                          
+                           } 
+                           	,{source: "ol",
+         	                    type: "OpenLayers.Layer.WMS",
+          	                    group: "common",
+          	                    visibility: false,
+          	                    args: [
+          	                        "Grid",
+          	                        "http://maps.imr.no/geoserver/wms",
+          	                        {layers: "grid_UTM33,utm33n_01bgX05lg,utm33n_02bgX10lg,utm33n_15bmX01lg,utm33n_30bmX02lg", format: "image/png", transparent: true},
+          	                        {opacity:1, singleTile:true}
+          	                    ]
+          					}                                                         
                         ],
-                        //center: [1088474,8089849],
                         center: [1088474,7689849],
                         zoom: 2
                     }
@@ -253,6 +263,7 @@
                     	}
                     }, this);
                     
+                    /***********************************/
                     var treeRoot = Ext.getCmp('thematic_tree');
                     var mergedSomeHovedtema;
                     <c:forEach var="hovedtema" items="${hovedtemaer}">
@@ -268,9 +279,15 @@
                             </c:forEach>
                         treeRoot.getRootNode().appendChild( mergedSomeHovedtema );
                     </c:forEach>
-                    /***********************************/
                     treeRoot.getRootNode().appendChild( mergedSomeHovedtema );
                     /***********************************/
+                    var rootRightTree = Ext.getCmp('layertree');
+        			var mergedCommonMaps = new Ext.tree.TreeNode({
+        				text: "Generelle kart" 
+        			});	
+                    rootRightTree.getRootNode().appendChild( new Ext.tree.TreeNode({text:"Generelle kart"}) );
+                    /***********************************/
+                    
                     var tmp = Ext.ComponentMgr.all.find(function(c) {
                         if (c instanceof Ext.Button) {
                             if (c.tooltip=="Publish map") {c.setTooltip("Publiser kartet");

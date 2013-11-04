@@ -1,5 +1,6 @@
 function getLayerIcon(url) {
 	if (url != null) {
+//		alert("getting icon for url:"+url);
 		if (url.indexOf("npd.no") != -1) {
 			return "gx-tree-rasterlayer-icon-OD";
 		} else if (url.indexOf("crius.nodc") != -1
