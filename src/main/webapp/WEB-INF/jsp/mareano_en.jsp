@@ -156,7 +156,7 @@
                                       	"Europa - white background",
                                       	"http://wms.geonorge.no/skwms1/wms.europa",
                                       	//"http://opencache.statkart.no/gatekeeper/gk/gk.open",
-                                      	{layers: "Land,Vmap0Land,Vmap0Bebyggelse,Vmap0Skog,Vmap0Dyrketmark,Vmap0Sletteland,Vmap0Innsjo,Vmap0MyrSump,Vmap0Isbre,Vmap0Hoydekontur,Vmap0Kystkontur,Vmap0Elver,Vmap0AdministrativeGrenser,Vmap0Hoydepunkt", format: "image/jpeg", transparent: true, isBaseLayer: true}
+                                      	{layers: "Land,Vmap0Land,Vmap0Bebyggelse,Vmap0Skog,Vmap0Sletteland,Vmap0Innsjo,Vmap0MyrSump,Vmap0Isbre,Vmap0Hoydekontur,Vmap0Kystkontur,Vmap0Elver,Vmap0AdministrativeGrenser", format: "image/jpeg", transparent: true, isBaseLayer: true}
                                       	//{layers: "europa", format: "image/jpeg", transparent: true, isBaseLayer: true}
                                       	,{singleTile:true}
                                 ]
