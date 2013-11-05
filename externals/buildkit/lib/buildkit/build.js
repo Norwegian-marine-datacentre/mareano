@@ -13,6 +13,7 @@ try {
 var parser = new (require("ringo/args").Parser)();
 
 parser.addOption("l", "list", "","list files to be included in a build");
+parser.addOption("u", "uncompressed", "", "do not compress scripts, only concatenate");
 parser.addOption("o", "outdir", "outdir", "output directory for scripts");
 parser.addOption("h", "help", "", "display this help message");
 
@@ -50,12 +51,10 @@ exports.main = function main(args) {
             print(ordered.join("\n"));
             print();
         } else {
-            try {
-                concat = MERGE.concat(group);
-            } catch (err) {
-                throw new Error("Trouble building " + section + "\n" + err.message);
+            concat = MERGE.concat(group);
+            if (!('uncompressed' in options)) {
+                concat = compile(concat);
             }
-            concat = compile(concat);
             outfile = section;
             if (options.outdir) {
                 if (!FS.isDirectory(options.outdir)) {

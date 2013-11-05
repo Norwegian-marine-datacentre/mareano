@@ -82,7 +82,7 @@ var expand = function(unordered, omit, assets) {
                     }
                 }
             } else {
-                throw new Error("Entry not found in assets: " + path);
+                throw "Entry not found in assets: " + path;
             }
         }
         unordered = newlyIncluded;
