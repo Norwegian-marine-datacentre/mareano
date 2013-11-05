@@ -80,7 +80,7 @@ public class MareanoController {
     protected List<HovedtemaVisning> listOrganizedToBrowser(String language) {
 
         List<Hovedtema> hovedtemaer = dao.getHovedtemaer();
-        List<HovedtemaVisning> hovedtemaVisninger = new ArrayList<HovedtemaVisning>();
+        List<HovedtemaVisning> hovedtemaVisninger = new ArrayList<HovedtemaVisning>(hovedtemaer.size());
 
         for (Hovedtema hovedtema : hovedtemaer) {
 //            if (!hovedtema.getGenericTitle().equals("Under utvikling")) {
@@ -199,7 +199,6 @@ public class MareanoController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-//        System.out.println("test:"+test);
         String someHeading = "<table width=\"100%\" cellspacing=\"0\"><tr height=\"45\"> "
                 + "<td valign=\"middle\" height=\"45\" style=\"background-image:url(http://www.mareano.no/kart/images/top/ny_heading_397.gif); background-repeat: repeat;\"> "
                 + "<a style=\"text-decoration: none\" target=\"_top\" href=\"http://www.mareano.no\"> "

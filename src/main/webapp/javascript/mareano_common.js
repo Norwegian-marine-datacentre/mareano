@@ -196,13 +196,9 @@ function addLayerToGroup( gruppeNavn, gruppeText, map, mapPanel, layers, store, 
             "checkchange": function(node, checked) { //setting all subnodes if parent is checked
             	node.expand();
             	var cs = node.childNodes;
-//            	for(var c = cs.length-1; c >= 0; c--) { //add layers in reverse of reverse order - so in the right order
-            	for(var c=0;c<cs.length;c++) {
+            	for(var c = cs.length-1; c >= 0; c--) { //add layers in reverse of reverse order - so in the right order
             		cs[c].ui.toggleCheck(checked);
             	} 
-//				node.eachChild(function(child){
-// 		        	child.ui.toggleCheck(checked);
-//				});
             }
         },                            
         layerStore: store,
