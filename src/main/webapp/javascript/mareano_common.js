@@ -289,7 +289,12 @@ function addSpesialpunkt(extent, kartlagId, layer, event, app, data) {
             strategies: [new OpenLayers.Strategy.Fixed()], 
             visibility: true,                                         
             projection: new OpenLayers.Projection("EPSG:32633"),
-            styleMap: new OpenLayers.StyleMap({'default':{externalGraphic: "theme/imr/images/geofotoSpesialpunkt.png"}})
+            styleMap: new OpenLayers.StyleMap({
+            	'default':{
+            		externalGraphic: "theme/imr/images/geofotoSpesialpunkt.png",
+            		cursor: "pointer"
+            	}
+            })
         }); 
 		
 		snitt.events.register( "featureselected", snitt, GMLselected );
