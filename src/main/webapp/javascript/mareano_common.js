@@ -280,14 +280,25 @@ function addSpesialpunkt(extent, kartlagId, layer, event, app, data) {
 		var styleMap = new OpenLayers.StyleMap({
 			'default':{externalGraphic: "theme/imr/images/geofotoSpesialpunkt.png"}
 		});
-		var snitt = new OpenLayers.Layer.GML("Spesialpunkt","spring/getgml", {styleMap: styleMap});   
-		app.mapOfGMLspesialpunkt[kartlagId] = snitt;	    
+		
+        var snitt = new OpenLayers.Layer.Vector("GML", { 
+            protocol: new OpenLayers.Protocol.HTTP({ 
+                url: "spring/getgml", 
+                format: new OpenLayers.Format.GML()
+            }), 
+            strategies: [new OpenLayers.Strategy.Fixed()], 
+            visibility: true,                                         
+            projection: new OpenLayers.Projection("EPSG:32633"),
+            styleMap: new OpenLayers.StyleMap({'default':{externalGraphic: "theme/imr/images/geofotoSpesialpunkt.png"}})
+        }); 
+		
 		snitt.events.register( "featureselected", snitt, GMLselected );
+		app.mapOfGMLspesialpunkt[kartlagId] = snitt;	    
 		app.mapPanel.map.addLayer( snitt );   	           
 		
 		var control = new OpenLayers.Control.SelectFeature( snitt );
-        app.mapPanel.map.addControl( control );
-        control.activate(); 	 
+		app.mapPanel.map.addControl( control );
+		control.activate(); 	 
 	}
 }
 
