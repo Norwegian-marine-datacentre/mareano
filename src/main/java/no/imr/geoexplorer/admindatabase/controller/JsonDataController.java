@@ -89,7 +89,7 @@ public class JsonDataController {
     		@RequestParam("extent") String extent,
     		@RequestParam("kartlagId") String kartlagId, 
     		@RequestParam("language") String language,
-    		HttpServletRequest req) throws IOException{
+    		HttpServletRequest req) throws IOException {
 
         SpesialpunktStatus spesialpunktJSON = getLegendsInfo(kartlagId, language);
         getKartlagInfo(kartlagId, spesialpunktJSON, language);
@@ -106,15 +106,16 @@ public class JsonDataController {
         return spesialpunktJSON;
     }
     
-    protected void createGMLFile(String kartlagId, String extent, HttpServletRequest req) throws IOException{
-        List<Spesialpunkt> punkter = getSpesialpunkt(new Long(kartlagId));
-        if (punkter.size() > 0) {
-            FeatureCollection features = toGMLPojos(punkter, extent);
-            String xml = xstream.toXML(features);
-            xml = "<?xml version=\"1.0\" encoding=\"utf-8\" ?>" + xml;
-            writeGmlToFile(xml, req);
-        }
-    }
+//    protected void createGMLFile(String kartlagId, String extent, HttpServletRequest req) throws IOException{
+//        List<Spesialpunkt> punkter = getSpesialpunkt(new Long(kartlagId));
+//        if (punkter.size() > 0) {
+//            FeatureCollection features = toGMLPojos(punkter, extent);
+//            String xml = xstream.toXML(features);
+//            xml = "<?xml version=\"1.0\" encoding=\"utf-8\" ?>\n\n\t" + xml;
+//            System.out.println(xml);
+//            writeGmlToFile(xml, req);
+//        }
+//    }
     
     protected SpesialpunktStatus getLegendsInfo(String kartlagId, String language) {
         SpesialpunktStatus spesialpunktJSON = new SpesialpunktStatus();
@@ -169,7 +170,6 @@ public class JsonDataController {
             file1.delete();
         }
         File file = new File(sct.getRealPath("") + File.separator + "spesialpunkt.xml");
-
         Writer out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), "UTF8"));
         out.write(xml);
         out.close();

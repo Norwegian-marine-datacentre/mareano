@@ -23,17 +23,18 @@ public class XstreamConfig {
 
 	public XstreamConfig() {
 		xstream = new XStream();
+		//xmlns:gml=\"http://www.opengis.net/gml/3.2 does not work in firefox - use xmlns:gml=\"http://www.opengis.net/gml
 		xstream.alias("FeatureCollection xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:gml=\"http://www.opengis.net/gml\"", FeatureCollection.class);
 		xstream.addImplicitCollection(FeatureCollection.class, "featureMember");
 		xstream.alias("gml:featureMember", FeatureMember.class);
-		xstream.aliasField("xsi:attributes", FeatureMember.class, "attributes");
+		xstream.aliasField("attributes", FeatureMember.class, "attributes");
 		xstream.aliasField("gml:boundedBy", FeatureCollection.class, "boundedBy");
 		xstream.aliasField("gml:Box", BoundedBy.class, "box");
-		xstream.aliasField("xsi:name", Attributes.class, "name");
-		xstream.aliasField("xsi:pid", Attributes.class, "pid");
-		xstream.aliasField("xsi:description", Attributes.class, "description");
-		xstream.aliasField("xsi:time", Attributes.class, "time");
-		xstream.aliasField("xsi:id", Attributes.class, "id");
+		xstream.aliasField("name", Attributes.class, "name");
+		xstream.aliasField("pid", Attributes.class, "pid");
+		xstream.aliasField("description", Attributes.class, "description");
+		xstream.aliasField("time", Attributes.class, "time");
+		xstream.aliasField("id", Attributes.class, "id");
 		xstream.aliasField("gml:Point", Attributes.class, "point");
 		xstream.aliasField("gml:coordinates", Point.class, "coordinates");
 		xstream.useAttributeFor(Point.class, "srsName");

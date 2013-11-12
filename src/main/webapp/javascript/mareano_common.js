@@ -278,7 +278,10 @@ function addSpesialpunkt(extent, kartlagId, layer, event, app, data) {
 	if ( data.noSpesialpunkt == false ) { 
 		var layerName = "";
 		var styleMap = new OpenLayers.StyleMap({
-			'default':{externalGraphic: "theme/imr/images/geofotoSpesialpunkt.png"}
+			'default':{
+				externalGraphic: "theme/imr/images/geofotoSpesialpunkt.png",
+				cursor: "pointer"
+			}
 		});
 		
         var snitt = new OpenLayers.Layer.Vector("GML", { 
@@ -289,12 +292,7 @@ function addSpesialpunkt(extent, kartlagId, layer, event, app, data) {
             strategies: [new OpenLayers.Strategy.Fixed()], 
             visibility: true,                                         
             projection: new OpenLayers.Projection("EPSG:32633"),
-            styleMap: new OpenLayers.StyleMap({
-            	'default':{
-            		externalGraphic: "theme/imr/images/geofotoSpesialpunkt.png",
-            		cursor: "pointer"
-            	}
-            })
+            styleMap: styleMap
         }); 
 		
 		snitt.events.register( "featureselected", snitt, GMLselected );
