@@ -126,7 +126,7 @@ function addLayerToGroup( gruppeNavn, gruppeText, map, mapPanel, layers, store, 
             }
             /** adding matching layer to matching container group */
             for( var i= layerName.length-1; i>=0; --i ) {
-                if ( record.get("group") == gruppeNavn ) {
+                if ( record.get("group") == gruppeNavn) {
                     return true;
                 }
             }
@@ -187,7 +187,6 @@ function addLayerToGroup( gruppeNavn, gruppeText, map, mapPanel, layers, store, 
         }
     });
     
-
     var layerContainerGruppe = new GeoExt.tree.LayerContainer({
     	checked: groupChecked,
         expanded: groupChecked,    	
@@ -285,6 +284,7 @@ function addSpesialpunkt(extent, kartlagId, layer, event, app, data) {
 		});
 		
         var snitt = new OpenLayers.Layer.Vector("GML", { 
+        	displayInLayerSwitcher: false,
             protocol: new OpenLayers.Protocol.HTTP({ 
                 url: "spring/getgml", 
                 format: new OpenLayers.Format.GML()

@@ -245,12 +245,6 @@
                     Ext.getCmp('topPanelHeading').update('${heading}');
                     
                     var newLegend = Ext.getCmp('newLegend');
-//root:      initialConfig,region,layout,autoScroll,border,height,html,id,events,toolbars,ownerCt,collapsed,container,rendered,el,headerCls,headerTextCls,bwrapCls,tbarCls,bodyCls,bbarCls,footerCls,tools,bwrap,body,boxReady,lastSize,items,getState,x,y,hasLayout                    
-//layout:    id,container                    
-//container: initialConfig,region,layout,autoScroll,border,height,html,id,events,toolbars,ownerCt,collapsed,container,rendered,el,headerCls,headerTextCls,bwrapCls,tbarCls,bodyCls,bbarCls,footerCls,tools,bwrap,body,boxReady,lastSize,items,getState,x,y,hasLayout                    
-                    //alert( Object.keys(newLegend) );
-                    //alert( Object.keys(newLegend) );
-                    //Ext.getCmp('newLegend').layout.south.getCollapsedEl().titleEl.dom.innerHTML = 'Tegnforklaring editert';
                     
                 	loadMareano( this.mapPanel, app, layers );
                 	

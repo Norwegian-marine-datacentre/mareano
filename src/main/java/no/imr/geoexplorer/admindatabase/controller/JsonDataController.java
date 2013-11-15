@@ -52,27 +52,27 @@ public class JsonDataController {
     protected final static String  EPSG_32633 = "epsg:32633";
 	
 //    @RequestMapping("/spesialpunkt")
-    public @ResponseBody SpesialpunktStatus getSpesialpunktAsGML(
-            @RequestParam("extent") String extent,
-            @RequestParam("kartlagId") String kartlagId,
-            HttpServletRequest req) throws IOException {
-
-        List<Spesialpunkt> punkter = getSpesialpunkt(new Long(kartlagId));
-        SpesialpunktStatus spesialpunktJSON = null;
-        if (punkter.size() > 0) {
-            FeatureCollection features = toGMLPojos(punkter, extent);
-            String xml = xstream.toXML(features);
-            xml = "<?xml version=\"1.0\" encoding=\"utf-8\" ?>" + xml;
-            writeGmlToFile(xml, req);
-
-            spesialpunktJSON = getLegendsInfo(kartlagId, "norsk");
-            spesialpunktJSON.setNoSpesialpunkt(false);
-        } else {
-            spesialpunktJSON = new SpesialpunktStatus();
-            spesialpunktJSON.setNoSpesialpunkt(true);
-        }
-        return spesialpunktJSON;
-    }
+//    public @ResponseBody SpesialpunktStatus getSpesialpunktAsGML(
+//            @RequestParam("extent") String extent,
+//            @RequestParam("kartlagId") String kartlagId,
+//            HttpServletRequest req) throws IOException {
+//
+//        List<Spesialpunkt> punkter = getSpesialpunkt(new Long(kartlagId));
+//        SpesialpunktStatus spesialpunktJSON = null;
+//        if (punkter.size() > 0) {
+//            FeatureCollection features = toGMLPojos(punkter, extent);
+//            String xml = xstream.toXML(features);
+//            xml = "<?xml version=\"1.0\" encoding=\"utf-8\" ?>" + xml;
+//            writeGmlToFile(xml, req);
+//
+//            spesialpunktJSON = getLegendsInfo(kartlagId, "norsk");
+//            spesialpunktJSON.setNoSpesialpunkt(false);
+//        } else {
+//            spesialpunktJSON = new SpesialpunktStatus();
+//            spesialpunktJSON.setNoSpesialpunkt(true);
+//        }
+//        return spesialpunktJSON;
+//    }
     
     @RequestMapping("/legend")
     public @ResponseBody SpesialpunktStatus getLegend(
@@ -170,7 +170,7 @@ public class JsonDataController {
             file1.delete();
         }
         File file = new File(sct.getRealPath("") + File.separator + "spesialpunkt.xml");
-        Writer out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), "UTF8"));
+        Writer out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), "UTF-8"));
         out.write(xml);
         out.close();
     }
