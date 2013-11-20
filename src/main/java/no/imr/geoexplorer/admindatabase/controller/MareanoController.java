@@ -3,6 +3,7 @@ package no.imr.geoexplorer.admindatabase.controller;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.InetAddress;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -47,7 +48,7 @@ public class MareanoController {
     private MareanoAdminDbDao dao;
 
     @RequestMapping("/mareano")
-    public ModelAndView getMareanoTest(HttpServletResponse resp) {
+    public ModelAndView getMareanoTest(HttpServletResponse resp) throws IOException {
         ModelAndView mav = new ModelAndView("mareano");
         getMareano(mav, "no");
         
@@ -58,7 +59,7 @@ public class MareanoController {
         return mav;
     }
 
-    protected ModelAndView getMareano(ModelAndView mav, String language) {
+    protected ModelAndView getMareano(ModelAndView mav, String language) throws IOException {
         long now = new Date().getTime();
         if (visninger == null || (lastupdated + TENMIN) < now) {
             visninger = listOrganizedToBrowser(language);
@@ -69,7 +70,7 @@ public class MareanoController {
     }
 
     @RequestMapping("/mareano_en")
-    public ModelAndView getMareanoEN(HttpServletResponse resp) {
+    public ModelAndView getMareanoEN(HttpServletResponse resp) throws IOException {
         ModelAndView mav = new ModelAndView("mareano_en");
         mav = getMareano(mav, "en");
 
@@ -77,97 +78,106 @@ public class MareanoController {
         return mav;
     }
 
-    protected List<HovedtemaVisning> listOrganizedToBrowser(String language) {
+    protected List<HovedtemaVisning> listOrganizedToBrowser(String language)  throws IOException{
 
         List<Hovedtema> hovedtemaer = dao.getHovedtemaer();
         List<HovedtemaVisning> hovedtemaVisninger = new ArrayList<HovedtemaVisning>(hovedtemaer.size());
 
+        String hostname =InetAddress.getLocalHost().getHostName();
         for (Hovedtema hovedtema : hovedtemaer) {
-//            if (!hovedtema.getGenericTitle().equals("Under utvikling")) {
-                HovedtemaVisning hovedtemaVisning = new HovedtemaVisning();
-                if (language.equals("en")) {
-                    List<HovedtemaEnNo> en = dao.getHovedtemaEn(hovedtema.getHovedtemaerId());
-                    if (en.size() > 0) {
-                        hovedtemaVisning.setHovedtema(en.get(0).getAlternateTitle());
-                    } else {
-                        hovedtemaVisning.setHovedtema(hovedtema.getGenericTitle());
-                    }
-                } else {
-                    List<HovedtemaEnNo> norsk = dao.getHovedtemaNo(hovedtema.getHovedtemaerId());
-                    if (norsk.size() > 0) {
-                        hovedtemaVisning.setHovedtema(norsk.get(0).getAlternateTitle());
-                    } else {
-                        hovedtemaVisning.setHovedtema(hovedtema.getGenericTitle());
-                    }
-                }
-
-                for (Kartbilder kartbilde : hovedtema.getKartbilder()) {
-                    KartbilderVisning kartbilderVisining = new KartbilderVisning();
-
-                    if (language.equals("en")) {
-                        List<KartBilderEnNo> en = dao.getKartbilderEn(kartbilde.getKartbilderId());
-                        if (en.size() > 0) {
-                            kartbilderVisining.setGruppe(en.get(0).getAlternateTitle());
-                        } else {
-                            kartbilderVisining.setGruppe(kartbilde.getGenericTitle());
-                        }
-                    } else {
-                        List<KartBilderEnNo> norsk = dao.getKartbilderNo(kartbilde.getKartbilderId());
-                        if (norsk.size() > 0) {
-                            kartbilderVisining.setGruppe(norsk.get(0).getAlternateTitle());
-                        } else {
-                            kartbilderVisining.setGruppe(kartbilde.getGenericTitle());
-                        }
-                    }
-
-                    if (kartbilderVisining.getGruppe().equals("MAREANO-oversiktskart") || kartbilderVisining.getGruppe().equals("MAREANO - overview")) {
-                        kartbilderVisining.setVisible(true);
-                    }
-                    List<Kartlag> kartlagene = dao.getKartlagene(kartbilde.getKartbilderId());
-                    for (Kartlag kartlag : kartlagene) {
-                        if (kartlag.isAvailable()) {
-                            KartlagVisning kart = new KartlagVisning();
-                            kart.setId(kartlag.getKartlagId());
-                            kart.setLayers(kartlag.getLayers());
-                            kart.setKeyword(kartlag.getKeyword());
-                            kart.setExGeographicBoundingBoxEastBoundLongitude(kartlag.getExGeographicBoundingBoxEastBoundLongitude());
-                            kart.setExGeographicBoundingBoxWestBoundLongitude(kartlag.getExGeographicBoundingBoxWestBoundLongitude());
-                            kart.setExGeographicBoundingBoxNorthBoundLatitude(kartlag.getExGeographicBoundingBoxNorthBoundLatitude());
-                            kart.setExGeographicBoundingBoxSouthBoundLatitude(kartlag.getExGeographicBoundingBoxSouthBoundLatitude());
-                            kart.setScalemin(kartlag.getScalemin());
-                            kart.setScalemax(kartlag.getScalemax());
-
-                            if (language.equals("en")) {
-                                List<KartlagEnNo> en = dao.getKartlagEn(kart.getId());
-                                if (en.size() > 0) {
-                                    kart.setTitle(en.get(0).getAlternateTitle());
-                                    kart.setAbstracts(en.get(0).getAbstracts());
-                                } else {
-                                    kart.setTitle(kartlag.getGenericTitle());
-                                }
-                            } else {
-                                List<KartlagEnNo> norsk = dao.getKartlagNo(kart.getId());
-                                if (norsk.size() > 0) {
-                                    kart.setTitle(norsk.get(0).getAlternateTitle());
-                                    kart.setAbstracts(norsk.get(0).getAbstracts());
-                                } else {
-                                    kart.setTitle(kartlag.getGenericTitle());
-                                }
-                            }
-
-                            kart.setUrl(kartlag.getKarttjeneste().getUrl());
-                            kartbilderVisining.addKart(kart);
-                        }
-                    }
-                    hovedtemaVisning.addBilder(kartbilderVisining);
-                }
-                if (hovedtemaVisning.getBilder().size() > 0) {
-                    hovedtemaVisninger.add(hovedtemaVisning);
-                }
-            //} //Under utvikling hovedtema
+        	
+        	if ( hostname.equals("webtest1.nodc.no") ) { //for webtest1
+        		addToList(hovedtemaVisninger, hovedtema, language);
+            } else if (!hovedtema.getGenericTitle().equals("Under utvikling") ) { //for prod 
+            	addToList(hovedtemaVisninger, hovedtema, language);
+            }
         }
         return hovedtemaVisninger;
     }
+    
+    protected List<HovedtemaVisning> addToList(List<HovedtemaVisning> hovedtemaVisninger, Hovedtema hovedtema, String language) {
+            HovedtemaVisning hovedtemaVisning = new HovedtemaVisning();
+            if (language.equals("en")) {
+                List<HovedtemaEnNo> en = dao.getHovedtemaEn(hovedtema.getHovedtemaerId());
+                if (en.size() > 0) {
+                    hovedtemaVisning.setHovedtema(en.get(0).getAlternateTitle());
+                } else {
+                    hovedtemaVisning.setHovedtema(hovedtema.getGenericTitle());
+                }
+            } else {
+                List<HovedtemaEnNo> norsk = dao.getHovedtemaNo(hovedtema.getHovedtemaerId());
+                if (norsk.size() > 0) {
+                    hovedtemaVisning.setHovedtema(norsk.get(0).getAlternateTitle());
+                } else {
+                    hovedtemaVisning.setHovedtema(hovedtema.getGenericTitle());
+                }
+            }
+
+            for (Kartbilder kartbilde : hovedtema.getKartbilder()) {
+                KartbilderVisning kartbilderVisining = new KartbilderVisning();
+
+                if (language.equals("en")) {
+                    List<KartBilderEnNo> en = dao.getKartbilderEn(kartbilde.getKartbilderId());
+                    if (en.size() > 0) {
+                        kartbilderVisining.setGruppe(en.get(0).getAlternateTitle());
+                    } else {
+                        kartbilderVisining.setGruppe(kartbilde.getGenericTitle());
+                    }
+                } else {
+                    List<KartBilderEnNo> norsk = dao.getKartbilderNo(kartbilde.getKartbilderId());
+                    if (norsk.size() > 0) {
+                        kartbilderVisining.setGruppe(norsk.get(0).getAlternateTitle());
+                    } else {
+                        kartbilderVisining.setGruppe(kartbilde.getGenericTitle());
+                    }
+                }
+
+                if (kartbilderVisining.getGruppe().equals("MAREANO-oversiktskart") || kartbilderVisining.getGruppe().equals("MAREANO - overview")) {
+                    kartbilderVisining.setVisible(true);
+                }
+                List<Kartlag> kartlagene = dao.getKartlagene(kartbilde.getKartbilderId());
+                for (Kartlag kartlag : kartlagene) {
+                    if (kartlag.isAvailable()) {
+                        KartlagVisning kart = new KartlagVisning();
+                        kart.setId(kartlag.getKartlagId());
+                        kart.setLayers(kartlag.getLayers());
+                        kart.setKeyword(kartlag.getKeyword());
+                        kart.setExGeographicBoundingBoxEastBoundLongitude(kartlag.getExGeographicBoundingBoxEastBoundLongitude());
+                        kart.setExGeographicBoundingBoxWestBoundLongitude(kartlag.getExGeographicBoundingBoxWestBoundLongitude());
+                        kart.setExGeographicBoundingBoxNorthBoundLatitude(kartlag.getExGeographicBoundingBoxNorthBoundLatitude());
+                        kart.setExGeographicBoundingBoxSouthBoundLatitude(kartlag.getExGeographicBoundingBoxSouthBoundLatitude());
+                        kart.setScalemin(kartlag.getScalemin());
+                        kart.setScalemax(kartlag.getScalemax());
+
+                        if (language.equals("en")) {
+                            List<KartlagEnNo> en = dao.getKartlagEn(kart.getId());
+                            if (en.size() > 0) {
+                                kart.setTitle(en.get(0).getAlternateTitle());
+                                kart.setAbstracts(en.get(0).getAbstracts());
+                            } else {
+                                kart.setTitle(kartlag.getGenericTitle());
+                            }
+                        } else {
+                            List<KartlagEnNo> norsk = dao.getKartlagNo(kart.getId());
+                            if (norsk.size() > 0) {
+                                kart.setTitle(norsk.get(0).getAlternateTitle());
+                                kart.setAbstracts(norsk.get(0).getAbstracts());
+                            } else {
+                                kart.setTitle(kartlag.getGenericTitle());
+                            }
+                        }
+
+                        kart.setUrl(kartlag.getKarttjeneste().getUrl());
+                        kartbilderVisining.addKart(kart);
+                    }
+                }
+                hovedtemaVisning.addBilder(kartbilderVisining);
+            }
+            if (hovedtemaVisning.getBilder().size() > 0) {
+                hovedtemaVisninger.add(hovedtemaVisning);
+            }
+            return hovedtemaVisninger;
+        }
 
     protected String getMareanoHeading(String language) {
         StringBuffer heading = new StringBuffer();
