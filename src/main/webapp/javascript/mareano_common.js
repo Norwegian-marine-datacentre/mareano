@@ -333,8 +333,8 @@ function buildLegendGraphicsHTML( currentLegend, kartlagId, data ) {
  * http://www.sencha.com/forum/archive/index.php/t-103797.html
  **/
 function visKartlagInfoHTML(kartlagId, data) {
-    var infoHTML = '<div id="'+kartlagId+'tips"><font style="font-size: 12px;"><b>'+ 
-    	data.kartlagInfo.kartlagInfoTitel+'</b>' + ':' + 
+    var infoHTML = '<div id="'+kartlagId+'tips" style="margin-bottom: 0.1cm;"><font style="font-size: 12px;"><b>'+ 
+    	data.kartlagInfo.kartlagInfoTitel+'</b>' + ':<br />' + 
     	data.kartlagInfo.text + '</font></div>';
 
     kartlagInfoState += infoHTML;
