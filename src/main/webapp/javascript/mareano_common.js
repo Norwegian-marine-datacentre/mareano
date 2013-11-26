@@ -141,7 +141,6 @@ function addLayerToGroup( gruppeNavn, gruppeText, map, mapPanel, layers, store, 
             }
             cssBgImg = getLayerIcon(url);
             attr.iconCls = cssBgImg;
-            attr.id = layerRecord.data.id;
             attr.checked = layerRecord.getLayer().visibility;
             attr.id = layerRecord.data.id;
 

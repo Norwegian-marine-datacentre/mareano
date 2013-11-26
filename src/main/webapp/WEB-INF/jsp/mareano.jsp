@@ -16,9 +16,12 @@
                 /* when OL encounters a 404, don't display the pink image */
                 display: none !important;
             }
-            #layertree .x-tree-node-cb[type="checkbox"] {
-            	display: none;
-            }            
+              #layertree :not(.general-layers-w-checkbox) input.x-tree-node-cb[type="checkbox"] {  
+              	display: none;  
+              }              
+            #layertree *.general-layers-w-checkbox input.x-tree-node-cb[type="checkbox"] {
+                display:inline;
+			}
         </style>
         <meta http-equiv="X-UA-Compatible" content="IE=IE8" >
         <!--script type="text/javascript" src="javascript/googleAnalyticsStatistics.js"></script -->
@@ -63,7 +66,8 @@
         <script type="text/javascript" src="script/ux.js"></script>
         
         <script type="text/javascript" src="javascript/WMSLayerPanel.js"></script>
-        <script type="text/javascript" src="javascript/mareano_common.js"></script>        
+        <script type="text/javascript" src="javascript/mareano_common.js"></script>    
+		<script type="text/javascript" src="javascript/generelleKartLayerGroup.js"></script>
 
         <!-- PrintPreview resources We need to install printing service on maps.imr.no/geoserver for this to work -->
         <!-- link rel="stylesheet" type="text/css" href="externals/PrintPreview/resources/css/printpreview.css">
@@ -80,6 +84,14 @@
                 gxp.plugins.LayerProperties.prototype.toolTip = "kartlag egenskaper";
                 gxp.plugins.Measure.prototype.lengthTooltip = "M\u00e5l lengde";
                 gxp.plugins.Measure.prototype.areaTooltip = "M\u00e5l areal";
+                gxp.plugins.ZoomToLayerExtent.prototype.menuText = "Zoom til kartlagets utstrekning";
+                gxp.plugins.ZoomToLayerExtent.prototype.tooltip = "Zoom til kartlagets utstrekning";
+                gxp.plugins.ZoomToLayerExtent.prototype.tooltip = "Zoom til kartlagets utstrekning";
+                gxp.plugins.RemoveLayer.prototype.removeMenuText = "Fjern kartlag";
+                gxp.plugins.RemoveLayer.prototype.removeActionTip = "Fjern kartlag";
+                gxp.plugins.LayerProperties.prototype.menuText = "Kartlag egenskaper";
+                gxp.plugins.LayerProperties.prototype.toolTip = "Kartlag egenskaper";
+                
                 // optionally set locale based on query string parameter
                 if (GeoExt.Lang) {
                     GeoExt.Lang.set(OpenLayers.Util.getParameters()["locale"] || GeoExt.Lang.locale);
@@ -117,7 +129,7 @@
                             	/*
                             	 * Kartloesninger fra geonorge.
                             	 * 1. http://wms.geonorge.no - ubegrenset tilgang for HI (fordi de har IP rangen vaar) men en begrensning paa ca 3 kall i sekundet. Kjoerer raskest med singleTile
-//                            	 * 2. opencache.statkart.no/gatekeeper - open loesning men begresning paa 10 000 kall pr dag. Tilet loesning
+                            	 * 2. opencache.statkart.no/gatekeeper - open loesning men begresning paa 10 000 kall pr dag. Tilet loesning
                             	 * 3. gatekeeper1.geonorge.no - ubegrenset med tilet tilgang men hver request krever en token som krever paalogging og som har timeout. Saa token forrandrer seg over tid
                             	 */
                                 source: "ol",
@@ -180,14 +192,14 @@
                            	,{source: "ol",
          	                    type: "OpenLayers.Layer.WMS",
           	                    group: "common",
-          	                    visibility: false,
+          	                    visibility: true,
           	                    args: [
           	                        "Grid",
           	                        "http://maps.imr.no/geoserver/wms",
           	                        {layers: "grid_UTM33,utm33n_01bgX05lg,utm33n_02bgX10lg,utm33n_15bmX01lg,utm33n_30bmX02lg", format: "image/png", transparent: true},
           	                        {opacity:1, singleTile:true}
           	                    ]
-          					}                                                         
+          					}                    	
                         ],
                         
                         center: [1088474,7689849],
@@ -196,10 +208,12 @@
                 });
 		
                 var layers = [];
+                var OLRecord;
                 <c:forEach var="hovedtema" items="${hovedtemaer}">
+                	if ( !("${hovedtema.hovedtema}" == "generelle") ) {
                     <c:forEach var="bilde" items="${hovedtema.bilder}">
                         <c:forEach var="kartlaget" items="${bilde.kart}">
-                            var OLRecord = gxp.plugins.OLSource.prototype.createLayerRecord({
+                            OLRecord = gxp.plugins.OLSource.prototype.createLayerRecord({
                                 source: "ol",
                                 type: "OpenLayers.Layer.WMS",
                                 group: "${bilde.gruppe}",
@@ -233,9 +247,87 @@
                             layers.push(OLRecord);
                         </c:forEach>
                     </c:forEach>
-                </c:forEach>              
+            		}
+                </c:forEach>              					
             	var store = new GeoExt.data.LayerStore();
                 store.add(layers);   
+                
+//                 var generelleLayers = [];    
+//                 var OLRecord2 = gxp.plugins.OLSource.prototype.createLayerRecord({
+//                     source: "ol",
+//                     type: "OpenLayers.Layer.WMS",
+//                     group: "common",
+//                     visibility: false,
+//                     checked: true,
+//                     properties: "mareano_wmslayerpanel",       
+//                     args: [
+//                         "Grid",
+//                         "http://maps.imr.no/geoserver/wms",
+//                         {layers: "grid_UTM33,utm33n_01bgX05lg,utm33n_02bgX10lg,utm33n_15bmX01lg,utm33n_30bmX02lg", format: "image/png", transparent: true},
+//                         {
+//                             opacity: 1,
+//                             metadata: {
+//                                 keyword: "kartlaget.keyword",
+//                                 'kartlagId': '999'
+//                             },
+//                             maxExtent: [
+//                                 ${kartlaget.exGeographicBoundingBoxWestBoundLongitude},
+//                                 ${kartlaget.exGeographicBoundingBoxSouthBoundLatitude},
+//                                 ${kartlaget.exGeographicBoundingBoxEastBoundLongitude},
+//                                 ${kartlaget.exGeographicBoundingBoxNorthBoundLatitude}
+//                             ],
+//                             singleTile:true,
+//                             buffer: 0, //getting no boarder around image - so panning will get a new image.
+//                             ratio: 1 //http://dev.openlayers.org/releases/OpenLayers-2.12/doc/apidocs/files/OpenLayers/Layer/Grid-js.html#OpenLayers.Layer.Grid.ratio                                        
+//                         }
+//                     ]
+//                 });
+//                 generelleLayers.push(OLRecord2); 
+//                 store.add(generelleLayers);  
+
+				var generelleLayers = []; 
+				var OLRecord2;
+                <c:forEach var="hovedtema" items="${hovedtemaer}">
+                	if ( "${hovedtema.hovedtema}" == "generelle" ) {
+                    <c:forEach var="bilde" items="${hovedtema.bilder}">
+                        <c:forEach var="kartlaget" items="${bilde.kart}">
+                            OLRecord2 = gxp.plugins.OLSource.prototype.createLayerRecord({
+                                source: "ol",
+                                type: "OpenLayers.Layer.WMS",
+                                group: "${bilde.gruppe}",
+                                visibility: ${bilde.visible},
+                                properties: "mareano_wmslayerpanel",           
+                                //properties: "${kartlaget.id}",
+                                //id: "${kartlaget.id}",   
+                                args: [
+                                    "${kartlaget.title}",
+                                    "${kartlaget.url}",
+                                    {layers: "${kartlaget.layers}", format: "image/png", transparent: true},
+                                    {
+                                        opacity: 1,
+                                        metadata: {
+                                            keyword: "${kartlaget.keyword}",
+                                            //'abstract': '${kartlaget.abstracts}', //causes error: missing } after property list genereres daglig fra OD's operasjonelle databaser. Detaljeringsg...
+                                            'kartlagId': '${kartlaget.id}'
+                                        },
+                                        maxExtent: [
+                                            ${kartlaget.exGeographicBoundingBoxWestBoundLongitude},
+                                            ${kartlaget.exGeographicBoundingBoxSouthBoundLatitude},
+                                            ${kartlaget.exGeographicBoundingBoxEastBoundLongitude},
+                                            ${kartlaget.exGeographicBoundingBoxNorthBoundLatitude}
+                                        ],
+                                        singleTile:true,
+                                        buffer: 0, //getting no boarder around image - so panning will get a new image.
+                                        ratio: 1 //http://dev.openlayers.org/releases/OpenLayers-2.12/doc/apidocs/files/OpenLayers/Layer/Grid-js.html#OpenLayers.Layer.Grid.ratio                                        
+                                    }
+                                ]
+                            });
+                            generelleLayers.push(OLRecord2);
+                        </c:forEach>
+                    </c:forEach>
+            		}
+                </c:forEach> 
+             	store.add(generelleLayers);  
 	                
                 /**
                  * Whenever a layer is turned on or off - send a request to local server (this server) to see
@@ -243,11 +335,8 @@
                  */
                 app.on("ready", function() {
                     Ext.getCmp('topPanelHeading').update('${heading}');
-                    
                     var newLegend = Ext.getCmp('newLegend');
-                    
                 	loadMareano( this.mapPanel, app, layers );
-                	
                     store.each(function(record) {
                     	if (record.getLayer().visibility === true) {
 	                    	var clone = record.clone();
@@ -262,6 +351,7 @@
                     var treeRoot = Ext.getCmp('thematic_tree');
                     var mergedSomeHovedtema;
                     <c:forEach var="hovedtema" items="${hovedtemaer}">
+                    	if ( !("${hovedtema.hovedtema}" == "generelle") ) {
                         mergedSomeHovedtema = new Ext.tree.TreeNode({
                             text: "${hovedtema.hovedtema}"
                         });			
@@ -271,16 +361,16 @@
 	                    		mergedSomeHovedtema.expanded = true;
 	                    	}
 	                    	mergedSomeHovedtema.appendChild( group );
-                            </c:forEach>
+                        </c:forEach>
                         treeRoot.getRootNode().appendChild( mergedSomeHovedtema );
+                    	}
                     </c:forEach>
                     treeRoot.getRootNode().appendChild( mergedSomeHovedtema );
                     /***********************************/
                     var rootRightTree = Ext.getCmp('layertree');
-        			var mergedCommonMaps = new Ext.tree.TreeNode({
-        				text: "Generelle kart" 
-        			});	
-                    rootRightTree.getRootNode().appendChild( new Ext.tree.TreeNode({text:"Generelle kart"}) );
+                    
+                    rootRightTree.getRootNode().appendChild( addGenerelleLayerToGroup("generelle", "Generelle kart", this.map, this.mapPanel, generelleLayers, store, app) );
+
                     /***********************************/
                     
                     var tmp = Ext.ComponentMgr.all.find(function(c) {
