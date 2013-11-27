@@ -51,7 +51,6 @@ function addGenerelleLayerToGroup( gruppeNavn, gruppeText, map, mapPanel, layers
             		var layer = layerRecord.getLayer();
             		var record = event.layerStore.getByLayer(layer);
             		if (event.ui.checkbox.checked) {
-            			//app.mapPanel.layers.add(record);
             			/** bart code */
                         var id = layer.metadata['kartlagId'];
                         var doAdd = true;
@@ -67,10 +66,8 @@ function addGenerelleLayerToGroup( gruppeNavn, gruppeText, map, mapPanel, layers
                             clone.getLayer().setVisibility(true);
                             clone.getLayer().metadata['kartlagId'] = id;
                             app.mapPanel.layers.add(clone);
-                        }
-            			//app.mapPanel.map.addLayer(layer); //adds layer to Overlay but mareano_wmslayerpanel is missing from properties and no layer properties are shown                        
+                        }                      
 		                displayLegendGraphicsAndSpesialpunkt(app.mapPanel.map.getExtent() + "", layer.metadata['kartlagId'], layerRecord.getLayer(), event, app);   
-            			//getSpesialPunkt(app.mapPanel.map.getExtent() + "", layerRecord.getLayer().metadata['kartlagId'], layerRecord.getLayer(), event, app);
             		} else {
             			removeLayerLegendAndInfo(app.mapOfGMLspesialpunkt, layer.metadata['kartlagId'], record, layer, app);
             		}

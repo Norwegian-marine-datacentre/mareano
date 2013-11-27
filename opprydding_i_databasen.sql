@@ -30,7 +30,14 @@ delete from kartbilder_kartlag where kartlag_id=259
 --insert into hovedtemaer_no (hovedtemaer_id,title, alternate_title,modified) values (36,'generelle','generelle','2012-03-07 14:26:17')
 --insert into hovedtemaer_en (hovedtemaer_id,title, alternate_title,modified) values (36,'generelle','generelle','2012-03-07 14:26:17')
 
---insert into kartbilder_en (kartbilder_id, title, alternate_title) values (213,'general','general')
+--insert into kartbilder_en (kartbilder_id, title, alternate_title) values (213,'generelle','generelle')
 --insert into kartbilder_no (kartbilder_id, title, alternate_title) values (213,'generelle','generelle')
 
 --insert into kartbilder_kartlag values(213,293,18815,29999,'2013-01-03 11:45:48')
+--insert into kartbilder_kartlag values(213,22,18815,29998,'2013-01-03 11:45:48')
+insert into kartbilder_kartlag values(213,257,18815,29997,'2013-01-03 11:45:48')
+
+--delete from kartbilder_kartlag where kartlag_id=293 and kartbilder_id!=213
+--delete from kartbilder_kartlag where kartlag_id=22 and kartbilder_id!=213
+--delete from kartbilder_kartlag where kartlag_id=257 and kartbilder_id!=213
+delete from kartbilder_kartlag where kartlag_id=405 and kartbilder_id!=213

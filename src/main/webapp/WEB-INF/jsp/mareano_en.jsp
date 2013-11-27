@@ -19,6 +19,9 @@
             #layertree .x-tree-node-cb[type="checkbox"] {
             	display: none;
             }
+            #layertree *.general-layers-w-checkbox input.x-tree-node-cb[type="checkbox"] {
+                display:inline;
+			}            
         </style>
         <meta http-equiv="X-UA-Compatible" content="IE=IE8" >
         <!--script type="text/javascript" src="javascript/googleAnalyticsStatistics.js"></script -->
@@ -64,10 +67,11 @@
 
         <script type="text/javascript" src="javascript/WMSLayerPanel.js"></script>
         <script type="text/javascript" src="javascript/mareano_common.js"></script>
+        <script type="text/javascript" src="javascript/generelleKartLayerGroup.js"></script>
 
-        <!-- PrintPreview resources -->
+        <!-- PrintPreview resources 
         <link rel="stylesheet" type="text/css" href="externals/PrintPreview/resources/css/printpreview.css">
-        <script type="text/javascript" src="script/PrintPreview.js"></script>
+        <script type="text/javascript" src="script/PrintPreview.js"></script>-->
 
         <script>
             function init() {
@@ -178,10 +182,12 @@
                 });
 
                 var layers = [];
+                var OLRecord;
                 <c:forEach var="hovedtema" items="${hovedtemaer}">
+                	if ( !("${hovedtema.hovedtema}" == "generelle") ) {
                     <c:forEach var="bilde" items="${hovedtema.bilder}">
                         <c:forEach var="kartlaget" items="${bilde.kart}">
-                        var OLRecord = gxp.plugins.OLSource.prototype.createLayerRecord({
+                       	OLRecord = gxp.plugins.OLSource.prototype.createLayerRecord({
                     		source: "ol",	
                                 type: "OpenLayers.Layer.WMS",
                                 group: "${bilde.gruppe}",
@@ -210,23 +216,61 @@
                                     }
                                 ]
                             });
-                            //alert("OLRecord:"+Object.keys(OLRecord.data));
-                            //if (${bilde.visible} == true ) alert("bilde:"+'${bilde.gruppe}');
-                            //OLRecord.data.visibility = ${bilde.visible};
                             layers.push(OLRecord);
                             </c:forEach>
                         </c:forEach>
+                		}
                     </c:forEach>                             
             	var store = new GeoExt.data.LayerStore();
                 store.add(layers);  
 
+				var generelleLayers = []; 
+				var OLRecord2;
+                <c:forEach var="hovedtema" items="${hovedtemaer}">
+                	if ( "${hovedtema.hovedtema}" == "generelle" ) {
+                    <c:forEach var="bilde" items="${hovedtema.bilder}">
+                        <c:forEach var="kartlaget" items="${bilde.kart}">
+                            OLRecord2 = gxp.plugins.OLSource.prototype.createLayerRecord({
+                                source: "ol",
+                                type: "OpenLayers.Layer.WMS",
+                                group: "${bilde.gruppe}",
+                                visibility: ${bilde.visible},
+                                properties: "mareano_wmslayerpanel",           
+                                args: [
+                                    "${kartlaget.title}",
+                                    "${kartlaget.url}",
+                                    {layers: "${kartlaget.layers}", format: "image/png", transparent: true},
+                                    {
+                                        opacity: 1,
+                                        metadata: {
+                                            keyword: "${kartlaget.keyword}",
+                                            //'abstract': '${kartlaget.abstracts}', //causes error: missing } after property list genereres daglig fra OD's operasjonelle databaser. Detaljeringsg...
+                                            'kartlagId': '${kartlaget.id}'
+                                        },
+                                        maxExtent: [
+                                            ${kartlaget.exGeographicBoundingBoxWestBoundLongitude},
+                                            ${kartlaget.exGeographicBoundingBoxSouthBoundLatitude},
+                                            ${kartlaget.exGeographicBoundingBoxEastBoundLongitude},
+                                            ${kartlaget.exGeographicBoundingBoxNorthBoundLatitude}
+                                        ],
+                                        singleTile:true,
+                                        buffer: 0, //getting no boarder around image - so panning will get a new image.
+                                        ratio: 1 //http://dev.openlayers.org/releases/OpenLayers-2.12/doc/apidocs/files/OpenLayers/Layer/Grid-js.html#OpenLayers.Layer.Grid.ratio                                        
+                                    }
+                                ]
+                            });
+                            generelleLayers.push(OLRecord2);
+                        </c:forEach>
+                    </c:forEach>
+            		}
+                </c:forEach> 
+             	store.add(generelleLayers);
                 /**
                 * Whenever a layer is turned on or off - send a request to local server (this server) to see
                 * if layer also should include Spesialpunkt from Mareano.
                 */
                 app.on("ready", function() {
                     Ext.getCmp('topPanelHeading').update('${heading}');
-
                 	loadMareano( this.mapPanel, app, layers );
 
                     store.each(function(record) {
@@ -239,9 +283,11 @@
                     	}
                     }, this);
                     
+                    /***********************************/
                     var treeRoot = Ext.getCmp('thematic_tree');
                     var mergedSomeHovedtema;
                     <c:forEach var="hovedtema" items="${hovedtemaer}">
+                    	if ( !("${hovedtema.hovedtema}" == "generelle") ) {
                         mergedSomeHovedtema = new Ext.tree.TreeNode({
                             text: "${hovedtema.hovedtema}"
                         });			
@@ -253,9 +299,12 @@
                         	mergedSomeHovedtema.appendChild( group );
                         </c:forEach>
                         treeRoot.getRootNode().appendChild( mergedSomeHovedtema );
+                    	}
                     </c:forEach>
-                    /***********************************/
                     treeRoot.getRootNode().appendChild( mergedSomeHovedtema );
+                    /***********************************/
+                    var rootRightTree = Ext.getCmp('layertree');
+                    rootRightTree.getRootNode().appendChild( addGenerelleLayerToGroup("generelle", "General Maps", this.map, this.mapPanel, generelleLayers, store, app) );                    
                     /***********************************/
                     var tmp = Ext.ComponentMgr.all.find(function(c) {
                     	if( c instanceof Ext.Button ) {

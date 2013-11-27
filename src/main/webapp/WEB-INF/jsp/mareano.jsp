@@ -251,39 +251,6 @@
                 </c:forEach>              					
             	var store = new GeoExt.data.LayerStore();
                 store.add(layers);   
-                
-//                 var generelleLayers = [];    
-//                 var OLRecord2 = gxp.plugins.OLSource.prototype.createLayerRecord({
-//                     source: "ol",
-//                     type: "OpenLayers.Layer.WMS",
-//                     group: "common",
-//                     visibility: false,
-//                     checked: true,
-//                     properties: "mareano_wmslayerpanel",       
-//                     args: [
-//                         "Grid",
-//                         "http://maps.imr.no/geoserver/wms",
-//                         {layers: "grid_UTM33,utm33n_01bgX05lg,utm33n_02bgX10lg,utm33n_15bmX01lg,utm33n_30bmX02lg", format: "image/png", transparent: true},
-//                         {
-//                             opacity: 1,
-//                             metadata: {
-//                                 keyword: "kartlaget.keyword",
-//                                 'kartlagId': '999'
-//                             },
-//                             maxExtent: [
-//                                 ${kartlaget.exGeographicBoundingBoxWestBoundLongitude},
-//                                 ${kartlaget.exGeographicBoundingBoxSouthBoundLatitude},
-//                                 ${kartlaget.exGeographicBoundingBoxEastBoundLongitude},
-//                                 ${kartlaget.exGeographicBoundingBoxNorthBoundLatitude}
-//                             ],
-//                             singleTile:true,
-//                             buffer: 0, //getting no boarder around image - so panning will get a new image.
-//                             ratio: 1 //http://dev.openlayers.org/releases/OpenLayers-2.12/doc/apidocs/files/OpenLayers/Layer/Grid-js.html#OpenLayers.Layer.Grid.ratio                                        
-//                         }
-//                     ]
-//                 });
-//                 generelleLayers.push(OLRecord2); 
-//                 store.add(generelleLayers);  
 
 				var generelleLayers = []; 
 				var OLRecord2;
@@ -335,8 +302,8 @@
                  */
                 app.on("ready", function() {
                     Ext.getCmp('topPanelHeading').update('${heading}');
-                    var newLegend = Ext.getCmp('newLegend');
                 	loadMareano( this.mapPanel, app, layers );
+                	
                     store.each(function(record) {
                     	if (record.getLayer().visibility === true) {
 	                    	var clone = record.clone();
@@ -368,9 +335,7 @@
                     treeRoot.getRootNode().appendChild( mergedSomeHovedtema );
                     /***********************************/
                     var rootRightTree = Ext.getCmp('layertree');
-                    
                     rootRightTree.getRootNode().appendChild( addGenerelleLayerToGroup("generelle", "Generelle kart", this.map, this.mapPanel, generelleLayers, store, app) );
-
                     /***********************************/
                     
                     var tmp = Ext.ComponentMgr.all.find(function(c) {
