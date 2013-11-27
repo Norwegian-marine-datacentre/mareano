@@ -3,6 +3,10 @@
 --select * from kartlag_no where title='GEBCO Skyggerelieff' -> 309, 245 (425)
 delete from kartbilder_kartlag where kartlag_id=309
 delete from kartbilder_kartlag where kartlag_id=245
+delete from kartbilder_kartlag where kartlag_id=425
+
+-- slett 1;"Enkelt bakgrunnskart"
+delete from kartbilder_kartlag where kartlag_id=1
 
 -- Slette tomt kartbilde under bagrunn, landkart
 --select * from kartbilder where hovedtemaer_id=1
