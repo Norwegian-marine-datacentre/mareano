@@ -45,3 +45,13 @@ insert into kartbilder_kartlag values(213,257,18815,29997,'2013-01-03 11:45:48')
 --delete from kartbilder_kartlag where kartlag_id=22 and kartbilder_id!=213
 --delete from kartbilder_kartlag where kartlag_id=257 and kartbilder_id!=213
 delete from kartbilder_kartlag where kartlag_id=405 and kartbilder_id!=213
+
+-- slette bakgrunnskart, land hovedtema og kartbilde:
+--select * from kartbilder where hovedtemaer_id=1
+--delete from kartbilder_no where kartbilder_id=1
+--delete from kartbilder_en where kartbilder_id=1
+--delete from kartbilder where kartbilder_id=1
+
+--delete from hovedtemaer_no where hovedtemaer_id=1
+--delete from hovedtemaer_en where hovedtemaer_id=1
+--delete from hovedtemaer where hovedtemaer_id=1
