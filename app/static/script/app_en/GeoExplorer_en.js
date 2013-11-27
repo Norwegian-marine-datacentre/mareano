@@ -248,8 +248,9 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
             title: "Legend",
             layout: "border",
             region: "south",
-            width: 200,
-            height: 250,
+            width: 215,
+            height: 200,
+            flex: 1, 
             split: true,
             collapsible: true,
             items: legendContainerContainerItems
@@ -261,12 +262,12 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
             title: "Layers",
             layout: "border",
             region: "center",
-            width: 250,
+            width: 215,
             split: true,
             collapseMode: "mini",
             resizable: true,
             items: [
-                 {region: 'center', autoScroll: true, tbar: [], border: false, id: 'tree', resizable: true},
+                 {region: 'center', autoScroll: true, tbar: [], border: false, id: 'tree', resizable: true, flex: 0, height:100},
                  legendContainerContainer
             ]
         });    
@@ -292,7 +293,7 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
             layout: "border",
             region: "west",
             unstyled:true,
-            width: 400,
+            width: 415,
             split: true,
             defaults:{ autoScroll:true },
             collapseMode: "mini",
@@ -313,7 +314,7 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
 		    }, {
 			    xtype: 'container',
 			    layout: "border",
-			    width: 200,
+			    width: 215,
 			    region: "center",
 			    items: westPanelTabs
 		    }]
