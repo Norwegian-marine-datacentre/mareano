@@ -141,7 +141,11 @@ function addLayerToGroup( gruppeNavn, gruppeText, map, mapPanel, layers, store, 
             }
             cssBgImg = getLayerIcon(url);
             attr.iconCls = cssBgImg;
-            attr.checked = layerRecord.getLayer().visibility;
+            // if layer already in map, set checked
+            var idx = app.mapPanel.layers.findBy(function(record) {
+                return record.getLayer().metadata['kartlagId'] === attr.layer.metadata['kartlagId'];
+            });
+            attr.checked = (layerRecord.getLayer().visibility || (idx !== -1));
             attr.id = layerRecord.data.id;
 
             attr.autoDisable = false;
