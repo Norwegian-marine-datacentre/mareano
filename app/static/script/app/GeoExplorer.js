@@ -308,7 +308,18 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
             layout: "border",
             region: "west",
             unstyled:true,
-            width: 415,
+            width: 200,
+            tbar: ['->', {text: "Expand", handler: function(cmp) {
+                if (!cmp._expanded) {
+                    cmp.setText('Collapse');
+                    westPanel2.setWidth(415);
+                } else {
+                    cmp.setText('Expand');
+                    westPanel2.setWidth(200);
+                }
+                westPanel2.ownerCt.doLayout();
+                cmp._expanded = !cmp._expanded;
+            }}],
             split: true,
             defaults:{ autoScroll:true },
             collapseMode: "mini",
