@@ -177,6 +177,10 @@ function addLayerToGroup( gruppeNavn, gruppeText, map, mapPanel, layers, store, 
                             clone.getLayer().setVisibility(true);
                             clone.getLayer().metadata['kartlagId'] = id;
                             app.mapPanel.layers.add(clone);
+                            var maxExtent = clone.getLayer().maxExtent;
+                            if (event.ui._silent !== true && maxExtent) {
+                                app.mapPanel.map.zoomToExtent(maxExtent);
+                            }
                         }
             			//app.mapPanel.map.addLayer(layer); //adds layer to Overlay but mareano_wmslayerpanel is missing from properties and no layer properties are shown                        
 		                displayLegendGraphicsAndSpesialpunkt(app.mapPanel.map.getExtent() + "", layer.metadata['kartlagId'], layerRecord.getLayer(), event, app);   
@@ -199,7 +203,9 @@ function addLayerToGroup( gruppeNavn, gruppeText, map, mapPanel, layers, store, 
             	node.expand();
             	var cs = node.childNodes;
             	for(var c = cs.length-1; c >= 0; c--) { //add layers in reverse of reverse order - so in the right order
-            		cs[c].ui.toggleCheck(checked);
+                    cs[c].ui._silent = true;
+                    cs[c].ui.toggleCheck(checked);
+                    delete cs[c].ui._silent;
             	} 
             }
         },                            
