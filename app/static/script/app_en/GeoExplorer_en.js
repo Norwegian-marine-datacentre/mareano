@@ -320,6 +320,16 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
 			    title: this.thematicText,
 			    layout: "fit",
 			    id: "thematic_tree",
+                            tbar: [{
+                                text: 'Turn off all',
+                                handler: function() {
+                                    var tree = Ext.getCmp('thematic_tree');
+                                    var checked = tree.getChecked();
+                                    for (var i=0, ii = checked.length; i<ii; ++i) {
+                                        checked[i].ui.toggleCheck(false);
+                                    }
+                                }
+                            }],
 			    flex: 1,
 			    split: true,
 			    width: 200,
