@@ -155,40 +155,48 @@ function addLayerToGroup( gruppeNavn, gruppeText, map, mapPanel, layers, store, 
             		node.ui.toggleCheck(false);
             	}
             });            
-            node.on("checkChange", function(event) {
-            	var cb = node.getUI().checkbox;
-            	if ( cb && Ext.get(cb).getAttribute('type') === 'checkbox' ) {
-            		var layer = layerRecord.getLayer();
-            		var record = event.layerStore.getByLayer(layer);
-            		if (event.ui.checkbox.checked) {
-            			//app.mapPanel.layers.add(record);
-            			/** bart code */
-                        var id = layer.metadata['kartlagId'];
-                        var doAdd = true;
-                        app.mapPanel.layers.each(function(record) {
-                            if (record.getLayer().metadata['kartlagId'] === id) {
-                                doAdd = false;
-                                return false;
-                            }
-                        });
-                        if (doAdd) {
-                            var clone = record.clone(); 
-                            clone.set("group", "default"); 
-                            clone.getLayer().setVisibility(true);
-                            clone.getLayer().metadata['kartlagId'] = id;
-                            app.mapPanel.layers.add(clone);
-                            var maxExtent = clone.getLayer().maxExtent;
-                            if (event.ui._silent !== true && maxExtent) {
-                                app.mapPanel.map.zoomToExtent(maxExtent);
-                            }
+            node.on("checkchange", function(event) {
+                var layer = layerRecord.getLayer();
+                var record = event.layerStore.getByLayer(layer);
+                var id = layer.metadata['kartlagId'];
+                // the layer can be associated with multiple nodes, so search the tree
+                var origNode = node;
+                while (node.parentNode) {
+                    node = node.parentNode;
+                }
+                node.cascade(function(n) {
+                    if (n.attributes.layer && n.attributes.layer.metadata['kartlagId'] === id) {
+                        n.ui.checkbox.checked = event.ui.checkbox.checked;
+                    }
+                });
+                node = origNode;
+            	if (event.ui.checkbox.checked) {
+                    //app.mapPanel.layers.add(record);
+                    /** bart code */
+                    var doAdd = true;
+                    app.mapPanel.layers.each(function(record) {
+                        if (record.getLayer().metadata['kartlagId'] === id) {
+                            doAdd = false;
+                            return false;
                         }
-            			//app.mapPanel.map.addLayer(layer); //adds layer to Overlay but mareano_wmslayerpanel is missing from properties and no layer properties are shown                        
-		                displayLegendGraphicsAndSpesialpunkt(app.mapPanel.map.getExtent() + "", layer.metadata['kartlagId'], layerRecord.getLayer(), event, app);   
-            			//getSpesialPunkt(app.mapPanel.map.getExtent() + "", layerRecord.getLayer().metadata['kartlagId'], layerRecord.getLayer(), event, app);
-            		} else {
-            			removeLayerLegendAndInfo(app.mapOfGMLspesialpunkt, layer.metadata['kartlagId'], record, layer, app);
-            		}
-            	}
+                    });
+                    if (doAdd) {
+                        var clone = record.clone(); 
+                        clone.set("group", "default"); 
+                        clone.getLayer().setVisibility(true);
+                        clone.getLayer().metadata['kartlagId'] = id;
+                        app.mapPanel.layers.add(clone);
+                        var maxExtent = clone.getLayer().maxExtent;
+                        if (event.ui._silent !== true && maxExtent) {
+                            app.mapPanel.map.zoomToExtent(maxExtent);
+                        }
+                    }
+            	    //app.mapPanel.map.addLayer(layer); //adds layer to Overlay but mareano_wmslayerpanel is missing from properties and no layer properties are shown                        
+		    displayLegendGraphicsAndSpesialpunkt(app.mapPanel.map.getExtent() + "", layer.metadata['kartlagId'], layerRecord.getLayer(), event, app);   
+            	    //getSpesialPunkt(app.mapPanel.map.getExtent() + "", layerRecord.getLayer().metadata['kartlagId'], layerRecord.getLayer(), event, app);
+                } else {
+            	    removeLayerLegendAndInfo(app.mapOfGMLspesialpunkt, layer.metadata['kartlagId'], record, layer, app);
+                }
             });                                    
             return node;
         }
