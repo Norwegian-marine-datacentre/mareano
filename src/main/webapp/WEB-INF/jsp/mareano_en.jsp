@@ -62,7 +62,7 @@
         <link rel="stylesheet" type="text/css" href="theme/app/geoexplorer.css" />
         <!--[if IE]><link rel="stylesheet" type="text/css" href="theme/app/ie.css"/><![endif]-->
         <link rel="stylesheet" type="text/css" href="theme/ux/colorpicker/color-picker.ux.css" />
-        <script type="text/javascript" src="script/GeoExplorer_en.js"></script>
+        <script type="text/javascript" src="script/GeoExplorer.js"></script>
         <script type="text/javascript" src="script/ux.js"></script>
 
         <script type="text/javascript" src="javascript/WMSLayerPanel.js"></script>
@@ -85,16 +85,9 @@
                 gxp.plugins.AddLayers.prototype.doneText = "Done";
                 gxp.plugins.AddLayers.prototype.addButtonText = "Add layers"; */
                                 
-                // optionally set locale based on query string parameter
-                if (GeoExt.Lang) {
-                    GeoExt.Lang.set(OpenLayers.Util.getParameters()["locale"] || GeoExt.Lang.locale);
-                }
                 //Ext.BLANK_IMAGE_URL = "theme/app/img/blank.gif";
                 OpenLayers.ImgPath = "theme/app/img/";
-                // optionally set locale based on query string parameter
-                if (GeoExt.Lang) {
-                    GeoExt.Lang.set(OpenLayers.Util.getParameters()["locale"] || GeoExt.Lang.locale);
-                }
+                GeoExt.Lang.set('en');
                 var app = new GeoExplorer.Composer({
                     <!-- authStatus: < status >, -->
                     proxy: "proxy/?url=",

@@ -92,16 +92,9 @@
                 gxp.plugins.LayerProperties.prototype.menuText = "Kartlag egenskaper";
                 gxp.plugins.LayerProperties.prototype.toolTip = "Kartlag egenskaper";
                 
-                // optionally set locale based on query string parameter
-                if (GeoExt.Lang) {
-                    GeoExt.Lang.set(OpenLayers.Util.getParameters()["locale"] || GeoExt.Lang.locale);
-                }
                 //Ext.BLANK_IMAGE_URL = "theme/app/img/blank.gif";
                 OpenLayers.ImgPath = "theme/app/img/";
-                // optionally set locale based on query string parameter
-                if (GeoExt.Lang) {
-                    GeoExt.Lang.set(OpenLayers.Util.getParameters()["locale"] || GeoExt.Lang.locale);
-                }
+                GeoExt.Lang.set('no');
                 var app = new GeoExplorer.Composer({
                     <!-- authStatus: < status >, -->
                     proxy: "proxy/?url=",

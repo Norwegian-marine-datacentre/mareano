@@ -62,6 +62,15 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
     contactText: "Contact",
     aboutThisMapText: "About this Map",
     thematicText: "Temakart",
+    dataSuppliedText: "Data levert av:",
+    legendTitle: "Tegnforklaring",
+    infoTitle: "Info om kartlag",
+    helpTitle: "Hjelp",
+    zoomBoxTooltip: "Zoom til omr\u00e5de",
+    mousePositionText: "Koordinater (WGS84): ",
+    goToTooltip: "G&aring; til koordinat",
+    goToText: "G&aring; til koordinat",
+    goToPrompt: "Posisjon i WGS84 (Breddegrad, Lengdegrad - for eksempel: 60.2,1.5):",
     // End i18n.
     
     /**
@@ -215,7 +224,7 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
             collapsed: true, 
             collapsible: true,
             collapseMode: "mini",
-            html:"Data levert av:" +
+            html: this.dataSuppliedText +
 		        "<img src=\"/geodata/theme/app/img/geosilk/kilder/DN_lite.png\" title=\"Direktoratet for naturforvaltning\"/>"+
 		        "<img src=\"/geodata/theme/app/img/geosilk/kilder/FD_lite.png\" title=\"Fiskeridirektoratet\"/>"+
 		        "<img src=\"/geodata/theme/app/img/geosilk/kilder/HI_lite.png\" title=\"Havforskningsinstituttet\"/>"+
@@ -248,7 +257,7 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
 		
         var legendContainerContainer = new Ext.Panel({
             border: false,
-            title: "Tegnforklaring",
+            title: this.legendTitle,
             layout: "border",
             region: "south",
             width: 215,
@@ -263,7 +272,7 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
         /** westpanel *****/        
         var westPanel = new Ext.Panel({
             border: true,
-            title: "Kartlag",
+            title: this.layersText,
             layout: "border",
             region: "center",
             width: 215,
@@ -277,7 +286,7 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
         });    
         
         var tipsPanel = new Ext.Panel({
-            title: 'Info om kartlag', 
+            title: this.infoTitle, 
             html:  "", 
             region: 'center', 
             id: 'tips', 
@@ -289,17 +298,10 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
             activeTab: 0,
             region: "center",
             items: [westPanel, tipsPanel,
-            {title:"Hjelp", 
-            	html:"For \u00e5 gj\u00f8re det enklere \u00e5 navigere og endre p\u00e5 hva kartene viser, er det laget to ulike paneler for \u00e5 styre dette. " +
-            			"I &#34;Temakart&#34; til venstre ligger alle ferdige kart og kartlag som man kan velge \u00e5 sl\u00e5 p\u00e5. De er organisert i hovedtema, under " +
-            			"hovedtema er kartbilder som man kan velge \u00e5 sl\u00e5 av/p\u00e5, og p\u00e5 det nederste niv\u00e5et er kartlag som man ogs\u00e5 " +
-            			"kan sl\u00e5s av/p\u00e5. N\u00e5r man \u00e5pner et temakart, blir et p\u00e5 forh\u00e5nd definert utvalg av kartlag \u00e5pnet. " +
-            			"Disse kartlagene blir synlige under &#34;Kartlag&#34; i det h\u00f8yre kartpanelet. Her kan rekkef\u00f8lgen p\u00e5 kartlagene endres ved " +
-            			"\u00e5 flytte p\u00e5 de ulike kartlagene, dette kan p\u00e5 enkelte kartlag for eksempel brukes til \u00e5 velge hvilke punkt som skal" +
-            			" v\u00E6re mest synlige. Man kan ogs\u00e5 h\u00f8yreklikke p\u00e5 tittelen p\u00e5 hvert kartlag for \u00e5 bl.a. zoome til " +
-            			"kartlagsutstrekning, det kan v\u00E6re nyttig for kartlag som har innhold som er mer synlig viss man zoomer inn p\u00e5 dem. " +
-            			"For sp\u00f8rsm\u00e5l send mail til <a href='gis@nmd.no'>gis@nmd.no</a>"
-            	, region: "center"}
+            {title: this.helpTitle, 
+            	html: this.helpText,
+                disabled: Ext.isEmpty(this.helpText),
+            	region: "center"}
             ]
         });
       
@@ -436,12 +438,13 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
             iconCls: "icon-zoom-to", //app\static\externals\openlayers\img\drag-rectangle-on.png
             map: this.mapPanel.map,
             toggleGroup: "draw",
-            tooltip: "Zoom til omr\u00e5de"
+            tooltip: this.zoomBoxTooltip
         });	          
     	
         Proj4js.defs["EPSG:32633"] = "+proj=utm +zone=33 +ellps=WGS84 +datum=WGS84 +units=m +no_defs";
         var oSrcPrj = new Proj4js.Proj('WGS84');
         var oDestPrj = new Proj4js.Proj('EPSG:32633');
+        var me = this;
         function formatLonlats(lonLat) {
             var lat = lonLat.lat;
             var longi = lonLat.lon;
@@ -451,7 +454,7 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
             var ns = OpenLayers.Util.getFormattedLonLat(aPoint.y);
             var ew = OpenLayers.Util.getFormattedLonLat(aPoint.x,'lon');
             
-            return 'Koordinater (WGS84): ' + ns + ', ' + ew;
+            return me.mousePositionText + ns + ', ' + ew;
             // + ' - EPSG:32633: (' + lat + ', ' + longi + ')';
         }	
         MousePositionBox = Ext.extend(Ext.BoxComponent, {
@@ -470,10 +473,10 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
         var tmpMouseP = new MousePositionBox( {map: this.mapPanel.map} );
     	
         var gaaTilKoord = new Ext.Button({
-            tooltip: "G&aring; til koordinat",
-            text: "G&aring; til koordinat",
+            tooltip: this.goToTooltip,
+            text: this.goToText,
             handler: function(){
-                Ext.MessageBox.prompt('Name', 'Posisjon i WGS84 (Breddegrad, Lengdegrad - for eksempel: 60.2,1.5):', showResultText);
+                Ext.MessageBox.prompt('Name', this.goToPrompt, showResultText);
                 function showResultText(btn, text){
                     var thisMapPanel = Ext.ComponentMgr.all.find(function(c) {
                         return c instanceof GeoExt.MapPanel;
@@ -493,20 +496,20 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
             },
             scope: this
         });
-    	
+
         var gaaTilHav = new Ext.form.ComboBox({
             fieldLabel: 'Number',
             hiddenName: 'number',
             store: new Ext.data.SimpleStore({
                 fields: ['number'],
-                data : [ ['Barentshavet'], ['Norskehavet'], [ 'Nordsj\u00f8en' ], ['Skagerrak'], ['Polhavet'] ]
+                data : [ [this.zoomToItem1], [this.zoomToItem2], [this.zoomToItem3], [this.zoomToItem4], [this.zoomToItem5] ]
             }),
             displayField: 'number',
             height: 10,
             typeAhead: true,
             mode: 'local',
             triggerAction: 'all',
-            emptyText: "G\u00e5 til havomr\u00e5de",
+            emptyText: this.zoomToEmptyText,
             selectOnFocus:true,
             listeners: {
                 select: {
@@ -514,17 +517,18 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
                         var thisMapPanel = Ext.ComponentMgr.all.find(function(c) {
                             return c instanceof GeoExt.MapPanel;
                         });
-                        if ( combo.getValue() == "Norskehavet" ) 
+                        if ( combo.getValue() == this.zoomToItem2 ) 
                             thisMapPanel.map.panTo( new OpenLayers.LonLat( -1644,7334116 ) );
-                        else if ( combo.getValue() == "Barentshavet" )
+                        else if ( combo.getValue() == this.zoomToItem1 )
                             thisMapPanel.map.panTo( new OpenLayers.LonLat( 1088474,8089849 ) );
-                        else if ( combo.getValue() == "Nordsj\u00f8en" )
+                        else if ( combo.getValue() == this.zoomToItem3 )
                             thisMapPanel.map.panTo( new OpenLayers.LonLat( -1644,6934116 ) );
-                        else if ( combo.getValue() == "Skagerrak" )
+                        else if ( combo.getValue() == this.zoomToItem4 )
                             thisMapPanel.map.panTo( new OpenLayers.LonLat( -1644,6434116 ) );    
-                        else if ( combo.getValue() == "Polhavet" )
+                        else if ( combo.getValue() == this.zoomToItem5 )
                             thisMapPanel.map.panTo( new OpenLayers.LonLat( 1000000,8999999 ) );            					
-                    }
+                    },
+                    scope: this
                 }
             }
         });
@@ -532,7 +536,11 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
         var mareanoNorskBtn = new Ext.Button({
             tooltip: "Norsk",
             buttonAlign: "center",
-            handler: function(){},
+            handler: function(){
+                if (location.href.indexOf("mareano.html") === -1) {
+                    location.href = location.href.substring(0,location.href.lastIndexOf('/mareano_en.html')) + "/mareano.html";
+                }
+            },
             iconCls: "icon-norsk",
             scope: this
         });
@@ -541,7 +549,9 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
             tooltip: "English",
             buttonAlign: "right", 
             handler: function(){
-                location.href = location.href.substring(0,location.href.lastIndexOf('/mareano.html')) + "/mareano_en.html"; 
+                if (location.href.indexOf("mareano_en.html") === -1) {
+                    location.href = location.href.substring(0,location.href.lastIndexOf('/mareano.html')) + "/mareano_en.html";
+                }
             },
             iconCls: "icon-english",
             scope: this
