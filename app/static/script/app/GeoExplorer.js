@@ -74,6 +74,8 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
     expandText: "Expand Layers >>",
     collapseText: "<< Collapse Layers",
     expandCollapseTooltip: "Expand or collapse the Layers panel",
+    visibilityText: "Turn off",
+    visibilityTooltip: "Turn off the visibility of all overlays",
     // End i18n.
     
     /**
@@ -314,17 +316,33 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
             region: "west",
             unstyled:true,
             width: 200,
-            tbar: ['->', {tooltip: this.expandCollapseTooltip, cls: "expand-collapse", text: this.expandText, handler: function(cmp) {
-                if (!cmp._expanded) {
-                    cmp.setText(this.collapseText);
-                    westPanel2.setWidth(415);
-                } else {
-                    cmp.setText(this.expandText);
-                    westPanel2.setWidth(200);
+            tbar: [{
+                text: this.visibilityText,
+                tooltip: this.visibilityTooltip,
+                handler: function() {
+                    var tree = Ext.getCmp('thematic_tree');
+                    var checked = tree.getChecked();
+                    for (var i=0, ii = checked.length; i<ii; ++i) {
+                        checked[i].ui.toggleCheck(false);
+                    }
                 }
-                westPanel2.ownerCt.doLayout();
-                cmp._expanded = !cmp._expanded;
-            }, scope: this}],
+            }, '->', {
+                tooltip: this.expandCollapseTooltip,
+                cls: "expand-collapse", 
+                text: this.expandText, 
+                handler: function(cmp) {
+                    if (!cmp._expanded) {
+                        cmp.setText(this.collapseText);
+                        westPanel2.setWidth(415);
+                    } else {
+                        cmp.setText(this.expandText);
+                        westPanel2.setWidth(200);
+                    }
+                    westPanel2.ownerCt.doLayout();
+                    cmp._expanded = !cmp._expanded;
+                },
+                scope: this
+            }],
             split: true,
             defaults:{ autoScroll:true },
             collapseMode: "mini",
@@ -338,16 +356,6 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
 			    title: this.thematicText,
 			    layout: "fit",
 			    id: "thematic_tree",
-                            tbar: [{
-                                text: 'Turn off all',
-                                handler: function() {
-                                    var tree = Ext.getCmp('thematic_tree');
-                                    var checked = tree.getChecked();
-                                    for (var i=0, ii = checked.length; i<ii; ++i) {
-                                        checked[i].ui.toggleCheck(false);
-                                    }
-                                }
-                            }],
 			    flex: 1,
 			    split: true,
 			    width: 200,

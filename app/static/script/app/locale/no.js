@@ -40,7 +40,9 @@ GeoExt.Lang.add("no", {
         zoomToEmptyText: "G\u00e5 til havomr\u00e5de",
         expandText: "Expand Layers >>",
         collapseText: "<< Collapse Layers",
-        expandCollapseTooltip: "Expand or collapse the Layers panel"
+        expandCollapseTooltip: "Expand or collapse the Layers panel",
+        visibilityText: "Turn off",
+        visibilityTooltip: "Turn off the visibility of all overlays"
     },
     "GeoExplorer.Composer.prototype": {
         exportMapText: "Publish Map",
