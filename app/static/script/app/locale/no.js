@@ -42,7 +42,7 @@ GeoExt.Lang.add("no", {
         collapseText: "<< Collapse Layers",
         expandCollapseTooltip: "Expand or collapse the Layers panel",
         visibilityText: "Turn off",
-        visibilityTooltip: "Turn off the visibility of all overlays"
+        visibilityTooltip: "Turn off all overlays"
     },
     "GeoExplorer.Composer.prototype": {
         exportMapText: "Publish Map",

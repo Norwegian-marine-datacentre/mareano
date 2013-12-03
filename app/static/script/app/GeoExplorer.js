@@ -75,7 +75,7 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
     collapseText: "<< Collapse Layers",
     expandCollapseTooltip: "Expand or collapse the Layers panel",
     visibilityText: "Turn off",
-    visibilityTooltip: "Turn off the visibility of all overlays",
+    visibilityTooltip: "Turn off all overlays",
     // End i18n.
     
     /**
