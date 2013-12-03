@@ -37,7 +37,10 @@ GeoExt.Lang.add("en", {
         zoomToItem3: "North Sea",
         zoomToItem4: "Skagerrak",
         zoomToItem5: "Polhavet",
-        zoomToEmptyText: "Go to Sea"
+        zoomToEmptyText: "Go to Sea",
+        expandText: "Expand Layers >>",
+        collapseText: "<< Collapse Layers",
+        expandCollapseTooltip: "Expand or collapse the Layers panel"
     },
     "GeoExplorer.Composer.prototype": {
         exportMapText: "Publish Map",

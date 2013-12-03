@@ -71,6 +71,9 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
     goToTooltip: "G&aring; til koordinat",
     goToText: "G&aring; til koordinat",
     goToPrompt: "Posisjon i WGS84 (Breddegrad, Lengdegrad - for eksempel: 60.2,1.5):",
+    expandText: "Expand Layers >>",
+    collapseText: "<< Collapse Layers",
+    expandCollapseTooltip: "Expand or collapse the Layers panel",
     // End i18n.
     
     /**
@@ -311,17 +314,17 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
             region: "west",
             unstyled:true,
             width: 200,
-            tbar: ['->', {text: "Expand", handler: function(cmp) {
+            tbar: ['->', {tooltip: this.expandCollapseTooltip, cls: "expand-collapse", text: this.expandText, handler: function(cmp) {
                 if (!cmp._expanded) {
-                    cmp.setText('Collapse');
+                    cmp.setText(this.collapseText);
                     westPanel2.setWidth(415);
                 } else {
-                    cmp.setText('Expand');
+                    cmp.setText(this.expandText);
                     westPanel2.setWidth(200);
                 }
                 westPanel2.ownerCt.doLayout();
                 cmp._expanded = !cmp._expanded;
-            }}],
+            }, scope: this}],
             split: true,
             defaults:{ autoScroll:true },
             collapseMode: "mini",
