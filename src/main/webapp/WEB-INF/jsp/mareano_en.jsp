@@ -188,7 +188,7 @@
                     		source: "ol",	
                                 type: "OpenLayers.Layer.WMS",
                                 group: "${bilde.gruppe}",
-                                visibility: ${bilde.visible},
+                                visibility: !(app.id > 0) ? ${bilde.visible} : false,,
                                 properties: "mareano_wmslayerpanel",           
                                 args: [
                                     "${kartlaget.title}",
