@@ -162,6 +162,17 @@ function addLayerToGroup( gruppeNavn, gruppeText, map, mapPanel, layers, store, 
                 var layer = layerRecord.getLayer();
                 var record = event.layerStore.getByLayer(layer);
                 var id = layer.metadata['kartlagId'];
+                // check if we should also check the parent node
+                var setGroupChecked = function(node) {
+                    var allChildrenChecked = true;
+                    node.parentNode.eachChild(function(child) {
+                        if (!child.ui.checkbox.checked) {
+                            allChildrenChecked = false;
+                        }
+                    });
+                    node.parentNode.ui.checkbox.checked = allChildrenChecked;
+                };
+                setGroupChecked(node);
                 // the layer can be associated with multiple nodes, so search the tree
                 var origNode = node;
                 while (node.parentNode) {
@@ -170,6 +181,7 @@ function addLayerToGroup( gruppeNavn, gruppeText, map, mapPanel, layers, store, 
                 node.cascade(function(n) {
                     if (n.attributes.layer && n.attributes.layer.metadata['kartlagId'] === id) {
                         n.ui.checkbox.checked = event.ui.checkbox.checked;
+                        setGroupChecked(n);
                     }
                 });
                 node = origNode;
