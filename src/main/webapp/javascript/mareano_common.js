@@ -49,10 +49,13 @@ function addLayerToGroup( gruppeNavn, gruppeText, map, mapPanel, layers, store, 
     var count = 0;    
     for (var i = layers.length-1;i>=0;--i) {
         if ( layers[i].get("group") == gruppeNavn ) {
-        	count++;
-        	if (layers[i].getLayer().visibility === true) {
-        		childrenVisible++;
-        	} 
+            count++;
+            var idx = mapPanel.layers.findBy(function(record) {
+                return record.getLayer().metadata['kartlagId'] === layers[i].getLayer().metadata['kartlagId'];
+            });
+            if (layers[i].getLayer().visibility === true || idx !== -1) {
+                childrenVisible++;
+            } 
             layerName.push(layers[i].getLayer().params.LAYERS);
         }
     }
