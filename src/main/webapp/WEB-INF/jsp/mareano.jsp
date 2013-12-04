@@ -229,6 +229,9 @@
                                             //'abstract': '${kartlaget.abstracts}', //causes error: missing } after property list genereres daglig fra OD's operasjonelle databaser. Detaljeringsg...
                                             'kartlagId': '${kartlaget.id}'
                                         },
+                                        minScale: ${kartlaget.scalemax},
+                                        maxScale: (${kartlaget.scalemin} > 0) ? ${kartlaget.scalemin} : 0.001,
+                                        units: "m",
                                         maxExtent: [
                                             ${kartlaget.exGeographicBoundingBoxWestBoundLongitude},
                                             ${kartlaget.exGeographicBoundingBoxSouthBoundLatitude},

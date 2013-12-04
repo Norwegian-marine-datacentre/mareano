@@ -201,6 +201,9 @@
                                             'abstract': '${kartlaget.abstracts}',
                                             'kartlagId': '${kartlaget.id}'
                                         },
+                                        minScale: ${kartlaget.scalemax},
+                                        maxScale: (${kartlaget.scalemin} > 0) ? ${kartlaget.scalemin} : 0.001,
+                                        units: "m",
                                         maxExtent: [
                                             ${kartlaget.exGeographicBoundingBoxWestBoundLongitude},
                                             ${kartlaget.exGeographicBoundingBoxSouthBoundLatitude},
