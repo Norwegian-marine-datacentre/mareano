@@ -278,15 +278,14 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
         var westPanel = new Ext.Panel({
             border: true,
             title: this.layersText,
-            layout: "border",
+            layout: "fit",
             region: "center",
             width: 215,
             split: true,
             collapseMode: "mini",
             resizable: true,
             items: [
-	            {region:'center',autoScroll:true,tbar:[],border:false, id:'tree', resizable: true, flex: 0,height:100},
-	            legendContainerContainer
+	            {autoScroll:true,tbar:[],border:false, id:'tree', resizable: true, flex: 0,height:100}
             ]
         });    
         
@@ -351,26 +350,32 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
             defaults:{ autoScroll:true },
             collapseMode: "mini",
             items: [{
-			    xtype: 'treepanel',
-			    enableDrag: true,
-			    enableDrop: false,
-			    loader: new Ext.tree.TreeLoader(),
-			    root: new Ext.tree.AsyncTreeNode(),
-			    rootVisible: false,
-			    title: this.thematicText,
-			    layout: "fit",
-			    id: "thematic_tree",
-			    flex: 1,
-			    split: true,
-			    width: 200,
-			    region: "west"
-		    }, {
-			    xtype: 'panel',
-			    layout: "border",
-			    width: 215,
-			    region: "center",
-			    items: westPanelTabs
-		    }]
+                layout: 'border',
+                width: 200,
+                autoScroll: false,
+                xtype: 'container',
+                split: true,
+                region: "west",
+                items: [{
+                    xtype: 'treepanel',
+                    region: "center",
+                    autoScroll: true,
+                    enableDrag: true,
+                    enableDrop: false,
+                    loader: new Ext.tree.TreeLoader(),
+                    root: new Ext.tree.AsyncTreeNode(),
+                    rootVisible: false,
+                    title: this.thematicText,
+                    layout: "fit",
+                    id: "thematic_tree"
+                }, legendContainerContainer]
+            }, {
+                xtype: 'panel',
+                layout: "border",
+                width: 215,
+                region: "center",
+                items: westPanelTabs
+            }]
         }); 
         /** slutt: import fra gammel versjon */    	
         
