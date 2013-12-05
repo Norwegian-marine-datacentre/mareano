@@ -12,6 +12,27 @@
         <script type="text/javascript" src="externals/ext/adapter/ext/ext-base-debug.js"></script>
         <script type="text/javascript" src="externals/ext/ext-all-debug-w-comments.js"></script>
         <style type="text/css">
+            .olControlOverviewMapMaximizeButton, .olControlOverviewMapMinimizeButton {
+                background-image: url(externals/ext/resources/images/gray/panel/tool-sprites.gif);
+                width: 15px !important;
+                height: 15px !important;
+                cursor: pointer;
+                margin-left: 2px;
+            }
+            .olControlOverviewMapMaximizeButton {
+                background-position:0 -180px;
+            }
+            .olControlOverviewMapMinimizeButton {
+                background-position:0 -165px;
+            }
+            #OpenLayers_Control_minimizeDiv_innerImage, #olControlOverviewMapMaximizeButton_innerImage {
+                display: none;
+            }
+            .olControlOverviewMapElement {
+                padding: 0px 0px 0px 0px !important;
+                border: 2px solid rgb(158, 154, 154) !important;
+                background-color: white !important;
+            }
             .gx-tree-layer-actions {
                 position: absolute;
                 left: 15px;
