@@ -53,10 +53,6 @@
             .gx-tree-layer-actions .disabled {
                 opacity: 0.2;
             }
-            .expand-collapse button {
-                color: red;
-                font-weight: bold;
-            }
             .olImageLoadError { 
    				/* when OL encounters a 404, don't display the pink image */
             	display: none !important;

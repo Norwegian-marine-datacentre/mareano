@@ -71,8 +71,8 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
     goToTooltip: "G&aring; til koordinat",
     goToText: "G&aring; til koordinat",
     goToPrompt: "Posisjon i WGS84 (Breddegrad, Lengdegrad - for eksempel: 60.2,1.5):",
-    expandText: "Expand Layers >>",
-    collapseText: "<< Collapse Layers",
+    expandText: "Expand Layers",
+    collapseText: "Collapse Layers",
     expandCollapseTooltip: "Expand or collapse the Layers panel",
     visibilityText: "Turn off",
     visibilityTooltip: "Turn off all overlays",
@@ -309,6 +309,10 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
             	region: "center"}
             ]
         });
+
+        var btnPostfix = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+        var expandDiv = '<div style="position:absolute; top: 5px; right: 5px;" class="x-tool x-tool-toggle x-tool-collapse-east">&nbsp;</div>';
+        var collapseDiv = '<div style="position:absolute; top: 5px; right: 5px;" class="x-tool x-tool-toggle x-tool-collapse-west">&nbsp;</div>';
       
         var westPanel2 = new Ext.Panel({
             border: true,
@@ -328,14 +332,14 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
                 }
             }, '->', {
                 tooltip: this.expandCollapseTooltip,
-                cls: "expand-collapse", 
-                text: this.expandText, 
+                cls: "expand-collapse",
+                text: this.expandText + btnPostfix + expandDiv,
                 handler: function(cmp) {
                     if (!cmp._expanded) {
-                        cmp.setText(this.collapseText);
+                        cmp.setText(this.collapseText + btnPostfix + collapseDiv);
                         westPanel2.setWidth(415);
                     } else {
-                        cmp.setText(this.expandText);
+                        cmp.setText(this.expandText + btnPostfix + expandDiv);
                         westPanel2.setWidth(200);
                     }
                     westPanel2.ownerCt.doLayout();
