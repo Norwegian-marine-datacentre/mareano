@@ -27,7 +27,8 @@ GeoExplorer.Composer = Ext.extend(GeoExplorer, {
     loginText: "Login",
     loginErrorText: "Invalid username or password.",
     userFieldText: "User",
-    passwordFieldText: "Password", 
+    passwordFieldText: "Password",
+    zoomScaleTip: "Zoom to a scale where the layer is visible",
     // End i18n.
 
     constructor: function(config) {
@@ -40,13 +41,39 @@ GeoExplorer.Composer = Ext.extend(GeoExplorer, {
         }
         // should not be persisted or accessed again
         delete config.authStatus;
-
+        var me = this;
         config.tools = [
             {
                 ptype: "gxp_layertree",
                 outputConfig: {
                     id: "layertree",
-                    enableDD:true
+                    enableDD:true,
+                    plugins: [{
+                        ptype: "gx_treenodeactions",
+                        actions: [{
+                            action: "zoomscale",
+                            qtip: me.zoomScaleTip,
+                        }],
+                        listeners: {
+                            action: function(node, action, evt) {
+                                var layer = node.layer;
+                                if (layer.inRange === false) {
+                                    var scale = (layer.minScale + layer.maxScale)/2; 
+                                    var res = OpenLayers.Util.getResolutionFromScale(scale,
+                                                         layer.map.baseLayer.units);
+
+                                    var halfWDeg = (layer.map.size.w * res) / 2;
+                                    var halfHDeg = (layer.map.size.h * res) / 2;
+                                    var center = layer.maxExtent.getCenterLonLat();
+                                    var extent = new OpenLayers.Bounds(center.lon - halfWDeg,
+                                        center.lat - halfHDeg,
+                                        center.lon + halfWDeg,
+                                        center.lat + halfHDeg);
+                                    layer.map.zoomToExtent(extent);
+                                }
+                            }
+                        }
+                    }]
                 },
                 outputTarget: "tree"
             }/*, {

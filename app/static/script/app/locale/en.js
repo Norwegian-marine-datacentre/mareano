@@ -54,6 +54,7 @@ GeoExt.Lang.add("en", {
         loginText: "Login",
         loginErrorText: "Invalid username or password.",
         userFieldText: "User",
-        passwordFieldText: "Password"
+        passwordFieldText: "Password",
+        zoomScaleTip: "Zoom to a scale where the layer is visible"
     }
 });

@@ -12,6 +12,26 @@
         <script type="text/javascript" src="externals/ext/adapter/ext/ext-base-debug.js"></script>
         <script type="text/javascript" src="externals/ext/ext-all-debug-w-comments.js"></script>
         <style type="text/css">
+            .gx-tree-layer-actions {
+                position: absolute;
+                left: 15px;
+            }
+            .gx-tree-layer-action {
+                background-position: center center;
+                background-repeat: no-repeat;
+                border: 0 none;
+                height: 16px;
+                margin: 0;
+                padding: 0;
+                vertical-align: top;
+                width: 16px;
+            }
+            .x-tree-node-disabled .gx-tree-layer-actions .zoomscale {
+                background: transparent url("theme/app/img/silk/magnifier.png");
+            }
+            .gx-tree-layer-actions .disabled {
+                opacity: 0.2;
+            }
             .expand-collapse button {
                 color: red;
                 font-weight: bold;
