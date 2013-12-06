@@ -203,7 +203,7 @@ function addLayerToGroup( gruppeNavn, gruppeText, map, mapPanel, layers, store, 
                         app.mapPanel.layers.add(clone);
                         var maxExtent = clone.getLayer().maxExtent;
                         if (event.ui._silent !== true && maxExtent) {
-                            app.mapPanel.map.zoomToExtent(maxExtent);
+                            app.mapPanel.map.zoomToExtent(maxExtent, true);
                         }
                         displayLegendGraphicsAndSpesialpunkt(app.mapPanel.map.getExtent() + "", layer.metadata['kartlagId'], layerRecord.getLayer(), event, app);
                     }

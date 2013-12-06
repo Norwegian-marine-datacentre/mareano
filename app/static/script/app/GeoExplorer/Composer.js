@@ -58,7 +58,7 @@ GeoExplorer.Composer = Ext.extend(GeoExplorer, {
                             action: function(node, action, evt) {
                                 var layer = node.layer;
                                 if (layer.maxExtent) {
-                                    layer.map.zoomToExtent(layer.maxExtent);
+                                    layer.map.zoomToExtent(layer.maxExtent, true);
                                 }
                             }
                         }
