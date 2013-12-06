@@ -19,6 +19,7 @@
                 -moz-opacity: 1 !important;
                 opacity: 1 !important;
                 filter: alpha(opacity=100) !important;
+            }
             .olControlOverviewMapMaximizeButton, .olControlOverviewMapMinimizeButton {
                 background-image: url(externals/ext/resources/images/gray/panel/tool-sprites.gif);
                 width: 15px !important;
