@@ -12,6 +12,14 @@
         <script type="text/javascript" src="externals/ext/adapter/ext/ext-base-debug.js"></script>
         <script type="text/javascript" src="externals/ext/ext-all-debug-w-comments.js"></script>
         <style type="text/css">
+            .x-tree-node .x-tree-node-disabled a span {
+                color: black !important;
+            }
+            .x-tree-node .x-tree-node-disabled .x-tree-node-icon {
+                -moz-opacity: 1 !important;
+                opacity: 1 !important;
+                filter: alpha(opacity=100) !important;
+            }
             .gx-tree-layer-actions {
                 position: absolute;
                 left: 15px;
