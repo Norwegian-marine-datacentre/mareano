@@ -12,6 +12,11 @@
         <script type="text/javascript" src="externals/ext/adapter/ext/ext-base-debug.js"></script>
         <script type="text/javascript" src="externals/ext/ext-all-debug-w-comments.js"></script>
         <style type="text/css">
+            .out-of-scale {
+                -moz-opacity: 0.5 !important;
+                opacity: 0.5 !important;
+                filter: alpha(opacity=50) !important;
+            }
             .x-tree-node .x-tree-node-disabled a span {
                 color: black !important;
             }
