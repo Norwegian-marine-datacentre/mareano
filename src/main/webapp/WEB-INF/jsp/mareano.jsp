@@ -383,6 +383,12 @@
 	                    	if (group.attributes.expanded === true) {
 	                    		mergedSomeHovedtema.expanded = true;
 	                    	}
+                                group.attributes.maxExtent = [
+                                    ${bilde.startextentMinx},
+                                    ${bilde.startextentMiny},
+                                    ${bilde.startextentMaxx},
+                                    ${bilde.startextentMaxy}
+                                ];
 	                    	mergedSomeHovedtema.appendChild( group );
                         </c:forEach>
                         treeRoot.getRootNode().appendChild( mergedSomeHovedtema );
