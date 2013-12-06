@@ -130,7 +130,12 @@ public class MareanoController {
                     } else {
                         kartbilderVisining.setGruppe(kartbilde.getGenericTitle());
                     }
+                    
                 }
+                kartbilderVisining.setStartextentMaxx( kartbilde.getStartextentMaxx() );
+                kartbilderVisining.setStartextentMaxy( kartbilde.getStartextentMaxy() );
+                kartbilderVisining.setStartextentMinx( kartbilde.getStartextentMinx() );
+                kartbilderVisining.setStartextentMiny( kartbilde.getStartextentMiny() );
 
                 if (kartbilderVisining.getGruppe().equals("MAREANO-oversiktskart") || kartbilderVisining.getGruppe().equals("MAREANO - overview")) {
                     kartbilderVisining.setVisible(true);

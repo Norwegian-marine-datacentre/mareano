@@ -7,6 +7,10 @@ public class KartbilderVisning {
 	private String gruppe;
 	private List<KartlagVisning> kart = new ArrayList<KartlagVisning>();
 	private boolean visible = false;
+	private double startextentMinx;
+	private double startextentMaxx;
+	private double startextentMiny;
+	private double startextentMaxy;
 
 	public boolean isVisible() {
 		return visible;
@@ -28,5 +32,29 @@ public class KartbilderVisning {
 	}
 	public void addKart(KartlagVisning kart) {
 		this.kart.add(kart);
+	}
+	public double getStartextentMinx() {
+		return startextentMinx;
+	}
+	public void setStartextentMinx(double startextentMinx) {
+		this.startextentMinx = startextentMinx;
+	}
+	public double getStartextentMaxx() {
+		return startextentMaxx;
+	}
+	public void setStartextentMaxx(double startextentMaxx) {
+		this.startextentMaxx = startextentMaxx;
+	}
+	public double getStartextentMiny() {
+		return startextentMiny;
+	}
+	public void setStartextentMiny(double startextentMiny) {
+		this.startextentMiny = startextentMiny;
+	}
+	public double getStartextentMaxy() {
+		return startextentMaxy;
+	}
+	public void setStartextentMaxy(double startextentMaxy) {
+		this.startextentMaxy = startextentMaxy;
 	}
 }
