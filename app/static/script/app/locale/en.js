@@ -38,8 +38,8 @@ GeoExt.Lang.add("en", {
         zoomToItem4: "Skagerrak",
         zoomToItem5: "Polhavet",
         zoomToEmptyText: "Go to Sea",
-        expandText: "Expand Layers",
-        collapseText: "Collapse Layers",
+        expandText: "Expand Layers >>",
+        collapseText: "<< Collapse Layers",
         expandCollapseTooltip: "Expand or collapse the Layers panel",
         visibilityText: "Turn off",
         visibilityTooltip: "Turn off all overlays"
