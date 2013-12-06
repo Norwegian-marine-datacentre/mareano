@@ -6,6 +6,21 @@ function loadMareano(mapPanel, app) {
     app.mapOfGMLspesialpunkt = new Object();        
     
     var layertree = Ext.getCmp("layertree");
+
+    var updateLegendScale = function() {
+        layertree.getRootNode().cascade(function(n) {
+            var id = n.attributes.layer && n.attributes.layer.metadata['kartlagId'];
+            if (id) {
+                if (n.disabled === true) {
+                    Ext.get(id).addClass('out-of-scale');
+                } else {
+                    Ext.get(id).removeClass('out-of-scale');
+                }
+            }
+        });
+    };
+    app.mapPanel.on('afterlayout', updateLegendScale);
+    app.mapPanel.map.events.register('zoomend', app, updateLegendScale);
     
     layertree.on('startdrag', function() {
     	silent = true;
