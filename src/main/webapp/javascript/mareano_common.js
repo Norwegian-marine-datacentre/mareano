@@ -445,9 +445,10 @@ function addOverviewMapAndKeyboardDefaults(thisMap) {
     var ol_wms2 = new OpenLayers.Layer.WMS(
     		"geonorge",
     		"http://wms.geonorge.no/skwms1/wms.europa?brukerid=EHAV_MOEEND&passord=spartakus234&VERSION=1.1.1&SERVICE=WMS",
-    		{layers: "Land,Vmap0Land,Vmap0Kystkontur"}
+    		{layers: "Land,Vmap0Land,Vmap0Kystkontur"},
+                {singleTile: true, ratio: 1}
 	);
-    var tmpLayerOptions = {layers: [ol_wms2], mapOptions: layerOptions, maximized: false, minRatio: 48, maxRatio: 72};
+    var tmpLayerOptions = {layers: [ol_wms2], mapOptions: layerOptions, maximized: false, minRatio: 48, maxRatio: 72, size: {w: 300, h: 150}};
     thisMap.addControl(new OpenLayers.Control.OverviewMap(tmpLayerOptions));
     thisMap.addControl(new OpenLayers.Control.KeyboardDefaults());
 

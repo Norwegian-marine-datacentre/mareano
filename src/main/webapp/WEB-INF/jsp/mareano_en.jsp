@@ -19,6 +19,26 @@
                 -moz-opacity: 1 !important;
                 opacity: 1 !important;
                 filter: alpha(opacity=100) !important;
+            .olControlOverviewMapMaximizeButton, .olControlOverviewMapMinimizeButton {
+                background-image: url(externals/ext/resources/images/gray/panel/tool-sprites.gif);
+                width: 15px !important;
+                height: 15px !important;
+                cursor: pointer;
+                margin-left: 2px;
+            }
+            .olControlOverviewMapMaximizeButton {
+                background-position:0 -180px;
+            }
+            .olControlOverviewMapMinimizeButton {
+                background-position:0 -165px;
+            }
+            #OpenLayers_Control_minimizeDiv_innerImage, #olControlOverviewMapMaximizeButton_innerImage {
+                display: none;
+            }
+            .olControlOverviewMapElement {
+                padding: 0px 0px 0px 0px !important;
+                border: 2px solid rgb(158, 154, 154) !important;
+                background-color: white !important;
             }
             .gx-tree-layer-actions {
                 position: absolute;
@@ -39,10 +59,6 @@
             }
             .gx-tree-layer-actions .disabled {
                 opacity: 0.2;
-            }
-            .expand-collapse button {
-                color: red;
-                font-weight: bold;
             }
             .olImageLoadError { 
    				/* when OL encounters a 404, don't display the pink image */
@@ -229,8 +245,8 @@
                                             'abstract': '${kartlaget.abstracts}',
                                             'kartlagId': '${kartlaget.id}'
                                         },
-                                        minScale: ${kartlaget.scalemax},
-                                        maxScale: (${kartlaget.scalemin} > 0) ? ${kartlaget.scalemin} : 1,
+                                        minScale: ${kartlaget.scalemax}*(96/0.0254),
+                                        maxScale: (${kartlaget.scalemin} > 0) ? ${kartlaget.scalemin}*(96/0.0254) : 1,
                                         units: "m",
                                         maxExtent: [
                                             ${kartlaget.exGeographicBoundingBoxWestBoundLongitude},
