@@ -71,8 +71,8 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
     goToTooltip: "G&aring; til koordinat",
     goToText: "G&aring; til koordinat",
     goToPrompt: "Posisjon i WGS84 (Breddegrad, Lengdegrad - for eksempel: 60.2,1.5):",
-    expandText: "Expand Layers >>",
-    collapseText: "<< Collapse Layers",
+    expandText: "Expand Layers",
+    collapseText: "Collapse Layers",
     expandCollapseTooltip: "Expand or collapse the Layers panel",
     visibilityText: "Turn off",
     visibilityTooltip: "Turn off all overlays",
@@ -278,15 +278,14 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
         var westPanel = new Ext.Panel({
             border: true,
             title: this.layersText,
-            layout: "border",
+            layout: "fit",
             region: "center",
             width: 215,
             split: true,
             collapseMode: "mini",
             resizable: true,
             items: [
-	            {region:'center',autoScroll:true,tbar:[],border:false, id:'tree', resizable: true, flex: 0,height:100},
-	            legendContainerContainer
+	            {autoScroll:true,tbar:[],border:false, id:'tree', resizable: true, flex: 0,height:100}
             ]
         });    
         
@@ -309,6 +308,10 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
             	region: "center"}
             ]
         });
+
+        var btnPostfix = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+        var expandDiv = '<div style="position:absolute; top: 5px; right: 5px;" class="x-tool x-tool-toggle x-tool-collapse-east">&nbsp;</div>';
+        var collapseDiv = '<div style="position:absolute; top: 5px; right: 5px;" class="x-tool x-tool-toggle x-tool-collapse-west">&nbsp;</div>';
       
         var westPanel2 = new Ext.Panel({
             border: true,
@@ -328,14 +331,14 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
                 }
             }, '->', {
                 tooltip: this.expandCollapseTooltip,
-                cls: "expand-collapse", 
-                text: this.expandText, 
+                cls: "expand-collapse",
+                text: this.expandText + btnPostfix + expandDiv,
                 handler: function(cmp) {
                     if (!cmp._expanded) {
-                        cmp.setText(this.collapseText);
+                        cmp.setText(this.collapseText + btnPostfix + collapseDiv);
                         westPanel2.setWidth(415);
                     } else {
-                        cmp.setText(this.expandText);
+                        cmp.setText(this.expandText + btnPostfix + expandDiv);
                         westPanel2.setWidth(200);
                     }
                     westPanel2.ownerCt.doLayout();
@@ -347,26 +350,32 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
             defaults:{ autoScroll:true },
             collapseMode: "mini",
             items: [{
-			    xtype: 'treepanel',
-			    enableDrag: true,
-			    enableDrop: false,
-			    loader: new Ext.tree.TreeLoader(),
-			    root: new Ext.tree.AsyncTreeNode(),
-			    rootVisible: false,
-			    title: this.thematicText,
-			    layout: "fit",
-			    id: "thematic_tree",
-			    flex: 1,
-			    split: true,
-			    width: 200,
-			    region: "west"
-		    }, {
-			    xtype: 'panel',
-			    layout: "border",
-			    width: 215,
-			    region: "center",
-			    items: westPanelTabs
-		    }]
+                layout: 'border',
+                width: 200,
+                autoScroll: false,
+                xtype: 'container',
+                split: true,
+                region: "west",
+                items: [{
+                    xtype: 'treepanel',
+                    region: "center",
+                    autoScroll: true,
+                    enableDrag: true,
+                    enableDrop: false,
+                    loader: new Ext.tree.TreeLoader(),
+                    root: new Ext.tree.AsyncTreeNode(),
+                    rootVisible: false,
+                    title: this.thematicText,
+                    layout: "fit",
+                    id: "thematic_tree"
+                }, legendContainerContainer]
+            }, {
+                xtype: 'panel',
+                layout: "border",
+                width: 215,
+                region: "center",
+                items: westPanelTabs
+            }]
         }); 
         /** slutt: import fra gammel versjon */    	
         
