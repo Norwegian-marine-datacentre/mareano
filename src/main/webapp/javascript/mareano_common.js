@@ -11,10 +11,13 @@ function loadMareano(mapPanel, app) {
         layertree.getRootNode().cascade(function(n) {
             var id = n.attributes.layer && n.attributes.layer.metadata['kartlagId'];
             if (id) {
-                if (n.disabled === true) {
-                    Ext.get(id).addClass('out-of-scale');
-                } else {
-                    Ext.get(id).removeClass('out-of-scale');
+                var legdiv = Ext.get(id);
+                if (legdiv !== null) {
+                    if (n.disabled === true) {
+                        legdiv.addClass('out-of-scale');
+                    } else {
+                        legdiv.removeClass('out-of-scale');
+                    }
                 }
             }
         });
