@@ -457,7 +457,7 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
             control: new OpenLayers.Control.ZoomBox({alwaysZoom:true}),
             iconCls: "icon-zoom-to", //app\static\externals\openlayers\img\drag-rectangle-on.png
             map: this.mapPanel.map,
-            toggleGroup: "draw",
+            toggleGroup: this.toggleGroup,
             tooltip: this.zoomBoxTooltip
         });	          
     	
