@@ -1,3 +1,644 @@
+(function() {
+    Ext.preg("gxp_layertree", gxp.plugins.LayerTree);
+})();
+
+Ext.ns("Mareano");
+
+Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
+
+    // Begin i18n.
+    zoomSliderText: "<div>Zoom Level: {zoom}</div><div>Scale: 1:{scale}</div>",
+    loadConfigErrorText: "Trouble reading saved configuration: <br />",
+    loadConfigErrorDefaultText: "Server Error.",
+    xhrTroubleText: "Communication Trouble: Status ",
+    layersText: "Kartlag",
+    titleText: "Title",
+    saveErrorText: "Trouble saving: ",
+    bookmarkText: "Bookmark URL",
+    permakinkText: 'Permalink',
+    appInfoText: "Mareano",
+    aboutText: "About GeoExplorer",
+    mapInfoText: "Map Info",
+    descriptionText: "Description",
+    contactText: "Contact",
+    aboutThisMapText: "About this Map",
+    thematicText: "Temakart",
+    dataSuppliedText: "Data levert av:",
+    legendTitle: "Tegnforklaring",
+    infoTitle: "Info om kartlag",
+    helpTitle: "Hjelp",
+    zoomBoxTooltip: "Zoom til omr\u00e5de",
+    mousePositionText: "Koordinater (WGS84): ",
+    goToTooltip: "G&aring; til koordinat",
+    goToText: "G&aring; til koordinat",
+    goToPrompt: "Posisjon i WGS84 (Breddegrad, Lengdegrad - for eksempel: 60.2,1.5):",
+    expandText: "Expand Layers",
+    collapseText: "Collapse Layers",
+    expandCollapseTooltip: "Expand or collapse the Layers panel",
+    visibilityText: "Turn off",
+    visibilityTooltip: "Turn off all overlays",
+    // End i18n.
+
+    constructor: function(config) {
+        if (config.authStatus === 401) {
+            // user has not authenticated or is not authorized
+            this.authorizedRoles = [];
+        } else {
+            // user has authenticated or auth back-end is not available
+            this.authorizedRoles = ["ROLE_ADMINISTRATOR"];
+        }
+        // should not be persisted or accessed again
+        delete config.authStatus;
+        var me = this;
+        config.tools = [
+            {
+                ptype: "gxp_layertree",
+                outputConfig: {
+                    id: "layertree",
+                    enableDD:true,
+                    plugins: [{
+                        ptype: "gx_treenodeactions",
+                        actions: [{
+                            action: "zoomscale",
+                            qtip: me.zoomScaleTip,
+                        }],
+                        listeners: {
+                            action: function(node, action, evt) {
+                                var layer = node.layer;
+                                if (layer.maxExtent) {
+                                    layer.map.zoomToExtent(layer.maxExtent, true);
+                                }
+                            }
+                        }
+                    }]
+                },
+                outputTarget: "tree"
+            }/*, {
+                ptype: "gxp_legend",
+                outputTarget: 'legend',
+                outputConfig: {autoScroll: true}
+            }, {
+                ptype: "gxp_addlayers",
+                actionTarget: "tree.tbar",
+                upload: true
+            }*/, {
+                ptype: "gxp_removelayer",
+                actionTarget: ["tree.tbar", "layertree.contextMenu"]
+            }, {
+                ptype: "gxp_layerproperties",
+                actionTarget: ["tree.tbar", "layertree.contextMenu"]
+            }/*, {
+                ptype: "gxp_styler",
+                actionTarget: ["tree.tbar", "layertree.contextMenu"]
+            }*/, {
+                ptype: "gxp_zoomtolayerextent",
+                actionTarget: ["tree.tbar", {target: "layertree.contextMenu", index: 0}]
+            }, {
+                ptype: "gxp_navigation", toggleGroup: this.toggleGroup,
+                actionTarget: {target: "paneltbar", index: 6}
+            }, {
+                ptype: "gxp_wmsgetfeatureinfo", toggleGroup: this.toggleGroup,
+                actionTarget: {target: "paneltbar", index: 7}
+            }, {
+                ptype: "gxp_featuremanager",
+                id: "featuremanager",
+                maxFeatures: 20,
+                paging: false
+            }/*, {
+                ptype: "gxp_featureeditor",
+                featureManager: "featuremanager",
+                autoLoadFeature: true,
+                toggleGroup: this.toggleGroup,
+                actionTarget: {target: "paneltbar", index: 8}
+            }*/, {
+                ptype: "gxp_measure", toggleGroup: this.toggleGroup,
+                controlOptions: {immediate: true},
+                actionTarget: {target: "paneltbar", index: 10}
+            }, {
+                ptype: "gxp_zoom",
+                actionTarget: {target: "paneltbar", index: 11}
+            }, {
+                ptype: "gxp_navigationhistory",
+                actionTarget: {target: "paneltbar", index: 13}
+            }, {
+                ptype: "gxp_zoomtoextent",
+                actionTarget: {target: "paneltbar", index: 15}
+            }, {
+                ptype: "gxp_print",
+                customParams: {outputFilename: 'GeoExplorer-print'},
+                printService: config.printService,
+                actionTarget: {target: "paneltbar", index: 5}
+            }, {
+                actions: ["zoomboxbutton"],  actionTarget: "paneltbar"
+            }, {
+                actions: ["-", "gaaTilKoordButton"], actionTarget: "paneltbar"
+            }, {
+                actions: ["gaaTilHavCombo"], actionTarget: "paneltbar"
+            }, {
+                actions: ["-", "mouseposition"], actionTarget: "paneltbar"
+            }, {
+                actions: ["->", "mareanoNorskBtn"], actionTarget: "paneltbar"
+            }, {
+                actions: ["mareanoEngelskBtn"], actionTarget: "paneltbar"
+            }
+//            , {
+//                ptype: "gxp_googleearth",
+//                actionTarget: {target: "paneltbar", index: 17},
+//                apiKeys: {
+//                    "localhost": "ABQIAAAAeDjUod8ItM9dBg5_lz0esxTnme5EwnLVtEDGnh-lFVzRJhbdQhQBX5VH8Rb3adNACjSR5kaCLQuBmw",
+//                    "localhost:8080": "ABQIAAAAeDjUod8ItM9dBg5_lz0esxTnme5EwnLVtEDGnh-lFVzRJhbdQhQBX5VH8Rb3adNACjSR5kaCLQuBmw",
+//                    "example.com": "-your-api-key-here-"
+//                }
+//            }
+        ];
+
+        GeoExplorer.Composer.superclass.constructor.apply(this, arguments);
+    },
+
+    createTools: function() {
+        Mareano.Composer.superclass.createTools.apply(this, arguments);
+        var zoomBoxAction = new GeoExt.Action({
+            control: new OpenLayers.Control.ZoomBox({alwaysZoom:true}),
+            iconCls: "icon-zoom-to", //app\static\externals\openlayers\img\drag-rectangle-on.png
+            map: this.mapPanel.map,
+            id: "zoomboxbutton",
+            toggleGroup: this.toggleGroup,
+            tooltip: this.zoomBoxTooltip
+        });
+        new Ext.Button(zoomBoxAction);
+
+        Proj4js.defs["EPSG:32633"] = "+proj=utm +zone=33 +ellps=WGS84 +datum=WGS84 +units=m +no_defs";
+        var oSrcPrj = new Proj4js.Proj('WGS84');
+        var oDestPrj = new Proj4js.Proj('EPSG:32633');
+        var me = this;
+        function formatLonlats(lonLat) {
+            var lat = lonLat.lat;
+            var longi = lonLat.lon;
+            var aPoint = new Proj4js.Point( longi, lat );
+            Proj4js.transform(oDestPrj,oSrcPrj,aPoint);
+
+            var ns = OpenLayers.Util.getFormattedLonLat(aPoint.y);
+            var ew = OpenLayers.Util.getFormattedLonLat(aPoint.x,'lon');
+
+            return me.mousePositionText + ns + ', ' + ew;
+            // + ' - EPSG:32633: (' + lat + ', ' + longi + ')';
+        }
+        MousePositionBox = Ext.extend(Ext.BoxComponent, {
+            map: null,
+            afterRender: function() {
+                var control = new OpenLayers.Control.MousePosition({
+                    div: this.getEl().dom,
+                    numDigits: 0,
+                    prefix: "",
+                    formatOutput: formatLonlats
+                });
+                this.map.addControl(control);
+                MousePositionBox.superclass.afterRender.apply(this, arguments);
+            }
+        });
+        var tmpMouseP = new MousePositionBox( {id: "mouseposition", map: this.mapPanel.map} );
+        var gaaTilKoord = new Ext.Button({
+            id: "gaaTilKoordButton",
+            tooltip: this.goToTooltip,
+            text: this.goToText,
+            handler: function(){
+                Ext.MessageBox.prompt('Name', this.goToPrompt, showResultText);
+                function showResultText(btn, text){
+                    var thisMapPanel = Ext.ComponentMgr.all.find(function(c) {
+                        return c instanceof GeoExt.MapPanel;
+                    });
+                    var bar = text.split(",");
+                    for(var i = 0;i<bar.length;i++){
+                        bar[i] = bar[i].split(",");
+                    }
+                    var x = bar[0];
+                    var y = bar[1];
+                    var newPoint = new Proj4js.Point( y, x );
+                    newPoint.y = y;
+                    newPoint.x = x;
+                    Proj4js.transform(new Proj4js.Proj('WGS84'),new Proj4js.Proj('EPSG:32633'), newPoint);
+                    thisMapPanel.map.panTo( new OpenLayers.LonLat( newPoint.y, newPoint.x ) ); // -1644,6934116 ) );
+                };
+            },
+            scope: this
+        });
+        var gaaTilHav = new Ext.form.ComboBox({
+            id: "gaaTilHavCombo",
+            fieldLabel: 'Number',
+            hiddenName: 'number',
+            store: new Ext.data.SimpleStore({
+                fields: ['number'],
+                data : [ [this.zoomToItem1], [this.zoomToItem2], [this.zoomToItem3], [this.zoomToItem4], [this.zoomToItem5] ]
+            }),
+            displayField: 'number',
+            height: 10,
+            typeAhead: true,
+            mode: 'local',
+            triggerAction: 'all',
+            emptyText: this.zoomToEmptyText,
+            selectOnFocus:true,
+            listeners: {
+                select: {
+                    fn:function(combo, value) {
+                        var thisMapPanel = Ext.ComponentMgr.all.find(function(c) {
+                            return c instanceof GeoExt.MapPanel;
+                        });
+                        if ( combo.getValue() == this.zoomToItem2 )
+                            thisMapPanel.map.panTo( new OpenLayers.LonLat( -1644,7334116 ) );
+                        else if ( combo.getValue() == this.zoomToItem1 )
+                            thisMapPanel.map.panTo( new OpenLayers.LonLat( 1088474,8089849 ) );
+                        else if ( combo.getValue() == this.zoomToItem3 )
+                            thisMapPanel.map.panTo( new OpenLayers.LonLat( -1644,6934116 ) );
+                        else if ( combo.getValue() == this.zoomToItem4 )
+                            thisMapPanel.map.panTo( new OpenLayers.LonLat( -1644,6434116 ) );
+                        else if ( combo.getValue() == this.zoomToItem5 )
+                            thisMapPanel.map.panTo( new OpenLayers.LonLat( 1000000,8999999 ) );
+                    },
+                    scope: this
+                }
+            }
+        });
+
+        var mareanoNorskBtn = new Ext.Button({
+            tooltip: "Norsk",
+            id: "mareanoNorskBtn",
+            buttonAlign: "center",
+            handler: function(){
+                if (location.href.indexOf("mareano.html") === -1) {
+                    location.href = location.href.substring(0,location.href.lastIndexOf('/mareano_en.html')) + "/mareano.html";
+                }
+            },
+            iconCls: "icon-norsk",
+            scope: this
+        });
+        var mareanoEngelskBtn = new Ext.Button({
+            id: "mareanoEngelskBtn",
+            tooltip: "English",
+            buttonAlign: "right",
+            handler: function(){
+                if (location.href.indexOf("mareano_en.html") === -1) {
+                    location.href = location.href.substring(0,location.href.lastIndexOf('/mareano.html')) + "/mareano_en.html";
+                }
+            },
+            iconCls: "icon-english",
+            scope: this
+        });    
+
+        /*var tools = [
+             "",
+             zoomBoxAction,
+             "-",
+             gaaTilKoord, 
+             gaaTilHav,   
+             "-",
+             tmpMouseP,
+             "->",
+             mareanoNorskBtn,
+             mareanoEngelskBtn
+        ];
+        return tools;*/
+    },
+
+    // there is currently no better way than overriding initPortal and copying the contents
+    // TODO revisit this
+    initPortal: function() {
+
+        /** import fra gammel versjon  */
+        var dataLevertPanel = new Ext.Panel({
+            border: true,
+            unstyled: true,
+            region: "south",
+            height: 40,
+            split: true,
+            collapsed: true,
+            collapsible: true,
+            collapseMode: "mini",
+            html: this.dataSuppliedText +
+                        "<img src=\"/geodata/theme/app/img/geosilk/kilder/DN_lite.png\" title=\"Direktoratet for naturforvaltning\"/>"+
+                        "<img src=\"/geodata/theme/app/img/geosilk/kilder/FD_lite.png\" title=\"Fiskeridirektoratet\"/>"+
+                        "<img src=\"/geodata/theme/app/img/geosilk/kilder/HI_lite.png\" title=\"Havforskningsinstituttet\"/>"+
+                        "<img src=\"/geodata/theme/app/img/geosilk/kilder/NGU_lite.png\" title=\"Norges geologiske unders&oslash;kelse\"/>"+
+                        "<img src=\"/geodata/theme/app/img/geosilk/kilder/OD_lite.png\" title=\"Oljedirektoratet\"/>"+
+                        "<img src=\"/geodata/theme/app/img/geosilk/kilder/kystverket_lite.jpg\" title=\"Kystverket\"/>"+
+                        "<img src=\"/geodata/theme/app/img/geosilk/kilder/SK_lite.png\" title=\"Statens kartverk\"/>"
+        });
+
+            var mareanoLegendContainer = new Ext.Panel({
+                region: 'center',
+                layout: 'fit',
+                autoScroll: true,
+                border: false,
+                height: 200,
+                html: '',
+                id: 'newLegend'
+            });
+            var dummyLegendContainer = new Ext.Panel({
+                region: 'center',
+                xtype: 'container',
+                layout: "fit",
+                border: false,
+                height:0,
+                width:0,
+                id: 'legend',
+                'visible':false
+            });
+            var legendContainerContainerItems = [dummyLegendContainer, mareanoLegendContainer];
+
+        var legendContainerContainer = new Ext.Panel({
+            border: false,
+            title: this.legendTitle,
+            layout: "border",
+            region: "south",
+            width: 215,
+            height: 200,
+            flex: 1,
+            split: true,
+            collapsible: true,
+            CollapseMode: 'header', //PlaceHolder
+            items: legendContainerContainerItems
+        });
+
+/*        var westPanel = new gxp.CrumbPanel({
+            id: "tree",
+            region: "west",
+            width: 320,
+            split: true,
+            collapsible: true,
+            collapseMode: "mini",
+            hideCollapseTool: true,
+            header: false
+        });*/
+
+        /** westpanel *****/
+        var westPanel = new Ext.Panel({
+            border: true,
+            title: this.layersText,
+            layout: "fit",
+            region: "center",
+            width: 215,
+            split: true,
+            collapseMode: "mini",
+            resizable: true,
+            items: [
+                    {autoScroll:true,tbar:[],border:false, id:'tree', resizable: true, flex: 0,height:100}
+            ]
+        });
+
+        var tipsPanel = new Ext.Panel({
+            title: this.infoTitle,
+            html:  "",
+            region: 'center',
+            id: 'tips',
+            preventBodyReset: true,
+            autoHeight: true
+        });
+
+        var westPanelTabs = new Ext.TabPanel({
+            activeTab: 0,
+            region: "center",
+            items: [westPanel, tipsPanel,
+            {title: this.helpTitle,
+                html: this.helpText,
+                disabled: Ext.isEmpty(this.helpText),
+                region: "center"}
+            ]
+        });
+
+        var btnPostfix = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+        var expandDiv = '<div style="position:absolute; top: 5px; right: 5px;" class="x-tool x-tool-toggle x-tool-collapse-east">&nbsp;</div>';
+        var collapseDiv = '<div style="position:absolute; top: 5px; right: 5px;" class="x-tool x-tool-toggle x-tool-collapse-west">&nbsp;</div>';
+
+        var westPanel2 = new Ext.Panel({
+            border: true,
+            layout: "border",
+            region: "west",
+            unstyled:true,
+            width: 200,
+            tbar: [{
+                text: this.visibilityText,
+                tooltip: this.visibilityTooltip,
+                handler: function() {
+                    var tree = Ext.getCmp('thematic_tree');
+                    var checked = tree.getChecked();
+                    for (var i=0, ii = checked.length; i<ii; ++i) {
+                        checked[i].ui.toggleCheck(false);
+                    }
+                }
+            }, '->', {
+                tooltip: this.expandCollapseTooltip,
+                cls: "expand-collapse",
+                text: this.expandText + btnPostfix + expandDiv,
+                handler: function(cmp) {
+                    if (!cmp._expanded) {
+                        cmp.setText(this.collapseText + btnPostfix + collapseDiv);
+                        westPanel2.setWidth(415);
+                    } else {
+                        cmp.setText(this.expandText + btnPostfix + expandDiv);
+                        westPanel2.setWidth(200);
+                    }
+                    westPanel2.ownerCt.doLayout();
+                    cmp._expanded = !cmp._expanded;
+                },
+                scope: this
+            }],
+            split: true,
+            defaults:{ autoScroll:true },
+            collapseMode: "mini",
+            items: [{
+                layout: 'border',
+                width: 200,
+                autoScroll: false,
+                xtype: 'container',
+                split: true,
+                region: "west",
+                items: [{
+                    xtype: 'treepanel',
+                    region: "center",
+                    autoScroll: true,
+                    enableDrag: true,
+                    enableDrop: false,
+                    loader: new Ext.tree.TreeLoader(),
+                    root: new Ext.tree.AsyncTreeNode(),
+                    rootVisible: false,
+                    title: this.thematicText,
+                    layout: "fit",
+                    id: "thematic_tree"
+                }, legendContainerContainer]
+            }, {
+                xtype: 'panel',
+                layout: "border",
+                width: 215,
+                region: "center",
+                items: westPanelTabs
+            }]
+        });
+        /** slutt: import fra gammel versjon */
+
+        var southPanel = new Ext.Panel({
+            region: "south",
+            id: "south",
+            height: 220,
+            border: false,
+            split: true,
+            collapsible: true,
+            collapseMode: "mini",
+            collapsed: true,
+            hideCollapseTool: true,
+            header: false,
+            layout: "border",
+            items: [{
+                region: "center",
+                id: "table",
+                title: this.tableText,
+                layout: "fit"
+            }, {
+                region: "west",
+                width: 320,
+                id: "query",
+                title: this.queryText,
+                split: true,
+                collapsible: true,
+                collapseMode: "mini",
+                collapsed: true,
+                hideCollapseTool: true,
+                layout: "fit"
+            }]
+        });
+        var toolbar = new Ext.Toolbar({
+            disabled: true,
+            id: 'paneltbar',
+            items: []
+        });
+        this.on("ready", function() {
+            // enable only those items that were not specifically disabled
+            var disabled = toolbar.items.filterBy(function(item) {
+                return item.initialConfig && item.initialConfig.disabled;
+            });
+            toolbar.enable();
+            disabled.each(function(item) {
+                item.disable();
+            });
+        });
+
+        var googleEarthPanel = new gxp.GoogleEarthPanel({
+            mapPanel: this.mapPanel,
+            id: "globe",
+            tbar: [],
+            listeners: {
+                beforeadd: function(record) {
+                    return record.get("group") !== "background";
+                }
+            }
+        });
+
+        // TODO: continue making this Google Earth Panel more independent
+        // Currently, it's too tightly tied into the viewer.
+        // In the meantime, we keep track of all items that the were already
+        // disabled when the panel is shown.
+        var preGoogleDisabled = [];
+
+        googleEarthPanel.on("show", function() {
+            preGoogleDisabled.length = 0;
+            toolbar.items.each(function(item) {
+                if (item.disabled) {
+                    preGoogleDisabled.push(item);
+                }
+            });
+            toolbar.disable();
+            // loop over all the tools and remove their output
+            for (var key in this.tools) {
+                var tool = this.tools[key];
+                if (tool.outputTarget === "map") {
+                    tool.removeOutput();
+                }
+            }
+            var layersContainer = Ext.getCmp("tree");
+            var layersToolbar = layersContainer && layersContainer.getTopToolbar();
+            if (layersToolbar) {
+                layersToolbar.items.each(function(item) {
+                    if (item.disabled) {
+                        preGoogleDisabled.push(item);
+                    }
+                });
+                layersToolbar.disable();
+            }
+        }, this);
+
+        googleEarthPanel.on("hide", function() {
+            // re-enable all tools
+            toolbar.enable();
+
+            var layersContainer = Ext.getCmp("tree");
+            var layersToolbar = layersContainer && layersContainer.getTopToolbar();
+            if (layersToolbar) {
+                layersToolbar.enable();
+            }
+            // now go back and disable all things that were disabled previously
+            for (var i=0, ii=preGoogleDisabled.length; i<ii; ++i) {
+                preGoogleDisabled[i].disable();
+            }
+
+        }, this);
+
+        this.mapPanelContainer = new Ext.Panel({
+            layout: "card",
+            region: "center",
+            defaults: {
+                border: false
+            },
+            items: [
+                this.mapPanel,
+                googleEarthPanel
+            ],
+            activeItem: 0
+        });
+
+        var innerNorthPanel = new Ext.Panel({
+            border: true,
+            region: "north",
+            split: true,
+            id: "topPanelHeading",
+            collapseMode: "mini",
+            bodyStyle: "background-image:url('http://www.mareano.no/kart/images/nav-main-background.jpg')",
+            html:'<table width="100%" cellspacing="0"><tr height="45"> ' + //content reloaded with content from MareanoController
+            '<td valign="middle" height="45" style="background-image:url(http://www.mareano.no/kart/images/top/ny_heading_397.gif); background-repeat: repeat;"> ' +
+            '<a style="text-decoration: none" target="_top" href="http://www.mareano.no"> ' +
+            '<img border="0" alt="MAREANO<br>samler kunnskap om havet" src="http://www.mareano.no/kart/images/top/ny_logo.gif"> ' +
+            '</a> ' +
+            '</td> ' +
+            '<td width="627" align="right" height="45" style="background-image:url(http://www.mareano.no/kart/images/top/ny_heading_627.gif);"> </td> ' +
+            '</tr></table> '+
+            '<div id="nav-main"><ul id="nav"><li><a href="/start">Startsiden</a></li></ul></div>'
+        });
+
+        var northPanel = new Ext.Panel({
+            height: 95,
+            split: true,
+            unstyled:true,
+            collapseMode: "mini",
+            region: "north",
+            items: [innerNorthPanel, toolbar]
+        });
+
+        this.portalItems = [{
+            region: "center",
+            layout: "border",
+            items: [
+                northPanel,
+                this.mapPanelContainer,
+                westPanel2,
+                southPanel
+            ]
+        }];
+
+        GeoExplorer.Composer.superclass.initPortal.apply(this, arguments);
+
+    }
+
+});
+
+// end of GeoExplorer overrides
+
 var silent = false;
 var kartlagInfoState = ""; //used by removeLayerLegendAndInfo(mapOfGMLspesialpunkt, kartlagId)
 
