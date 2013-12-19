@@ -39,120 +39,55 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
     visibilityTooltip: "Turn off all overlays",
     // End i18n.
 
-    constructor: function(config) {
-        if (config.authStatus === 401) {
-            // user has not authenticated or is not authorized
-            this.authorizedRoles = [];
-        } else {
-            // user has authenticated or auth back-end is not available
-            this.authorizedRoles = ["ROLE_ADMINISTRATOR"];
+    loadConfig: function(config) {
+        var idx;
+        for (var i=0, ii=config.tools.length; i<ii; ++i) {
+            var tool = config.tools[i];
+            if (tool.ptype === "gxp_layermanager") {
+                idx = i;
+                break;
+            }
         }
-        // should not be persisted or accessed again
-        delete config.authStatus;
         var me = this;
-        config.tools = [
-            {
-                ptype: "gxp_layertree",
-                outputConfig: {
-                    id: "layertree",
-                    enableDD:true,
-                    plugins: [{
-                        ptype: "gx_treenodeactions",
-                        actions: [{
-                            action: "zoomscale",
-                            qtip: me.zoomScaleTip,
-                        }],
-                        listeners: {
-                            action: function(node, action, evt) {
-                                var layer = node.layer;
-                                if (layer.maxExtent) {
-                                    layer.map.zoomToExtent(layer.maxExtent, true);
-                                }
+        config.tools.splice(idx, 1);
+        config.tools.splice(0, 0 ,{
+            ptype: "gxp_layertree",
+            outputConfig: {
+                id: "layers",
+                enableDD:true,
+                plugins: [{
+                    ptype: "gx_treenodeactions",
+                    actions: [{
+                        action: "zoomscale",
+                        qtip: me.zoomScaleTip,
+                    }],
+                    listeners: {
+                        action: function(node, action, evt) {
+                            var layer = node.layer;
+                            if (layer.maxExtent) {
+                                layer.map.zoomToExtent(layer.maxExtent, true);
                             }
                         }
-                    }]
-                },
-                outputTarget: "tree"
-            }/*, {
-                ptype: "gxp_legend",
-                outputTarget: 'legend',
-                outputConfig: {autoScroll: true}
-            }, {
-                ptype: "gxp_addlayers",
-                actionTarget: "tree.tbar",
-                upload: true
-            }*/, {
-                ptype: "gxp_removelayer",
-                actionTarget: ["tree.tbar", "layertree.contextMenu"]
-            }, {
-                ptype: "gxp_layerproperties",
-                actionTarget: ["tree.tbar", "layertree.contextMenu"]
-            }/*, {
-                ptype: "gxp_styler",
-                actionTarget: ["tree.tbar", "layertree.contextMenu"]
-            }*/, {
-                ptype: "gxp_zoomtolayerextent",
-                actionTarget: ["tree.tbar", {target: "layertree.contextMenu", index: 0}]
-            }, {
-                ptype: "gxp_navigation", toggleGroup: this.toggleGroup,
-                actionTarget: {target: "paneltbar", index: 6}
-            }, {
-                ptype: "gxp_wmsgetfeatureinfo", toggleGroup: this.toggleGroup,
-                actionTarget: {target: "paneltbar", index: 7}
-            }, {
-                ptype: "gxp_featuremanager",
-                id: "featuremanager",
-                maxFeatures: 20,
-                paging: false
-            }/*, {
-                ptype: "gxp_featureeditor",
-                featureManager: "featuremanager",
-                autoLoadFeature: true,
-                toggleGroup: this.toggleGroup,
-                actionTarget: {target: "paneltbar", index: 8}
-            }*/, {
-                ptype: "gxp_measure", toggleGroup: this.toggleGroup,
-                controlOptions: {immediate: true},
-                actionTarget: {target: "paneltbar", index: 10}
-            }, {
-                ptype: "gxp_zoom",
-                actionTarget: {target: "paneltbar", index: 11}
-            }, {
-                ptype: "gxp_navigationhistory",
-                actionTarget: {target: "paneltbar", index: 13}
-            }, {
-                ptype: "gxp_zoomtoextent",
-                actionTarget: {target: "paneltbar", index: 15}
-            }, {
-                ptype: "gxp_print",
-                customParams: {outputFilename: 'GeoExplorer-print'},
-                printService: config.printService,
-                actionTarget: {target: "paneltbar", index: 5}
-            }, {
-                actions: ["zoomboxbutton"],  actionTarget: "paneltbar"
-            }, {
-                actions: ["-", "gaaTilKoordButton"], actionTarget: "paneltbar"
-            }, {
-                actions: ["gaaTilHavCombo"], actionTarget: "paneltbar"
-            }, {
-                actions: ["-", "mouseposition"], actionTarget: "paneltbar"
-            }, {
-                actions: ["->", "mareanoNorskBtn"], actionTarget: "paneltbar"
-            }, {
-                actions: ["mareanoEngelskBtn"], actionTarget: "paneltbar"
-            }
-//            , {
-//                ptype: "gxp_googleearth",
-//                actionTarget: {target: "paneltbar", index: 17},
-//                apiKeys: {
-//                    "localhost": "ABQIAAAAeDjUod8ItM9dBg5_lz0esxTnme5EwnLVtEDGnh-lFVzRJhbdQhQBX5VH8Rb3adNACjSR5kaCLQuBmw",
-//                    "localhost:8080": "ABQIAAAAeDjUod8ItM9dBg5_lz0esxTnme5EwnLVtEDGnh-lFVzRJhbdQhQBX5VH8Rb3adNACjSR5kaCLQuBmw",
-//                    "example.com": "-your-api-key-here-"
-//                }
-//            }
-        ];
-
-        GeoExplorer.Composer.superclass.constructor.apply(this, arguments);
+                    }
+                }]
+            },
+            outputTarget: "tree"
+        });
+        // TODO: get rid of gxp_legend, gxp_addlayers, gxp_styler, gxp_featureeditor, gxp_googleearth
+        config.tools.push({
+            actions: ["zoomboxbutton"],  actionTarget: "paneltbar"
+        }, {
+            actions: ["-", "gaaTilKoordButton"], actionTarget: "paneltbar"
+        }, {
+            actions: ["gaaTilHavCombo"], actionTarget: "paneltbar"
+        }, {
+            actions: ["-", "mouseposition"], actionTarget: "paneltbar"
+        }, {
+            actions: ["->", "mareanoNorskBtn"], actionTarget: "paneltbar"
+        }, {
+            actions: ["mareanoEngelskBtn"], actionTarget: "paneltbar"
+        });
+        Mareano.Composer.superclass.loadConfig.call(this, config);
     },
 
     createTools: function() {
@@ -646,7 +581,7 @@ function loadMareano(mapPanel, app) {
 	addOverviewMapAndKeyboardDefaults(mapPanel.map);
     app.mapOfGMLspesialpunkt = new Object();        
     
-    var layertree = Ext.getCmp("layertree");
+    var layertree = Ext.getCmp("layers");
 
     var updateLegendScale = function() {
         layertree.getRootNode().cascade(function(n) {

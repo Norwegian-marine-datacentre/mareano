@@ -70,10 +70,10 @@
    				/* when OL encounters a 404, don't display the pink image */
             	display: none !important;
     		}
-            #layertree .x-tree-node-cb[type="checkbox"] {
+            #layers .x-tree-node-cb[type="checkbox"] {
             	display: none;
             }
-            #layertree *.general-layers-w-checkbox input.x-tree-node-cb[type="checkbox"] {
+            #layers *.general-layers-w-checkbox input.x-tree-node-cb[type="checkbox"] {
                 display:inline;
 			}            
         </style>
@@ -370,7 +370,7 @@
                     </c:forEach>
                     treeRoot.getRootNode().appendChild( mergedSomeHovedtema );
                     /***********************************/
-                    var rootRightTree = Ext.getCmp('layertree');
+                    var rootRightTree = Ext.getCmp('layers');
                     rootRightTree.getRootNode().appendChild( addGenerelleLayerToGroup("generelle", "General Maps", this.map, this.mapPanel, generelleLayers, store, app) );                    
                     /***********************************/
                     var tmp = Ext.ComponentMgr.all.find(function(c) {
