@@ -72,8 +72,6 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
             outputTarget: "tree"
         });
         config.tools.push({
-            actions: ["zoomboxbutton"],  actionTarget: "paneltbar"
-        }, {
             actions: ["-", "gaaTilKoordButton"], actionTarget: "paneltbar"
         }, {
             actions: ["gaaTilHavCombo"], actionTarget: "paneltbar"
@@ -89,16 +87,6 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
 
     createTools: function() {
         Mareano.Composer.superclass.createTools.apply(this, arguments);
-        var zoomBoxAction = new GeoExt.Action({
-            control: new OpenLayers.Control.ZoomBox({alwaysZoom:true}),
-            iconCls: "icon-zoom-to", //app\static\externals\openlayers\img\drag-rectangle-on.png
-            map: this.mapPanel.map,
-            id: "zoomboxbutton",
-            toggleGroup: this.toggleGroup,
-            tooltip: this.zoomBoxTooltip
-        });
-        new Ext.Button(zoomBoxAction);
-
         Proj4js.defs["EPSG:32633"] = "+proj=utm +zone=33 +ellps=WGS84 +datum=WGS84 +units=m +no_defs";
         var oSrcPrj = new Proj4js.Proj('WGS84');
         var oDestPrj = new Proj4js.Proj('EPSG:32633');
