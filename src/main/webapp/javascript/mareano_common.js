@@ -1,5 +1,7 @@
 (function() {
     Ext.preg("gxp_layertree", gxp.plugins.LayerTree);
+    Proj4js.defs["EPSG:32633"] = "+proj=utm +zone=33 +ellps=WGS84 +datum=WGS84 +units=m +no_defs";
+    OpenLayers.DOTS_PER_INCH = 96.047217;
 })();
 
 Ext.ns("Mareano");
@@ -32,6 +34,11 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
     goToTooltip: "G&aring; til koordinat",
     goToText: "G&aring; til koordinat",
     goToPrompt: "Posisjon i WGS84 (Breddegrad, Lengdegrad - for eksempel: 60.2,1.5):",
+    zoomToItem1: "Barents Sea",
+    zoomToItem2: "Norwegian Sea",
+    zoomToItem3: "North Sea",
+    zoomToItem4: "Skagerrak",
+    zoomToItem5: "Polhavet",
     expandText: "Expand Layers",
     collapseText: "Collapse Layers",
     expandCollapseTooltip: "Expand or collapse the Layers panel",
@@ -39,14 +46,23 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
     visibilityTooltip: "Turn off all overlays",
     // End i18n.
 
+    constructor: function() {
+        Mareano.Composer.superclass.constructor.apply(this, arguments);    
+        this.on("beforecreateportal", this.modifyPortal, this);
+    },
+
     loadConfig: function(config) {
-        var ptypes = ["gxp_layermanager", "gxp_legend", "gxp_addlayers", "gxp_styler", "gxp_featureeditor", "gxp_googleearth"];
+        var ptypes = ["gxp_layermanager", "gxp_legend", "gxp_addlayers",
+            "gxp_styler", "gxp_featureeditor", "gxp_googleearth"];
         for (var i=config.tools.length-1; i>= 0; --i) {
             var tool = config.tools[i];
             if (tool.ptype == "gxp_zoom") {
                 tool.controlOptions = {alwaysZoom:true};
             }
-            if (ptypes.indexOf(tool.ptype) !== -1 || (tool.actions && tool.actions.length > 0 && (tool.actions[0] == "->" || tool.actions[0] == "loginbutton"))) {
+            // remove the above ptypes and also the login button
+            if (ptypes.indexOf(tool.ptype) !== -1 ||
+              (tool.actions && tool.actions.length > 0 &&
+              (tool.actions[0] == "->" || tool.actions[0] == "loginbutton"))) {
                 config.tools.splice(i, 1);
             }
         }
@@ -90,7 +106,6 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
 
     createTools: function() {
         Mareano.Composer.superclass.createTools.apply(this, arguments);
-        Proj4js.defs["EPSG:32633"] = "+proj=utm +zone=33 +ellps=WGS84 +datum=WGS84 +units=m +no_defs";
         var oSrcPrj = new Proj4js.Proj('WGS84');
         var oDestPrj = new Proj4js.Proj('EPSG:32633');
         var me = this;
@@ -206,66 +221,29 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
             iconCls: "icon-english",
             scope: this
         });    
-
-        /*var tools = [
-             "",
-             zoomBoxAction,
-             "-",
-             gaaTilKoord, 
-             gaaTilHav,   
-             "-",
-             tmpMouseP,
-             "->",
-             mareanoNorskBtn,
-             mareanoEngelskBtn
-        ];
-        return tools;*/
     },
 
-    // there is currently no better way than overriding initPortal and copying the contents
-    // TODO revisit this
-    initPortal: function() {
-
-        /** import fra gammel versjon  */
-        var dataLevertPanel = new Ext.Panel({
-            border: true,
-            unstyled: true,
-            region: "south",
-            height: 40,
-            split: true,
-            collapsed: true,
-            collapsible: true,
-            collapseMode: "mini",
-            html: this.dataSuppliedText +
-                        "<img src=\"/geodata/theme/app/img/geosilk/kilder/DN_lite.png\" title=\"Direktoratet for naturforvaltning\"/>"+
-                        "<img src=\"/geodata/theme/app/img/geosilk/kilder/FD_lite.png\" title=\"Fiskeridirektoratet\"/>"+
-                        "<img src=\"/geodata/theme/app/img/geosilk/kilder/HI_lite.png\" title=\"Havforskningsinstituttet\"/>"+
-                        "<img src=\"/geodata/theme/app/img/geosilk/kilder/NGU_lite.png\" title=\"Norges geologiske unders&oslash;kelse\"/>"+
-                        "<img src=\"/geodata/theme/app/img/geosilk/kilder/OD_lite.png\" title=\"Oljedirektoratet\"/>"+
-                        "<img src=\"/geodata/theme/app/img/geosilk/kilder/kystverket_lite.jpg\" title=\"Kystverket\"/>"+
-                        "<img src=\"/geodata/theme/app/img/geosilk/kilder/SK_lite.png\" title=\"Statens kartverk\"/>"
+    modifyPortal: function() {
+        var mareanoLegendContainer = new Ext.Panel({
+            region: 'center',
+            layout: 'fit',
+            autoScroll: true,
+            border: false,
+            height: 200,
+            html: '',
+            id: 'newLegend'
         });
-
-            var mareanoLegendContainer = new Ext.Panel({
-                region: 'center',
-                layout: 'fit',
-                autoScroll: true,
-                border: false,
-                height: 200,
-                html: '',
-                id: 'newLegend'
-            });
-            var dummyLegendContainer = new Ext.Panel({
-                region: 'center',
-                xtype: 'container',
-                layout: "fit",
-                border: false,
-                height:0,
-                width:0,
-                id: 'legend',
-                'visible':false
-            });
-            var legendContainerContainerItems = [dummyLegendContainer, mareanoLegendContainer];
+        var dummyLegendContainer = new Ext.Panel({
+            region: 'center',
+            xtype: 'container',
+            layout: "fit",
+            border: false,
+            height:0,
+            width:0,
+            id: 'legend',
+            'visible':false
+        });
+        var legendContainerContainerItems = [dummyLegendContainer, mareanoLegendContainer];
 
         var legendContainerContainer = new Ext.Panel({
             border: false,
@@ -281,18 +259,6 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
             items: legendContainerContainerItems
         });
 
-/*        var westPanel = new gxp.CrumbPanel({
-            id: "tree",
-            region: "west",
-            width: 320,
-            split: true,
-            collapsible: true,
-            collapseMode: "mini",
-            hideCollapseTool: true,
-            header: false
-        });*/
-
-        /** westpanel *****/
         var westPanel = new Ext.Panel({
             border: true,
             title: this.layersText,
@@ -330,7 +296,6 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
         var btnPostfix = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
         var expandDiv = '<div style="position:absolute; top: 5px; right: 5px;" class="x-tool x-tool-toggle x-tool-collapse-east">&nbsp;</div>';
         var collapseDiv = '<div style="position:absolute; top: 5px; right: 5px;" class="x-tool x-tool-toggle x-tool-collapse-west">&nbsp;</div>';
-
         var westPanel2 = new Ext.Panel({
             border: true,
             layout: "border",
@@ -395,126 +360,6 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
                 items: westPanelTabs
             }]
         });
-        /** slutt: import fra gammel versjon */
-
-        var southPanel = new Ext.Panel({
-            region: "south",
-            id: "south",
-            height: 220,
-            border: false,
-            split: true,
-            collapsible: true,
-            collapseMode: "mini",
-            collapsed: true,
-            hideCollapseTool: true,
-            header: false,
-            layout: "border",
-            items: [{
-                region: "center",
-                id: "table",
-                title: this.tableText,
-                layout: "fit"
-            }, {
-                region: "west",
-                width: 320,
-                id: "query",
-                title: this.queryText,
-                split: true,
-                collapsible: true,
-                collapseMode: "mini",
-                collapsed: true,
-                hideCollapseTool: true,
-                layout: "fit"
-            }]
-        });
-        var toolbar = new Ext.Toolbar({
-            disabled: true,
-            id: 'paneltbar',
-            items: []
-        });
-        this.on("ready", function() {
-            // enable only those items that were not specifically disabled
-            var disabled = toolbar.items.filterBy(function(item) {
-                return item.initialConfig && item.initialConfig.disabled;
-            });
-            toolbar.enable();
-            disabled.each(function(item) {
-                item.disable();
-            });
-        });
-
-        var googleEarthPanel = new gxp.GoogleEarthPanel({
-            mapPanel: this.mapPanel,
-            id: "globe",
-            tbar: [],
-            listeners: {
-                beforeadd: function(record) {
-                    return record.get("group") !== "background";
-                }
-            }
-        });
-
-        // TODO: continue making this Google Earth Panel more independent
-        // Currently, it's too tightly tied into the viewer.
-        // In the meantime, we keep track of all items that the were already
-        // disabled when the panel is shown.
-        var preGoogleDisabled = [];
-
-        googleEarthPanel.on("show", function() {
-            preGoogleDisabled.length = 0;
-            toolbar.items.each(function(item) {
-                if (item.disabled) {
-                    preGoogleDisabled.push(item);
-                }
-            });
-            toolbar.disable();
-            // loop over all the tools and remove their output
-            for (var key in this.tools) {
-                var tool = this.tools[key];
-                if (tool.outputTarget === "map") {
-                    tool.removeOutput();
-                }
-            }
-            var layersContainer = Ext.getCmp("tree");
-            var layersToolbar = layersContainer && layersContainer.getTopToolbar();
-            if (layersToolbar) {
-                layersToolbar.items.each(function(item) {
-                    if (item.disabled) {
-                        preGoogleDisabled.push(item);
-                    }
-                });
-                layersToolbar.disable();
-            }
-        }, this);
-
-        googleEarthPanel.on("hide", function() {
-            // re-enable all tools
-            toolbar.enable();
-
-            var layersContainer = Ext.getCmp("tree");
-            var layersToolbar = layersContainer && layersContainer.getTopToolbar();
-            if (layersToolbar) {
-                layersToolbar.enable();
-            }
-            // now go back and disable all things that were disabled previously
-            for (var i=0, ii=preGoogleDisabled.length; i<ii; ++i) {
-                preGoogleDisabled[i].disable();
-            }
-
-        }, this);
-
-        this.mapPanelContainer = new Ext.Panel({
-            layout: "card",
-            region: "center",
-            defaults: {
-                border: false
-            },
-            items: [
-                this.mapPanel,
-                googleEarthPanel
-            ],
-            activeItem: 0
-        });
 
         var innerNorthPanel = new Ext.Panel({
             border: true,
@@ -540,22 +385,19 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
             unstyled:true,
             collapseMode: "mini",
             region: "north",
-            items: [innerNorthPanel, toolbar]
+            items: [innerNorthPanel, this.portalItems[0].tbar /* add the existing tbar */]
         });
 
-        this.portalItems = [{
-            region: "center",
-            layout: "border",
-            items: [
-                northPanel,
-                this.mapPanelContainer,
-                westPanel2,
-                southPanel
-            ]
-        }];
-
-        GeoExplorer.Composer.superclass.initPortal.apply(this, arguments);
-
+        for (var i = this.portalItems[0].items.length-1; i>=0; --i) {
+            // get rid of GeoExplorer's west panel
+            if (this.portalItems[0].items[i].region == "west") {
+                this.portalItems[0].items.slice(i, 1);
+            }
+        }
+        // get rid of GeoExplorer's tbar, it it part of the north panel in our case
+        delete this.portalItems[0].tbar;
+        // add our new panels here
+        this.portalItems[0].items.push(northPanel, westPanel2);
     }
 
 });
