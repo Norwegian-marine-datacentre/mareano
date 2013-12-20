@@ -40,16 +40,14 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
     // End i18n.
 
     loadConfig: function(config) {
-        var idx;
-        for (var i=0, ii=config.tools.length; i<ii; ++i) {
+        var ptypes = ["gxp_layermanager", "gxp_legend", "gxp_addlayers", "gxp_styler", "gxp_featureeditor", "gxp_googleearth"];
+        for (var i=config.tools.length-1; i>= 0; --i) {
             var tool = config.tools[i];
-            if (tool.ptype === "gxp_layermanager") {
-                idx = i;
-                break;
+            if (ptypes.indexOf(tool.ptype) !== -1 || (tool.actions && tool.actions.length > 0 && (tool.actions[0] == "->" || tool.actions[0] == "loginbutton"))) {
+                config.tools.splice(i, 1);
             }
         }
         var me = this;
-        config.tools.splice(idx, 1);
         config.tools.splice(0, 0 ,{
             ptype: "gxp_layertree",
             outputConfig: {
@@ -73,7 +71,6 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
             },
             outputTarget: "tree"
         });
-        // TODO: get rid of gxp_legend, gxp_addlayers, gxp_styler, gxp_featureeditor, gxp_googleearth
         config.tools.push({
             actions: ["zoomboxbutton"],  actionTarget: "paneltbar"
         }, {
