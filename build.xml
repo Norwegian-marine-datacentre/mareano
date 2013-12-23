@@ -35,7 +35,7 @@
         <mkdir dir="${build}/${ant.project.name}/WEB-INF/app/static/script"/>
         <java jar="externals/ringojs/run.jar" fork="true" failonerror="true">
             <sysproperty key="ringo.home" path="externals/ringojs"/>
-            <arg path="externals/buildkit/lib/buildkit/build.js"/>
+            <arg path="externals2/suite/geoexplorer/externals/buildkit/lib/buildkit/build.js"/>
             <arg line="-u -o ${build}/${ant.project.name}/WEB-INF/app/static/script buildjs.cfg"/>
         </java>
     </target>
