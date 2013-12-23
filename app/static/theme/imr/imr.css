@@ -1,5 +1,5 @@
 .x-btn .icon-geoexplorer {
-    background-image: url(img/mareanoLogo.png);
+    background-image: url(img/mareanoLogo.png) !important;
 }
 
 .x-btn .icon-norsk {

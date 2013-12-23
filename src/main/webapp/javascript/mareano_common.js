@@ -8,6 +8,8 @@ Ext.ns("Mareano");
 
 Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
 
+    appInfoText: "Mareano",
+
     constructor: function() {
         Mareano.Composer.superclass.constructor.apply(this, arguments);    
         this.on("beforecreateportal", this.modifyPortal, this);
