@@ -1,9 +1,53 @@
+.x-btn .icon-geoexplorer {
+    background-image: url(img/mareanoLogo.png);
+}
+
 .x-btn .icon-norsk {
     background-image: url(img/tillegg/norsk.gif);
 }
 
 .x-btn .icon-english {
     background-image: url(img/tillegg/english.gif);
+}
+
+.x-tree-node-leaf  .gx-tree-layer-icon {
+    background-image: url(img/geosilk/vector.png);
+    title: "vektorgrafikk";
+}
+
+.x-tree-node-leaf  .gx-tree-rasterlayer-icon-DN{
+    background-image: url(img/geosilk/kilder/DN_lite.png);
+    title: "Direktoratet for naturforvaltning";
+}
+
+.x-tree-node-leaf  .gx-tree-rasterlayer-icon-FD{
+    background-image: url(img/geosilk/kilder/FD_lite.png);
+    title: "Fiskeridirektoratet";
+}
+
+.x-tree-node-leaf  .gx-tree-rasterlayer-icon-HI{
+    background-image: url(img/geosilk/kilder/HI_lite.png);
+    title: "Havforskningsinstituttet";
+}
+
+.x-tree-node-leaf  .gx-tree-rasterlayer-icon-NGU{
+    background-image: url(img/geosilk/kilder/NGU_lite.png);
+    title: "Norges geologiske unders&oslash;kelse";
+}
+
+.x-tree-node-leaf  .gx-tree-rasterlayer-icon-OD{
+    background-image: url(img/geosilk/kilder/OD_lite.png);
+    title: "Oljedirektoratet";
+}
+
+.x-tree-node-leaf  .gx-tree-rasterlayer-icon-SK{
+    background-image: url(img/geosilk/kilder/SK_lite.png);
+    title: "Statens kartverk";
+}
+
+.x-tree-node-leaf  .gx-tree-rasterlayer-icon-KV{
+    background-image: url(img/geosilk/kilder/kystverket_lite.png);
+    title: "Kystverket";
 }
 
 html { width: 100%; height: 100%}
