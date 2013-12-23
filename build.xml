@@ -57,6 +57,8 @@
             <fileset dir="app">
                 <exclude name="**/externals/**"/>
                 <exclude name="**/script/**"/>
+                <exclude name="**/static/theme/app/**"/>
+                <exclude name="**/static/theme/ux/**"/>
             </fileset>
         </copy>
         <!-- copy Ext resources -->
@@ -79,7 +81,11 @@
         <copy todir="${build}/${ant.project.name}/WEB-INF/app/static/externals/PrintPreview/resources">
             <fileset dir="externals2/suite/geoexplorer/app/static/externals/printpreview/resources"/>
         </copy>
-        
+        <!-- copy GeoExplorer resources -->
+        <copy todir="${build}/${ant.project.name}/WEB-INF/app/static/theme">
+            <fileset dir="externals2/suite/geoexplorer/app/static/theme"/>
+        </copy>
+
     </target>
 
     <target name="war" depends="dist">
