@@ -70,10 +70,10 @@
                 /* when OL encounters a 404, don't display the pink image */
                 display: none !important;
             }
-              #layertree :not(.general-layers-w-checkbox) input.x-tree-node-cb[type="checkbox"] {  
+              #layers :not(.general-layers-w-checkbox) input.x-tree-node-cb[type="checkbox"] {  
               	display: none;  
               }              
-            #layertree *.general-layers-w-checkbox input.x-tree-node-cb[type="checkbox"] {
+            #layers *.general-layers-w-checkbox input.x-tree-node-cb[type="checkbox"] {
                 display:inline;
 			}
         </style>
@@ -97,17 +97,14 @@
 
         <!-- OpenLayers resources -->
         <link rel="stylesheet" type="text/css" href="externals/openlayers/theme/default/style.css">
-        <script type="text/javascript" src="script/OpenLayers.js"></script>
 
         <!-- GeoExt resources -->
         <link rel="stylesheet" type="text/css" href="externals/GeoExt/resources/css/popup.css">
         <link rel="stylesheet" type="text/css" href="externals/GeoExt/resources/css/layerlegend.css">
         <link rel="stylesheet" type="text/css" href="externals/GeoExt/resources/css/gxtheme-gray.css">
-        <script type="text/javascript" src="script/GeoExt.js"></script>
 
         <!-- gxp resources -->
         <link rel="stylesheet" type="text/css" href="externals/gxp/src/theme/all.css">
-        <script type="text/javascript" src="script/gxp.js"></script>
 
         <!-- proj4js resources -->
         <script type="text/javascript" src="javascript/proj4js-compressed.js"></script>
@@ -117,7 +114,6 @@
         <!--[if IE]><link rel="stylesheet" type="text/css" href="theme/app/ie.css"/><![endif]-->
         <link rel="stylesheet" type="text/css" href="theme/ux/colorpicker/color-picker.ux.css" />
         <script type="text/javascript" src="script/GeoExplorer.js"></script>
-        <script type="text/javascript" src="script/ux.js"></script>
         
         <script type="text/javascript" src="javascript/WMSLayerPanel.js"></script>
         <script type="text/javascript" src="javascript/mareano_common.js"></script>    
@@ -149,7 +145,7 @@
                 //Ext.BLANK_IMAGE_URL = "theme/app/img/blank.gif";
                 OpenLayers.ImgPath = "theme/app/img/";
                 GeoExt.Lang.set('no');
-                var app = new GeoExplorer.Composer({
+                var app = new Mareano.Composer({
                     <!-- authStatus: < status >, -->
                     proxy: "proxy/?url=",
                     printService: null,
@@ -401,7 +397,7 @@
                     </c:forEach>
                     treeRoot.getRootNode().appendChild( mergedSomeHovedtema );
                     /***********************************/
-                    var rootRightTree = Ext.getCmp('layertree');
+                    var rootRightTree = Ext.getCmp('layers');
                     rootRightTree.getRootNode().appendChild( addGenerelleLayerToGroup("generelle", "Generelle kart", this.map, this.mapPanel, generelleLayers, store, app) );
                     /***********************************/
                     
