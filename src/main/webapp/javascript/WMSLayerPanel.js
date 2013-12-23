@@ -1,6 +1,6 @@
-Ext.ns("mareano");
+Ext.ns("Mareano");
 
-mareano.WMSLayerPanel = Ext.extend(Ext.form.FormPanel, {
+Mareano.WMSLayerPanel = Ext.extend(Ext.form.FormPanel, {
 
     nameLabel: "Layer Name",
     titleLabel: "Layer Title",
@@ -14,7 +14,7 @@ mareano.WMSLayerPanel = Ext.extend(Ext.form.FormPanel, {
     labelWidth: 75,
 
     initComponent: function() {
-        mareano.WMSLayerPanel.superclass.initComponent.call(this);
+        Mareano.WMSLayerPanel.superclass.initComponent.call(this);
         var record = this.layerRecord;
         var layer = record.getLayer();
         if (layer instanceof OpenLayers.Layer.WMS) {
@@ -77,4 +77,4 @@ mareano.WMSLayerPanel = Ext.extend(Ext.form.FormPanel, {
 
 });
 
-Ext.reg('mareano_wmslayerpanel', mareano.WMSLayerPanel);
+Ext.reg('mareano_wmslayerpanel', Mareano.WMSLayerPanel);
