@@ -9,6 +9,7 @@ Ext.ns("Mareano");
 Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
 
     appInfoText: "Mareano",
+    aboutUrl: "./about.html",
 
     constructor: function() {
         Mareano.Composer.superclass.constructor.apply(this, arguments);    
