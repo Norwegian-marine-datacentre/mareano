@@ -350,6 +350,8 @@ function addSpesialpunkt(extent, kartlagId, layer, event, app, data) {
             styleMap: styleMap
         }); 
 		
+        OpenLayers.Control.SelectFeature.toggle = true;
+        OpenLayers.Control.SelectFeature.highlightOnly = true;
 		snitt.events.register( "featureselected", snitt, GMLselected );
 		app.mapOfGMLspesialpunkt[kartlagId] = snitt;	    
 		app.mapPanel.map.addLayer( snitt );   	           
@@ -436,7 +438,7 @@ function GMLselected (event) {
     if ( event.feature.data.type == "bilder" ) {
     	Ext.MessageBox.show({
     		title:event.feature.data.name, 
-    		msg:'<a href="' + event.feature.data.description + '" TARGET="_blank"><img src=" '+event.feature.data.description+'" width=400 height=400 /></a>'
+    		msg:'<a href="' + event.feature.data.description + '" TARGET="_blank"><img src=" '+event.feature.data.description+'" width=150 height=100 /></a>'
     	});
     } else if ( event.feature.data.type == "video" ) {
         Ext.MessageBox.show({
@@ -481,3 +483,25 @@ function addOverviewMapAndKeyboardDefaults(thisMap) {
         }
     }
 }  
+
+OpenLayers.Control.SelectFeature.prototype.clickFeature = function(feature) {
+    if(!this.hover) {
+        var selected = (OpenLayers.Util.indexOf(
+            feature.layer.selectedFeatures, feature) > -1);
+        if(selected) {
+            if(this.toggleSelect()) {
+                this.unselect(feature);
+            } else if(!this.multipleSelect()) {
+                this.unselectAll({except: feature});
+            }
+            // bartvde, even if feature was selected before, fire the featureselected event
+            this.select(feature);
+        } else {
+            if(!this.multipleSelect()) {
+                this.unselectAll({except: feature});
+            }
+            this.select(feature);
+        }
+    }
+};
+
