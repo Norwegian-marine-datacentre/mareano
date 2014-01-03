@@ -72,10 +72,10 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
     goToText: "G&aring; til koordinat",
     goToPrompt: "Posisjon i WGS84 (Breddegrad, Lengdegrad - for eksempel: 60.2,1.5):",
     expandText: "Expand Layers",
-    collapseText: "Collapse Layers",
-    expandCollapseTooltip: "Expand or collapse the Layers panel",
-    visibilityText: "Turn off",
-    visibilityTooltip: "Turn off all overlays",
+    collapseText: "P\u00e5sl\u00e5tt kartlag",
+	expandCollapseTooltip: "Sl\u00e5 sammen eller ekspander kartlag panel",
+    visibilityText: "Sl\u00e5 av",
+    visibilityTooltip: "Sl\u00e5 av alle kartlag",
     // End i18n.
     
     /**

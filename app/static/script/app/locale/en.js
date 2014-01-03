@@ -36,7 +36,7 @@ GeoExt.Lang.add("en", {
         zoomToItem2: "Norwegian Sea",
         zoomToItem3: "North Sea",
         zoomToItem4: "Skagerrak",
-        zoomToItem5: "Polhavet",
+        zoomToItem5: "Polar Ocean",
         zoomToEmptyText: "Go to Sea",
         expandText: "Expand Layers",
         collapseText: "Collapse Layers",

@@ -38,15 +38,15 @@ GeoExt.Lang.add("no", {
         zoomToItem4: "Skagerrak",
         zoomToItem5: "Polhavet",
         zoomToEmptyText: "G\u00e5 til havomr\u00e5de",
-        expandText: "Expand Layers",
-        collapseText: "Collapse Layers",
-        expandCollapseTooltip: "Expand or collapse the Layers panel",
-        visibilityText: "Turn off",
-        visibilityTooltip: "Turn off all overlays"
+        expandText: "Utvid kartlag Panel",
+        collapseText: "Sl\u00e5 sammen kartlag Panel",
+        expandCollapseTooltip: "Utvid eller sl\u00e5 sammen kartlag Panel",
+        visibilityText: "Sl\u00e5 av",
+        visibilityTooltip: "Sl\u00e5 av alle kartlag"
     },
     "GeoExplorer.Composer.prototype": {
-        exportMapText: "Publish Map",
-        saveMapText: "Save Map",
+        exportMapText: "Publiser kart",
+        saveMapText: "Lagre kart",
         toolsTitle: "Choose tools to include in the toolbar:",
         previewText: "Preview",
         backText: "Back",
