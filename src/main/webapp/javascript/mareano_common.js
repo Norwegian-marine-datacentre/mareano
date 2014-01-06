@@ -350,8 +350,6 @@ function addSpesialpunkt(extent, kartlagId, layer, event, app, data) {
             styleMap: styleMap
         }); 
 		
-        OpenLayers.Control.SelectFeature.toggle = true;
-        OpenLayers.Control.SelectFeature.highlightOnly = true;
 		snitt.events.register( "featureselected", snitt, GMLselected );
 		app.mapOfGMLspesialpunkt[kartlagId] = snitt;	    
 		app.mapPanel.map.addLayer( snitt );   	           
