@@ -231,7 +231,7 @@
                                group: "background",
                                args: [
                                      	"Europa og Gebco",
-                                     	"http://wms.geonorge.no/skwms1/wms.barents_watch",
+                                     	"http://maps.imr.no/geoserver/wms",
                                      	{layers: "barents_watch_WMS", format: "image/jpeg", transparent: true, isBaseLayer: true}
                                      	,{singleTile:true}
                                ]
