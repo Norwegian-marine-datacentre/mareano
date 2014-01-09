@@ -206,11 +206,11 @@
                                 group: "background",
                                 args: [
                                       	"Europa",
-                                      	"http://wms.geonorge.no/skwms1/wms.europa",
+                                      	"http://maps.imr.no/geoserver/gwc/service/wms",
                                       	//"http://opencache.statkart.no/gatekeeper/gk/gk.open",
-                                      	{layers: "europa_wms", format: "image/jpeg", transparent: true, isBaseLayer: true}
+                                      	{layers: "geonorge_europa:Europa_WMS", format: "image/jpeg", transparent: true, isBaseLayer: true}
                                       	//{layers: "europa", format: "image/jpeg", transparent: true, isBaseLayer: true}
-                                      	,{singleTile:true}
+                                      	,{singleTile:false}
                                 ]
                             }, {
                                 source: "ol",
@@ -218,11 +218,11 @@
                                 group: "background",
                                 args: [
                                       	"Europa -hvit bakgrunn",
-                                      	"http://wms.geonorge.no/skwms1/wms.europa",
+                                      	"http://maps.imr.no/geoserver/gwc/service/wms",
                                       	//"http://opencache.statkart.no/gatekeeper/gk/gk.open",
-                                      	{layers: "Land,Vmap0Land,Vmap0Bebyggelse,Vmap0Skog,Vmap0Sletteland,Vmap0Innsjo,Vmap0MyrSump,Vmap0Isbre,Vmap0Hoydekontur,Vmap0Kystkontur,Vmap0Elver,Vmap0AdministrativeGrenser", format: "image/jpeg", transparent: true, isBaseLayer: true}
+                                      	{layers: "geonorge_europa:geonorge_europa_hvit_bakgrunn", format: "image/jpeg", transparent: true, isBaseLayer: true}
                                       	//{layers: "europa", format: "image/jpeg", transparent: true, isBaseLayer: true}
-                                      	,{singleTile:true}
+                                      	,{singleTile:false}
                                 ]
                             }	  
                            	, {
@@ -231,8 +231,8 @@
                                group: "background",
                                args: [
                                      	"Europa og Gebco",
-                                     	"http://maps.imr.no/geoserver/wms",
-                                     	{layers: "barents_watch_WMS", format: "image/jpeg", transparent: true, isBaseLayer: true}
+                                     	"http://maps.imr.no/geoserver/gwc/service/wms",
+                                     	{layers: "geonorge:barents_watch_WMS", format: "image/jpeg", transparent: true, isBaseLayer: true}
                                      	,{singleTile:false}
                                ]
                            } 
