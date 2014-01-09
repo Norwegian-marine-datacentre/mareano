@@ -6,7 +6,7 @@ function getLayerIcon(url) {
 		} else if (url.indexOf("crius.nodc") != -1
 				|| url.indexOf("atlas.nodc") != -1
 				|| url.indexOf("maps.nodc") != -1
-				|| url.indexOf("maps.imr.no") != -1
+				|| url.indexOf("maps.imr.no/geoserver/wms") != -1
 				|| url.indexOf("talos.nodc.no") != -1) {
 			return "gx-tree-rasterlayer-icon-HI";
 		} else if (url.indexOf("ngu.no") != -1) {
@@ -16,7 +16,8 @@ function getLayerIcon(url) {
 		} else if (url.indexOf("fiskeridir.no") != -1) {
 			return "gx-tree-rasterlayer-icon-FD";
 		} else if (url.indexOf("geonorge.no") != -1
-				|| url.indexOf("opencache.statkart.no") != -1) {
+				|| url.indexOf("opencache.statkart.no") != -1
+				|| url.indexOf("http://maps.imr.no/geoserver/gwc/service/wms") != -1) { //cached maps come from geoserver
 			return "gx-tree-rasterlayer-icon-SK";
 		} else if (url.indexOf("kart.kystverket.no") != -1) {
 			return "gx-tree-rasterlayer-icon-KV";
