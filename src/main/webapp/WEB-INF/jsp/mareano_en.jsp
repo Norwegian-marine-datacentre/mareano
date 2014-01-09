@@ -9,8 +9,10 @@
         <!-- Ext resources -->
         <link rel="stylesheet" type="text/css" href="externals/ext/resources/css/ext-all.css">
         <link rel="stylesheet" type="text/css" href="externals/ext/resources/css/xtheme-gray.css">
-        <script type="text/javascript" src="externals/ext/adapter/ext/ext-base-debug.js"></script>
-        <script type="text/javascript" src="externals/ext/ext-all-debug-w-comments.js"></script>
+        <!-- script type="text/javascript" src="externals/ext/adapter/ext/ext-base-debug.js"></script -->
+        <script type="text/javascript" src="externals/ext/adapter/ext/ext-base.js"></script>
+        <!-- script type="text/javascript" src="externals/ext/ext-all-debug-w-comments.js"></script -->
+        <script type="text/javascript" src="externals/ext/ext-all.js"></script>
         <style type="text/css">
             .out-of-scale {
                 -moz-opacity: 0.5 !important;
