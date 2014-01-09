@@ -52,7 +52,7 @@ GeoExplorer.Composer = Ext.extend(GeoExplorer, {
                         ptype: "gx_treenodeactions",
                         actions: [{
                             action: "zoomscale",
-                            qtip: me.zoomScaleTip,
+                            qtip: me.zoomScaleTip
                         }],
                         listeners: {
                             action: function(node, action, evt) {
