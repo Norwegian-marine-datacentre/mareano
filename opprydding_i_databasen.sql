@@ -55,3 +55,26 @@ delete from kartbilder_kartlag where kartlag_id=405 and kartbilder_id!=213
 --delete from hovedtemaer_no where hovedtemaer_id=1
 --delete from hovedtemaer_en where hovedtemaer_id=1
 --delete from hovedtemaer where hovedtemaer_id=1
+
+--delete Mareano - oversiktskart - kartbilde
+--delete from kartbilder_kartlag where kartbilder_id=2;
+delete from kartbilder_no where kartbilder_id=2;
+delete from kartbilder_en where kartbilder_id=2;
+delete from kartbilder where kartbilder_id=2;
+
+-- move one Havbunn skyggerelieff to commons map and delete the rest
+update kartbilder_kartlag set kartbilder_id=213 where kartbilder_id=27 and kartlag_id=311
+delete from kartbilder_kartlag where kartlag_id=311 and kartbilder_id!=213
+
+-- do the same for marine områder
+update kartbilder_kartlag set kartbilder_id=213 where kartbilder_id=5 and kartlag_id=14
+delete from kartbilder_kartlag where kartlag_id=14 and kartbilder_id!=213
+
+-- flyttet Leiteområder for olje og gass fra mareano oversiktskart til næringsaktiviteter
+update kartbilder set hovedtemaer_id=28 where kartbilder_id=157
+
+-- Slett vegnet fra detaljerte dybdedata
+delete from kartbilder_kartlag where kartlag_id=255 and kartbilder_id=48 
+delete from kartbilder_kartlag where kartlag_id=256 and kartbilder_id=48 
+delete from kartbilder_kartlag where kartlag_id=189 and kartbilder_id=48
+delete from kartbilder_kartlag where kartlag_id=253 and kartbilder_id=48
