@@ -40,23 +40,52 @@ public class MareanoController {
 
     private List<HovedtemaVisning> visninger = null;
     private long lastupdated = new Date().getTime();
+    private long mavLastUpdated = new Date().getTime();
 //	private final static long ADAY = 24 * 60 * 60 * 1000;
     private final static long TENMIN = 10 * 1000;
+    private final static long ONEHOUR = 60 * 1000;
     private final static String ENGLISH = "en";
     
     @Autowired(required = true)
     private MareanoAdminDbDao dao;
 
+    ModelAndView mavNo = null;
+    ModelAndView mavEn = null;
+    
+    @RequestMapping("/update")
+    public ModelAndView updateMareano(HttpServletResponse resp) throws IOException {
+    	mavNo = null;
+    	mavEn = null;
+    	return getMareanoTest( resp );
+    }
+    
     @RequestMapping("/mareano")
     public ModelAndView getMareanoTest(HttpServletResponse resp) throws IOException {
-        ModelAndView mav = new ModelAndView("mareano");
-        getMareano(mav, "no");
-        
-        String heading = getMareanoHeading("");
-        mav.addObject("heading", heading);
+    	if (mavNo == null || (System.currentTimeMillis() - mavLastUpdated) > ONEHOUR) {
+    		mavNo = commonGetMareano(resp, "no", "mareano");
+    	} 
+    	return mavNo;
+    }
+    
+    @RequestMapping("/mareano_en")
+    public ModelAndView getMareanoEN(HttpServletResponse resp) throws IOException {
+    	if (mavEn == null || (System.currentTimeMillis() - mavLastUpdated) > ONEHOUR) {
+    		mavEn = commonGetMareano(resp, "en", "mareano_en");
+    	} 
+    	return mavEn;
+    }
+    
+    private ModelAndView commonGetMareano(HttpServletResponse resp, String language, String mareanoJSP) throws IOException {
+    	
+		ModelAndView mav = new ModelAndView(mareanoJSP);
+		getMareano(mav, language);
 
-        resp.setCharacterEncoding("UTF-8");
-        return mav;
+		String heading = getMareanoHeading(language);
+		mav.addObject("heading", heading);
+
+		resp.setCharacterEncoding("UTF-8");
+		mavLastUpdated = new Date().getTime();
+		return mav;    	
     }
 
     protected ModelAndView getMareano(ModelAndView mav, String language) throws IOException {
@@ -66,15 +95,6 @@ public class MareanoController {
             lastupdated = new Date().getTime();
         }
         mav.addObject("hovedtemaer", visninger);
-        return mav;
-    }
-
-    @RequestMapping("/mareano_en")
-    public ModelAndView getMareanoEN(HttpServletResponse resp) throws IOException {
-        ModelAndView mav = new ModelAndView("mareano_en");
-        mav = getMareano(mav, "en");
-
-        mav.addObject("heading", getMareanoHeading(ENGLISH));
         return mav;
     }
 
@@ -137,7 +157,7 @@ public class MareanoController {
                 kartbilderVisining.setStartextentMinx( kartbilde.getStartextentMinx() );
                 kartbilderVisining.setStartextentMiny( kartbilde.getStartextentMiny() );
 
-                if (kartbilderVisining.getGruppe().equals("MAREANO-oversiktskart") || kartbilderVisining.getGruppe().equals("MAREANO - overview")) {
+                if (kartbilderVisining.getGruppe().equals("MAREANO-stasjoner") || kartbilderVisining.getGruppe().equals("MAREANO-stations")) {
                     kartbilderVisining.setVisible(true);
                 }
                 List<Kartlag> kartlagene = dao.getKartlagene(kartbilde.getKartbilderId());
