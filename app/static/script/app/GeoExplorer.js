@@ -318,7 +318,7 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
             layout: "border",
             region: "west",
             unstyled:true,
-            width: 200,
+            width: 240,  //200
             tbar: [{
                 text: this.visibilityText,
                 tooltip: this.visibilityTooltip,
@@ -336,10 +336,10 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
                 handler: function(cmp) {
                     if (!cmp._expanded) {
                         cmp.setText(this.collapseText + btnPostfix + collapseDiv);
-                        westPanel2.setWidth(415);
+                        westPanel2.setWidth(440);  //415
                     } else {
                         cmp.setText(this.expandText + btnPostfix + expandDiv);
-                        westPanel2.setWidth(200);
+                        westPanel2.setWidth(240);  //200
                     }
                     westPanel2.ownerCt.doLayout();
                     cmp._expanded = !cmp._expanded;
@@ -351,7 +351,7 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
             collapseMode: "mini",
             items: [{
                 layout: 'border',
-                width: 200,
+                width: 240,  //200
                 autoScroll: false,
                 xtype: 'container',
                 split: true,
@@ -372,7 +372,7 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
             }, {
                 xtype: 'panel',
                 layout: "border",
-                width: 215,
+                width: 200,  //215
                 region: "center",
                 items: westPanelTabs
             }]
