@@ -87,13 +87,6 @@
 
         <link href="theme/imr/imr.css" rel="stylesheet" type="text/css">
         
-        <!-- script type="text/javascript" src="javascript/layerIcon.js"></script>
-        <script type="text/javascript" src="javascript/toNorwegianTranslateMenuButtons.js"></script>
-        <script type="text/javascript" src="javascript/WMSLayerPanel.js"></script>
-        <script type="text/javascript" src="javascript/mareano_common.js"></script>
-        <script type="text/javascript" src="javascript/generelleKartLayerGroup.js"></script -->
-        <script type="text/javascript" src="script/mareano.js"></script>
-        
         <!-- Mareano.no -->
         <link rel="stylesheet" type="text/css" href="http://www.mareano.no/kart/styles/mareanoStyle.css">
         <style type="text/css">
@@ -129,6 +122,13 @@
         <!-- PrintPreview resources 
         <link rel="stylesheet" type="text/css" href="externals/PrintPreview/resources/css/printpreview.css">
         <script type="text/javascript" src="script/PrintPreview.js"></script>-->
+        
+		<!-- script type="text/javascript" src="javascript/layerIcon.js"></script>
+        <script type="text/javascript" src="javascript/toNorwegianTranslateMenuButtons.js"></script>
+        <script type="text/javascript" src="javascript/WMSLayerPanel.js"></script>
+        <script type="text/javascript" src="javascript/mareano_common.js"></script>
+        <script type="text/javascript" src="javascript/generelleKartLayerGroup.js"></script -->
+        <script type="text/javascript" src="script/mareano.js"></script>
 
         <script>
             function init() {
