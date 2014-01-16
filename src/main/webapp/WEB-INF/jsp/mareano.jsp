@@ -13,72 +13,9 @@
         <script type="text/javascript" src="externals/ext/adapter/ext/ext-base.js"></script>
         <!-- script type="text/javascript" src="externals/ext/ext-all-debug-w-comments.js"></script -->
         <script type="text/javascript" src="externals/ext/ext-all.js"></script>
-        <style type="text/css">
-            .out-of-scale {
-                -moz-opacity: 0.5 !important;
-                opacity: 0.5 !important;
-                filter: alpha(opacity=50) !important;
-            }
-            .x-tree-node .x-tree-node-disabled a span {
-                color: black !important;
-            }
-            .x-tree-node .x-tree-node-disabled .x-tree-node-icon {
-                -moz-opacity: 1 !important;
-                opacity: 1 !important;
-                filter: alpha(opacity=100) !important;
-            }
-            .olControlOverviewMapMaximizeButton, .olControlOverviewMapMinimizeButton {
-                background-image: url(externals/ext/resources/images/gray/panel/tool-sprites.gif);
-                width: 15px !important;
-                height: 15px !important;
-                cursor: pointer;
-                margin-left: 2px;
-            }
-            .olControlOverviewMapMaximizeButton {
-                background-position:0 -180px;
-            }
-            .olControlOverviewMapMinimizeButton {
-                background-position:0 -165px;
-            }
-            #OpenLayers_Control_minimizeDiv_innerImage, #olControlOverviewMapMaximizeButton_innerImage {
-                display: none;
-            }
-            .olControlOverviewMapElement {
-                padding: 0px 0px 0px 0px !important;
-                border: 2px solid rgb(158, 154, 154) !important;
-                background-color: white !important;
-            }
-            .gx-tree-layer-actions {
-                position: absolute;
-                left: 15px;
-            }
-            .gx-tree-layer-action {
-                background-position: center center;
-                background-repeat: no-repeat;
-                border: 0 none;
-                height: 16px;
-                margin: 0;
-                padding: 0;
-                vertical-align: top;
-                width: 16px;
-            }
-            .x-tree-node-disabled .gx-tree-layer-actions .zoomscale {
-                background: transparent url("theme/app/img/silk/magnifier.png");
-            }
-            .gx-tree-layer-actions .disabled {
-                opacity: 0.2;
-            }
-            .olImageLoadError { 
-                /* when OL encounters a 404, don't display the pink image */
-                display: none !important;
-            }
-              #layertree :not(.general-layers-w-checkbox) input.x-tree-node-cb[type="checkbox"] {  
-              	display: none;  
-              }              
-            #layertree *.general-layers-w-checkbox input.x-tree-node-cb[type="checkbox"] {
-                display:inline;
-			}
-        </style>
+
+		<link rel="stylesheet" type="text/css" href="css/mareano.css">
+
         <meta http-equiv="X-UA-Compatible" content="IE=IE8" >
         <!--script type="text/javascript" src="javascript/googleAnalyticsStatistics.js"></script -->
 
@@ -90,9 +27,9 @@
         <!-- Mareano.no -->
         <link rel="stylesheet" type="text/css" href="http://www.mareano.no/kart/styles/mareanoStyle.css">
         <style type="text/css">
-        #nav-main {
-            background-image: url("http://www.mareano.no/kart/images/nav-main-background.jpg");
-        }
+	        #nav-main {
+	            background-image: url("http://www.mareano.no/kart/images/nav-main-background.jpg");
+	        }
         </style>
 
         <!-- OpenLayers resources -->
