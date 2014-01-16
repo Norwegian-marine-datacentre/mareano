@@ -6,6 +6,7 @@
         <title>Mareano</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <link rel="shortcut icon" href="theme/app/img/mareanoLogo.png">
+        
         <!-- Ext resources -->
         <link rel="stylesheet" type="text/css" href="externals/ext/resources/css/ext-all.css">
         <link rel="stylesheet" type="text/css" href="externals/ext/resources/css/xtheme-gray.css">
@@ -60,24 +61,12 @@
         <link rel="stylesheet" type="text/css" href="externals/PrintPreview/resources/css/printpreview.css">
         <script type="text/javascript" src="script/PrintPreview.js"></script>-->
         
-		<!-- script type="text/javascript" src="javascript/layerIcon.js"></script>
-        <script type="text/javascript" src="javascript/toNorwegianTranslateMenuButtons.js"></script>
-        <script type="text/javascript" src="javascript/WMSLayerPanel.js"></script>
-        <script type="text/javascript" src="javascript/mareano_common.js"></script>
-        <script type="text/javascript" src="javascript/generelleKartLayerGroup.js"></script -->
         <script type="text/javascript" src="script/mareano.js"></script>
 
         <script>
             function init() {
                 gxp.plugins.LayerTree.prototype.baseNodeText = "Base Layer";
                 gxp.plugins.LayerTree.prototype.overlayNodeText = "Overlays";
-                /*gxp.plugins.AddLayers.prototype.addActionTip = "Add layers";
-                gxp.plugins.AddLayers.prototype.addServerText = "Add a New Server";
-                gxp.plugins.AddLayers.prototype.addButtonText = "Legg til kartlag";
-                gxp.plugins.AddLayers.prototype.availableLayersText = "Available Layers";
-                gxp.plugins.AddLayers.prototype.layerSelectionText = "View available data from:";
-                gxp.plugins.AddLayers.prototype.doneText = "Done";
-                gxp.plugins.AddLayers.prototype.addButtonText = "Add layers"; */
                                 
                 //Ext.BLANK_IMAGE_URL = "theme/app/img/blank.gif";
                 OpenLayers.ImgPath = "theme/app/img/";

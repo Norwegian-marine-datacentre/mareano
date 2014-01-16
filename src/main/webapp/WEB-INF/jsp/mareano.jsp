@@ -59,12 +59,7 @@
         <!-- PrintPreview resources We need to install printing service on maps.imr.no/geoserver for this to work -->
         <!-- link rel="stylesheet" type="text/css" href="externals/PrintPreview/resources/css/printpreview.css">
         <script type="text/javascript" src="script/PrintPreview.js"></script -->
-        
-        <!-- script type="text/javascript" src="javascript/layerIcon.js"></script>
-        <script type="text/javascript" src="javascript/toEnglishTranslateMenuButtons.js"></script>
-		<script type="text/javascript" src="javascript/WMSLayerPanel.js"></script>
-        <script type="text/javascript" src="javascript/mareano_common.js"></script>    
-		<script type="text/javascript" src="javascript/generelleKartLayerGroup.js"></script -->
+
 		<script type="text/javascript" src="script/mareano.js"></script>        
 
         <script>
@@ -175,18 +170,7 @@
                                      	{layers: "geonorge:barents_watch_WMS", format: "image/jpeg", transparent: true, isBaseLayer: true}
                                      	,{singleTile:false}
                                ]
-                           } 
-                           	,{source: "ol",
-         	                    type: "OpenLayers.Layer.WMS",
-          	                    group: "common",
-          	                    visibility: true,
-          	                    args: [
-          	                        "Grid",
-          	                        "http://maps.imr.no/geoserver/wms",
-          	                        {layers: "grid_UTM33,utm33n_01bgX05lg,utm33n_02bgX10lg,utm33n_15bmX01lg,utm33n_30bmX02lg", format: "image/png", transparent: true},
-          	                        {opacity:1, singleTile:true}
-          	                    ]
-          					}                    	
+                           }                	
                         ],
                         
                         center: [1088474,7689849],
