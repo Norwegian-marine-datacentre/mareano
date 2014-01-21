@@ -413,7 +413,9 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
             id: "topPanelHeading",
             collapseMode: "mini",
             bodyStyle: "background-image:url('http://www.mareano.no/kart/images/nav-main-background.jpg')",
-            html:'<table width="100%" cellspacing="0"><tr height="45"> ' + //content reloaded with content from MareanoController
+            //html - content reloaded with content from MareanoController - but this must be here for the rest of the rest of the panels to
+            //     load in the correct size. 
+            html:'<table width="100%" cellspacing="0" border="1"><tr height="45"> ' + 
             '<td valign="middle" height="45" style="background-image:url(http://www.mareano.no/kart/images/top/ny_heading_397.gif); background-repeat: repeat;"> ' +
             '<a style="text-decoration: none" target="_top" href="http://www.mareano.no"> ' +
             '<img border="0" alt="MAREANO<br>samler kunnskap om havet" src="http://www.mareano.no/kart/images/top/ny_logo.gif"> ' +
@@ -430,6 +432,7 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
             unstyled:true,
             collapseMode: "mini",
             region: "north",
+            id: 'page-header-panel',
             items: [innerNorthPanel,this.toolbar]
         });
         
