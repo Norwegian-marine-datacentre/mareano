@@ -6,7 +6,6 @@
         <title>Mareano</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <link rel="shortcut icon" href="theme/app/img/mareanoLogo.png">
-        
         <!-- Ext resources -->
         <link rel="stylesheet" type="text/css" href="externals/ext/resources/css/ext-all.css">
         <link rel="stylesheet" type="text/css" href="externals/ext/resources/css/xtheme-gray.css">
@@ -14,8 +13,6 @@
         <script type="text/javascript" src="externals/ext/adapter/ext/ext-base.js"></script>
         <!-- script type="text/javascript" src="externals/ext/ext-all-debug-w-comments.js"></script -->
         <script type="text/javascript" src="externals/ext/ext-all.js"></script>
-        
-		<link rel="stylesheet" type="text/css" href="css/mareano.css">
 			
         <meta http-equiv="X-UA-Compatible" content="IE=IE8" >
         <!--script type="text/javascript" src="javascript/googleAnalyticsStatistics.js"></script -->
@@ -23,10 +20,12 @@
         <script type="text/javascript" src="javascript/jquery-1.6.2.min.js"></script>
         <script type="text/javascript">jQuery.noConflict();</script>
 
-        <link href="theme/imr/imr.css" rel="stylesheet" type="text/css">
+		<link rel="stylesheet" type="text/css" href="css/mareano.css">
+		<link rel="stylesheet" type="text/css" href="css/mareanoMenu.css">
         
         <!-- Mareano.no -->
-        <link rel="stylesheet" type="text/css" href="http://www.mareano.no/kart/styles/mareanoStyle.css">
+        <link href="theme/imr/imr.css" rel="stylesheet" type="text/css">
+<!--         <link rel="stylesheet" type="text/css" href="http://www.mareano.no/kart/styles/mareanoStyle.css"> -->
         <style type="text/css">
 	        #nav-main {
 	        	background-image: url("http://www.mareano.no/kart/images/nav-main-background.jpg");

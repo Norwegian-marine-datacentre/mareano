@@ -1,0 +1,183 @@
+/** needed to have menu items in green menu overflow the other items */
+#page-header-panel .x-panel-body,#page-header-panel .x-panel-bwrap #topPanelHeading {
+/* 	overflow: auto;  */
+   	z-index: 1;
+}		
+
+/* NAV-MAIN */
+div#nav-main {
+	background-image: url(http://mareano.no/resources/layout/nav-main-background.jpg);
+	background-repeat: repeat-y;
+
+/* 	width: 800px; */
+	width: 100%;  /* needed to style manu bar when removing */ 
+	height: 20px; /* overflow:hidden in extjs */
+	
+	border-bottom: 1px solid #9FAE7F;
+	clear: both;
+	padding-left: 160px;
+	font-size: 62.5%;
+}
+
+div#nav-main ul {
+/* 	width: 800px; */
+	width: 100%
+}
+
+/* DROPDOWN-MENY */
+
+#nav, #nav ul { /* all lists */
+	padding: 0;
+	margin: 0;
+	list-style: none;
+	line-height: 1;
+}
+
+#nav a {
+	/* width: 10em; */
+	display: block;
+	padding: 0;
+	text-decoration: none;
+	color: #000;
+	padding: 0.5em 1em 0.5em 1em;
+	white-space: nowrap;
+
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 1em;	
+
+	border-left: 1px solid #AAD255;
+	border-right: 1px solid #AAD255;
+
+}
+
+#nav a:hover {
+	background-color: #C8E885;
+	border-left: 1px solid #9FAE7F;
+	border-right: 1px solid #9FAE7F;
+}
+
+#nav li { /* all list items */
+	float: left;
+	/* width needed or else Opera goes nuts */
+	/* width: 10em; */
+}
+
+#nav ul {
+	background-color: #C8E885;
+}
+
+#nav li ul li {
+	width: 15em;
+	/* padding: 0.5em; */
+	height: 1%; 
+}
+
+#nav li ul li a {
+	white-space: normal;
+	padding: 0.4em;
+	display: block;
+	height: 1%;
+	font-size: 1em;
+}
+
+#nav li ul li a:hover {
+	background-color: #D2EF93;
+}
+
+#nav li ul { /* second-level lists */
+	position: absolute;
+	/* background: #AAD255; */
+	width: 15em;
+	left: -999em; /* using left instead of display to hide menus because display: none isn't read by screen readers */
+	border: 1px solid #9FAE7F;
+}
+
+#nav li ul ul { /* third-and-above-level lists */
+	margin: -1em 0 0 10em;
+}
+
+#nav li:hover ul ul, #nav li.sfhover ul ul {
+	left: -999em;
+}
+
+#nav li:hover ul, #nav li li:hover ul, #nav li.sfhover ul, #nav li li.sfhover ul { /* lists nested under hovered list items */
+	left: auto;
+}
+
+div#nav-main ul li#nav-main-first a {
+	margin-left: -1em;
+}
+
+
+/*
+div#nav-main ul {
+	float: left;
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+	display: block;
+	width: 800px;
+}
+
+div#nav-main li {
+	float: left;
+}
+
+div#nav-main a {
+	display: block;
+	padding: 0;
+	font-size: 1.2em;	
+	text-decoration: none;
+	color: #000;
+	padding: 0.3em 1.5em 0.3em 1em;
+}
+
+div#nav-main a:hover {
+	color: #666;
+}
+
+div#nav-main ul li#nav-main-first a {
+	padding-left: 0;
+}
+*/
+
+/* BRANDING */
+div#branding {
+}
+
+/* NAV-SEC */
+
+div#nav-sec {
+	width: 160px;
+	float: left;
+	padding-top: 1.5em;
+}
+
+div#nav-sec ul {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+}
+
+div#nav-sec ul li {
+	height: 1%; /* hack */ /* unngå ekstra luft */
+}
+
+div#nav-sec ul li a {
+	color: #666;
+	text-decoration: none;
+	display: block;
+	padding: 0.5em 1em;
+	height: 1%; /* hack */ /* la linkene få utstrekning i IE */
+
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 1.1em;
+}
+
+div#nav-sec ul li a:hover {
+	text-decoration: underline;
+}
+
+div#nav-sec ul ul li { /* third-and-above-level lists */
+	margin: 0 0 0 1em;
+}
