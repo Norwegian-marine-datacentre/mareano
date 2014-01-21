@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.InetAddress;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
@@ -229,12 +228,10 @@ public class MareanoController {
 
             }
             reader.close();
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        String someHeading = "<table width=\"100%\" cellspacing=\"0\"><tr height=\"45\"> "
+        String someHeading = "<table width=\"100%\" cellspacing=\"0\" border=\"0\"><tr height=\"45\"> "
                 + "<td valign=\"middle\" height=\"45\" style=\"background-image:url(http://www.mareano.no/kart/images/top/ny_heading_397.gif); background-repeat: repeat;\"> "
                 + "<a style=\"text-decoration: none\" target=\"_top\" href=\"http://www.mareano.no\"> "
                 + "<img border=\"0\" alt=\"MAREANO<br>samler kunnskap om havet\" src=\"http://www.mareano.no/kart/images/top/ny_logo.gif\"> "
