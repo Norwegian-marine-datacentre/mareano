@@ -1910,10 +1910,10 @@ fieldset.x-panel-collapsed .x-fieldset-bwrap {
 	padding:2px;
     background:repeat-x top left;
     position:relative;
-    left:0;
+	left:0;
     top:0;
     zoom:1;
-    overflow:hidden;
+/*     overflow:hidden; */
 }
 
 .x-toolbar-left {
@@ -2149,6 +2149,7 @@ div.x-toolbar-no-items {
 	overflow:hidden;
 }
 
+/*     overflow:hidden !important; */
 .x-grid-panel .x-panel-body {
     overflow:hidden !important;
 }
@@ -2837,7 +2838,9 @@ a.x-grid3-hd-btn:hover {
     -moz-opacity: .5;
     filter:alpha(opacity=50);
     zoom:1;
-}.ext-strict .ext-ie .x-tree .x-panel-bwrap{
+}
+/*     overflow:hidden; */
+.ext-strict .ext-ie .x-tree .x-panel-bwrap{
     position:relative;
     overflow:hidden;
 }
@@ -2876,7 +2879,7 @@ a.x-grid3-hd-btn:hover {
 input.x-tree-node-cb {
     margin-left:1px;
     height: 19px;
-	vertical-align: bottom;
+    vertical-align: bottom;
 }
 
 .ext-ie input.x-tree-node-cb {
@@ -3825,7 +3828,7 @@ a.x-menu-item {
 .x-panel-body {
     border:1px solid;
     border-top:0 none;
-    overflow:hidden;
+/*     overflow:hidden; */
     position: relative; /* added for item scroll positioning */
 }
 
@@ -3953,13 +3956,13 @@ a.x-menu-item {
 }
 
 .x-panel-bwrap {
-    overflow:hidden;
+/*     overflow:hidden; */
     zoom:1;
     left:0;
     top:0;
 }
 .x-panel-body {
-    overflow:hidden;
+/*     overflow:hidden; */
     zoom:1;
 }
 
@@ -3972,9 +3975,9 @@ a.x-menu-item {
 }
 
 /* Plain */
-.x-plain-body {
-    overflow:hidden;
-}
+/* .x-plain-body { */
+/*     overflow:hidden; */
+/* } */
 
 .x-plain-bbar .x-toolbar {
     overflow:hidden;
@@ -3987,13 +3990,13 @@ a.x-menu-item {
 }
 
 .x-plain-bwrap {
-    overflow:hidden;
+/*     overflow:hidden; */
     zoom:1;
 }
 
-.x-plain {
-    overflow:hidden;
-}
+/* .x-plain { */
+/*     overflow:hidden; */
+/* } */
 
 /* Tools */
 .x-tool {
