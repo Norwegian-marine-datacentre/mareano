@@ -117,6 +117,10 @@ body {
     background-image: url(img/tillegg/english.gif);
 }
 
+.x-btn .icon-question {
+	background-image: url(img/silk/help.png);
+}
+
 .x-btn .icon-zoom-previous { 
     background-image: url(img/silk/arrow_left.png);
 }

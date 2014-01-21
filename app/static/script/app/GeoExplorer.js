@@ -579,6 +579,16 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
             iconCls: "icon-english",
             scope: this
         });    	
+        
+        var helpIcon = new Ext.Button({
+            type:'help',
+            tooltip: 'Get Help',
+            handler: function(event, toolEl, panel) {
+                alert('Do you need help?');
+        	},
+        	iconCls: "icon-question",
+        	scope: this
+        });
     	
         var tools = [
              "", 
@@ -589,6 +599,7 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
              "-",
              tmpMouseP,
              "->",
+             helpIcon,
              mareanoNorskBtn,
              mareanoEngelskBtn  			
         ];
