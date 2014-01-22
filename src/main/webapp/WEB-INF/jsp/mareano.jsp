@@ -86,7 +86,7 @@
                 //Ext.BLANK_IMAGE_URL = "theme/app/img/blank.gif";
                 OpenLayers.ImgPath = "theme/app/img/";
                 GeoExt.Lang.set('no');
-                var app = new GeoExplorer.Composer({
+                app = new GeoExplorer.Composer({
                     <!-- authStatus: < status >, -->
                     proxy: "proxy/?url=",
                     printService: null,
@@ -359,9 +359,25 @@
                             if(c.text=="Area") c.setText("Areal");
                         }
                     });
+                    
+					addDropdownmenuToMareanoMenuIfIe();
+                  	
                 });
             }
                
+            function addDropdownmenuToMareanoMenuIfIe() {
+            	//if ( navigator.userAgent.toLowerCase().indexOf('msie') != -1) {} works either way in other browsers 
+                var sfEls = document.getElementById("nav").getElementsByTagName("LI");
+              	for (var i=0; i<sfEls.length; i++) {
+	                    sfEls[i].onmouseover=function() {
+	                      this.className+=" sfhover";
+                    }
+	                sfEls[i].onmouseout=function() {
+	                    this.className=this.className.replace(new RegExp(" sfhover\\b"), "");
+                	}
+				}
+            }
+            
             function openURI(uri){ // needed by GMLselected(evt)
             	window.open(uri,'Punktdata');
             }
