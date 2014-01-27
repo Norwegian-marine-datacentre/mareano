@@ -302,10 +302,11 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
             activeTab: 0,
             region: "center",
             items: [westPanel, tipsPanel,
-            {title: this.helpTitle, 
+            {	title: this.helpTitle, 
             	html: this.helpText,
                 disabled: Ext.isEmpty(this.helpText),
-            	region: "center"}
+            	region: "center",
+            	autoScroll:true}
             ]
         });
 
