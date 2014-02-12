@@ -38,10 +38,10 @@ GeoExt.Lang.add("no", {
         zoomToItem4: "Skagerrak",
         zoomToItem5: "Polhavet",
         zoomToEmptyText: "G\u00e5 til havomr\u00e5de",
-        expandText: "Utvid kartlag Panel",
-        collapseText: "Sl\u00e5 sammen kartlag Panel",
-        expandCollapseTooltip: "Utvid eller sl\u00e5 sammen kartlag Panel",
-        visibilityText: "Sl\u00e5 av",
+        expandText: "Utvid kartlag panel",
+        collapseText: "Sl\u00e5 sammen kartlag panel",
+        expandCollapseTooltip: "Utvid eller sl\u00e5 sammen kartlag panel",
+        visibilityText: "Sl\u00e5 av alle kartlag",
         visibilityTooltip: "Sl\u00e5 av alle kartlag"
     },
     "GeoExplorer.Composer.prototype": {

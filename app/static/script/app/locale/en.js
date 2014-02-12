@@ -41,7 +41,7 @@ GeoExt.Lang.add("en", {
         expandText: "Expand Layers",
         collapseText: "Collapse Layers",
         expandCollapseTooltip: "Expand or collapse the Layers panel",
-        visibilityText: "Turn off",
+        visibilityText: "Turn off all overlays",
         visibilityTooltip: "Turn off all overlays"
     },
     "GeoExplorer.Composer.prototype": {
