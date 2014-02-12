@@ -154,6 +154,16 @@
                                 type: "OpenLayers.Layer.WMS",
                                 group: "background",
                                 args: [
+                                      	"Gebco skyggerelieff gråtoner",
+                                      	"http://maps.imr.no/geoserver/gwc/service/wms",
+                                      	{layers: "geonorge:geonorge_norge_skyggerelieff", format: "image/jpeg", transparent: true, isBaseLayer: true},
+                                      	{singleTile:false}
+                                ]                            
+                            }, {
+                                source: "ol",
+                                type: "OpenLayers.Layer.WMS",
+                                group: "background",
+                                args: [
                                       	"Europa -hvit bakgrunn",
                                       	"http://maps.imr.no/geoserver/gwc/service/wms",
                                       	//"http://opencache.statkart.no/gatekeeper/gk/gk.open",

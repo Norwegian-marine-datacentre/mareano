@@ -133,6 +133,16 @@
                                 type: "OpenLayers.Layer.WMS",
                                 group: "background",
                                 args: [
+                                      	"Gebco shaded relief in grayscale",
+                                      	"http://maps.imr.no/geoserver/gwc/service/wms",
+                                      	{layers: "geonorge:geonorge_norge_skyggerelieff", format: "image/jpeg", transparent: true, isBaseLayer: true},
+                                      	{singleTile:false}
+                                ]                            
+                            }, {                            	
+                                source: "ol",
+                                type: "OpenLayers.Layer.WMS",
+                                group: "background",
+                                args: [
                                       	"Europa - white background",
                                       	"http://maps.imr.no/geoserver/gwc/service/wms",
                                       	//"http://opencache.statkart.no/gatekeeper/gk/gk.open",
