@@ -219,10 +219,10 @@ function addLayerToGroup( gruppeNavn, gruppeText, map, mapPanel, layers, store, 
                         clone.getLayer().setVisibility(true);
                         clone.getLayer().metadata['kartlagId'] = id;
                         app.mapPanel.layers.add(clone);
-                        var maxExtent = clone.getLayer().maxExtent;
-                        if (event.ui._silent !== true && maxExtent) {
-                            app.mapPanel.map.zoomToExtent(maxExtent, true);
-                        }
+//                        var maxExtent = clone.getLayer().maxExtent; //zoom to extent for layers
+//                        if (event.ui._silent !== true && maxExtent) {
+//                            app.mapPanel.map.zoomToExtent(maxExtent, true);
+//                        }
                         displayLegendGraphicsAndSpesialpunkt(app.mapPanel.map.getExtent() + "", layer.metadata['kartlagId'], layerRecord.getLayer(), event, app);
                     }
             	    //app.mapPanel.map.addLayer(layer); //adds layer to Overlay but mareano_wmslayerpanel is missing from properties and no layer properties are shown                        
@@ -243,9 +243,9 @@ function addLayerToGroup( gruppeNavn, gruppeText, map, mapPanel, layers, store, 
         listeners: {
             "checkchange": function(node, checked) { //setting all subnodes if parent is checked
                 var extent = node.attributes.maxExtent;
-                if (extent && checked) {
-                    app.mapPanel.map.zoomToExtent(extent, true);
-                }
+//                if (extent && checked) { //zoom to extent for pictures
+//                    app.mapPanel.map.zoomToExtent(extent, true);
+//                }
                 node.expand();
                 var cs = node.childNodes;
                 for(var c = cs.length-1; c >= 0; c--) { //add layers in reverse of reverse order - so in the right order
