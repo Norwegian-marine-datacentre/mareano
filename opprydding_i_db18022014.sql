@@ -65,3 +65,60 @@ delete from hovedtemaer where hovedtemaer_id=1;
 delete from kartbilder_kartlag where kartlag_id=311 and kartbilder_id!=66;
 update kartbilder_no set alternate_title = 'Terrengmodell havbunn (skyggerelieff)' where kartbilder_id=66
 update kartbilder_en set alternate_title = 'Terrain Model seabed (shaded relief)' where kartbilder_id=66
+
+--rename Oversiktskart, dybdeforhold til Dybdedata havområder 
+--select * from kartbilder_no where  alternate_title like '%Oversiktskart, dybdeforhold%' --> 120
+update kartbilder_no set alternate_title = 'Dybdedata havområder' where kartbilder_id=120;
+update kartbilder_en set alternate_title = 'Depth Data seas' where kartbilder_id=120;
+
+-- bytt navn på hovedtema Havbunn og vannmasser til Havbunn
+--select * from hovedtemaer_no where  alternate_title like '%Havbunn og vannmasser%'  --> 6
+update hovedtemaer_no set alternate_title = 'Havbunn' where hovedtemaer_id=6;
+update hovedtemaer_en set alternate_title = 'Seabed' where hovedtemaer_id=6;
+
+-- opprett et kartbilde  Havbunn > Terrengmodell havbunn (skyggerelieff)	 
+insert into kartbilder (kartbilder_id, hovedtemaer_id) values (216, 6);
+insert into kartbilder_no (kartbilder_id, title, alternate_title) values (216,'Terrengmodell havbunn (detalj)','Terrengmodell havbunn (detalj)');
+insert into kartbilder_en (kartbilder_id, title, alternate_title) values (216,'Terrain Model seabed (details)','Terrain Model seabed (details)');
+
+-- slett alle Skyggerelieff, fokusområder (tidligere skyggerelieff detaljert) utenom en som 
+-- flyttes til havbunn > Terrengmodell havbunn 
+--select * from kartbilder_no where  alternate_title like '%Terrengmodell havbunn (sk%' -->66
+-- select * from kartbilder_kartlag where kartbilder_id=66 and kartlag_id=321;
+update kartbilder_kartlag set kartbilder_id=216 where kartbilder_id=66 and kartlag_id=321;
+
+--flytte dybdedata > Detaljerte dybdedata til Andre kart (id 30)
+--select * from kartbilder_no where  alternate_title like '%Detaljerte dybdedata%' --> 48
+update kartbilder set hovedtemaer_id=30 where kartbilder_id=48;
+
+-- Fjern Dybdedata > Enkeltstråle ekkolodd 
+--select * from kartlag_no where  alternate_title ilike '%Enkeltstråle ekkolodd%' --> 191
+delete from kartbilder_kartlag where kartlag_id=191 and kartbilder_id!=66;
+
+-- flytt Bakgrunn, sjø > Sjøgrenser til Dybdekart
+--select * from kartlag_no where  alternate_title ilike '%Sjøgrenser%' --> 329
+--select * from kartbilder_kartlag where kartlag_id=329 --> kartbilde_id 136
+--select * from hovedtemaer_no where  alternate_title ilike '%Dybdekart%' --> 3
+update kartbilder set hovedtemaer_id=3 where kartbilder_id=136;
+-- rename kartbilde Sjøgrenser til Maritime grenser
+update kartbilder_no set alternate_title='Maritime grenser' where kartbilder_id=136;
+update kartbilder_en set alternate_title='Maritime boundaries' where kartbilder_id=136;
+-- rename kartlag Sjøgrenser > Sjøgrenser til Martitime grenser > Martitime grenser
+update kartlag_no set alternate_title='Maritime grenser' where kartlag_id=329;
+update kartlag_en set alternate_title='Maritime boundaries' where kartlag_id=329;
+
+-- flytte Artsmangfold og naturtyper > Landskap til Havbunn
+--select * from kartbilder_no where  alternate_title ilike '%Landskap%' --> 145 (Marine landskap)
+update kartbilder set hovedtemaer_id=6 where kartbilder_id=145;
+
+-- slett skyggerelieff detaljert
+--select * from kartlag_no where  alternate_title ilike '%Skyggerelieff detaljert%' --> 432
+--select * from kartbilder_kartlag where kartlag_id=432 
+delete from kartbilder_kartlag where kartlag_id=432;
+
+--Slett Havbunn>Landskap>Marine områder og Dybdekoter(regional)
+--select * from kartbilder_no where kartbilder_id=145
+--select * from kartbilder_kartlag where kartbilder_id=145 -> 14, 421, 351
+--select * from kartbilder_kartlag where kartlag_id=421 and kartbilder_id=145;
+delete from kartbilder_kartlag where kartlag_id=14 and kartbilder_id=145;
+delete from kartbilder_kartlag where kartlag_id=421 and kartbilder_id=145;
