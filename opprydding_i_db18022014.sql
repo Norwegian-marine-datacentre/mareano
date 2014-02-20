@@ -334,3 +334,30 @@ delete from kartbilder_en where kartbilder_id=7;
 delete from kartbilder_no where kartbilder_id=7;
 delete from kartbilder where kartbilder_id=7;
 
+-- opprett et kartbilde  Andre kart > Annen geokjemi	 
+--select * from kartbilder order by kartbilder_id -->
+insert into kartbilder (kartbilder_id, hovedtemaer_id) values (217, 30);
+insert into kartbilder_no (kartbilder_id, title, alternate_title) values (217,'Annen geokjemi','Annen geokjemi');
+insert into kartbilder_en (kartbilder_id, title, alternate_title) values (217,'Annen geokjemi','Annen geokjemi');
+
+-- flytte Kvikksølv-nivåer;rasterkart, Bly-nivåer; rasterkart, Barium-nivåer; rasterkart
+--select * from kartlag_no where alternate_title ilike '%rasterkart%' --> 219 232 231
+--select * from kartbilder_kartlag where kartlag_id=219 --> 103, 105
+--select * from kartbilder_no where kartbilder_id=103 --> kartbilde blynivå;rasterkart
+--select * from kartbilder_no where kartbilder_id=105 --> Tungmetaller
+
+update kartbilder_kartlag set kartbilder_id=217 where kartbilder_id=105 and kartlag_id=219
+--select * from kartbilder_kartlag where kartlag_id=232 --> 106, 109
+--select * from kartbilder_no where kartbilder_id=109 --> Barium-nivåer, rasterkart
+--select * from kartbilder_no where kartbilder_id=106 --> Andre kjemiske element
+update kartbilder_kartlag set kartbilder_id=217 where kartbilder_id=106 and kartlag_id=232
+--select * from kartbilder_kartlag where kartlag_id=231 --> 104, 105
+--select * from kartbilder_no where kartbilder_id=104 --> kvikksølv-nivåer
+--select * from kartbilder_no where kartbilder_id=105 -->Tungmetaller
+update kartbilder_kartlag set kartbilder_id=217 where kartbilder_id=105 and kartlag_id=231
+
+-- slettet kartbilde PBDE-209-nivåer
+--select * from kartbilder_no where alternate_title ilike '%BDE209-nivåer%' -->207
+delete from kartbilder_en where kartbilder_id=207
+delete from kartbilder_no where kartbilder_id=207
+delete from kartbilder where kartbilder_id=207

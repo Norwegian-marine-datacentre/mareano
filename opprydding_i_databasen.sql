@@ -9,13 +9,14 @@ delete from kartbilder_kartlag where kartlag_id=425;
 delete from kartbilder_kartlag where kartlag_id=1;
 
 -- Slette tomt kartbilde under bagrunn, landkart
--- select * from kartbilder where hovedtemaer_id=1
+	-- select * from kartbilder where hovedtemaer_id=1
 -- select * from kartbilder_no where kartbilder_id=11
 delete from kartbilder_no where kartbilder_id=11;
 delete from kartbilder_en where kartbilder_id=11;
 delete from kartbilder where kartbilder_id=11;
 
 -- Slett satelittbilder også etter detaljertbakgrunnskart er fjernet
+-- select * from kartbilder where kartbilder_id=10; 
 delete from kartbilder_kartlag where kartbilder_id=10;
 delete from kartbilder_no where kartbilder_id=10;
 delete from kartbilder_en where kartbilder_id=10;
@@ -35,18 +36,18 @@ insert into hovedtemaer(hovedtemaer_id) values (36);
 insert into hovedtemaer_no (hovedtemaer_id,title, alternate_title,modified) values (36,'generelle','generelle','2012-03-07 14:26:17');
 insert into hovedtemaer_en (hovedtemaer_id,title, alternate_title,modified) values (36,'generelle','generelle','2012-03-07 14:26:17');
 
-insert into kartbilder (kartbilder_id, hovedtemaer_id) values (214, 36);
-insert into kartbilder_en (kartbilder_id, title, alternate_title) values (214,'generelle','generelle');
-insert into kartbilder_no (kartbilder_id, title, alternate_title) values (214,'generelle','generelle');
+insert into kartbilder (kartbilder_id, hovedtemaer_id) values (215, 36);
+insert into kartbilder_en (kartbilder_id, title, alternate_title) values (215,'generelle','generelle');
+insert into kartbilder_no (kartbilder_id, title, alternate_title) values (215,'generelle','generelle');
 
-insert into kartbilder_kartlag values(214,293,18815,29999,'2013-01-03 11:45:48');
-insert into kartbilder_kartlag values(214,22,18815,29998,'2013-01-03 11:45:48');
-insert into kartbilder_kartlag values(214,257,18815,29997,'2013-01-03 11:45:48');
+insert into kartbilder_kartlag values(215,293,18815,29999,'2013-01-03 11:45:48');
+insert into kartbilder_kartlag values(215,22,18815,29998,'2013-01-03 11:45:48');
+insert into kartbilder_kartlag values(215,257,18815,29997,'2013-01-03 11:45:48');
 
-delete from kartbilder_kartlag where kartlag_id=293 and kartbilder_id!=214; --hav, navn
-delete from kartbilder_kartlag where kartlag_id=22 and kartbilder_id!=214; --10 graders rutenett
-delete from kartbilder_kartlag where kartlag_id=257 and kartbilder_id!=214; --stedsnavn, fra topografisk norgeskart
-delete from kartbilder_kartlag where kartlag_id=405 and kartbilder_id!=214; --stedsnavn, fra topografisk kart
+delete from kartbilder_kartlag where kartlag_id=293 and kartbilder_id!=215; --hav, navn
+delete from kartbilder_kartlag where kartlag_id=22 and kartbilder_id!=215; --10 graders rutenett
+delete from kartbilder_kartlag where kartlag_id=257 and kartbilder_id!=215; --stedsnavn, fra topografisk norgeskart
+delete from kartbilder_kartlag where kartlag_id=405 and kartbilder_id!=215; --stedsnavn, fra topografisk kart
 
 -- slette bakgrunnskart, land hovedtema og kartbilde:
 -- select * from kartbilder where hovedtemaer_id=1
@@ -67,14 +68,14 @@ delete from kartbilder where kartbilder_id=2;
 
 -- NB! Flytting har feilet
 -- move one Havbunn skyggerelieff to commons map and delete the rest
-update kartbilder_kartlag set kartbilder_id=214 where kartbilder_id=27 and kartlag_id=311;
-delete from kartbilder_kartlag where kartlag_id=311 and kartbilder_id!=214;
+update kartbilder_kartlag set kartbilder_id=215 where kartbilder_id=27 and kartlag_id=311;
+delete from kartbilder_kartlag where kartlag_id=311 and kartbilder_id!=215;
 
 -- flytt skyggerelieff, og slett skyggerelieff detaljert
 --(select * from kartbilder_kartlag where kartlag_id=432 and kartlag_id=473)
 --select * from kartbilder_kartlag where kartlag_id=473
-update kartbilder_kartlag set kartbilder_id=214 where kartbilder_id=121 and kartlag_id=473;
-delete from kartbilder_kartlag where kartlag_id=473 and kartbilder_id!=214;
+update kartbilder_kartlag set kartbilder_id=215 where kartbilder_id=121 and kartlag_id=473;
+delete from kartbilder_kartlag where kartlag_id=473 and kartbilder_id!=215;
 delete from kartbilder_kartlag where kartlag_id=432;
 
 --flytt en dybdekoter (regional) til generelle kart og slett resten

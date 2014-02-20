@@ -94,7 +94,17 @@
                         numZoomLevels: 18,
                         wrapDateLine: false,
                         layers: [
-                            {
+                         {
+                             source: "ol",
+                             type: "OpenLayers.Layer.WMS",
+                             group: "background",
+                             args: [
+                                 "Nautical chart",
+                                 "http://wms.geonorge.no/skwms1/wms.sjo_hovedkart2",
+                                 {layers: "Sjokart_Hovedkartserien2", format: "image/png", transparent: true, isBaseLayer: true}
+                                 ,{singleTile:true}
+                             ]
+                         }, {
                             	source: "ol",
                                 type: "OpenLayers.Layer.WMS",
                                 group: "background",

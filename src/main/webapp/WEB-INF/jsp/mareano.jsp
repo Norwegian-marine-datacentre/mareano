@@ -108,8 +108,18 @@
                         maxExtent: [-2500000.0,3500000.0,3045984.0,9045984.0],
                         numZoomLevels: 18,
                         wrapDateLine: false,
-                        layers: [                             
-                            {
+                        layers: [
+                         {
+                             source: "ol",
+                             type: "OpenLayers.Layer.WMS",
+                             group: "background",
+                             args: [
+                                 "Sj\u00F8kart",
+                                 "http://wms.geonorge.no/skwms1/wms.sjo_hovedkart2",
+                                 {layers: "Sjokart_Hovedkartserien2", format: "image/png", transparent: true, isBaseLayer: true}
+                                 ,{singleTile:true}
+                             ]
+                         }, {
                             	/*
                             	 * Kartloesninger fra geonorge.
                             	 * 1. http://wms.geonorge.no - ubegrenset tilgang for HI (fordi de har IP rangen vaar) men en begrensning paa ca 3 kall i sekundet. Kjoerer raskest med singleTile
