@@ -189,7 +189,8 @@
                                args: [
                                      	"Europa og Gebco",
                                      	"http://maps.imr.no/geoserver/gwc/service/wms",
-                                     	{layers: "geonorge:barents_watch_WMS", format: "image/jpeg", transparent: true, isBaseLayer: true}
+//                                      	{layers: "geonorge:barents_watch_WMS", format: "image/jpeg", transparent: true, isBaseLayer: true}
+                                     	{layers: "barents_watch_WMS", format: "image/jpeg", transparent: true, isBaseLayer: true}
                                      	,{singleTile:false}
                                ]
                            }                	
