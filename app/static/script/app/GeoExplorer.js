@@ -410,7 +410,7 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
         var innerNorthPanel = new Ext.Panel({
             border: true,
             region: "north",
-            split: true,
+            split: false,
             id: "topPanelHeading",
             collapseMode: "mini",
             bodyStyle: "background-image:url('http://www.mareano.no/kart/images/nav-main-background.jpg')",
@@ -429,7 +429,7 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
         
         var northPanel = new Ext.Panel({
             height: "40%",
-            split: true,
+            split: false,
             unstyled:true,
             collapseMode: "mini",
             region: "north",
