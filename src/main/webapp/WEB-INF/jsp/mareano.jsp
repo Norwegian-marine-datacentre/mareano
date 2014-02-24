@@ -115,9 +115,9 @@
                              group: "background",
                              args: [
                                  "Sj\u00F8kart",
-                                 "http://wms.geonorge.no/skwms1/wms.sjo_hovedkart2",
+                                 "http://maps.imr.no/geoserver/gwc/service/wms",
                                  {layers: "Sjokart_Hovedkartserien2", format: "image/png", transparent: true, isBaseLayer: true}
-                                 ,{singleTile:true}
+                                 ,{singleTile:false}
                              ]
                          }, {
                             	/*
@@ -132,7 +132,6 @@
                                 args: [
                                     "Norgeskart",
                                     "http://wms.geonorge.no/skwms1/wms.toporaster2",
-                                    //"http://opencache.statkart.no/gatekeeper/gk/gk.open",
                                     {layers: "toporaster", format: "image/png", transparent: true, isBaseLayer: true}
                                     ,{singleTile:true}
                                 ]
@@ -143,7 +142,6 @@
                                 args: [
                                     "Norgeskart (gr\u00e5tone)",
                                     "http://wms.geonorge.no/skwms1/wms.topo2.graatone",
-                                    //"http://opencache.statkart.no/gatekeeper/gk/gk.open",
                                     {layers: "topo2_graatone_WMS", format: "image/png", transparent: true, isBaseLayer: true}
                                     ,{singleTile:true}
                                 ]
@@ -154,9 +152,7 @@
                                 args: [
                                       	"Europa",
                                       	"http://maps.imr.no/geoserver/gwc/service/wms",
-                                      	//"http://opencache.statkart.no/gatekeeper/gk/gk.open",
-                                      	{layers: "geonorge_europa:Europa_WMS", format: "image/jpeg", transparent: true, isBaseLayer: true}
-                                      	//{layers: "europa", format: "image/jpeg", transparent: true, isBaseLayer: true}
+                                      	{layers: "Europa_WMS", format: "image/jpeg", transparent: true, isBaseLayer: true}
                                       	,{singleTile:false}
                                 ]
                             }, {
@@ -176,26 +172,21 @@
                                 args: [
                                       	"Europa -hvit bakgrunn",
                                       	"http://maps.imr.no/geoserver/gwc/service/wms",
-                                      	//"http://opencache.statkart.no/gatekeeper/gk/gk.open",
-                                      	{layers: "geonorge_europa:geonorge_europa_hvit_bakgrunn", format: "image/jpeg", transparent: true, isBaseLayer: true}
-                                      	//{layers: "europa", format: "image/jpeg", transparent: true, isBaseLayer: true}
+                                      	{layers: "geonorge_europa_hvit_bakgrunn", format: "image/jpeg", transparent: true, isBaseLayer: true}
                                       	,{singleTile:false}
                                 ]
-                            }	  
-                           	, {
+                            }, {
                                source: "ol",
                                type: "OpenLayers.Layer.WMS",
                                group: "background",
                                args: [
                                      	"Europa og Gebco",
                                      	"http://maps.imr.no/geoserver/gwc/service/wms",
-//                                      	{layers: "geonorge:barents_watch_WMS", format: "image/jpeg", transparent: true, isBaseLayer: true}
                                      	{layers: "barents_watch_WMS", format: "image/jpeg", transparent: true, isBaseLayer: true}
                                      	,{singleTile:false}
                                ]
                            }                	
                         ],
-                        
                         center: [1088474,7489849],
                         zoom: 2
                     }
