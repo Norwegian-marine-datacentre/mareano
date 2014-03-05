@@ -121,6 +121,10 @@ body {
 	background-image: url(img/silk/help.png);
 }
 
+.x-btn .icon-support {
+	background-image: url(img/mail-icon.PNG);
+}
+
 .x-btn .icon-zoom-previous { 
     background-image: url(img/silk/arrow_left.png);
 }

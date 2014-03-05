@@ -581,11 +581,21 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
             scope: this
         });    	
         
+        var support = new Ext.Button({
+            type:'support',
+            tooltip: 'Support',
+            handler: function() {
+                window.location = 'mailto:datahjelp@imr.no';
+            },
+        	iconCls: "icon-support",
+        	scope: this
+        });
+        
         var helpIcon = new Ext.Button({
             type:'help',
             tooltip: 'Get Help',
             handler: function(event, toolEl, panel) {
-                alert('Do you need help?');
+                alert('Help - is under construction.');
         	},
         	iconCls: "icon-question",
         	scope: this
@@ -600,6 +610,7 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
              "-",
              tmpMouseP,
              "->",
+             support,
              helpIcon,
              mareanoNorskBtn,
              mareanoEngelskBtn  			
