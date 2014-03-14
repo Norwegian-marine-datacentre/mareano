@@ -23,6 +23,6 @@
 	<select id="getKartlagInfoEN" parameterType="long" resultMap="KartlagInfoResult">
     	<include refid="kartlagInfoSelect" />
     	FROM kartlag_en where kartlag_id=#{kartlagId}
-	</select>    
+	</select>      
 	
 </mapper>

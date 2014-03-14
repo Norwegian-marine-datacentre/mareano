@@ -189,6 +189,7 @@ function addLayerToGroup( gruppeNavn, gruppeText, map, mapPanel, layers, store, 
                         }
                     });
                     node.parentNode.ui.checkbox.checked = allChildrenChecked;
+                	addKartbildeAbstract(node.parentNode, allChildrenChecked);
                 };
                 setGroupChecked(node);
                 // the layer can be associated with multiple nodes, so search the tree
@@ -226,8 +227,7 @@ function addLayerToGroup( gruppeNavn, gruppeText, map, mapPanel, layers, store, 
                         displayLegendGraphicsAndSpesialpunkt(app.mapPanel.map.getExtent() + "", layer.metadata['kartlagId'], layerRecord.getLayer(), event, app);
                     }
             	    //app.mapPanel.map.addLayer(layer); //adds layer to Overlay but mareano_wmslayerpanel is missing from properties and no layer properties are shown                        
-		    //displayLegendGraphicsAndSpesialpunkt(app.mapPanel.map.getExtent() + "", layer.metadata['kartlagId'], layerRecord.getLayer(), event, app);   
-            	    //getSpesialPunkt(app.mapPanel.map.getExtent() + "", layerRecord.getLayer().metadata['kartlagId'], layerRecord.getLayer(), event, app);
+                	//displayLegendGraphicsAndSpesialpunkt(app.mapPanel.map.getExtent() + "", layer.metadata['kartlagId'], layerRecord.getLayer(), event, app);   
                 } else {
             	    removeLayerLegendAndInfo(app.mapOfGMLspesialpunkt, layer.metadata['kartlagId'], record, layer, app);
                 }
@@ -247,6 +247,8 @@ function addLayerToGroup( gruppeNavn, gruppeText, map, mapPanel, layers, store, 
 //                    app.mapPanel.map.zoomToExtent(extent, true);
 //                }
                 node.expand();
+//                addKartbildeAbstract(node, checked);
+                
                 var cs = node.childNodes;
                 for(var c = cs.length-1; c >= 0; c--) { //add layers in reverse of reverse order - so in the right order
                     cs[c].ui._silent = true;
@@ -258,30 +260,51 @@ function addLayerToGroup( gruppeNavn, gruppeText, map, mapPanel, layers, store, 
         layerStore: store,
         loader: tmpLoader
     });
-
     return layerContainerGruppe;
 } 
 
-function getSpesialPunkt(extent, kartlagId, layer, event, app) {
-    jQuery.ajax({
-        type: 'get',
-        url: "spring/spesialpunkt",
-        contentType: "application/json",
-        data: {
-            extent : extent,
-            kartlagId: kartlagId
-        },                	
-        success:function(data) {
-
-        }                
-    });
+function addKartbildeAbstract(node, checked) {
+    if ( checked == true) {
+    	var languageChoosen = getLanguage();
+        jQuery.ajax({
+            type: 'get',
+            url: "spring/infoKartBilde",
+            contentType: "application/json",
+            data: {
+                kartbildeNavn: node.attributes.text,
+                language: languageChoosen
+            },
+            success:function(data) {
+            	var legendDiv = getKartlagBildeDiv(node)
+            	visKartlagInfoHTML( legendDiv, data );
+            }
+        }); 
+    } else if ( checked == false ) {
+    	var legendDiv = getKartlagBildeDiv(node)
+    	fjernKartlagInfo('#'+legendDiv);
+    }
 }
 
-function displayLegendGraphicsAndSpesialpunkt(extent, kartlagId, layer, event, app) {
+function getKartlagBildeDiv(node) {
+	var legendDiv = node.attributes.text;
+	legendDiv = legendDiv.toLowerCase();
+	legendDiv = legendDiv.replace("æ","ae");
+	legendDiv = legendDiv.replace("ø","oe");
+	legendDiv = legendDiv.replace("å","aa");
+	legendDiv = legendDiv.replace(" ","_");
+	return legendDiv;
+}
+
+function getLanguage() {
 	var languageChoosen = "en";
 	if (document.location.href.indexOf("mareano.html") != -1) {
 		languageChoosen = "norsk";
 	}
+	return languageChoosen;
+}
+
+function displayLegendGraphicsAndSpesialpunkt(extent, kartlagId, layer, event, app) {
+	var languageChoosen = getLanguage();
     jQuery.ajax({
         type: 'get',
         url: "spring/legendAndSpesialpunkt",
@@ -299,10 +322,7 @@ function displayLegendGraphicsAndSpesialpunkt(extent, kartlagId, layer, event, a
 }
 
 function displayLegendGraphics(kartlagId) {
-	var languageChoosen = "en";
-	if (document.location.href.indexOf("mareano.html") != -1) {
-		languageChoosen = "norsk";
-	}
+	var languageChoosen = getLanguage();
     jQuery.ajax({
         type: 'get',
         url: "spring/legend",
@@ -414,10 +434,14 @@ function removeLayerLegendAndInfo(mapOfGMLspesialpunkt, kartlagId, record, layer
     }
     var legendDiv = '#'+kartlagId; //fjern legend 
     jQuery(legendDiv).remove();
-    
-    var temp = jQuery("<div>").html(kartlagInfoState); //fjern kartlaginfo 
+    fjernKartlagInfo(legendDiv);
+}
+
+function fjernKartlagInfo(legendDiv) {
+	var temp = jQuery("<div>").html(kartlagInfoState); //fjern kartlaginfo 
     jQuery(temp).find(legendDiv+'tips').remove();
-    kartlagInfoState = jQuery(temp).html();			
+    kartlagInfoState = jQuery(temp).html();
+
     updateOrSetKartlagInfo(kartlagInfoState);
 }
 
@@ -452,54 +476,5 @@ function GMLselected (event) {
     }
 }
 
-/**
- * Adding overviewmap and keyboard defaults
- */
-function addOverviewMapAndKeyboardDefaults(thisMap) {
-    var layerOptions = {
-        units: "m",
-        projection: "EPSG:32633",
-        maxExtent: new OpenLayers.Bounds( -4101096.2210526327,5925725.768421048,4999746.221052637,9135005.768421048 ),
-        minResolution: new OpenLayers.Bounds( -4101096.2210526327,5925725.768421048,4999746.221052637,9135005.768421048 ),
-        bounds: new OpenLayers.Bounds( -4101096.2210526327,5925725.768421048,4999746.221052637,9135005.768421048 ),
-        theme: null
-    };
-    var ol_wms2 = new OpenLayers.Layer.WMS(
-    		"geonorge",
-    		"http://wms.geonorge.no/skwms1/wms.europa?brukerid=EHAV_MOEEND&passord=spartakus234&VERSION=1.1.1&SERVICE=WMS",
-    		{layers: "Land,Vmap0Land,Vmap0Kystkontur"},
-                {singleTile: true, ratio: 1}
-	);
-    var tmpLayerOptions = {layers: [ol_wms2], mapOptions: layerOptions, maximized: false, minRatio: 48, maxRatio: 72, size: {w: 300, h: 150}};
-    thisMap.addControl(new OpenLayers.Control.OverviewMap(tmpLayerOptions));
-    thisMap.addControl(new OpenLayers.Control.KeyboardDefaults());
 
-    /*** Fix to avoid vector layer below baselayers ***/
-    for ( var i = thisMap.layers.length-1; i>=0; --i ) {
-        if ( thisMap.layers[i] instanceof OpenLayers.Layer.Vector ) {
-            thisMap.setLayerIndex( thisMap.layers[i], 33 );
-        }
-    }
-}  
-
-OpenLayers.Control.SelectFeature.prototype.clickFeature = function(feature) {
-    if(!this.hover) {
-        var selected = (OpenLayers.Util.indexOf(
-            feature.layer.selectedFeatures, feature) > -1);
-        if(selected) {
-            if(this.toggleSelect()) {
-                this.unselect(feature);
-            } else if(!this.multipleSelect()) {
-                this.unselectAll({except: feature});
-            }
-            // bartvde, even if feature was selected before, fire the featureselected event
-            this.select(feature);
-        } else {
-            if(!this.multipleSelect()) {
-                this.unselectAll({except: feature});
-            }
-            this.select(feature);
-        }
-    }
-};
 

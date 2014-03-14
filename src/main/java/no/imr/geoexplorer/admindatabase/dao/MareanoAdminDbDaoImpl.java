@@ -113,4 +113,16 @@ public class MareanoAdminDbDaoImpl implements MareanoAdminDbDao {
 		}
 		return kartlagInfo;
 	}
+	
+	/** {@inheritDoc} */
+	@Transactional(readOnly = true)
+	public KartBilderEnNo getKartBildeInfo( String kartBildeName, String noOrEn ) throws Exception {
+		KartBilderEnNo kartBilderEnNo = null;
+		if ( noOrEn.equals("norsk") ) {
+			kartBilderEnNo= (KartBilderEnNo) template.selectOne("getKartbilderNo_byName", kartBildeName);
+		} else {
+			kartBilderEnNo= (KartBilderEnNo) template.selectOne("getKartbilderEn_byName", kartBildeName);
+		}
+		return kartBilderEnNo;		
+	}
 }

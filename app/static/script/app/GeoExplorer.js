@@ -296,11 +296,13 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
             id: 'tips', 
             preventBodyReset: true,
             autoHeight: true
+            
         });        	
         
         var westPanelTabs = new Ext.TabPanel({
             activeTab: 0,
             region: "center",
+            autoScroll:true,
             items: [westPanel, tipsPanel,
             {	title: this.helpTitle, 
             	html: this.helpText,
