@@ -189,7 +189,6 @@ function addLayerToGroup( gruppeNavn, gruppeText, map, mapPanel, layers, store, 
                         }
                     });
                     node.parentNode.ui.checkbox.checked = allChildrenChecked;
-                	addKartbildeAbstract(node.parentNode, allChildrenChecked);
                 };
                 setGroupChecked(node);
                 // the layer can be associated with multiple nodes, so search the tree
@@ -247,7 +246,7 @@ function addLayerToGroup( gruppeNavn, gruppeText, map, mapPanel, layers, store, 
 //                    app.mapPanel.map.zoomToExtent(extent, true);
 //                }
                 node.expand();
-//                addKartbildeAbstract(node, checked);
+                addKartbildeAbstract(node, checked);
                 
                 var cs = node.childNodes;
                 for(var c = cs.length-1; c >= 0; c--) { //add layers in reverse of reverse order - so in the right order
@@ -288,10 +287,10 @@ function addKartbildeAbstract(node, checked) {
 function getKartlagBildeDiv(node) {
 	var legendDiv = node.attributes.text;
 	legendDiv = legendDiv.toLowerCase();
-	legendDiv = legendDiv.replace("æ","ae");
-	legendDiv = legendDiv.replace("ø","oe");
-	legendDiv = legendDiv.replace("å","aa");
-	legendDiv = legendDiv.replace(" ","_");
+	legendDiv = legendDiv.replace(/æ/g,'ae'); // /g global option
+	legendDiv = legendDiv.replace(/ø/g,'oe');
+	legendDiv = legendDiv.replace(/å/g,'aa');
+	legendDiv = legendDiv.replace(/ /g,'_');
 	return legendDiv;
 }
 
