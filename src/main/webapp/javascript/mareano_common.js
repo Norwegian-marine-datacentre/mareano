@@ -191,6 +191,7 @@ function addLayerToGroup( gruppeNavn, gruppeText, map, mapPanel, layers, store, 
                     node.parentNode.ui.checkbox.checked = allChildrenChecked;
                 };
                 setGroupChecked(node);
+                addKartbildeAbstract(node.parentNode, node.parentNode.ui.checkbox.checked);
                 // the layer can be associated with multiple nodes, so search the tree
                 var origNode = node;
                 while (node.parentNode) {
@@ -246,7 +247,7 @@ function addLayerToGroup( gruppeNavn, gruppeText, map, mapPanel, layers, store, 
 //                    app.mapPanel.map.zoomToExtent(extent, true);
 //                }
                 node.expand();
-                addKartbildeAbstract(node, checked);
+//                addKartbildeAbstract(node, checked);
                 
                 var cs = node.childNodes;
                 for(var c = cs.length-1; c >= 0; c--) { //add layers in reverse of reverse order - so in the right order
