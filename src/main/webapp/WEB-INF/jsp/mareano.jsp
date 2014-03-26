@@ -60,9 +60,9 @@
         <!-- PrintPreview resources We need to install printing service on maps.imr.no/geoserver for this to work -->
         <!-- link rel="stylesheet" type="text/css" href="externals/PrintPreview/resources/css/printpreview.css">
         <script type="text/javascript" src="script/PrintPreview.js"></script -->
-
+		
+		 
 		<script type="text/javascript" src="script/mareano.js"></script>    
-
         <script>
             function init() {
                 gxp.plugins.LayerTree.prototype.baseNodeText = "Bakgrunnskart";

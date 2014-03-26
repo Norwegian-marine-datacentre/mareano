@@ -347,10 +347,9 @@ function addLegendGraphics(kartlagId, data) {
     buildLegendGraphicsHTML( currentLegend, kartlagId, data );
     visKartlagInfoHTML( kartlagId, data ); 
 }
-
+var controlSelectFeature = null;
 function addSpesialpunkt(extent, kartlagId, layer, event, app, data) {
 	if ( data.noSpesialpunkt == false ) { 
-		var layerName = "";
 		var styleMap = new OpenLayers.StyleMap({
 			'default':{
 				externalGraphic: "theme/imr/images/geofotoSpesialpunkt.png",
@@ -374,9 +373,14 @@ function addSpesialpunkt(extent, kartlagId, layer, event, app, data) {
 		app.mapOfGMLspesialpunkt[kartlagId] = snitt;	    
 		app.mapPanel.map.addLayer( snitt );   	           
 		
-		var control = new OpenLayers.Control.SelectFeature( snitt );
-		app.mapPanel.map.addControl( control );
-		control.activate(); 	 
+		if ( controlSelectFeature == null ) {
+			controlSelectFeature = new OpenLayers.Control.SelectFeature( snitt );
+			defineSelectFeatureAddLayer()
+		}
+		controlSelectFeature.addLayer(snitt);
+		
+		app.mapPanel.map.addControl( controlSelectFeature );
+		controlSelectFeature.activate(); 	 
 	}
 }
 

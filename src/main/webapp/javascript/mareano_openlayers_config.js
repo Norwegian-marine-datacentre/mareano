@@ -32,8 +32,8 @@ function addOverviewMapAndKeyboardDefaults(thisMap) {
  * Show GML points (spesialpunkt) 
  * Code related to bug: "Visning av bilder (spesialpunkt) virker ikke) -
  * https://github.com/Norwegian-marine-datacentre/mareano/issues/2
- */
-OpenLayers.Control.SelectFeature.prototype.clickFeature = function(feature) {
+*/
+OpenLayers.Control.SelectFeature.prototype.clickFeature = function(feature) {	
     if(!this.hover) {
         var selected = (OpenLayers.Util.indexOf(
             feature.layer.selectedFeatures, feature) > -1);
@@ -53,4 +53,27 @@ OpenLayers.Control.SelectFeature.prototype.clickFeature = function(feature) {
             this.select(feature);
         }
     }
+}; 
+
+function defineSelectFeatureAddLayer() {
+	OpenLayers.Control.SelectFeature.prototype.addLayer = function(layer) {
+	    var isActive = this.active;
+	    var currLayers = this.layers; 
+	    this.deactivate();
+	    
+	    if(this.layers) {
+	        this.layer.destroy();
+	        this.layers = null;
+	    }
+	    if ( currLayers != null) {
+	    	currLayers.push(layer);	
+	    	this.initLayer(currLayers);
+	    } else {
+	    	this.initLayer([layer]);
+	    }
+	    this.handlers.feature.layer = this.layer;
+	    if (isActive) {
+	        this.activate();
+	    }
+	}
 };
