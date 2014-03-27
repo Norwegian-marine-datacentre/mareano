@@ -348,6 +348,7 @@ function addLegendGraphics(kartlagId, data) {
     visKartlagInfoHTML( kartlagId, data ); 
 }
 var controlSelectFeature = null;
+var snitts = [];
 function addSpesialpunkt(extent, kartlagId, layer, event, app, data) {
 	if ( data.noSpesialpunkt == false ) { 
 		var styleMap = new OpenLayers.StyleMap({
@@ -375,9 +376,17 @@ function addSpesialpunkt(extent, kartlagId, layer, event, app, data) {
 		
 		if ( controlSelectFeature == null ) {
 			controlSelectFeature = new OpenLayers.Control.SelectFeature( snitt );
-			defineSelectFeatureAddLayer()
+			defineSelectFeatureAddLayer();
+			
+			// add openlayers pull request: https://github.com/openlayers/openlayers/issues/958
+			defineRemoveLayer();
+			defineDestroy();
+			defineSetMap();
+			defineResetRoot();
+		} else {
+			controlSelectFeature.addLayer( snitt );
 		}
-		controlSelectFeature.addLayer(snitt);
+		snitts.push( snitt );
 		
 		app.mapPanel.map.addControl( controlSelectFeature );
 		controlSelectFeature.activate(); 	 
