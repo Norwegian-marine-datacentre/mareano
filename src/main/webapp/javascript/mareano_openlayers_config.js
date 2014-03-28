@@ -96,7 +96,6 @@ function defineSelectFeatureAddLayer() {
  */
 function defineRemoveLayer() {
 	OpenLayers.Control.SelectFeature.prototype.removeLayer = function(evt) {
-		alert("removeLayer");
 	 	if(this.layers) {
 	 		for(var i=0; i<this.layers.length; ++i) {
 	 			if(evt.layer = this.layers[i]) {
@@ -114,7 +113,6 @@ function defineRemoveLayer() {
  */
 function defineDestroy() {
 	OpenLayers.Control.SelectFeature.prototype.destroy = function() {
-		alert("destroy");
 	    if(this.active && this.layers) {
 	        this.map.removeLayer(this.layer);
 	    }
@@ -137,7 +135,6 @@ function defineDestroy() {
  */
 function defineSetMap() {
 	OpenLayers.Control.SelectFeature.prototype.setMap = function(map) {
-		alert("setMap");
 	    this.handlers.feature.setMap(map);
 	    if (this.box) {
 	        this.handlers.box.setMap(map);
@@ -157,7 +154,6 @@ function defineSetMap() {
  */
 function defineResetRoot() {
 	OpenLayers.Layer.Vector.RootContainer.prototype.resetRoot = function(layer) {
-		alert("resetRoot");
 	    for(var i=0; i<this.layers.length; ++i) {
 	        if(layer == this.layers[i] && this.renderer && layer.renderer.getRenderLayerId() == this.id) {
 	            this.renderer.moveRoot(layer.renderer);
