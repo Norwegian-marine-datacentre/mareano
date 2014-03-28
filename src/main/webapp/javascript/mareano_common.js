@@ -386,7 +386,6 @@ function addSpesialpunkt(extent, kartlagId, layer, event, app, data) {
 		} else {
 			controlSelectFeature.addLayer( snitt );
 		}
-		snitts.push( snitt );
 		
 		app.mapPanel.map.addControl( controlSelectFeature );
 		controlSelectFeature.activate(); 	 
