@@ -347,8 +347,8 @@ function addLegendGraphics(kartlagId, data) {
     buildLegendGraphicsHTML( currentLegend, kartlagId, data );
     visKartlagInfoHTML( kartlagId, data ); 
 }
+
 var controlSelectFeature = null;
-var snitts = [];
 function addSpesialpunkt(extent, kartlagId, layer, event, app, data) {
 	if ( data.noSpesialpunkt == false ) { 
 		var styleMap = new OpenLayers.StyleMap({
