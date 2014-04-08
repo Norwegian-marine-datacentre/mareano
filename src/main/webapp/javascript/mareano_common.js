@@ -191,7 +191,7 @@ function addLayerToGroup( gruppeNavn, gruppeText, map, mapPanel, layers, store, 
                     node.parentNode.ui.checkbox.checked = allChildrenChecked;
                 };
                 setGroupChecked(node);
-                addKartbildeAbstract(node.parentNode, node.parentNode.ui.checkbox.checked);
+                addKartbildeAbstractOrRemove(node.parentNode, node.parentNode.ui.checkbox.checked);
                 // the layer can be associated with multiple nodes, so search the tree
                 var origNode = node;
                 while (node.parentNode) {
@@ -263,7 +263,7 @@ function addLayerToGroup( gruppeNavn, gruppeText, map, mapPanel, layers, store, 
     return layerContainerGruppe;
 } 
 
-function addKartbildeAbstract(node, checked) {
+function addKartbildeAbstractOrRemove(node, checked) { 
     if ( checked == true) {
     	var languageChoosen = getLanguage();
         jQuery.ajax({
@@ -275,24 +275,25 @@ function addKartbildeAbstract(node, checked) {
                 language: languageChoosen
             },
             success:function(data) {
-            	var legendDiv = getKartlagBildeDiv(node)
+            	var legendDiv = getKartlagBildeDiv(node.attributes.text)
             	visKartlagInfoHTML( legendDiv, data );
             }
         }); 
     } else if ( checked == false ) {
-    	var legendDiv = getKartlagBildeDiv(node)
-    	fjernKartlagInfo('#'+legendDiv);
+    	var legendDiv = getKartlagBildeDiv(node.attributes.text)
+    	fjernKartlagInfo(legendDiv);
     }
 }
 
-function getKartlagBildeDiv(node) {
-	var legendDiv = node.attributes.text;
-	legendDiv = legendDiv.toLowerCase();
-	legendDiv = legendDiv.replace(/æ/g,'ae'); // /g global option
-	legendDiv = legendDiv.replace(/ø/g,'oe');
-	legendDiv = legendDiv.replace(/å/g,'aa');
-	legendDiv = legendDiv.replace(/ /g,'_');
-	return legendDiv;
+function getKartlagBildeDiv(nodeText) {   
+	nodeText = nodeText.toLowerCase();
+	nodeText = nodeText.replace(/æ/g,'ae'); // /g global option
+	nodeText = nodeText.replace(/ø/g,'oe');
+	nodeText = nodeText.replace(/å/g,'aa');
+	nodeText = nodeText.replace(/ /g,'');
+
+    nodeText = nodeText.replace(/[!"#$%&'()*+,.\/:;<=>?@[\\\]^`{|}~]/g, "");
+	return nodeText;
 }
 
 function getLanguage() {
@@ -444,16 +445,16 @@ function removeLayerLegendAndInfo(mapOfGMLspesialpunkt, kartlagId, record, layer
     	app.mapPanel.map.removeLayer(mapOfGMLspesialpunkt[kartlagId], false);
     	mapOfGMLspesialpunkt[kartlagId] = null;
     }
-    var legendDiv = '#'+kartlagId; //fjern legend 
-    jQuery(legendDiv).remove();
-    fjernKartlagInfo(legendDiv);
+    fjernKartlagInfo(kartlagId);
 }
 
 function fjernKartlagInfo(legendDiv) {
-	var temp = jQuery("<div>").html(kartlagInfoState); //fjern kartlaginfo 
-    jQuery(temp).find(legendDiv+'tips').remove();
+	var temp = jQuery("<div>").html(kartlagInfoState); 
+    
+    legendDiv = getKartlagBildeDiv(legendDiv);
+    jQuery(temp).find('#'+legendDiv+'tips').remove();
+    
     kartlagInfoState = jQuery(temp).html();
-
     updateOrSetKartlagInfo(kartlagInfoState);
 }
 
