@@ -8,6 +8,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.List;
 
@@ -25,6 +26,7 @@ import no.imr.geoexplorer.admindatabase.gml.pojo.Point;
 import no.imr.geoexplorer.admindatabase.jsp.pojo.KartlagInfos;
 import no.imr.geoexplorer.admindatabase.jsp.pojo.LegendsInfo;
 import no.imr.geoexplorer.admindatabase.jsp.pojo.SpesialpunktStatus;
+import no.imr.geoexplorer.admindatabase.mybatis.pojo.KartBilderEnNo;
 import no.imr.geoexplorer.admindatabase.mybatis.pojo.KartlagInfo;
 import no.imr.geoexplorer.admindatabase.mybatis.pojo.Legend;
 import no.imr.geoexplorer.admindatabase.mybatis.pojo.Spesialpunkt;
@@ -50,29 +52,6 @@ public class JsonDataController {
     
     private final static String baseUrlForLegend = "http://www.mareano.no/kart/";
     protected final static String  EPSG_32633 = "epsg:32633";
-	
-//    @RequestMapping("/spesialpunkt")
-//    public @ResponseBody SpesialpunktStatus getSpesialpunktAsGML(
-//            @RequestParam("extent") String extent,
-//            @RequestParam("kartlagId") String kartlagId,
-//            HttpServletRequest req) throws IOException {
-//
-//        List<Spesialpunkt> punkter = getSpesialpunkt(new Long(kartlagId));
-//        SpesialpunktStatus spesialpunktJSON = null;
-//        if (punkter.size() > 0) {
-//            FeatureCollection features = toGMLPojos(punkter, extent);
-//            String xml = xstream.toXML(features);
-//            xml = "<?xml version=\"1.0\" encoding=\"utf-8\" ?>" + xml;
-//            writeGmlToFile(xml, req);
-//
-//            spesialpunktJSON = getLegendsInfo(kartlagId, "norsk");
-//            spesialpunktJSON.setNoSpesialpunkt(false);
-//        } else {
-//            spesialpunktJSON = new SpesialpunktStatus();
-//            spesialpunktJSON.setNoSpesialpunkt(true);
-//        }
-//        return spesialpunktJSON;
-//    }
     
     @RequestMapping("/legend")
     public @ResponseBody SpesialpunktStatus getLegend(
@@ -104,6 +83,21 @@ public class JsonDataController {
             spesialpunktJSON.setNoSpesialpunkt(false);
         }
         return spesialpunktJSON;
+    }
+    
+    @RequestMapping("/infoKartBilde")
+    public @ResponseBody SpesialpunktStatus getInfoKartBilde(
+    		@RequestParam("kartbildeNavn") String kartbildeNavn,
+    		@RequestParam("language") String language) throws Exception {
+    	SpesialpunktStatus json = new SpesialpunktStatus();
+    	KartlagInfos info = new KartlagInfos();
+
+    	KartBilderEnNo kartBildeInfo = dao.getKartBildeInfo(kartbildeNavn, language);
+    	
+    	info.setKartlagInfoTitel(kartBildeInfo.getAlternateTitle());
+    	info.setText(kartBildeInfo.getAbstracts());
+    	json.setKartlagInfo(info);
+    	return json;
     }
     
 //    protected void createGMLFile(String kartlagId, String extent, HttpServletRequest req) throws IOException{

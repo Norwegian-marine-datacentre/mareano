@@ -7,93 +7,33 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <link rel="shortcut icon" href="theme/app/img/mareanoLogo.png">
         <!-- Ext resources -->
-        <link rel="stylesheet" type="text/css" href="externals/ext/resources/css/ext-all.css">
+<!--         <link rel="stylesheet" type="text/css" href="externals/ext/resources/css/ext-all.css"> DONT use default ext-all or green mareano menu wount work-->
+        <link rel="stylesheet" type="text/css" href="css/ext-all.css">
+         
         <link rel="stylesheet" type="text/css" href="externals/ext/resources/css/xtheme-gray.css">
-        <script type="text/javascript" src="externals/ext/adapter/ext/ext-base-debug.js"></script>
-        <script type="text/javascript" src="externals/ext/ext-all-debug-w-comments.js"></script>
-        <style type="text/css">
-            .out-of-scale {
-                -moz-opacity: 0.5 !important;
-                opacity: 0.5 !important;
-                filter: alpha(opacity=50) !important;
-            }
-            .x-tree-node .x-tree-node-disabled a span {
-                color: black !important;
-            }
-            .x-tree-node .x-tree-node-disabled .x-tree-node-icon {
-                -moz-opacity: 1 !important;
-                opacity: 1 !important;
-                filter: alpha(opacity=100) !important;
-            }
-            .olControlOverviewMapMaximizeButton, .olControlOverviewMapMinimizeButton {
-                background-image: url(externals/ext/resources/images/gray/panel/tool-sprites.gif);
-                width: 15px !important;
-                height: 15px !important;
-                cursor: pointer;
-                margin-left: 2px;
-            }
-            .olControlOverviewMapMaximizeButton {
-                background-position:0 -180px;
-            }
-            .olControlOverviewMapMinimizeButton {
-                background-position:0 -165px;
-            }
-            #OpenLayers_Control_minimizeDiv_innerImage, #olControlOverviewMapMaximizeButton_innerImage {
-                display: none;
-            }
-            .olControlOverviewMapElement {
-                padding: 0px 0px 0px 0px !important;
-                border: 2px solid rgb(158, 154, 154) !important;
-                background-color: white !important;
-            }
-            .gx-tree-layer-actions {
-                position: absolute;
-                left: 15px;
-            }
-            .gx-tree-layer-action {
-                background-position: center center;
-                background-repeat: no-repeat;
-                border: 0 none;
-                height: 16px;
-                margin: 0;
-                padding: 0;
-                vertical-align: top;
-                width: 16px;
-            }
-            .x-tree-node-disabled .gx-tree-layer-actions .zoomscale {
-                background: transparent url("theme/app/img/silk/magnifier.png");
-            }
-            .gx-tree-layer-actions .disabled {
-                opacity: 0.2;
-            }
-            .olImageLoadError { 
-                /* when OL encounters a 404, don't display the pink image */
-                display: none !important;
-            }
-              #layers :not(.general-layers-w-checkbox) input.x-tree-node-cb[type="checkbox"] {  
-              	display: none;  
-              }              
-            #layers *.general-layers-w-checkbox input.x-tree-node-cb[type="checkbox"] {
-                display:inline;
-			}
-        </style>
+        <!-- script type="text/javascript" src="externals/ext/adapter/ext/ext-base-debug.js"></script -->
+        <script type="text/javascript" src="externals/ext/adapter/ext/ext-base.js"></script>
+        <!-- script type="text/javascript" src="externals/ext/ext-all-debug-w-comments.js"></script -->
+        <script type="text/javascript" src="externals/ext/ext-all.js"></script>
+
         <meta http-equiv="X-UA-Compatible" content="IE=IE8" >
         <!--script type="text/javascript" src="javascript/googleAnalyticsStatistics.js"></script -->
 
         <script type="text/javascript" src="javascript/jquery-1.6.2.min.js"></script>
         <script type="text/javascript">jQuery.noConflict();</script>
 
-        <link href="theme/imr/imr.css" rel="stylesheet" type="text/css">
-        <script type="text/javascript" src="javascript/layerIcon.js"></script>
-        <script type="text/javascript" src="javascript/toEnglishTranslateMenuButtons.js"></script>
+		<link rel="stylesheet" type="text/css" href="css/mareano.css">
+		<link rel="stylesheet" type="text/css" href="css/mareanoMenu.css">
 
-        <!-- Mareano.no -->
-        <link rel="stylesheet" type="text/css" href="http://www.mareano.no/kart/styles/mareanoStyle.css">
-        <style type="text/css">
-        #nav-main {
-            background-image: url("http://www.mareano.no/kart/images/nav-main-background.jpg");
-        }
-        </style>
+		<!--Mareano.no-->
+		<link rel="stylesheet" type="text/css" href="theme/imr/imr.css">
+		<!-- link rel="stylesheet" type="text/css" href="http://www.mareano.no/kart/styles/mareanoStyle.css" -->
+		<style type="text/css">
+			#nav-main {
+				background-image: url("http://www.mareano.no/kart/images/nav-main-background.jpg");
+			}
+		</style>
+		<!-- link rel="stylesheet" type="text/css" href="http://www.mareano.no/templates/mareano/css/stylesheet.css" -->
 
         <!-- OpenLayers resources -->
         <link rel="stylesheet" type="text/css" href="externals/openlayers/theme/default/style.css">
@@ -110,18 +50,12 @@
         <script type="text/javascript" src="javascript/proj4js-compressed.js"></script>
 
         <!-- GeoExplorer resources -->
-        <link rel="stylesheet" type="text/css" href="theme/app/geoexplorer.css" />
+<!--         <link rel="stylesheet" type="text/css" href="theme/app/geoexplorer.css" /> -->
         <!--[if IE]><link rel="stylesheet" type="text/css" href="theme/app/ie.css"/><![endif]-->
         <link rel="stylesheet" type="text/css" href="theme/ux/colorpicker/color-picker.ux.css" />
         <script type="text/javascript" src="script/GeoExplorer.js"></script>
-        
-        <script type="text/javascript" src="javascript/WMSLayerPanel.js"></script>
-        <script type="text/javascript" src="javascript/mareano_common.js"></script>    
-		<script type="text/javascript" src="javascript/generelleKartLayerGroup.js"></script>
 
-        <!-- PrintPreview resources We need to install printing service on maps.imr.no/geoserver for this to work -->
-        <!-- link rel="stylesheet" type="text/css" href="externals/PrintPreview/resources/css/printpreview.css">
-        <script type="text/javascript" src="script/PrintPreview.js"></script -->
+		<script type="text/javascript" src="script/mareano.js"></script>    
 
         <script>
             function init() {
@@ -167,8 +101,18 @@
                         maxExtent: [-2500000.0,3500000.0,3045984.0,9045984.0],
                         numZoomLevels: 18,
                         wrapDateLine: false,
-                        layers: [                             
-                            {
+                        layers: [
+                         {
+                             source: "ol",
+                             type: "OpenLayers.Layer.WMS",
+                             group: "background",
+                             args: [
+                                 "Sj\u00F8kart",
+                                 "http://maps.imr.no/geoserver/gwc/service/wms",
+                                 {layers: "Sjokart_Hovedkartserien2", format: "image/png", transparent: true, isBaseLayer: true}
+                                 ,{singleTile:false}
+                             ]
+                         }, {
                             	/*
                             	 * Kartloesninger fra geonorge.
                             	 * 1. http://wms.geonorge.no - ubegrenset tilgang for HI (fordi de har IP rangen vaar) men en begrensning paa ca 3 kall i sekundet. Kjoerer raskest med singleTile
@@ -181,7 +125,6 @@
                                 args: [
                                     "Norgeskart",
                                     "http://wms.geonorge.no/skwms1/wms.toporaster2",
-                                    //"http://opencache.statkart.no/gatekeeper/gk/gk.open",
                                     {layers: "toporaster", format: "image/png", transparent: true, isBaseLayer: true}
                                     ,{singleTile:true}
                                 ]
@@ -192,7 +135,6 @@
                                 args: [
                                     "Norgeskart (gr\u00e5tone)",
                                     "http://wms.geonorge.no/skwms1/wms.topo2.graatone",
-                                    //"http://opencache.statkart.no/gatekeeper/gk/gk.open",
                                     {layers: "topo2_graatone_WMS", format: "image/png", transparent: true, isBaseLayer: true}
                                     ,{singleTile:true}
                                 ]
@@ -202,50 +144,43 @@
                                 group: "background",
                                 args: [
                                       	"Europa",
-                                      	"http://wms.geonorge.no/skwms1/wms.europa",
-                                      	//"http://opencache.statkart.no/gatekeeper/gk/gk.open",
-                                      	{layers: "europa_wms", format: "image/jpeg", transparent: true, isBaseLayer: true}
-                                      	//{layers: "europa", format: "image/jpeg", transparent: true, isBaseLayer: true}
-                                      	,{singleTile:true}
+                                      	"http://maps.imr.no/geoserver/gwc/service/wms",
+                                      	{layers: "Europa_WMS", format: "image/jpeg", transparent: true, isBaseLayer: true}
+                                      	,{singleTile:false}
                                 ]
                             }, {
                                 source: "ol",
                                 type: "OpenLayers.Layer.WMS",
                                 group: "background",
                                 args: [
+                                      	"Gebco skyggerelieff gråtoner",
+                                      	"http://maps.imr.no/geoserver/gwc/service/wms",
+                                      	{layers: "geonorge:geonorge_norge_skyggerelieff", format: "image/jpeg", transparent: true, isBaseLayer: true},
+                                      	{singleTile:false}
+                                ]                            
+                            }, {
+                                source: "ol",
+                                type: "OpenLayers.Layer.WMS",
+                                group: "background",
+                                args: [
                                       	"Europa -hvit bakgrunn",
-                                      	"http://wms.geonorge.no/skwms1/wms.europa",
-                                      	//"http://opencache.statkart.no/gatekeeper/gk/gk.open",
-                                      	{layers: "Land,Vmap0Land,Vmap0Bebyggelse,Vmap0Skog,Vmap0Sletteland,Vmap0Innsjo,Vmap0MyrSump,Vmap0Isbre,Vmap0Hoydekontur,Vmap0Kystkontur,Vmap0Elver,Vmap0AdministrativeGrenser", format: "image/jpeg", transparent: true, isBaseLayer: true}
-                                      	//{layers: "europa", format: "image/jpeg", transparent: true, isBaseLayer: true}
-                                      	,{singleTile:true}
+                                      	"http://maps.imr.no/geoserver/gwc/service/wms",
+                                      	{layers: "geonorge_europa_hvit_bakgrunn", format: "image/jpeg", transparent: true, isBaseLayer: true}
+                                      	,{singleTile:false}
                                 ]
-                            }	  
-                           	, {
+                            }, {
                                source: "ol",
                                type: "OpenLayers.Layer.WMS",
                                group: "background",
                                args: [
                                      	"Europa og Gebco",
-                                     	"http://wms.geonorge.no/skwms1/wms.barents_watch",
+                                     	"http://maps.imr.no/geoserver/gwc/service/wms",
                                      	{layers: "barents_watch_WMS", format: "image/jpeg", transparent: true, isBaseLayer: true}
-                                     	,{singleTile:true}
+                                     	,{singleTile:false}
                                ]
-                           } 
-                           	,{source: "ol",
-         	                    type: "OpenLayers.Layer.WMS",
-          	                    group: "common",
-          	                    visibility: true,
-          	                    args: [
-          	                        "Grid",
-          	                        "http://maps.imr.no/geoserver/wms",
-          	                        {layers: "grid_UTM33,utm33n_01bgX05lg,utm33n_02bgX10lg,utm33n_15bmX01lg,utm33n_30bmX02lg", format: "image/png", transparent: true},
-          	                        {opacity:1, singleTile:true}
-          	                    ]
-          					}                    	
+                           }                	
                         ],
-                        
-                        center: [1088474,7689849],
+                        center: [1088474,7489849],
                         zoom: 2
                     }
                 });
@@ -272,7 +207,6 @@
                                         opacity: 1,
                                         metadata: {
                                             keyword: "${kartlaget.keyword}",
-                                            //'abstract': '${kartlaget.abstracts}', //causes error: missing } after property list genereres daglig fra OD's operasjonelle databaser. Detaljeringsg...
                                             'kartlagId': '${kartlaget.id}'
                                         },
                                         minScale: ${kartlaget.scalemax}*(96/0.0254),
@@ -320,7 +254,6 @@
                                         opacity: 1,
                                         metadata: {
                                             keyword: "${kartlaget.keyword}",
-                                            //'abstract': '${kartlaget.abstracts}', //causes error: missing } after property list genereres daglig fra OD's operasjonelle databaser. Detaljeringsg...
                                             'kartlagId': '${kartlaget.id}'
                                         },
                                         maxExtent: [
@@ -429,9 +362,25 @@
                             if(c.text=="Area") c.setText("Areal");
                         }
                     });
+                    
+					addDropdownmenuToMareanoMenuIfIe();
+                  	
                 });
             }
                
+            function addDropdownmenuToMareanoMenuIfIe() {
+            	//if ( navigator.userAgent.toLowerCase().indexOf('msie') != -1) {} works either way in other browsers 
+                var sfEls = document.getElementById("nav").getElementsByTagName("LI");
+              	for (var i=0; i<sfEls.length; i++) {
+	                    sfEls[i].onmouseover=function() {
+	                      this.className+=" sfhover";
+                    }
+	                sfEls[i].onmouseout=function() {
+	                    this.className=this.className.replace(new RegExp(" sfhover\\b"), "");
+                	}
+				}
+            }
+            
             function openURI(uri){ // needed by GMLselected(evt)
             	window.open(uri,'Punktdata');
             }

@@ -55,6 +55,8 @@ public interface MareanoAdminDbDao {
 	
 	List<Legend> getALegend( long kartlagId, String language );
 	
+	KartBilderEnNo getKartBildeInfo( String kartBildeName, String noOrEn ) throws Exception;
+	
 	KartlagInfo getKartlagInfo( long kartlagId, String noOrEn );
 
 }

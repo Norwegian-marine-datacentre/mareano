@@ -10,6 +10,14 @@
     background-image: url(img/tillegg/english.gif);
 }
 
+.x-btn .icon-question {
+	background-image: url(img/geosilk/help.png);
+}
+
+.x-btn .icon-support {
+	background-image: url(img/geosilk/mail-icon.PNG);
+}
+
 .x-tree-node-leaf  .gx-tree-layer-icon {
     background-image: url(img/geosilk/vector.png);
     title: "vektorgrafikk";

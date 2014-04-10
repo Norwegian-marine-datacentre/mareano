@@ -62,7 +62,11 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
         }, {
             actions: ["-", "mouseposition"], actionTarget: "paneltbar"
         }, {
-            actions: ["->", "mareanoNorskBtn"], actionTarget: "paneltbar"
+            actions: ["->", "support"], actionTarget: "paneltbar"
+        }, {
+        	actions: ["helpIcon"], actionTarget: "paneltbar"
+        }, {
+        	actions: ["mareanoNorskBtn"], actionTarget: "paneltbar"
         }, {
             actions: ["mareanoEngelskBtn"], actionTarget: "paneltbar"
         });
@@ -161,6 +165,28 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
                 }
             }
         });
+        
+        var support = new Ext.Button({
+            type:'support',
+            tooltip: 'Support',
+            id: "support",
+            handler: function() {
+                window.location = 'mailto:datahjelp@imr.no';
+            },
+         iconCls: "icon-support",
+         scope: this
+        });
+        
+        var helpIcon = new Ext.Button({
+            type:'help',
+            tooltip: 'Get Help',
+            id: "helpIcon",
+            handler: function(event, toolEl, panel) {
+                alert('Help - is under construction.');
+         },
+         iconCls: "icon-question",
+         scope: this
+        });
 
         var mareanoNorskBtn = new Ext.Button({
             tooltip: "Norsk",
@@ -250,11 +276,15 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
         var westPanelTabs = new Ext.TabPanel({
             activeTab: 0,
             region: "center",
+            autoScroll:true,
             items: [westPanel, tipsPanel,
-            {title: this.helpTitle,
-                html: this.helpText,
-                disabled: Ext.isEmpty(this.helpText),
-                region: "center"}
+                {	
+            		title: this.helpTitle,
+            		html: this.helpText,
+            		disabled: Ext.isEmpty(this.helpText),
+        			region: "center",
+        			autoScroll:true
+    			}
             ]
         });
 
@@ -266,7 +296,7 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
             layout: "border",
             region: "west",
             unstyled:true,
-            width: 200,
+            width: 240, 
             tbar: [{
                 text: this.visibilityText,
                 tooltip: this.visibilityTooltip,
@@ -284,10 +314,10 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
                 handler: function(cmp) {
                     if (!cmp._expanded) {
                         cmp.setText(this.collapseText + btnPostfix + collapseDiv);
-                        westPanel2.setWidth(415);
+                        westPanel2.setWidth(440); 
                     } else {
                         cmp.setText(this.expandText + btnPostfix + expandDiv);
-                        westPanel2.setWidth(200);
+                        westPanel2.setWidth(240); 
                     }
                     westPanel2.ownerCt.doLayout();
                     cmp._expanded = !cmp._expanded;
@@ -299,7 +329,7 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
             collapseMode: "mini",
             items: [{
                 layout: 'border',
-                width: 200,
+                width: 240,
                 autoScroll: false,
                 xtype: 'container',
                 split: true,
@@ -320,7 +350,7 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
             }, {
                 xtype: 'panel',
                 layout: "border",
-                width: 215,
+                width: 200,
                 region: "center",
                 items: westPanelTabs
             }]
@@ -329,11 +359,14 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
         var innerNorthPanel = new Ext.Panel({
             border: true,
             region: "north",
-            split: true,
+            split: false,
             id: "topPanelHeading",
             collapseMode: "mini",
             bodyStyle: "background-image:url('http://www.mareano.no/kart/images/nav-main-background.jpg')",
-            html:'<table width="100%" cellspacing="0"><tr height="45"> ' + //content reloaded with content from MareanoController
+            html:
+            //html - content reloaded with content from MareanoController - but this must be here for the rest of the rest of the panels to
+            //load in the correct size. 
+            '<table width="100%" cellspacing="0" border="1"><tr height="45"> ' + 
             '<td valign="middle" height="45" style="background-image:url(http://www.mareano.no/kart/images/top/ny_heading_397.gif); background-repeat: repeat;"> ' +
             '<a style="text-decoration: none" target="_top" href="http://www.mareano.no"> ' +
             '<img border="0" alt="MAREANO<br>samler kunnskap om havet" src="http://www.mareano.no/kart/images/top/ny_logo.gif"> ' +
@@ -346,10 +379,11 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
 
         var northPanel = new Ext.Panel({
             height: 95,
-            split: true,
+            split: false,
             unstyled:true,
             collapseMode: "mini",
             region: "north",
+            id: 'page-header-panel',
             items: [innerNorthPanel, this.portalItems[0].tbar /* add the existing tbar */]
         });
 
@@ -375,7 +409,7 @@ GeoExt.Lang.add("no", {
         legendTitle: "Tegnforklaring",
         infoTitle: "Info om kartlag",
         helpTitle: "Hjelp",
-        helpText: "For \u00e5 gj\u00f8re det enklere \u00e5 navigere og endre p\u00e5 hva kartene viser, er det laget to ulike paneler for \u00e5 styre dette. I &#34;Temakart&#34; til venstre ligger alle ferdige kart og kartlag som man kan velge \u00e5 sl\u00e5 p\u00e5. De er organisert i hovedtema, under hovedtema er kartbilder som man kan velge \u00e5 sl\u00e5 av/p\u00e5, og p\u00e5 det nederste niv\u00e5et er kartlag som man ogs\u00e5 kan sl\u00e5s av/p\u00e5. N\u00e5r man \u00e5pner et temakart, blir et p\u00e5 forh\u00e5nd definert utvalg av kartlag \u00e5pnet. Disse kartlagene blir synlige under &#34;Kartlag&#34; i det h\u00f8yre kartpanelet. Her kan rekkef\u00f8lgen p\u00e5 kartlagene endres ved \u00e5 flytte p\u00e5 de ulike kartlagene, dette kan p\u00e5 enkelte kartlag for eksempel brukes til \u00e5 velge hvilke punkt som skal v\u00E6re mest synlige. Man kan ogs\u00e5 h\u00f8yreklikke p\u00e5 tittelen p\u00e5 hvert kartlag for \u00e5 bl.a. zoome til kartlagsutstrekning, det kan v\u00E6re nyttig for kartlag som har innhold som er mer synlig viss man zoomer inn p\u00e5 dem. For sp\u00f8rsm\u00e5l send mail til <a href='gis@nmd.no'>gis@nmd.no</a>",
+        helpText: "For \u00e5 gj\u00f8re det enklere \u00e5 navigere og endre p\u00e5 hva kartene viser, er det laget to ulike paneler for \u00e5 styre dette. I &#34;Temakart&#34; til venstre ligger alle ferdige kart og kartlag som man kan velge \u00e5 sl\u00e5 p\u00e5. De er organisert i hovedtema, under hovedtema er kartbilder som man kan velge \u00e5 sl\u00e5 av/p\u00e5, og p\u00e5 det nederste niv\u00e5et er kartlag som man ogs\u00e5 kan sl\u00e5s av/p\u00e5. N\u00e5r man \u00e5pner et temakart, blir et p\u00e5 forh\u00e5nd definert utvalg av kartlag \u00e5pnet. Disse kartlagene blir synlige under &#34;Kartlag&#34; i det h\u00f8yre kartpanelet. Her kan rekkef\u00f8lgen p\u00e5 kartlagene endres ved \u00e5 flytte p\u00e5 de ulike kartlagene, dette kan p\u00e5 enkelte kartlag for eksempel brukes til \u00e5 velge hvilke punkt som skal v\u00E6re mest synlige. Man kan ogs\u00e5 h\u00f8yreklikke p\u00e5 tittelen p\u00e5 hvert kartlag for \u00e5 bl.a. zoome til kartlagsutstrekning, det kan v\u00E6re nyttig for kartlag som har innhold som er mer synlig viss man zoomer inn p\u00e5 dem. For sp\u00f8rsm\u00e5l send mail til <a href='datahjelp@imr.no'>datahjelp@imr.no</a>",
         mousePositionText: "Koordinater (WGS84): ",
         goToTooltip: "G&aring; til koordinat",
         goToText: "G&aring; til koordinat",
@@ -385,11 +419,11 @@ GeoExt.Lang.add("no", {
         zoomToItem3: "Nordsj\u00f8en",
         zoomToItem4: "Skagerrak",
         zoomToItem5: "Polhavet",
-        expandText: "* Expand Layers *",
-        collapseText: "* Collapse Layers *",
-        expandCollapseTooltip: "* Expand or collapse the Layers panel *",
-        visibilityText: "* Turn off *",
-        visibilityTooltip: "* Turn off all overlays *"
+        expandText: "Utvid kartlag panel",
+        collapseText: "Sl\u00e5 sammen kartlag panel",
+        expandCollapseTooltip: "Utvid eller sl\u00e5 sammen kartlag panel",
+        visibilityText: "Sl\u00e5 av alle kartlag",
+        visibilityTooltip: "Sl\u00e5 av alle kartlag"
     }
 });
 
@@ -408,12 +442,12 @@ GeoExt.Lang.add("en", {
         zoomToItem2: "Norwegian Sea",
         zoomToItem3: "North Sea",
         zoomToItem4: "Skagerrak",
-        zoomToItem5: "Polhavet",
+        zoomToItem5: "Polar Ocean",
         expandText: "Expand Layers",
         collapseText: "Collapse Layers",
         expandCollapseTooltip: "Expand or collapse the Layers panel",
-        visibilityText: "Turn off",
-        visibilityTooltip: "Turn off all overlays"
+        visibilityText: "Turn off all layers",
+        visibilityTooltip: "Turn off all layers"
     }
 });
 
@@ -451,7 +485,7 @@ function loadMareano(mapPanel, app) {
     	silent = false;
 	});
     	
-    layertree.on('beforeinsert', function(tree, container, node) {
+	layertree.on('beforeinsert', function(tree, container, node) {
     	node.attributes.iconCls = getLayerIcon(node.layer.url);
     }, this, {single: false});
     // we cannot specify this in outputConfig see: https://github.com/opengeo/gxp/issues/159   
@@ -610,6 +644,7 @@ function addLayerToGroup( gruppeNavn, gruppeText, map, mapPanel, layers, store, 
                     node.parentNode.ui.checkbox.checked = allChildrenChecked;
                 };
                 setGroupChecked(node);
+                addKartbildeAbstractOrRemove(node.parentNode, node.parentNode.ui.checkbox.checked);
                 // the layer can be associated with multiple nodes, so search the tree
                 var origNode = node;
                 while (node.parentNode) {
@@ -638,15 +673,14 @@ function addLayerToGroup( gruppeNavn, gruppeText, map, mapPanel, layers, store, 
                         clone.getLayer().setVisibility(true);
                         clone.getLayer().metadata['kartlagId'] = id;
                         app.mapPanel.layers.add(clone);
-                        var maxExtent = clone.getLayer().maxExtent;
-                        if (event.ui._silent !== true && maxExtent) {
-                            app.mapPanel.map.zoomToExtent(maxExtent, true);
-                        }
+//                        var maxExtent = clone.getLayer().maxExtent; //zoom to extent for layers
+//                        if (event.ui._silent !== true && maxExtent) {
+//                            app.mapPanel.map.zoomToExtent(maxExtent, true);
+//                        }
                         displayLegendGraphicsAndSpesialpunkt(app.mapPanel.map.getExtent() + "", layer.metadata['kartlagId'], layerRecord.getLayer(), event, app);
                     }
             	    //app.mapPanel.map.addLayer(layer); //adds layer to Overlay but mareano_wmslayerpanel is missing from properties and no layer properties are shown                        
-		    //displayLegendGraphicsAndSpesialpunkt(app.mapPanel.map.getExtent() + "", layer.metadata['kartlagId'], layerRecord.getLayer(), event, app);   
-            	    //getSpesialPunkt(app.mapPanel.map.getExtent() + "", layerRecord.getLayer().metadata['kartlagId'], layerRecord.getLayer(), event, app);
+                	//displayLegendGraphicsAndSpesialpunkt(app.mapPanel.map.getExtent() + "", layer.metadata['kartlagId'], layerRecord.getLayer(), event, app);   
                 } else {
             	    removeLayerLegendAndInfo(app.mapOfGMLspesialpunkt, layer.metadata['kartlagId'], record, layer, app);
                 }
@@ -662,10 +696,12 @@ function addLayerToGroup( gruppeNavn, gruppeText, map, mapPanel, layers, store, 
         listeners: {
             "checkchange": function(node, checked) { //setting all subnodes if parent is checked
                 var extent = node.attributes.maxExtent;
-                if (extent && checked) {
-                    app.mapPanel.map.zoomToExtent(extent, true);
-                }
+//                if (extent && checked) { //zoom to extent for pictures
+//                    app.mapPanel.map.zoomToExtent(extent, true);
+//                }
                 node.expand();
+//                addKartbildeAbstractOrRemove(node, checked);
+                
                 var cs = node.childNodes;
                 for(var c = cs.length-1; c >= 0; c--) { //add layers in reverse of reverse order - so in the right order
                     cs[c].ui._silent = true;
@@ -677,30 +713,52 @@ function addLayerToGroup( gruppeNavn, gruppeText, map, mapPanel, layers, store, 
         layerStore: store,
         loader: tmpLoader
     });
-
     return layerContainerGruppe;
 } 
 
-function getSpesialPunkt(extent, kartlagId, layer, event, app) {
-    jQuery.ajax({
-        type: 'get',
-        url: "spring/spesialpunkt",
-        contentType: "application/json",
-        data: {
-            extent : extent,
-            kartlagId: kartlagId
-        },                	
-        success:function(data) {
-
-        }                
-    });
+function addKartbildeAbstractOrRemove(node, checked) {
+    if ( checked == true) {
+    	var languageChoosen = getLanguage();
+        jQuery.ajax({
+            type: 'get',
+            url: "spring/infoKartBilde",
+            contentType: "application/json",
+            data: {
+                kartbildeNavn: node.attributes.text,
+                language: languageChoosen
+            },
+            success:function(data) {
+            	var legendDiv = getKartlagBildeDiv(node.attributes.text)
+            	visKartlagInfoHTML( legendDiv, data );
+            }
+        }); 
+    } else if ( checked == false ) {
+    	var legendDiv = getKartlagBildeDiv(node.attributes.text)
+    	fjernKartlagInfo(legendDiv);
+    }
 }
 
-function displayLegendGraphicsAndSpesialpunkt(extent, kartlagId, layer, event, app) {
+function getKartlagBildeDiv(nodeText) {   
+	nodeText = nodeText.toLowerCase();
+	nodeText = nodeText.replace(/æ/g,'ae'); // /g global option
+	nodeText = nodeText.replace(/ø/g,'oe');
+	nodeText = nodeText.replace(/å/g,'aa');
+	nodeText = nodeText.replace(/ /g,'');
+
+    nodeText = nodeText.replace(/[!"#$%&'()*+,.\/:;<=>?@[\\\]^`{|}~]/g, "");
+	return nodeText;
+}
+
+function getLanguage() {
 	var languageChoosen = "en";
 	if (document.location.href.indexOf("mareano.html") != -1) {
 		languageChoosen = "norsk";
 	}
+	return languageChoosen;
+}
+
+function displayLegendGraphicsAndSpesialpunkt(extent, kartlagId, layer, event, app) {
+	var languageChoosen = getLanguage();
     jQuery.ajax({
         type: 'get',
         url: "spring/legendAndSpesialpunkt",
@@ -718,10 +776,7 @@ function displayLegendGraphicsAndSpesialpunkt(extent, kartlagId, layer, event, a
 }
 
 function displayLegendGraphics(kartlagId) {
-	var languageChoosen = "en";
-	if (document.location.href.indexOf("mareano.html") != -1) {
-		languageChoosen = "norsk";
-	}
+	var languageChoosen = getLanguage();
     jQuery.ajax({
         type: 'get',
         url: "spring/legend",
@@ -747,9 +802,9 @@ function addLegendGraphics(kartlagId, data) {
     visKartlagInfoHTML( kartlagId, data ); 
 }
 
+var controlSelectFeature = null;
 function addSpesialpunkt(extent, kartlagId, layer, event, app, data) {
 	if ( data.noSpesialpunkt == false ) { 
-		var layerName = "";
 		var styleMap = new OpenLayers.StyleMap({
 			'default':{
 				externalGraphic: "theme/imr/images/geofotoSpesialpunkt.png",
@@ -773,9 +828,21 @@ function addSpesialpunkt(extent, kartlagId, layer, event, app, data) {
 		app.mapOfGMLspesialpunkt[kartlagId] = snitt;	    
 		app.mapPanel.map.addLayer( snitt );   	           
 		
-		var control = new OpenLayers.Control.SelectFeature( snitt );
-		app.mapPanel.map.addControl( control );
-		control.activate(); 	 
+		if ( controlSelectFeature == null ) {
+			controlSelectFeature = new OpenLayers.Control.SelectFeature( snitt );
+			defineSelectFeatureAddLayer();
+			
+			// add openlayers pull request: https://github.com/openlayers/openlayers/issues/958
+			defineRemoveLayer();
+			defineDestroy();
+			defineSetMap();
+			defineResetRoot();
+		} else {
+			controlSelectFeature.addLayer( snitt );
+		}
+		
+		app.mapPanel.map.addControl( controlSelectFeature );
+		controlSelectFeature.activate(); 	 
 	}
 }
 
@@ -831,12 +898,16 @@ function removeLayerLegendAndInfo(mapOfGMLspesialpunkt, kartlagId, record, layer
     	app.mapPanel.map.removeLayer(mapOfGMLspesialpunkt[kartlagId], false);
     	mapOfGMLspesialpunkt[kartlagId] = null;
     }
-    var legendDiv = '#'+kartlagId; //fjern legend 
-    jQuery(legendDiv).remove();
+	fjernKartlagInfo(kartlagId);
+}
+
+function fjernKartlagInfo(legendDiv) {
+	var temp = jQuery("<div>").html(kartlagInfoState); 
     
-    var temp = jQuery("<div>").html(kartlagInfoState); //fjern kartlaginfo 
-    jQuery(temp).find(legendDiv+'tips').remove();
-    kartlagInfoState = jQuery(temp).html();			
+    legendDiv = getKartlagBildeDiv(legendDiv);
+    jQuery(temp).find('#'+legendDiv+'tips').remove();
+    
+    kartlagInfoState = jQuery(temp).html();
     updateOrSetKartlagInfo(kartlagInfoState);
 }
 
@@ -855,7 +926,7 @@ function GMLselected (event) {
     if ( event.feature.data.type == "bilder" ) {
     	Ext.MessageBox.show({
     		title:event.feature.data.name, 
-    		msg:'<a href="' + event.feature.data.description + '" TARGET="_blank"><img src=" '+event.feature.data.description+'" width=400 height=400 /></a>'
+    		msg:'<a href="' + event.feature.data.description + '" TARGET="_blank"><img src=" '+event.feature.data.description+'" width=150 height=100 /></a>'
     	});
     } else if ( event.feature.data.type == "video" ) {
         Ext.MessageBox.show({
@@ -871,32 +942,5 @@ function GMLselected (event) {
     }
 }
 
-/**
- * Adding overviewmap and keyboard defaults
- */
-function addOverviewMapAndKeyboardDefaults(thisMap) {
-    var layerOptions = {
-        units: "m",
-        projection: "EPSG:32633",
-        maxExtent: new OpenLayers.Bounds( -4101096.2210526327,5925725.768421048,4999746.221052637,9135005.768421048 ),
-        minResolution: new OpenLayers.Bounds( -4101096.2210526327,5925725.768421048,4999746.221052637,9135005.768421048 ),
-        bounds: new OpenLayers.Bounds( -4101096.2210526327,5925725.768421048,4999746.221052637,9135005.768421048 ),
-        theme: null
-    };
-    var ol_wms2 = new OpenLayers.Layer.WMS(
-    		"geonorge",
-    		"http://wms.geonorge.no/skwms1/wms.europa?brukerid=EHAV_MOEEND&passord=spartakus234&VERSION=1.1.1&SERVICE=WMS",
-    		{layers: "Land,Vmap0Land,Vmap0Kystkontur"},
-                {singleTile: true, ratio: 1}
-	);
-    var tmpLayerOptions = {layers: [ol_wms2], mapOptions: layerOptions, maximized: false, minRatio: 48, maxRatio: 72, size: {w: 300, h: 150}};
-    thisMap.addControl(new OpenLayers.Control.OverviewMap(tmpLayerOptions));
-    thisMap.addControl(new OpenLayers.Control.KeyboardDefaults());
 
-    /*** Fix to avoid vector layer below baselayers ***/
-    for ( var i = thisMap.layers.length-1; i>=0; --i ) {
-        if ( thisMap.layers[i] instanceof OpenLayers.Layer.Vector ) {
-            thisMap.setLayerIndex( thisMap.layers[i], 33 );
-        }
-    }
-}  
+
