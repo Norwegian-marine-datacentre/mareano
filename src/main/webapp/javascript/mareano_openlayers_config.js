@@ -98,7 +98,7 @@ function defineRemoveLayer() {
 	OpenLayers.Control.SelectFeature.prototype.removeLayer = function(evt) {
 	 	if(this.layers) {
 	 		for(var i=0; i<this.layers.length; ++i) {
-	 			if(evt.layer = this.layers[i]) {
+	 			if(evt.layer == this.layers[i]) {
 	 				this.layer.resetRoot(evt.layer);
 	 				OpenLayers.Util.removeItem(this.layers, evt.layer);
 	 				return;
