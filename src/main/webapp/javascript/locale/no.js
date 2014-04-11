@@ -1,5 +1,3 @@
-
-/* TODO strings with * need translation */
 GeoExt.Lang.add("no", {
     "Mareano.Composer.prototype": {
         thematicText: "Temakart",
