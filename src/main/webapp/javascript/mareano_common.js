@@ -18,7 +18,7 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
 
     loadConfig: function(config) {
         var ptypes = ["gxp_layermanager", "gxp_legend", "gxp_addlayers",
-            "gxp_styler", "gxp_featureeditor", "gxp_googleearth"];
+                      "gxp_styler", "gxp_featureeditor", "gxp_googleearth"];
         for (var i=config.tools.length-1; i>= 0; --i) {
             var tool = config.tools[i];
             if (tool.ptype == "gxp_zoom") {
@@ -26,8 +26,8 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
             }
             // remove the above ptypes and also the login button
             if (ptypes.indexOf(tool.ptype) !== -1 ||
-              (tool.actions && tool.actions.length > 0 &&
-              (tool.actions[0] == "->" || tool.actions[0] == "loginbutton"))) {
+                    (tool.actions && tool.actions.length > 0 &&
+                            (tool.actions[0] == "->" || tool.actions[0] == "loginbutton"))) {
                 config.tools.splice(i, 1);
             }
         }
@@ -64,9 +64,9 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
         }, {
             actions: ["->", "support"], actionTarget: "paneltbar"
         }, {
-        	actions: ["helpIcon"], actionTarget: "paneltbar"
+            actions: ["helpIcon"], actionTarget: "paneltbar"
         }, {
-        	actions: ["mareanoNorskBtn"], actionTarget: "paneltbar"
+            actions: ["mareanoNorskBtn"], actionTarget: "paneltbar"
         }, {
             actions: ["mareanoEngelskBtn"], actionTarget: "paneltbar"
         });
@@ -165,7 +165,7 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
                 }
             }
         });
-        
+
         var support = new Ext.Button({
             type:'support',
             tooltip: 'Support',
@@ -173,19 +173,19 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
             handler: function() {
                 window.location = 'mailto:datahjelp@imr.no';
             },
-         iconCls: "icon-support",
-         scope: this
+            iconCls: "icon-support",
+            scope: this
         });
-        
+
         var helpIcon = new Ext.Button({
             type:'help',
             tooltip: 'Get Help',
             id: "helpIcon",
             handler: function(event, toolEl, panel) {
                 alert('Help - is under construction.');
-         },
-         iconCls: "icon-question",
-         scope: this
+            },
+            iconCls: "icon-question",
+            scope: this
         });
 
         var mareanoNorskBtn = new Ext.Button({
@@ -261,7 +261,7 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
             resizable: true,
             items: [
                     {autoScroll:true,tbar:[],border:false, id:'tree', resizable: true, flex: 0,height:100}
-            ]
+                    ]
         });
 
         var tipsPanel = new Ext.Panel({
@@ -278,13 +278,13 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
             region: "center",
             autoScroll:true,
             items: [westPanel, tipsPanel,
-                {	
-            		title: this.helpTitle,
-            		html: this.helpText,
-            		disabled: Ext.isEmpty(this.helpText),
-        			region: "center",
-        			autoScroll:true
-    			}
+                    {	
+                title: this.helpTitle,
+                html: this.helpText,
+                disabled: Ext.isEmpty(this.helpText),
+                region: "center",
+                autoScroll:true
+                    }
             ]
         });
 
@@ -364,17 +364,17 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
             collapseMode: "mini",
             bodyStyle: "background-image:url('http://www.mareano.no/kart/images/nav-main-background.jpg')",
             html:
-            //html - content reloaded with content from MareanoController - but this must be here for the rest of the rest of the panels to
-            //load in the correct size. 
-            '<table width="100%" cellspacing="0" border="1"><tr height="45"> ' + 
-            '<td valign="middle" height="45" style="background-image:url(http://www.mareano.no/kart/images/top/ny_heading_397.gif); background-repeat: repeat;"> ' +
-            '<a style="text-decoration: none" target="_top" href="http://www.mareano.no"> ' +
-            '<img border="0" alt="MAREANO<br>samler kunnskap om havet" src="http://www.mareano.no/kart/images/top/ny_logo.gif"> ' +
-            '</a> ' +
-            '</td> ' +
-            '<td width="627" align="right" height="45" style="background-image:url(http://www.mareano.no/kart/images/top/ny_heading_627.gif);"> </td> ' +
-            '</tr></table> '+
-            '<div id="nav-main"><ul id="nav"><li><a href="/start">Startsiden</a></li></ul></div>'
+                //html - content reloaded with content from MareanoController - but this must be here for the rest of the rest of the panels to
+                //load in the correct size. 
+                '<table width="100%" cellspacing="0" border="1"><tr height="45"> ' + 
+                '<td valign="middle" height="45" style="background-image:url(http://www.mareano.no/kart/images/top/ny_heading_397.gif); background-repeat: repeat;"> ' +
+                '<a style="text-decoration: none" target="_top" href="http://www.mareano.no"> ' +
+                '<img border="0" alt="MAREANO<br>samler kunnskap om havet" src="http://www.mareano.no/kart/images/top/ny_logo.gif"> ' +
+                '</a> ' +
+                '</td> ' +
+                '<td width="627" align="right" height="45" style="background-image:url(http://www.mareano.no/kart/images/top/ny_heading_627.gif);"> </td> ' +
+                '</tr></table> '+
+                '<div id="nav-main"><ul id="nav"><li><a href="/start">Startsiden</a></li></ul></div>'
         });
 
         var northPanel = new Ext.Panel({
@@ -401,63 +401,13 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
 
 });
 
-/* TODO strings with * need translation */
-
-GeoExt.Lang.add("no", {
-    "Mareano.Composer.prototype": {
-        thematicText: "Temakart",
-        legendTitle: "Tegnforklaring",
-        infoTitle: "Info om kartlag",
-        helpTitle: "Hjelp",
-        helpText: "For \u00e5 gj\u00f8re det enklere \u00e5 navigere og endre p\u00e5 hva kartene viser, er det laget to ulike paneler for \u00e5 styre dette. I &#34;Temakart&#34; til venstre ligger alle ferdige kart og kartlag som man kan velge \u00e5 sl\u00e5 p\u00e5. De er organisert i hovedtema, under hovedtema er kartbilder som man kan velge \u00e5 sl\u00e5 av/p\u00e5, og p\u00e5 det nederste niv\u00e5et er kartlag som man ogs\u00e5 kan sl\u00e5s av/p\u00e5. N\u00e5r man \u00e5pner et temakart, blir et p\u00e5 forh\u00e5nd definert utvalg av kartlag \u00e5pnet. Disse kartlagene blir synlige under &#34;Kartlag&#34; i det h\u00f8yre kartpanelet. Her kan rekkef\u00f8lgen p\u00e5 kartlagene endres ved \u00e5 flytte p\u00e5 de ulike kartlagene, dette kan p\u00e5 enkelte kartlag for eksempel brukes til \u00e5 velge hvilke punkt som skal v\u00E6re mest synlige. Man kan ogs\u00e5 h\u00f8yreklikke p\u00e5 tittelen p\u00e5 hvert kartlag for \u00e5 bl.a. zoome til kartlagsutstrekning, det kan v\u00E6re nyttig for kartlag som har innhold som er mer synlig viss man zoomer inn p\u00e5 dem. For sp\u00f8rsm\u00e5l send mail til <a href='datahjelp@imr.no'>datahjelp@imr.no</a>",
-        mousePositionText: "Koordinater (WGS84): ",
-        goToTooltip: "G&aring; til koordinat",
-        goToText: "G&aring; til koordinat",
-        goToPrompt: "Posisjon i WGS84 (Breddegrad, Lengdegrad - for eksempel: 60.2,1.5):",
-        zoomToItem1: "Barentshavet",
-        zoomToItem2: "Norskehavet",
-        zoomToItem3: "Nordsj\u00f8en",
-        zoomToItem4: "Skagerrak",
-        zoomToItem5: "Polhavet",
-        expandText: "Utvid kartlag panel",
-        collapseText: "Sl\u00e5 sammen kartlag panel",
-        expandCollapseTooltip: "Utvid eller sl\u00e5 sammen kartlag panel",
-        visibilityText: "Sl\u00e5 av alle kartlag",
-        visibilityTooltip: "Sl\u00e5 av alle kartlag"
-    }
-});
-
-GeoExt.Lang.add("en", {
-    "Mareano.Composer.prototype": {
-        thematicText: "Thematic maps",
-        legendTitle: "Legend",
-        infoTitle: "Info about layers",
-        helpTitle: "Help",
-        helpText: "",
-        mousePositionText: "Coordinates (WGS84): ",
-        goToTooltip: "Go to coordinate",
-        goToText: "Go to coordinate",
-        goToPrompt: "Position in WGS84 (Latitude, Longitude - eg. - 60.2,1.5):",
-        zoomToItem1: "Barents Sea",
-        zoomToItem2: "Norwegian Sea",
-        zoomToItem3: "North Sea",
-        zoomToItem4: "Skagerrak",
-        zoomToItem5: "Polar Ocean",
-        expandText: "Expand Layers",
-        collapseText: "Collapse Layers",
-        expandCollapseTooltip: "Expand or collapse the Layers panel",
-        visibilityText: "Turn off all layers",
-        visibilityTooltip: "Turn off all layers"
-    }
-});
-
 var silent = false;
 var kartlagInfoState = ""; //used by removeLayerLegendAndInfo(mapOfGMLspesialpunkt, kartlagId)
 
 function loadMareano(mapPanel, app) {
-	addOverviewMapAndKeyboardDefaults(mapPanel.map);
+    addOverviewMapAndKeyboardDefaults(mapPanel.map);
     app.mapOfGMLspesialpunkt = new Object();        
-    
+
     var layertree = Ext.getCmp("layers");
 
     var updateLegendScale = function() {
@@ -477,22 +427,22 @@ function loadMareano(mapPanel, app) {
     };
     app.mapPanel.on('afterlayout', updateLegendScale);
     app.mapPanel.map.events.register('zoomend', app, updateLegendScale);
-    
+
     layertree.on('startdrag', function() {
-    	silent = true;
-	});
-	layertree.on('dragdrop', function() {
-    	silent = false;
-	});
-    	
-	layertree.on('beforeinsert', function(tree, container, node) {
-    	node.attributes.iconCls = getLayerIcon(node.layer.url);
+        silent = true;
+    });
+    layertree.on('dragdrop', function() {
+        silent = false;
+    });
+
+    layertree.on('beforeinsert', function(tree, container, node) {
+        node.attributes.iconCls = getLayerIcon(node.layer.url);
     }, this, {single: false});
     // we cannot specify this in outputConfig see: https://github.com/opengeo/gxp/issues/159   
     layertree.on('beforenodedrop', function(event) {
-    	// prevent dragging complete folders
+        // prevent dragging complete folders
         if (!event.dropNode.layer || event.target.text == "Base Layer" ||
-        		event.target.parentNode.text == "Base Layer")  {
+                event.target.parentNode.text == "Base Layer")  {
             return false;
         }
         if (event.source.tree.id === "thematic_tree") {
@@ -501,10 +451,10 @@ function loadMareano(mapPanel, app) {
             var record = event.dropNode.layerStore.getByLayer(layer);
             var iconCls = event.dropNode.attributes.iconCls;
             var kartlagId = event.dropNode.attributes.id;
-            
+
             if (!layer.map) {
-    			record.set("group", group);
-    			record.getLayer().setVisibility(true);
+                record.set("group", group);
+                record.getLayer().setVisibility(true);
             }
             return false;
         }
@@ -544,7 +494,7 @@ function addLayerToGroup( gruppeNavn, gruppeText, map, mapPanel, layers, store, 
                 /** Ugly - fix by not sending request when click outside layer */
                 if ( response.responseText != null && response.responseText != "" && bodyStr.length > 14 ) {
                     //Ext.MessageBox.show( 'Feature Info', response.responseText );
-                	winPanel = new Ext.Window({title: 'Feature Info',autoHeight: true,width:300,html: response.responseText});
+                    winPanel = new Ext.Window({title: 'Feature Info',autoHeight: true,width:300,html: response.responseText});
                     winPanel.show();
                     //Ext.MessageBox.show( {title: 'Feature Info', msg: response.responseText, setAutoScroll:true} );
                 }
@@ -552,7 +502,7 @@ function addLayerToGroup( gruppeNavn, gruppeText, map, mapPanel, layers, store, 
             };
             var tmpMap = mapPanel.map;
             if (record.get("layer").url!=null && !(record.get("layer") instanceof OpenLayers.Layer.Vector) &&
-                record.get("layer").url.indexOf( 'http://maps.imr.no/geoserver/wms' ) != -1 ) {
+                    record.get("layer").url.indexOf( 'http://maps.imr.no/geoserver/wms' ) != -1 ) {
 
                 var isRegFlag = 0;
                 if ( featureInfoEvents != [] ) {
@@ -576,20 +526,20 @@ function addLayerToGroup( gruppeNavn, gruppeText, map, mapPanel, layers, store, 
                         if (pressed && !gfiCache[record.get("layer").id] && record.get("layer").getVisibility() ) {
                             gfiCache[record.get("layer").id] = true;
                             var params = {
-                                REQUEST: "GetFeatureInfo",
-                                EXCEPTIONS: "application/vnd.ogc.se_xml",
-                                BBOX: tmpMap.getExtent().toBBOX(),
-                                X: parseInt(e.xy.x),
-                                Y: parseInt(e.xy.y),
-                                INFO_FORMAT: 'text/html',
-                                QUERY_LAYERS: record.get("layer").params['LAYERS'],
-                                FEATURE_COUNT: 50,
-                                Layers: record.get("layer").params['LAYERS'],
-                                Styles: '',
-                                Srs: 'EPSG:32633',
-                                WIDTH: tmpMap.size.w,
-                                HEIGHT: tmpMap.size.h,
-                                format: 'image/jpeg'
+                                    REQUEST: "GetFeatureInfo",
+                                    EXCEPTIONS: "application/vnd.ogc.se_xml",
+                                    BBOX: tmpMap.getExtent().toBBOX(),
+                                    X: parseInt(e.xy.x),
+                                    Y: parseInt(e.xy.y),
+                                    INFO_FORMAT: 'text/html',
+                                    QUERY_LAYERS: record.get("layer").params['LAYERS'],
+                                    FEATURE_COUNT: 50,
+                                    Layers: record.get("layer").params['LAYERS'],
+                                    Styles: '',
+                                    Srs: 'EPSG:32633',
+                                    WIDTH: tmpMap.size.w,
+                                    HEIGHT: tmpMap.size.h,
+                                    format: 'image/jpeg'
                             };
                             var returned = OpenLayers.loadURL("http://maps.imr.no/geoserver/wms", params, this, setThisHTML);
                             //returned.abort(); //to avoid two popups
@@ -625,9 +575,9 @@ function addLayerToGroup( gruppeNavn, gruppeText, map, mapPanel, layers, store, 
             attr.autoDisable = false;
             var node = GeoExt.tree.LayerLoader.prototype.createNode.call(this, attr);       
             app.mapPanel.layers.on("remove", function(store, record) {
-            	if (silent !== true && record.getLayer().metadata['kartlagId'] === attr.layer.metadata['kartlagId']) {
-            		node.ui.toggleCheck(false);
-            	}
+                if (silent !== true && record.getLayer().metadata['kartlagId'] === attr.layer.metadata['kartlagId']) {
+                    node.ui.toggleCheck(false);
+                }
             });            
             node.on("checkchange", function(event) {
                 var layer = layerRecord.getLayer();
@@ -657,7 +607,7 @@ function addLayerToGroup( gruppeNavn, gruppeText, map, mapPanel, layers, store, 
                     }
                 });
                 node = origNode;
-            	if (event.ui.checkbox.checked) {
+                if (event.ui.checkbox.checked) {
                     //app.mapPanel.layers.add(record);
                     /** bart code */
                     var doAdd = true;
@@ -673,41 +623,41 @@ function addLayerToGroup( gruppeNavn, gruppeText, map, mapPanel, layers, store, 
                         clone.getLayer().setVisibility(true);
                         clone.getLayer().metadata['kartlagId'] = id;
                         app.mapPanel.layers.add(clone);
-//                        var maxExtent = clone.getLayer().maxExtent; //zoom to extent for layers
-//                        if (event.ui._silent !== true && maxExtent) {
-//                            app.mapPanel.map.zoomToExtent(maxExtent, true);
-//                        }
+//                      var maxExtent = clone.getLayer().maxExtent; //zoom to extent for layers
+//                      if (event.ui._silent !== true && maxExtent) {
+//                      app.mapPanel.map.zoomToExtent(maxExtent, true);
+//                      }
                         displayLegendGraphicsAndSpesialpunkt(app.mapPanel.map.getExtent() + "", layer.metadata['kartlagId'], layerRecord.getLayer(), event, app);
                     }
-            	    //app.mapPanel.map.addLayer(layer); //adds layer to Overlay but mareano_wmslayerpanel is missing from properties and no layer properties are shown                        
-                	//displayLegendGraphicsAndSpesialpunkt(app.mapPanel.map.getExtent() + "", layer.metadata['kartlagId'], layerRecord.getLayer(), event, app);   
+                    //app.mapPanel.map.addLayer(layer); //adds layer to Overlay but mareano_wmslayerpanel is missing from properties and no layer properties are shown                        
+                    //displayLegendGraphicsAndSpesialpunkt(app.mapPanel.map.getExtent() + "", layer.metadata['kartlagId'], layerRecord.getLayer(), event, app);   
                 } else {
-            	    removeLayerLegendAndInfo(app.mapOfGMLspesialpunkt, layer.metadata['kartlagId'], record, layer, app);
+                    removeLayerLegendAndInfo(app.mapOfGMLspesialpunkt, layer.metadata['kartlagId'], record, layer, app);
                 }
             });                                    
             return node;
         }
     });
-    
+
     var layerContainerGruppe = new GeoExt.tree.LayerContainer({
-    	checked: groupChecked,
+        checked: groupChecked,
         expanded: groupChecked,    	
         text: gruppeText,   
         listeners: {
             "checkchange": function(node, checked) { //setting all subnodes if parent is checked
                 var extent = node.attributes.maxExtent;
-//                if (extent && checked) { //zoom to extent for pictures
-//                    app.mapPanel.map.zoomToExtent(extent, true);
-//                }
+//              if (extent && checked) { //zoom to extent for pictures
+//              app.mapPanel.map.zoomToExtent(extent, true);
+//              }
                 node.expand();
-//                addKartbildeAbstractOrRemove(node, checked);
-                
+//              addKartbildeAbstractOrRemove(node, checked);
+
                 var cs = node.childNodes;
                 for(var c = cs.length-1; c >= 0; c--) { //add layers in reverse of reverse order - so in the right order
                     cs[c].ui._silent = true;
                     cs[c].ui.toggleCheck(checked);
                     delete cs[c].ui._silent;
-            	} 
+                } 
             }
         },                            
         layerStore: store,
@@ -718,7 +668,7 @@ function addLayerToGroup( gruppeNavn, gruppeText, map, mapPanel, layers, store, 
 
 function addKartbildeAbstractOrRemove(node, checked) {
     if ( checked == true) {
-    	var languageChoosen = getLanguage();
+        var languageChoosen = getLanguage();
         jQuery.ajax({
             type: 'get',
             url: "spring/infoKartBilde",
@@ -728,37 +678,37 @@ function addKartbildeAbstractOrRemove(node, checked) {
                 language: languageChoosen
             },
             success:function(data) {
-            	var legendDiv = getKartlagBildeDiv(node.attributes.text)
-            	visKartlagInfoHTML( legendDiv, data );
+                var legendDiv = getKartlagBildeDiv(node.attributes.text)
+                visKartlagInfoHTML( legendDiv, data );
             }
         }); 
     } else if ( checked == false ) {
-    	var legendDiv = getKartlagBildeDiv(node.attributes.text)
-    	fjernKartlagInfo(legendDiv);
+        var legendDiv = getKartlagBildeDiv(node.attributes.text)
+        fjernKartlagInfo(legendDiv);
     }
 }
 
 function getKartlagBildeDiv(nodeText) {   
-	nodeText = nodeText.toLowerCase();
-	nodeText = nodeText.replace(/æ/g,'ae'); // /g global option
-	nodeText = nodeText.replace(/ø/g,'oe');
-	nodeText = nodeText.replace(/å/g,'aa');
-	nodeText = nodeText.replace(/ /g,'');
+    nodeText = nodeText.toLowerCase();
+    nodeText = nodeText.replace(/æ/g,'ae'); // /g global option
+    nodeText = nodeText.replace(/ø/g,'oe');
+    nodeText = nodeText.replace(/å/g,'aa');
+    nodeText = nodeText.replace(/ /g,'');
 
     nodeText = nodeText.replace(/[!"#$%&'()*+,.\/:;<=>?@[\\\]^`{|}~]/g, "");
-	return nodeText;
+    return nodeText;
 }
 
 function getLanguage() {
-	var languageChoosen = "en";
-	if (document.location.href.indexOf("mareano.html") != -1) {
-		languageChoosen = "norsk";
-	}
-	return languageChoosen;
+    var languageChoosen = "en";
+    if (document.location.href.indexOf("mareano.html") != -1) {
+        languageChoosen = "norsk";
+    }
+    return languageChoosen;
 }
 
 function displayLegendGraphicsAndSpesialpunkt(extent, kartlagId, layer, event, app) {
-	var languageChoosen = getLanguage();
+    var languageChoosen = getLanguage();
     jQuery.ajax({
         type: 'get',
         url: "spring/legendAndSpesialpunkt",
@@ -769,14 +719,14 @@ function displayLegendGraphicsAndSpesialpunkt(extent, kartlagId, layer, event, a
             extent: extent
         },
         success:function(data) {
-        	addLegendGraphics(kartlagId, data);
-        	addSpesialpunkt(extent, kartlagId, layer, event, app, data);
+            addLegendGraphics(kartlagId, data);
+            addSpesialpunkt(extent, kartlagId, layer, event, app, data);
         }
     }); 
 }
 
 function displayLegendGraphics(kartlagId) {
-	var languageChoosen = getLanguage();
+    var languageChoosen = getLanguage();
     jQuery.ajax({
         type: 'get',
         url: "spring/legend",
@@ -786,7 +736,7 @@ function displayLegendGraphics(kartlagId) {
             language: languageChoosen
         },
         success:function(data) {
-        	addLegendGraphics(kartlagId, data);
+            addLegendGraphics(kartlagId, data);
         }
     }); 
 }
@@ -804,16 +754,16 @@ function addLegendGraphics(kartlagId, data) {
 
 var controlSelectFeature = null;
 function addSpesialpunkt(extent, kartlagId, layer, event, app, data) {
-	if ( data.noSpesialpunkt == false ) { 
-		var styleMap = new OpenLayers.StyleMap({
-			'default':{
-				externalGraphic: "theme/imr/images/geofotoSpesialpunkt.png",
-				cursor: "pointer"
-			}
-		});
-		
+    if ( data.noSpesialpunkt == false ) { 
+        var styleMap = new OpenLayers.StyleMap({
+            'default':{
+                externalGraphic: "theme/imr/images/geofotoSpesialpunkt.png",
+                cursor: "pointer"
+            }
+        });
+
         var snitt = new OpenLayers.Layer.Vector("GML", { 
-        	displayInLayerSwitcher: false,
+            displayInLayerSwitcher: false,
             protocol: new OpenLayers.Protocol.HTTP({ 
                 url: "spring/getgml", 
                 format: new OpenLayers.Format.GML()
@@ -823,45 +773,45 @@ function addSpesialpunkt(extent, kartlagId, layer, event, app, data) {
             projection: new OpenLayers.Projection("EPSG:32633"),
             styleMap: styleMap
         }); 
-		
-		snitt.events.register( "featureselected", snitt, GMLselected );
-		app.mapOfGMLspesialpunkt[kartlagId] = snitt;	    
-		app.mapPanel.map.addLayer( snitt );   	           
-		
-		if ( controlSelectFeature == null ) {
-			controlSelectFeature = new OpenLayers.Control.SelectFeature( snitt );
-			defineSelectFeatureAddLayer();
-			
-			// add openlayers pull request: https://github.com/openlayers/openlayers/issues/958
-			defineRemoveLayer();
-			defineDestroy();
-			defineSetMap();
-			defineResetRoot();
-		} else {
-			controlSelectFeature.addLayer( snitt );
-		}
-		
-		app.mapPanel.map.addControl( controlSelectFeature );
-		controlSelectFeature.activate(); 	 
-	}
+
+        snitt.events.register( "featureselected", snitt, GMLselected );
+        app.mapOfGMLspesialpunkt[kartlagId] = snitt;	    
+        app.mapPanel.map.addLayer( snitt );   	           
+
+        if ( controlSelectFeature == null ) {
+            controlSelectFeature = new OpenLayers.Control.SelectFeature( snitt );
+            defineSelectFeatureAddLayer();
+
+            // add openlayers pull request: https://github.com/openlayers/openlayers/issues/958
+            defineRemoveLayer();
+            defineDestroy();
+            defineSetMap();
+            defineResetRoot();
+        } else {
+            controlSelectFeature.addLayer( snitt );
+        }
+
+        app.mapPanel.map.addControl( controlSelectFeature );
+        controlSelectFeature.activate(); 	 
+    }
 }
 
 function buildLegendGraphicsHTML( currentLegend, kartlagId, data ) {
     var legendGraphicsHTML = currentLegend+'<div id="'+kartlagId+'">';
     for ( var i=0; i < data.legends.length; i++ ) {
-    	if ( i > 0 ) {
-    		legendGraphicsHTML += '<div>';     
-    	}
-    	if ( data.legends[i].url != '') {
-    		legendGraphicsHTML += '<table><tr><td><img src="' + data.legends[i].url + '"/></td>';
-    		legendGraphicsHTML += '<td>' + data.legends[i].text + '</td></tr></table>';
-    	} else {
-    		legendGraphicsHTML += data.legends[i].text;
-    	}
-    	
-    	if ( i > 0 ) {
-    		legendGraphicsHTML += '</div>';     
-    	}
+        if ( i > 0 ) {
+            legendGraphicsHTML += '<div>';     
+        }
+        if ( data.legends[i].url != '') {
+            legendGraphicsHTML += '<table><tr><td><img src="' + data.legends[i].url + '"/></td>';
+            legendGraphicsHTML += '<td>' + data.legends[i].text + '</td></tr></table>';
+        } else {
+            legendGraphicsHTML += data.legends[i].text;
+        }
+
+        if ( i > 0 ) {
+            legendGraphicsHTML += '</div>';     
+        }
     } 
     legendGraphicsHTML += '</div>';
     Ext.getCmp('newLegend').update(legendGraphicsHTML);
@@ -875,8 +825,8 @@ function buildLegendGraphicsHTML( currentLegend, kartlagId, data ) {
  **/
 function visKartlagInfoHTML(kartlagId, data) {
     var infoHTML = '<div id="'+kartlagId+'tips" style="margin-bottom: 0.1cm;"><font style="font-size: 12px;"><b>'+ 
-    	data.kartlagInfo.kartlagInfoTitel+'</b>' + ':<br />' + 
-    	data.kartlagInfo.text + '</font></div>';
+    data.kartlagInfo.kartlagInfoTitel+'</b>' + ':<br />' + 
+    data.kartlagInfo.text + '</font></div>';
 
     kartlagInfoState += infoHTML;
     updateOrSetKartlagInfo(kartlagInfoState);
@@ -886,36 +836,36 @@ function visKartlagInfoHTML(kartlagId, data) {
  * Remove Legend div tag and KartlagInfo div tag associated with kartlagId
  */
 function removeLayerLegendAndInfo(mapOfGMLspesialpunkt, kartlagId, record, layer, app) {
-	
-	app.mapPanel.layers.each(function(record) {
-		if (record.getLayer().metadata['kartlagId'] === kartlagId) {
-			this.remove(record);
-			return false;
-		}
-	}, app.mapPanel.layers);
-	
-	if ( mapOfGMLspesialpunkt[kartlagId] != null ) { //fjern spesialpunkt     
-    	app.mapPanel.map.removeLayer(mapOfGMLspesialpunkt[kartlagId], false);
-    	mapOfGMLspesialpunkt[kartlagId] = null;
+
+    app.mapPanel.layers.each(function(record) {
+        if (record.getLayer().metadata['kartlagId'] === kartlagId) {
+            this.remove(record);
+            return false;
+        }
+    }, app.mapPanel.layers);
+
+    if ( mapOfGMLspesialpunkt[kartlagId] != null ) { //fjern spesialpunkt     
+        app.mapPanel.map.removeLayer(mapOfGMLspesialpunkt[kartlagId], false);
+        mapOfGMLspesialpunkt[kartlagId] = null;
     }
-	fjernKartlagInfo(kartlagId);
+    fjernKartlagInfo(kartlagId);
 }
 
 function fjernKartlagInfo(legendDiv) {
-	var temp = jQuery("<div>").html(kartlagInfoState); 
-    
+    var temp = jQuery("<div>").html(kartlagInfoState); 
+
     legendDiv = getKartlagBildeDiv(legendDiv);
     jQuery(temp).find('#'+legendDiv+'tips').remove();
-    
+
     kartlagInfoState = jQuery(temp).html();
     updateOrSetKartlagInfo(kartlagInfoState);
 }
 
 function updateOrSetKartlagInfo(kartlagInfoState) {
     if ( Ext.getCmp('tips').rendered ) {
-    	Ext.getCmp('tips').update(kartlagInfoState);
+        Ext.getCmp('tips').update(kartlagInfoState);
     } else {
-    	Ext.getCmp('tips').html = kartlagInfoState;
+        Ext.getCmp('tips').html = kartlagInfoState;
     }	
 }
 
@@ -924,21 +874,21 @@ function updateOrSetKartlagInfo(kartlagInfoState) {
  */
 function GMLselected (event) {
     if ( event.feature.data.type == "bilder" ) {
-    	Ext.MessageBox.show({
-    		title:event.feature.data.name, 
-    		msg:'<a href="' + event.feature.data.description + '" TARGET="_blank"><img src=" '+event.feature.data.description+'" width=150 height=100 /></a>'
-    	});
+        Ext.MessageBox.show({
+            title:event.feature.data.name, 
+            msg:'<a href="' + event.feature.data.description + '" TARGET="_blank"><img src=" '+event.feature.data.description+'" width=150 height=100 /></a>'
+        });
     } else if ( event.feature.data.type == "video" ) {
         Ext.MessageBox.show({
-        	title:event.feature.data.name, 
-        	msg:'<embed width="330" height="200" controls="TRUE" autoplay="TRUE" loop="FALSE" src="'+event.feature.data.description+'">'
+            title:event.feature.data.name, 
+            msg:'<embed width="330" height="200" controls="TRUE" autoplay="TRUE" loop="FALSE" src="'+event.feature.data.description+'">'
         });
     } else if ( event.feature.data.type == "pdf" ) { // finnes ennaa ikke
         Ext.MessageBox.show({title:event.feature.data.name,msg:'<a href="' + event.feature.data.description + '" TARGET="_blank">' + event.feature.data.name + '</a>'});    
     } else if ( event.feature.data.type == "text" ) {
         jQuery.get('/geodata/proxy?url=http://atlas.nodc.no/website/mareano/' + event.feature.data.description, function(response) { 
             Ext.MessageBox.show({title:event.feature.data.name, msg: response}); 
-		});
+        });
     }
 }
 
