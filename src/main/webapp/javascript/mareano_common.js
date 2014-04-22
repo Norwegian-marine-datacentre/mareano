@@ -138,7 +138,7 @@ function addLayerToGroup( gruppeNavn, gruppeText, map, mapPanel, layers, store, 
                                     HEIGHT: tmpMap.size.h,
                                     format: 'image/jpeg'
                             };
-                            var returned = OpenLayers.loadURL("http://maps.imr.no/geoserver/wms", params, this, setThisHTML);
+                            var returned = OpenLayers.Request.GET({url: "http://maps.imr.no/geoserver/wms", params: params, callback: setThisHTML});
                             //returned.abort(); //to avoid two popups
                             OpenLayers.Event.stop(e);
                         }
