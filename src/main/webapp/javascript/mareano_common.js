@@ -445,6 +445,10 @@ function removeLayerLegendAndInfo(mapOfGMLspesialpunkt, kartlagId, record, layer
     	app.mapPanel.map.removeLayer(mapOfGMLspesialpunkt[kartlagId], false);
     	mapOfGMLspesialpunkt[kartlagId] = null;
     }
+	
+    var legendDiv = '#'+kartlagId; //fjern legend
+    jQuery(legendDiv).remove();
+	
     fjernKartlagInfo(kartlagId);
 }
 
