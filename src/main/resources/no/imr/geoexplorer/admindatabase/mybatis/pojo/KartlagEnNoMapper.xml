@@ -9,20 +9,21 @@
     	<result property="title" column="title"/>
     	<result property="alternateTitle" column="alternate_title"/>
     	<result property="abstracts" column="abstract"/>
+    	<result property="queryable" column="queryable"/>
 	</resultMap>
 
 	<sql id="kartlagSelect">
-   		SELECT kartlag_id, title, alternate_title, abstract
+   		SELECT l.kartlag_id, l.title, l.alternate_title, l.abstract, k.queryable
     </sql>
     
 	<select id="getKartlagEn" resultMap="KartlagEnNoResult" resultType="java.util.ArrayList">
     	<include refid="kartlagSelect" />
-    	FROM kartlag_en where kartlag_id=#{kartlagId}
+    	FROM kartlag_en l, kartlag k where l.kartlag_id=#{kartlagId} and k.kartlag_id=l.kartlag_id
 	</select>
 	
 	<select id="getKartlagNo" resultMap="KartlagEnNoResult" resultType="java.util.ArrayList">
     	<include refid="kartlagSelect" />
-    	FROM kartlag_no where kartlag_id=#{kartlagId}
+    	FROM kartlag_no l, kartlag k where l.kartlag_id=#{kartlagId} and k.kartlag_id=l.kartlag_id
 	</select>
 				
 </mapper>

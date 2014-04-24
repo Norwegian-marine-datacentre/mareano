@@ -385,7 +385,7 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
             region: "north",
             id: 'page-header-panel',
             items: [innerNorthPanel, this.portalItems[0].tbar /* add the existing tbar */]
-        });
+        });       
 
         for (var i = this.portalItems[0].items.length-1; i>=0; --i) {
             // get rid of GeoExplorer's west panel

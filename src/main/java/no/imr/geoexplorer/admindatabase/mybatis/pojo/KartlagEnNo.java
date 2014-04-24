@@ -5,6 +5,7 @@ public class KartlagEnNo {
 	private String title;
 	private String alternateTitle;
 	private String abstracts;
+	private Boolean queryable;
 	
 	public long getKartlagId() {
 		return kartlagId;
@@ -30,4 +31,10 @@ public class KartlagEnNo {
 	public void setAbstracts(String abstracts) {
 		this.abstracts = abstracts;
 	}
+    public Boolean getQueryable() {
+        return queryable;
+    }
+    public void setQueryable(Boolean queryable) {
+        this.queryable = queryable;
+    }	
 }

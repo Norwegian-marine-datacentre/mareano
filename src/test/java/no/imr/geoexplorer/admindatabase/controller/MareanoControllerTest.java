@@ -46,58 +46,11 @@ public class MareanoControllerTest {
 
 	@SuppressWarnings("unchecked")
 	@Test
-	public void getHovedtemaer() {
+	public void getHovedtemaer() throws Exception{
 		ModelAndView mav = mareanoController.getMareanoTest(new MockHttpServletResponse());
 		Map<String, Object> mavMap = mav.getModel();
 		List<HovedtemaVisning> hovedtemaer = (List<HovedtemaVisning>) mavMap.get("hovedtemaer");
 		assertNotNull(hovedtemaer);
-	}
-
-	@Test
-	public void getSpesialpunktForKartlagOgKartbilde() {
-		List<Spesialpunkt> punkter = mareanoController.getSpesialpunkt(259l);
-		assertNotNull(punkter);
-		//assertTrue(punkter.size() > 0);
-	}
-
-	@Test
-	public void getSpesialpunkt() throws Exception {
-		String extent = "-524140,7672817,2701088,8506881";
-		mareanoController.getSpesialpunktAsGML(extent, kartlagId+"", new MockHttpServletRequest(), new MockHttpServletResponse());
-	}
-
-	@Test
-	public void spesialPunktPojosToGMLPojos() {
-		List<Spesialpunkt> spesialpunkt = mareanoController.getSpesialpunkt(kartlagId);
-		String extent = "-524140,7672817,2701088,8506881";
-		FeatureCollection features = mareanoController.toGMLPojos(spesialpunkt, extent);
-		String xml = xstream.toXML(features);
-		assertNotNull(xml);
-	}
-
-	@Test
-	public void testWriteGmlToFile() throws Exception {
-		MockHttpServletRequest req = new MockHttpServletRequest();
-		String xml = dummyGML("extent");
-		mareanoController.writeGmlToFile(xml, req);
-	}
-	
-	@Test
-	public void getLegendTest() {
-		mareanoController.getLegend("296", "norsk");
-	}
-	
-	@Test
-	public void getLegendsInfoTest() {
-		SpesialpunktStatus status = mareanoController.getLegendsInfo("287", "norsk");
-		for ( LegendsInfo aLegend : status.getLegends() ) {
-			System.out.println("Url:"+aLegend.getUrl()+" \t text:"+aLegend.getText());
-		}
-	}
-	
-	@Test
-	public void getKartlagInfoTest() {
-		mareanoController.getKartlagInfo("287", new SpesialpunktStatus(), "norsk");;
 	}
 	
 	@Test 
@@ -107,7 +60,7 @@ public class MareanoControllerTest {
 	}
 	
 	@Test
-	public void getListOrganizedToBrowser() {
+	public void getListOrganizedToBrowser() throws Exception {
 		mareanoController.listOrganizedToBrowser("en");
 	}
 

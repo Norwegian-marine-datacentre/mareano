@@ -176,6 +176,7 @@
                     		source: "ol",	
                                 type: "OpenLayers.Layer.WMS",
                                 group: "${bilde.gruppe}",
+                                queryable: ${kartlaget.queryable}, 
                                 visibility: !(app.id > 0) ? ${bilde.visible} : false,
                                 properties: "mareano_wmslayerpanel",           
                                 args: [
@@ -222,6 +223,7 @@
                                 source: "ol",
                                 type: "OpenLayers.Layer.WMS",
                                 group: "${bilde.gruppe}",
+                                queryable: ${kartlaget.queryable}, //needed to make getFeatureInfo work with gx_olsource 
                                 visibility: ${bilde.visible},
                                 properties: "mareano_wmslayerpanel",           
                                 args: [

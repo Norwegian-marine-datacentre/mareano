@@ -17,7 +17,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  * @author endrem
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations={"classpath:springmvc-servlet.xml"})
+@ContextConfiguration(locations={"classpath:test-context-dont-check-inn.xml"})
 public class KartlagEnNoTest {
 
 	@Autowired( required = true )

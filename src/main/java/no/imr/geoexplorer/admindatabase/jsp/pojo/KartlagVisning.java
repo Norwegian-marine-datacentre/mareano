@@ -14,6 +14,8 @@ public class KartlagVisning {
 	private String abstracts;
 	private double scalemin;
 	private double scalemax;
+	private Boolean queryable = true; 
+	
 	public long getId() {
 		return id;
 	}
@@ -92,5 +94,10 @@ public class KartlagVisning {
 	public void setScalemax(double scalemax) {
 		this.scalemax = scalemax;
 	}
-
+    public Boolean getQueryable() {
+        return queryable;
+    }
+    public void setQueryable(Boolean queryable) {
+        this.queryable = queryable;
+    }
 }

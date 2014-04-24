@@ -5,6 +5,7 @@ public class KartlagInfo {
 	private String title;
 	private String alternateTitle;
 	private String abstracts;
+	
 	public long getKartlagId() {
 		return kartlagId;
 	}
@@ -29,6 +30,4 @@ public class KartlagInfo {
 	public void setAbstracts(String abstracts) {
 		this.abstracts = abstracts;
 	}
-	
-
 }
