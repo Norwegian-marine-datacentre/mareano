@@ -191,7 +191,6 @@
                                         opacity: 1,
                                         metadata: {
                                             keyword: "${kartlaget.keyword}",
-                                            'abstract': '${kartlaget.abstracts}',
                                             'kartlagId': '${kartlaget.id}'
                                         },
                                         minScale: ${kartlaget.scalemax}*(96/0.0254),
@@ -237,7 +236,6 @@
                                         opacity: 1,
                                         metadata: {
                                             keyword: "${kartlaget.keyword}",
-                                            //'abstract': '${kartlaget.abstracts}', //causes error: missing } after property list genereres daglig fra OD's operasjonelle databaser. Detaljeringsg...
                                             'kartlagId': '${kartlaget.id}'
                                         },
                                         maxExtent: [
