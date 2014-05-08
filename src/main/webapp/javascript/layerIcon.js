@@ -21,6 +21,8 @@ function getLayerIcon(url) {
 			return "gx-tree-rasterlayer-icon-SK";
 		} else if (url.indexOf("kart.kystverket.no") != -1) {
 			return "gx-tree-rasterlayer-icon-KV";
+		} else if (url.indexOf("wms.nina.no") != -1) {
+			return "gx-tree-rasterlayer-icon-SEAPOP";			
 		} else {
 			return "gx-tree-rasterlayer-icon";
 		}
