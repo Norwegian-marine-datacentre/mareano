@@ -58,6 +58,11 @@
     title: "Kystverket";
 }
 
+.x-tree-node-leaf  .gx-tree-rasterlayer-icon-SEAPOP{
+    background-image: url(img/geosilk/kilder/seapop_smal.jpg);
+    title: "SEAPOP";
+}
+
 html { width: 100%; height: 100%}
 body { width: 100%; margin: 0px; padding: 0px;  font-family: arial, verdana, helvetica, sans-serif; font-size: 1.0em; height: 100% }
 img { border: 0; }
