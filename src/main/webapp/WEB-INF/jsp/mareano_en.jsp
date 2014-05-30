@@ -15,7 +15,7 @@
         <script type="text/javascript" src="externals/ext/ext-all.js"></script>
 			
         <meta http-equiv="X-UA-Compatible" content="IE=IE8" >
-        <!--script type="text/javascript" src="javascript/googleAnalyticsStatistics.js"></script -->
+        <script type="text/javascript" src="javascript/googleAnalyticsStatistics.js"></script>
 
         <script type="text/javascript" src="javascript/jquery-1.6.2.min.js"></script>
         <script type="text/javascript">jQuery.noConflict();</script>

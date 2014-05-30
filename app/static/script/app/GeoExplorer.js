@@ -73,7 +73,7 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
     goToPrompt: "Posisjon i WGS84 (Breddegrad, Lengdegrad - for eksempel: 60.2,1.5):",
     expandText: "Expand Layers",
     collapseText: "P\u00e5sl\u00e5tt kartlag",
-	expandCollapseTooltip: "Sl\u00e5 sammen eller ekspander kartlag panel",
+	expandCollapseTooltip: "Sl\u00e5 sammen eller ekspander kartlagspanel",
     visibilityText: "Sl\u00e5 av",
     visibilityTooltip: "Sl\u00e5 av alle kartlag",
     // End i18n.
@@ -596,8 +596,8 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
         var helpIcon = new Ext.Button({
             type:'help',
             tooltip: 'Get Help',
-            handler: function(event, toolEl, panel) {
-                alert('Help - is under construction.');
+            handler: function() {
+                window.open( location.href.substring(0,location.href.lastIndexOf('/mareano.html')) + "/javascript/mareano_help.pdf" );
         	},
         	iconCls: "icon-question",
         	scope: this
