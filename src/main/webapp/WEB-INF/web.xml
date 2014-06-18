@@ -39,7 +39,7 @@
         <url-pattern>/ringo/*</url-pattern>
     </servlet-mapping>
     <welcome-file-list>
-        <welcome-file>geodataHI.html</welcome-file>
+        <welcome-file>mareano.html</welcome-file>
     </welcome-file-list>
     <context-param>
         <param-name>contextConfigLocation</param-name>

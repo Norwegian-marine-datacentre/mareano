@@ -195,7 +195,7 @@
                                 source: "ol",
                                 type: "OpenLayers.Layer.WMS",
                                 group: "${bilde.gruppe}",
-                                queryable: true,
+                                queryable: ${kartlaget.queryable},
                                 visibility: !(app.id > 0) ? ${bilde.visible} : false,
                                 properties: "mareano_wmslayerpanel",           
                                 //properties: "${kartlaget.id}",
