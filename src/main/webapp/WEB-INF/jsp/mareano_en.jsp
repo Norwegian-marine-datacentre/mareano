@@ -50,7 +50,7 @@
         <script type="text/javascript" src="javascript/proj4js-compressed.js"></script>
 
         <!-- GeoExplorer resources -->
-<!--         <link rel="stylesheet" type="text/css" href="theme/app/geoexplorer.css" /> -->
+        <link rel="stylesheet" type="text/css" href="theme/app/geoexplorer.css" />
         <!--[if IE]><link rel="stylesheet" type="text/css" href="theme/app/ie.css"/><![endif]-->
         <link rel="stylesheet" type="text/css" href="theme/ux/colorpicker/color-picker.ux.css" />
         <script type="text/javascript" src="script/GeoExplorer.js"></script>
