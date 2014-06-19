@@ -64,7 +64,7 @@
                 gxp.plugins.LayerTree.prototype.overlayNodeText = "Overlays";
                                 
                 //Ext.BLANK_IMAGE_URL = "theme/app/img/blank.gif";
-                OpenLayers.ImgPath = "theme/app/img/";
+                OpenLayers.ImgPath = "theme/imr/img/";
                 GeoExt.Lang.set('en');
                 var app = new Mareano.Composer({
                     <!-- authStatus: < status >, -->
