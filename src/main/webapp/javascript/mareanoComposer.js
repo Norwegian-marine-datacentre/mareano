@@ -36,6 +36,11 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
             ptype: "gxp_layertree",
             outputConfig: {
                 id: "layers",
+                listeners: {
+                    beforeinsert: function(tree, container, node) {
+    	                node.attributes.iconCls = getLayerIcon(node.layer.url);
+                    }
+                },
                 enableDD:true,
                 plugins: [{
                     ptype: "gx_treenodeactions",

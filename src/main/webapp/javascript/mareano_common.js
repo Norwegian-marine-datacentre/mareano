@@ -34,9 +34,6 @@ function loadMareano(mapPanel, app) {
         silent = false;
     });
 
-    layertree.on('beforeinsert', function(tree, container, node) {
-        node.attributes.iconCls = getLayerIcon(node.layer.url);
-    }, this, {single: false});
     // we cannot specify this in outputConfig see: https://github.com/opengeo/gxp/issues/159   
     layertree.on('beforenodedrop', function(event) {
         // prevent dragging complete folders
