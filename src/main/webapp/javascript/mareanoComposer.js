@@ -13,7 +13,12 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
 
     constructor: function() {
         Mareano.Composer.superclass.constructor.apply(this, arguments);    
+        this.on("beforesave", this.beforeSave, this);
         this.on("beforecreateportal", this.modifyPortal, this);
+    },
+
+    beforeSave: function(requestConfig, callback) {
+        requestConfig.url = requestConfig.url.replace('../maps', './maps');
     },
 
     loadConfig: function(config) {
