@@ -35,6 +35,7 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
         config.tools.splice(0, 0 ,{
             ptype: "gxp_layertree",
             outputConfig: {
+                tbar: [],
                 id: "layers",
                 listeners: {
                     beforeinsert: function(tree, container, node) {
