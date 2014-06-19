@@ -187,7 +187,6 @@
                                         opacity: 1,
                                         metadata: {
                                             keyword: "${kartlaget.keyword}",
-                                            'abstract': '${kartlaget.abstracts}',
                                             'kartlagId': '${kartlaget.id}'
                                         },
                                         minScale: ${kartlaget.scalemax}*(96/0.0254),
