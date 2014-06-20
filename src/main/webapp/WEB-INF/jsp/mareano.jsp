@@ -92,7 +92,7 @@
                     sources: {
                         ol: {
                             ptype: "gx_olsource"
-                        }                   
+                        }
                     },
                     map: {
                         projection: "EPSG:32633",
@@ -180,7 +180,7 @@
                                ]
                            }                	
                         ],
-                        center: [1088474,7489849],
+						center: [450000, 7550000],
                         zoom: 2
                     }
                 });
@@ -240,7 +240,7 @@
                     <c:forEach var="bilde" items="${hovedtema.bilder}">
                         <c:forEach var="kartlaget" items="${bilde.kart}">
                             OLRecord2 = gxp.plugins.OLSource.prototype.createLayerRecord({
-                                source: "ol",
+                            	source: "ol",
                                 type: "OpenLayers.Layer.WMS",
                                 group: "${bilde.gruppe}",
                                 queryable: ${kartlaget.queryable}, //needed to make getFeatureInfo work with gx_olsource  
