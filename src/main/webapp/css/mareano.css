@@ -60,21 +60,15 @@
     background: transparent url("../theme/app/img/silk/magnifier.png");
 }
 .gx-tree-layer-actions .disabled {
-   	opacity: 0.2;
+    opacity: 0.2;
 }
 .olImageLoadError { 
     /* when OL encounters a 404, don't display the pink image */
     display: none !important;
-    }
-    /* fjernet i https://github.com/Norwegian-marine-datacentre/mareano/commit/996b1c652b0e3b56a99caec1343eac6918ec7958#diff-d0aeb49d86ed4d99f27131c2ca560af0 */
-    #layertree :not(.general-layers-w-checkbox) input.x-tree-node-cb[type="checkbox"] {
-    /*
-    #layers :not(.general-layers-w-checkbox) input.x-tree-node-cb[type="checkbox"] {*/
-       	display: none;  
-    }
-    /* fjernet i https://github.com/Norwegian-marine-datacentre/mareano/commit/996b1c652b0e3b56a99caec1343eac6918ec7958#diff-d0aeb49d86ed4d99f27131c2ca560af0 */              
-    #layertree *.general-layers-w-checkbox input.x-tree-node-cb[type="checkbox"] {
-    /*
-    #layers *.general-layers-w-checkbox input.x-tree-node-cb[type="checkbox"] { */
-    	display:inline;
+}
+#layers :not(.general-layers-w-checkbox) input.x-tree-node-cb[type="checkbox"] {
+    display: none;
+}
+#layers *.general-layers-w-checkbox input.x-tree-node-cb[type="checkbox"] {
+    display:inline;
 }

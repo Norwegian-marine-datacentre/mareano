@@ -50,7 +50,7 @@
         <script type="text/javascript" src="javascript/proj4js-compressed.js"></script>
 
         <!-- GeoExplorer resources -->
-<!--         <link rel="stylesheet" type="text/css" href="theme/app/geoexplorer.css" /> -->
+        <link rel="stylesheet" type="text/css" href="theme/app/geoexplorer.css" />
         <!--[if IE]><link rel="stylesheet" type="text/css" href="theme/app/ie.css"/><![endif]-->
         <link rel="stylesheet" type="text/css" href="theme/ux/colorpicker/color-picker.ux.css" />
         <script type="text/javascript" src="script/GeoExplorer.js"></script>
@@ -64,7 +64,7 @@
                 gxp.plugins.LayerTree.prototype.overlayNodeText = "Overlays";
                                 
                 //Ext.BLANK_IMAGE_URL = "theme/app/img/blank.gif";
-                OpenLayers.ImgPath = "theme/app/img/";
+                OpenLayers.ImgPath = "theme/imr/img/";
                 GeoExt.Lang.set('en');
                 var app = new Mareano.Composer({
                     <!-- authStatus: < status >, -->
