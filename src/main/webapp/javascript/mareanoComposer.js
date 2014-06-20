@@ -1,10 +1,19 @@
 (function() {
-    Ext.preg("gxp_layertree", gxp.plugins.LayerTree);
     Proj4js.defs["EPSG:32633"] = "+proj=utm +zone=33 +ellps=WGS84 +datum=WGS84 +units=m +no_defs";
     OpenLayers.DOTS_PER_INCH = 96.047217;
 })();
 
-Ext.ns("Mareano");
+Ext.ns("Mareano.plugins");
+
+Mareano.plugins.LayerTree = Ext.extend(gxp.plugins.LayerTree, {
+    ptype: "mareano_layertree",
+    configureLayerNode: function(loader, attr) {
+        attr.iconCls = getLayerIcon(attr.layer.url);
+        Mareano.plugins.LayerTree.superclass.configureLayerNode.apply(this, arguments);
+    }
+});
+
+Ext.preg(Mareano.plugins.LayerTree.prototype.ptype, Mareano.plugins.LayerTree);
 
 Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
 
@@ -38,15 +47,10 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
         }
         var me = this;
         config.tools.splice(0, 0 ,{
-            ptype: "gxp_layertree",
+            ptype: "mareano_layertree",
             outputConfig: {
                 tbar: [],
                 id: "layers",
-                listeners: {
-                    beforeinsert: function(tree, container, node) {
-    	                node.attributes.iconCls = getLayerIcon(node.layer.url);
-                    }
-                },
                 enableDD:true,
                 plugins: [{
                     ptype: "gx_treenodeactions",
