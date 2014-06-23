@@ -80,7 +80,7 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
             outputTarget: "tree"
         });
         config.tools = config.tools.concat(mapTools);
-        config.tools.push(mapTools, {
+        config.tools.push({
             actions: ["-", "gaaTilKoordButton"], actionTarget: "paneltbar"
         }, {
             actions: ["gaaTilHavCombo"], actionTarget: "paneltbar"
