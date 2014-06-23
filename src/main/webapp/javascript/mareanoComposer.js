@@ -32,10 +32,15 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
     },
 
     loadConfig: function(config) {
-        var ptypes = ["gxp_layermanager", "gxp_legend", "gxp_addlayers",
+        var ptypes = ["gxp_featuremanager", "gxp_queryform", "gxp_featuregrid",
+                      "gxp_zoomtoselectedfeatures", "gxp_layermanager", "gxp_legend", "gxp_addlayers",
                       "gxp_styler", "gxp_featureeditor", "gxp_googleearth"];
+        var map_ptypes = ["gxp_navigation", "gxp_zoom", "gxp_navigationhistory", "gxp_zoomtoextent"];
         for (var i=config.tools.length-1; i>= 0; --i) {
             var tool = config.tools[i];
+            if (map_ptypes.indexOf(tool.ptype) !== -1) {
+                tool.actionTarget = "paneltbar";
+            }
             if (tool.ptype == "gxp_zoom") {
                 tool.controlOptions = {alwaysZoom:true};
             }
