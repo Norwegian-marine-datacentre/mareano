@@ -36,10 +36,13 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
                       "gxp_zoomtoselectedfeatures", "gxp_layermanager", "gxp_legend", "gxp_addlayers",
                       "gxp_styler", "gxp_featureeditor", "gxp_googleearth"];
         var map_ptypes = ["gxp_navigation", "gxp_zoom", "gxp_navigationhistory", "gxp_zoomtoextent"];
+        var mapTools = [];
         for (var i=config.tools.length-1; i>= 0; --i) {
             var tool = config.tools[i];
             if (map_ptypes.indexOf(tool.ptype) !== -1) {
                 tool.actionTarget = "paneltbar";
+                mapTools.push(tool);
+                config.tools.splice(i, 1);
             }
             if (tool.ptype == "gxp_zoom") {
                 tool.controlOptions = {alwaysZoom:true};
@@ -76,7 +79,8 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
             },
             outputTarget: "tree"
         });
-        config.tools.push({
+        config.tools = config.tools.concat(mapTools);
+        config.tools.push(mapTools, {
             actions: ["-", "gaaTilKoordButton"], actionTarget: "paneltbar"
         }, {
             actions: ["gaaTilHavCombo"], actionTarget: "paneltbar"
