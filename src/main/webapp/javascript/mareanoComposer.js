@@ -39,6 +39,10 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
         var mapTools = [];
         for (var i=config.tools.length-1; i>= 0; --i) {
             var tool = config.tools[i];
+            if (tool.actions && tool.actions[0] === "mapmenu") {
+                tool.actions[0] = "save-map";
+                tool.actions.push("export-map");
+            }
             if (map_ptypes.indexOf(tool.ptype) !== -1) {
                 tool.actionTarget = "paneltbar";
                 mapTools.push(tool);
@@ -99,7 +103,30 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
     },
 
     createTools: function() {
-        Mareano.Composer.superclass.createTools.apply(this, arguments);
+        GeoExplorer.Composer.superclass.createTools.apply(this, arguments);
+        new Ext.Button({
+            id: "export-map",
+            tooltip: this.exportMapText,
+            handler: function() {
+                this.doAuthorized(["ROLE_ADMINISTRATOR"], function() {
+                    this.save(this.showEmbedWindow);
+                }, this);
+            },
+            scope: this,
+            iconCls: 'icon-export'
+        });
+        new Ext.Button({
+            id: "save-map",
+            tooltip: this.saveMapText,
+            handler: function() {
+                this.doAuthorized(["ROLE_ADMINISTRATOR"], function() {
+                    this.save(this.showUrl);
+                }, this);
+            },
+            scope: this,
+            iconCls: "icon-save"
+        });
+        //Mareano.Composer.superclass.createTools.apply(this, arguments);
         var oSrcPrj = new Proj4js.Proj('WGS84');
         var oDestPrj = new Proj4js.Proj('EPSG:32633');
         var me = this;
