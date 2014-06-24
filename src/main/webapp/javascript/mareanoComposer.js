@@ -448,6 +448,7 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
         delete this.portalItems[0].tbar;
         // add our new panels here
         this.portalItems[0].items.push(northPanel, westPanel2);
+        this.portalItems[0].items[1].initialConfig.collapseMode = undefined;
     }
 
 });
