@@ -126,7 +126,6 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
             scope: this,
             iconCls: "icon-save"
         });
-        //Mareano.Composer.superclass.createTools.apply(this, arguments);
         var oSrcPrj = new Proj4js.Proj('WGS84');
         var oDestPrj = new Proj4js.Proj('EPSG:32633');
         var me = this;
@@ -430,7 +429,7 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
         });
 
         var northPanel = new Ext.Panel({
-            height: 95,
+            height: 97,
             split: false,
             unstyled:true,
             collapseMode: "mini",
