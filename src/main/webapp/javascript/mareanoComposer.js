@@ -39,6 +39,10 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
         var mapTools = [];
         for (var i=config.tools.length-1; i>= 0; --i) {
             var tool = config.tools[i];
+            if (tool.ptype === "gxp_layerproperties") {
+                // direct output to new window instead of 'tree'
+                tool.outputTarget = null;
+            }
             if (tool.actions && tool.actions[0] === "mapmenu") {
                 tool.actions[0] = "save-map";
                 tool.actions.push("export-map");
