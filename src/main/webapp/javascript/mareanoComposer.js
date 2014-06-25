@@ -439,16 +439,15 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
         });       
 
         for (var i = this.portalItems[0].items.length-1; i>=0; --i) {
-            // get rid of GeoExplorer's west panel
-            if (this.portalItems[0].items[i].region == "west") {
-                this.portalItems[0].items.slice(i, 1);
+            // get rid of GeoExplorer's west and south panel
+            if (this.portalItems[0].items[i].region == "west" || this.portalItems[0].items[i].region == "south") {
+                this.portalItems[0].items = this.portalItems[0].items.splice(i, 1);
             }
         }
         // get rid of GeoExplorer's tbar, it it part of the north panel in our case
         delete this.portalItems[0].tbar;
         // add our new panels here
         this.portalItems[0].items.push(northPanel, westPanel2);
-        this.portalItems[0].items[1].initialConfig.collapseMode = undefined;
     }
 
 });
