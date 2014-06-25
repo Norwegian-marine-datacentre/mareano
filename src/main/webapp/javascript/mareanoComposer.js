@@ -445,7 +445,7 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
         for (var i = this.portalItems[0].items.length-1; i>=0; --i) {
             // get rid of GeoExplorer's west and south panel
             if (this.portalItems[0].items[i].region == "west" || this.portalItems[0].items[i].region == "south") {
-                this.portalItems[0].items = this.portalItems[0].items.splice(i, 1);
+                this.portalItems[0].items.splice(i, 1);
             }
         }
         // get rid of GeoExplorer's tbar, it it part of the north panel in our case
