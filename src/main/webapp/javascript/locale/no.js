@@ -20,5 +20,6 @@ GeoExt.Lang.add("no", {
         visibilityText: "Sl\u00e5 av alle kartlag",
         visibilityTooltip: "Sl\u00e5 av alle kartlag",
         zoomToEmptyText: "G\u00e5 til havomr\u00e5de",
+        zoomScaleTip: "Zoom to make scale-dependent layer visible"
     }
 });

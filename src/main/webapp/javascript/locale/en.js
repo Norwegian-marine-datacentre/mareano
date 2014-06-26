@@ -19,6 +19,7 @@ GeoExt.Lang.add("en", {
         expandCollapseTooltip: "Expand or collapse the Layers panel",
         visibilityText: "Turn off all layers",
         visibilityTooltip: "Turn off all layers",
-        zoomToEmptyText: "Go to Sea"
+        zoomToEmptyText: "Go to Sea",
+        zoomScaleTip: "Zoom to make scale-dependent layer visible"
     }
 });
