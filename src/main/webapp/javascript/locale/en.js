@@ -20,6 +20,7 @@ GeoExt.Lang.add("en", {
         visibilityText: "Turn off all layers",
         visibilityTooltip: "Turn off all layers",
         zoomToEmptyText: "Go to Sea",
-        zoomScaleTip: "Zoom to make scale-dependent layer visible"
+        zoomScaleTip: "Zoom to make scale-dependent layer visible",
+        queryableTip: "This layer is queryable"
     }
 });

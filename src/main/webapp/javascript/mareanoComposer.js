@@ -9,6 +9,10 @@ Mareano.plugins.LayerTree = Ext.extend(gxp.plugins.LayerTree, {
     ptype: "mareano_layertree",
     configureLayerNode: function(loader, attr) {
         attr.iconCls = getLayerIcon(attr.layer.url);
+        var record = attr.layerStore.getByLayer(attr.layer);
+        if (record.get('queryable') === true) {
+            attr.cls = 'feature-info';
+        }
         Mareano.plugins.LayerTree.superclass.configureLayerNode.apply(this, arguments);
     }
 });
@@ -74,12 +78,17 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
                     actions: [{
                         action: "zoomscale",
                         qtip: me.zoomScaleTip,
+                    }, {
+                        action: "queryable",
+                        qtip: me.queryableTip
                     }],
                     listeners: {
                         action: function(node, action, evt) {
-                            var layer = node.layer;
-                            if (layer.maxExtent) {
-                                layer.map.zoomToExtent(layer.maxExtent, true);
+                            if (action === 'zoomscale') {
+                                var layer = node.layer;
+                                if (layer.maxExtent) {
+                                    layer.map.zoomToExtent(layer.maxExtent, true);
+                                }
                             }
                         }
                     }

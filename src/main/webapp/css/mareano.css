@@ -44,7 +44,7 @@
 }
 .gx-tree-layer-actions {
     position: absolute;
-    left: 15px;
+    left: 0px;
 }
 .gx-tree-layer-action {
     background-position: center center;
@@ -58,6 +58,9 @@
 }
 .x-tree-node-disabled .gx-tree-layer-actions .zoomscale {
     background: transparent url("../theme/app/img/silk/magnifier.png");
+}
+.feature-info .gx-tree-layer-actions .queryable {
+    background: transparent url("../externals/gxp/src/theme/img/silk/information.png");
 }
 .gx-tree-layer-actions .disabled {
     opacity: 0.2;
