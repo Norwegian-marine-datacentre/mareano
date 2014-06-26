@@ -21,6 +21,8 @@ GeoExt.Lang.add("en", {
         visibilityTooltip: "Turn off all layers",
         zoomToEmptyText: "Go to Sea",
         zoomScaleTip: "Zoom to make scale-dependent layer visible",
-        queryableTip: "This layer is queryable"
+        queryableTip: "This layer is queryable",
+        saveMapErrorTitle: "Cannot overwrite existing layer",
+        saveMapErrorMsg: "Cannot overwrite existing layer - go to http://www.mareano.no/kart/mareano_en.html to save - not http://www.mareano.no/kart/mareano_en.html#/maps/"        
     }
 });

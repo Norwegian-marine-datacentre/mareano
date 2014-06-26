@@ -33,6 +33,16 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
 
     beforeSave: function(requestConfig, callback) {
         requestConfig.url = requestConfig.url.replace('../maps', './maps');
+        
+        var mapNum = requestConfig.url.substr( 7, requestConfig.url.length); 
+        var mapsReadOnly = [3, 5, 6, 7, 8, 9, 10, 14];
+        if (mapsReadOnly.indexOf( parseInt(mapNum) ) !== -1) {
+        	Ext.Msg.show( {
+        		title: this.saveMapErrorTitle,
+        		msg: this.saveMapErrorMsg + mapNum
+    		});
+        	return false;
+        }        
     },
 
     loadConfig: function(config) {
