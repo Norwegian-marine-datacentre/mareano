@@ -87,7 +87,7 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
                     ptype: "gx_treenodeactions",
                     actions: [{
                         action: "zoomscale",
-                        qtip: me.zoomScaleTip,
+                        qtip: me.zoomScaleTip
                     }, {
                         action: "queryable",
                         qtip: me.queryableTip
