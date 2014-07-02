@@ -243,59 +243,123 @@
 			<artifactId>catalina</artifactId>
 			<version>6.0.29</version>
 			<scope>test</scope>
-		</dependency>       	
+		</dependency>     
+        <dependency>
+            <groupId>org.ringojs</groupId>
+            <artifactId>ringojs</artifactId>
+            <version>0.8.1</version>
+        </dependency>		  	
     </dependencies>
     <build>
         <sourceDirectory>src/main/java</sourceDirectory>
         <testSourceDirectory>src/test/java</testSourceDirectory>
         <plugins>
-			<!-- from parent pom -->
+            <plugin>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <configuration>
+                    <outputDirectory>${war-src}/WEB-INF/lib</outputDirectory>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>initialize</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <artifactId>maven-antrun-plugin</artifactId>
-                <dependencies>
-                    <dependency>
-                        <groupId>com.sun</groupId>
-                        <artifactId>tools</artifactId>
-                        <version>1.5.0</version>
-                        <scope>system</scope>
-                        <systemPath>${java.home}/../lib/tools.jar</systemPath>
-                    </dependency>
-                    <dependency>
-                        <groupId>ant</groupId>
-                        <artifactId>ant</artifactId>
-                        <version>${ant.version}</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>ant-contrib</groupId>
-                        <artifactId>ant-contrib</artifactId>
-                        <version>1.0b3</version>
-                    </dependency>
-                </dependencies>
+                <executions>
+                    <execution>
+                        <phase>generate-resources</phase>
+                        <configuration>
+                            <tasks>
+                                <copy todir="${war-src}/WEB-INF/app">
+                                    <fileset dir="app">
+                                        <exclude name="**/externals/**"/>
+                                        <exclude name="**/script/**"/>
+                                    </fileset>
+                                </copy>
+                                <!-- copy stick -->
+                                <copy todir="${war-src}/WEB-INF/app/stick">
+                                    <fileset dir="externals2/suite/geoexplorer/externals/stick">
+                                        <include name="**/lib/**"/>
+                                        <include name="package.json"/>
+                                    </fileset>
+                                </copy>
+                                <!-- copy Ext resources -->
+                                <copy todir="${war-src}/WEB-INF/app/static/externals/ext">
+                                    <fileset dir="externals2/suite/geoexplorer/app/static/externals/ext">
+                                        <exclude name="**/*debug*.js"/>
+                                        <exclude name="**/ext-all-notheme.css"/>
+                                        <exclude name="**/xtheme-blue.css"/>
+                                    </fileset>
+                                </copy>
+                                <!-- copy OpenLayers resources -->
+                                <copy todir="${war-src}/WEB-INF/app/static/externals/openlayers/theme">
+                                    <fileset dir="externals2/suite/geoexplorer/app/static/externals/openlayers/theme"/>
+                                </copy>
+                                <!-- copy GeoExt resources -->
+                                <copy todir="${war-src}/WEB-INF/app/static/externals/geoext/resources">
+                                    <fileset dir="externals2/suite/geoexplorer/app/static/externals/geoext/resources">
+                                        <exclude name="**/geoext-all-debug.css"/>
+                                        <exclude name="**/gxtheme-slate.css"/>
+                                        <exclude name="**/slate/**"/>
+                                    </fileset>
+                                </copy>
+                                <!-- copy gxp resources -->
+                                <copy todir="${war-src}/WEB-INF/app/static/externals/gxp/src/theme">
+                                    <fileset dir="externals2/suite/geoexplorer/app/static/externals/gxp/src/theme"/>
+                                </copy>
+                                <!-- copy PrintPreview resources -->
+                                <copy todir="${war-src}/WEB-INF/app/static/externals/printpreview/resources">
+                                    <fileset dir="externals2/suite/geoexplorer/app/static/externals/printpreview/resources"/>
+                                </copy>
+                                <!-- build JavaScript -->
+                                <mkdir dir="${war-src}/WEB-INF/app/static/script"/>
+                                <!-- uncompressed -->
+                                <java classname="org.ringojs.tools.launcher.Main" failonerror="true" fork="true">
+                                    <classpath>
+                                        <fileset dir="${war-src}/WEB-INF/lib">
+                                            <include name="**/*.jar"/>
+                                        </fileset>
+                                    </classpath>
+                                    <sysproperty key="ringo.home" path="${war-src}/WEB-INF"/>
+                                    <arg path="externals2/suite/geoexplorer/externals/buildkit/lib/buildkit/build.js"/>
+                                    <arg value="-u"/>
+                                    <arg value="-o"/>
+                                    <arg path="${war-src}/WEB-INF/app/static/script"/>
+                                    <arg path="buildjs.cfg"/>
+                                </java>
+                                <move
+                                    file="${war-src}/WEB-INF/app/static/script/GeoExplorer.js"
+                                    tofile="${war-src}/WEB-INF/app/static/script/GeoExplorer-debug.js"/>
+                                <!-- compressed -->
+                                <java classname="org.ringojs.tools.launcher.Main" failonerror="true" fork="true">
+                                    <classpath>
+                                        <fileset dir="${war-src}/WEB-INF/lib">
+                                            <include name="**/*.jar"/>
+                                        </fileset>
+                                    </classpath>
+                                    <sysproperty key="ringo.home" path="${war-src}/WEB-INF"/>
+                                    <arg path="externals2/suite/geoexplorer/externals/buildkit/lib/buildkit/build.js"/>
+                                    <arg value="-o"/>
+                                    <arg path="${war-src}/WEB-INF/app/static/script"/>
+                                    <arg path="buildjs.cfg"/>
+                                </java>
+                            </tasks>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
-            <plugin>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <configuration>
-                    <finalName>opengeosuite-${project.version}</finalName>
-                    <descriptors>
-                        <descriptor>assembly/bin.xml</descriptor>
-                        <descriptor>assembly/win.xml</descriptor>
-                        <descriptor>assembly/mac.xml</descriptor>
-                        <descriptor>assembly/doc.xml</descriptor>
-                        <descriptor>assembly/ext.xml</descriptor>
-                        <descriptor>assembly/war-geoserver.xml</descriptor>
-                        <descriptor>assembly/war-geoexplorer.xml</descriptor>
-                        <descriptor>assembly/war-geoeditor.xml</descriptor>
-                        <descriptor>assembly/war-geowebcache.xml</descriptor>
-                        <descriptor>assembly/war-geoserver-jboss.xml</descriptor>
-                        <descriptor>assembly/war.xml</descriptor>
-                    </descriptors>
-                </configuration>
-            </plugin>
-			<!-- end - from parent pom -->	   
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
-                <version>2.2</version>
+                <version>2.3</version>
                 <configuration>
                     <warName>geodata</warName>
                     <warSourceDirectory>src/main/webapp</warSourceDirectory>
@@ -313,35 +377,6 @@
                         <phase>install</phase>
                         <goals>
                             <goal>war</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <artifactId>maven-antrun-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>compile</id>
-                        <phase>compile</phase>
-                        <configuration>
-                            <tasks>
-                                <ant antfile="${basedir}/build.xml" dir="${basedir}"/>
-                            </tasks>
-                        </configuration>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>clean</id>
-                        <phase>clean</phase>
-                        <configuration>
-                            <tasks>
-                                <ant antfile="${basedir}/build.xml" dir="${basedir}" target="clean" />
-                            </tasks>
-                        </configuration>
-                        <goals>
-                            <goal>run</goal>
                         </goals>
                     </execution>
                 </executions>
