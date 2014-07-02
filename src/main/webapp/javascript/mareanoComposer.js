@@ -66,9 +66,6 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
                 mapTools.push(tool);
                 config.tools.splice(i, 1);
             }
-            if (tool.ptype == "gxp_zoom") {
-                tool.controlOptions = {alwaysZoom:true};
-            }
             // remove the above ptypes and also the login button
             if (ptypes.indexOf(tool.ptype) !== -1 ||
                     (tool.actions && tool.actions.length > 0 &&
