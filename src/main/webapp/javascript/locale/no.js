@@ -21,7 +21,7 @@ GeoExt.Lang.add("no", {
         visibilityTooltip: "Sl\u00e5 av alle kartlag",
         zoomToEmptyText: "G\u00e5 til havomr\u00e5de",
         zoomScaleTip: "Zoom to make scale-dependent layer visible",
-        queryableTip: "This layer is queryable",
+        queryableTip: "Dette laget har FeatureInfo",
         saveMapErrorTitle: "Kan ikke overskrive kartlag",
         saveMapErrorMsg: "Kan ikke overskrive eksisterende kart - g\u00e5 tilbake til http://www.mareano.no/kart/mareano.html for \u00e5 lagre kart - ikke http://www.mareano.no/kart/mareano.html#/maps/"        
     }
