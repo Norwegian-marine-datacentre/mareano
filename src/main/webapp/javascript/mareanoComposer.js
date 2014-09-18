@@ -35,7 +35,7 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
         requestConfig.url = requestConfig.url.replace('../maps', './maps');
         
         var mapNum = requestConfig.url.substr( 7, requestConfig.url.length); 
-        var mapsReadOnly = [3, 5, 6, 7, 8, 9, 10, 14,,160,161,162,163,19,186,188,189,200,201];
+        var mapsReadOnly = [3, 5, 6, 7, 8, 9, 10, 14,160,161,162,163,19,186,188,189,200,201];
         if (mapsReadOnly.indexOf( parseInt(mapNum) ) !== -1) {
         	Ext.Msg.show( {
         		title: this.saveMapErrorTitle,
@@ -255,7 +255,7 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
             handler: function(event, toolEl, panel) {
                 if (location.href.indexOf("mareano.html") === -1) {
                     window.open( location.href.substring(0,location.href.lastIndexOf('/mareano_en.html')) + "/javascript/GeoExplorer toolbar_Mareano_Engelsk.pdf" );
-                } else if (location.href.indexOf("mareano_en.html") === -1) {
+                } else if (location.href.indexOf("mareano_en.html") === -1) {   
                 	window.open( location.href.substring(0,location.href.lastIndexOf('/mareano.html')) + "/javascript/GeoExplorer toolbar_Mareano_Norsk.pdf" );
                 }
             },

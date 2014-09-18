@@ -17,3 +17,4 @@ externals/*
 lib/*
 tests/*
 build/*
+${war-src}/*
