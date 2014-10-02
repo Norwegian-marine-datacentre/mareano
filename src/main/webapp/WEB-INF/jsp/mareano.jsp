@@ -278,7 +278,7 @@
              	store.add(generelleLayers);  
 	                
                 /**
-                 * Whenever a layer is turned on or off - send a request to local server (this server) to see
+                 * Whenever a layer is turned on or off - send a request to server to see
                  * if layer also should include Spesialpunkt from Mareano.
                  */
                 app.on("ready", function() {
