@@ -259,29 +259,8 @@
                 */
                 app.on("ready", function() {
                     Ext.getCmp('topPanelHeading').update('${heading}');
-                	loadMareano( this.mapPanel, app, layers );
-
-                    this.mapPanel.layers.each(function(record) {
-                         if (record.get('visibility') === true && record.getLayer().metadata['kartlagId'] !== undefined) {
-                             displayLegendGraphics(record.getLayer().metadata['kartlagId']);
-                         }
-                    });
-
-                    store.each(function(record) {
-                    	if (record.getLayer().visibility === true) {
-                                var clone = record.clone();
-                                clone.set("group", "default");
-                                clone.getLayer().metadata['kartlagId'] = record.getLayer().metadata['kartlagId'];
-                                var idx = this.mapPanel.layers.findBy(function(r) {
-                                    return (record.getLayer().metadata['kartlagId'] === r.getLayer().metadata['kartlagId']);
-                                });
-                                if (idx === -1) {
-                                    this.mapPanel.layers.add(clone);
-                                    displayLegendGraphics(clone.getLayer().metadata['kartlagId']);
-                                }
-                    	}
-                    }, this);
-                    
+                    loadMareano( this.mapPanel, app, layers );
+                	turnOnDefaultLayers( this, store );
                     /***********************************/
                     var treeRoot = Ext.getCmp('thematic_tree');
                     var mergedSomeHovedtema;
