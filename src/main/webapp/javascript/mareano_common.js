@@ -200,6 +200,25 @@ function addLayerToGroup( gruppeNavn, gruppeText, map, mapPanel, layers, store, 
     return layerContainerGruppe;
 } 
 
+function getKartlagBildeDiv(nodeText) {   
+    nodeText = nodeText.toLowerCase();
+    nodeText = nodeText.replace(/æ/g,'ae'); // /g global option
+    nodeText = nodeText.replace(/ø/g,'oe');
+    nodeText = nodeText.replace(/å/g,'aa');
+    nodeText = nodeText.replace(/ /g,'');
+
+    nodeText = nodeText.replace(/[!"#$%&'()*+,.\/:;<=>?@[\\\]^`{|}~]/g, "");
+    return nodeText;
+}
+
+function getLanguage() {
+    var languageChoosen = "en";
+    if (document.location.href.indexOf("mareano.html") != -1) {
+        languageChoosen = "norsk";
+    }
+    return languageChoosen;
+}
+
 function addKartbildeAbstractOrRemove(node, checked) {
     if ( checked == true) {
         var languageChoosen = getLanguage();
@@ -222,23 +241,8 @@ function addKartbildeAbstractOrRemove(node, checked) {
     }
 }
 
-function getKartlagBildeDiv(nodeText) {   
-    nodeText = nodeText.toLowerCase();
-    nodeText = nodeText.replace(/æ/g,'ae'); // /g global option
-    nodeText = nodeText.replace(/ø/g,'oe');
-    nodeText = nodeText.replace(/å/g,'aa');
-    nodeText = nodeText.replace(/ /g,'');
-
-    nodeText = nodeText.replace(/[!"#$%&'()*+,.\/:;<=>?@[\\\]^`{|}~]/g, "");
-    return nodeText;
-}
-
-function getLanguage() {
-    var languageChoosen = "en";
-    if (document.location.href.indexOf("mareano.html") != -1) {
-        languageChoosen = "norsk";
-    }
-    return languageChoosen;
+function addLegend(kartlagId) {
+	displayLegendGraphicsAndSpesialpunkt(null, kartlagId, null, null, null);
 }
 
 function displayLegendGraphicsAndSpesialpunkt(extent, kartlagId, layer, event, app) {

@@ -3,59 +3,7 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> 
 <html>
     <head>
-        <title>Mareano</title>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <link rel="shortcut icon" href="theme/app/img/mareanoLogo.png">
-        <!-- Ext resources -->
-<!--         <link rel="stylesheet" type="text/css" href="externals/ext/resources/css/ext-all.css"> DONT use default ext-all or green mareano menu wount work-->
-        <link rel="stylesheet" type="text/css" href="css/ext-all.css">
-         
-        <link rel="stylesheet" type="text/css" href="externals/ext/resources/css/xtheme-gray.css">
-        <!-- script type="text/javascript" src="externals/ext/adapter/ext/ext-base-debug.js"></script -->
-        <script type="text/javascript" src="externals/ext/adapter/ext/ext-base.js"></script>
-        <!-- script type="text/javascript" src="externals/ext/ext-all-debug-w-comments.js"></script -->
-        <script type="text/javascript" src="externals/ext/ext-all.js"></script>
-
-        <meta http-equiv="X-UA-Compatible" content="IE=IE8" >
-        <!--script type="text/javascript" src="javascript/googleAnalyticsStatistics.js"></script -->
-
-        <script type="text/javascript" src="javascript/jquery-1.6.2.min.js"></script>
-        <script type="text/javascript">jQuery.noConflict();</script>
-
-		<link rel="stylesheet" type="text/css" href="css/mareano.css">
-		<link rel="stylesheet" type="text/css" href="css/mareanoMenu.css">
-
-		<!--Mareano.no-->
-		<link rel="stylesheet" type="text/css" href="theme/imr/imr.css">
-		<!-- link rel="stylesheet" type="text/css" href="http://www.mareano.no/kart/styles/mareanoStyle.css" -->
-		<style type="text/css">
-			#nav-main {
-				background-image: url("http://www.mareano.no/kart/images/nav-main-background.jpg");
-			}
-		</style>
-		<!-- link rel="stylesheet" type="text/css" href="http://www.mareano.no/templates/mareano/css/stylesheet.css" -->
-
-        <!-- OpenLayers resources -->
-        <link rel="stylesheet" type="text/css" href="externals/openlayers/theme/default/style.css">
-
-        <!-- GeoExt resources -->
-        <link rel="stylesheet" type="text/css" href="externals/GeoExt/resources/css/popup.css">
-        <link rel="stylesheet" type="text/css" href="externals/GeoExt/resources/css/layerlegend.css">
-        <link rel="stylesheet" type="text/css" href="externals/GeoExt/resources/css/gxtheme-gray.css">
-
-        <!-- gxp resources -->
-        <link rel="stylesheet" type="text/css" href="externals/gxp/src/theme/all.css">
-
-        <!-- proj4js resources -->
-        <script type="text/javascript" src="javascript/proj4js-compressed.js"></script>
-
-        <!-- GeoExplorer resources -->
-        <link rel="stylesheet" type="text/css" href="theme/app/geoexplorer.css" />
-        <!--[if IE]><link rel="stylesheet" type="text/css" href="theme/app/ie.css"/><![endif]-->
-        <link rel="stylesheet" type="text/css" href="theme/ux/colorpicker/color-picker.ux.css" />
-        <script type="text/javascript" src="script/GeoExplorer.js"></script>
-
-		<script type="text/javascript" src="script/mareano.js"></script>    
+        <jsp:include page = "jsAndCssIncludes.jsp" />
 
         <script>
             function init() {
@@ -287,29 +235,7 @@
                 	turnOnDefaultLayers( this, store );
                     /***********************************/
                     var treeRoot = Ext.getCmp('thematic_tree');
-                    var mergedSomeHovedtema;
-                    <c:forEach var="hovedtema" items="${hovedtemaer}">
-                    	if ( !("${hovedtema.hovedtema}" == "generelle") ) {
-                        mergedSomeHovedtema = new Ext.tree.TreeNode({
-                            text: "${hovedtema.hovedtema}"
-                        });			
-                        <c:forEach var="bilde" items="${hovedtema.bilder}">
-                        	var group = addLayerToGroup("${bilde.gruppe}","${bilde.gruppe}", this.map, this.mapPanel, layers, store, app);
-                        	if (group.attributes.expanded === true) {
-                        		mergedSomeHovedtema.expanded = true;
-                        	}
-                                group.attributes.maxExtent = [
-                                    ${bilde.startextentMinx},
-                                    ${bilde.startextentMiny},
-                                    ${bilde.startextentMaxx},
-                                    ${bilde.startextentMaxy}
-                                ];
-                        	mergedSomeHovedtema.appendChild( group );
-                        </c:forEach>
-                        treeRoot.getRootNode().appendChild( mergedSomeHovedtema );
-                    	}
-                    </c:forEach>
-                    treeRoot.getRootNode().appendChild( mergedSomeHovedtema );
+                    <jsp:include page = "addLayerTreeToRoot.jsp" />
                     /***********************************/
                     var rootRightTree = Ext.getCmp('layers');
                     rootRightTree.getRootNode().appendChild( addGenerelleLayerToGroup("generelle", "Generelle kart", this.map, this.mapPanel, generelleLayers, store, app) );
