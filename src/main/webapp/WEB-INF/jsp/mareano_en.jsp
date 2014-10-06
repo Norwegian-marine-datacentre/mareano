@@ -1,6 +1,7 @@
 <!DOCTYPE HTML SYSTEM>
 <%@page pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> 
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <html>
     <head>
         <jsp:include page = "jsAndCssIncludes.jsp" /> 
@@ -20,7 +21,7 @@
                     printService: null,
                     about: {
                         title: "Mareano",
-                        "abstract": "Copyright (C) 2005-2013 Mareano. Map projection WGS84, UTM 33 N",
+                        "abstract": "<spring:message code="projectAbstract" text="text" />",
                         contact: "For more information, contact <a href='http://www.imr.no'>Institute of Marine Research</a>."
                     },
                     defaultSourceType: "gxp_wmscsource",

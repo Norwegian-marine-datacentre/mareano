@@ -269,7 +269,7 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
             buttonAlign: "center",
             handler: function(){
                 if (location.href.indexOf("mareano.html") === -1) {
-                    location.href = location.href.substring(0,location.href.lastIndexOf('/mareano_en.html')) + "/mareano.html";
+                    location.href = location.href.substring(0,location.href.lastIndexOf('/mareano_en.html')) + "/mareano.html?language=no";
                 }
             },
             iconCls: "icon-norsk",
@@ -281,7 +281,7 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
             buttonAlign: "right",
             handler: function(){
                 if (location.href.indexOf("mareano_en.html") === -1) {
-                    location.href = location.href.substring(0,location.href.lastIndexOf('/mareano.html')) + "/mareano_en.html";
+                    location.href = location.href.substring(0,location.href.lastIndexOf('/mareano.html')) + "/mareano_en.html?language=en";
                 }
             },
             iconCls: "icon-english",

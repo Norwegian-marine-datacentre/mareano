@@ -214,7 +214,7 @@ function getKartlagBildeDiv(nodeText) {
 function getLanguage() {
     var languageChoosen = "en";
     if (document.location.href.indexOf("mareano.html") != -1) {
-        languageChoosen = "norsk";
+        languageChoosen = "no";
     }
     return languageChoosen;
 }
