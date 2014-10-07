@@ -4,7 +4,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <html>
     <head>
-        <jsp:include page = "jsAndCssIncludes.jsp" />
+        <jsp:include page = "fragments/jsAndCssIncludes.jsp" />
 
         <script>
             function init() {
@@ -28,7 +28,7 @@
                 //Ext.BLANK_IMAGE_URL = "theme/app/img/blank.gif";
                 OpenLayers.ImgPath = "theme/imr/img/";
                 GeoExt.Lang.set('no');
-                <jsp:include page = "mareanoConstructor.jsp" />
+                <jsp:include page = "fragments/mareanoConstructor.jsp" />
 	                
                 /**
                  * Whenever a layer is turned on or off - send a request to server to see
@@ -40,7 +40,7 @@
                 	turnOnDefaultLayers( this, store );
                     /***********************************/
                     var treeRoot = Ext.getCmp('thematic_tree');
-                    <jsp:include page = "addLayerTreeToRoot.jsp" />
+                    <jsp:include page = "fragments/addLayerTreeToRoot.jsp" />
                     /***********************************/
                     var rootRightTree = Ext.getCmp('layers');
                     rootRightTree.getRootNode().appendChild( addGenerelleLayerToGroup("generelle", "Generelle kart", this.map, this.mapPanel, generelleLayers, store, app) );
@@ -62,10 +62,7 @@
                 	}
 				}
             }
-            
-            function openURI(uri){ // needed by GMLselected(evt)
-            	window.open(uri,'Punktdata');
-            }
+
         </script>
     </head>
     <body onload="init()">

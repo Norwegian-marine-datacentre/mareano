@@ -4,7 +4,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <html>
     <head>
-        <jsp:include page = "jsAndCssIncludes.jsp" /> 
+        <jsp:include page = "fragments/jsAndCssIncludes.jsp" /> 
 
         <script>
         	var app;
@@ -15,7 +15,7 @@
                 //Ext.BLANK_IMAGE_URL = "theme/app/img/blank.gif";
                 OpenLayers.ImgPath = "theme/imr/img/";
                 GeoExt.Lang.set('en');
-                <jsp:include page = "mareanoConstructor.jsp" />
+                <jsp:include page = "fragments/mareanoConstructor.jsp" />
                 /**
                 * Whenever a layer is turned on or off - send a request to local server (this server) to see
                 * if layer also should include Spesialpunkt from Mareano.
@@ -26,7 +26,7 @@
                 	turnOnDefaultLayers( this, store );
                     /***********************************/
                     var treeRoot = Ext.getCmp('thematic_tree');
-                    <jsp:include page = "addLayerTreeToRoot.jsp" />
+                    <jsp:include page = "fragments/addLayerTreeToRoot.jsp" />
                     /***********************************/
                     var rootRightTree = Ext.getCmp('layers');
                     rootRightTree.getRootNode().appendChild( addGenerelleLayerToGroup("generelle", "General Maps", this.map, this.mapPanel, generelleLayers, store, app) );                    
@@ -46,10 +46,7 @@
                 	}
 				}
             }
-            
-            function openURI(uri) { // needed by GMLselected(event)
-            	window.open(uri,'Punktdata');
-            }
+
         </script>
     </head>
     <body onload="init()">

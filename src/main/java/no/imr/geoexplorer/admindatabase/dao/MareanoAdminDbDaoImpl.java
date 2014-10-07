@@ -22,6 +22,8 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Repository("MareanoAdminDbDao")
 public class MareanoAdminDbDaoImpl implements MareanoAdminDbDao {
+    
+    private static final String NORSK = "no";
 
 	@Autowired(required = true)
 	private SqlSessionTemplate template;
@@ -94,7 +96,7 @@ public class MareanoAdminDbDaoImpl implements MareanoAdminDbDao {
 	@Transactional(readOnly = true)
 	public List<Legend> getALegend( long id, String language ) {
 		List<Legend> legends = null;
-		if ( language.equals("norsk") ) {
+		if ( language.equals(NORSK) ) {
 			legends = (List<Legend>) template.selectList("getLegendNo", id);
 		} else {
 			legends = (List<Legend>) template.selectList("getLegendEn", id);
@@ -106,7 +108,7 @@ public class MareanoAdminDbDaoImpl implements MareanoAdminDbDao {
 	@Transactional(readOnly = true)
 	public KartlagInfo getKartlagInfo( long kartlagId, String noOrEn ) {
 		KartlagInfo kartlagInfo = null;
-		if ( noOrEn.equals("norsk") ) {
+		if ( noOrEn.equals(NORSK) ) {
 			kartlagInfo= (KartlagInfo) template.selectOne("getKartlagInfoNO", kartlagId);
 		} else {
 			kartlagInfo= (KartlagInfo) template.selectOne("getKartlagInfoEN", kartlagId);
@@ -118,7 +120,7 @@ public class MareanoAdminDbDaoImpl implements MareanoAdminDbDao {
 	@Transactional(readOnly = true)
 	public KartBilderEnNo getKartBildeInfo( String kartBildeName, String noOrEn ) throws Exception {
 		KartBilderEnNo kartBilderEnNo = null;
-		if ( noOrEn.equals("norsk") ) {
+		if ( noOrEn.equals(NORSK) ) {
 			kartBilderEnNo= (KartBilderEnNo) template.selectOne("getKartbilderNo_byName", kartBildeName);
 		} else {
 			kartBilderEnNo= (KartBilderEnNo) template.selectOne("getKartbilderEn_byName", kartBildeName);
