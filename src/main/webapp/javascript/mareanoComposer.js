@@ -250,7 +250,7 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
 
         var helpIcon = new Ext.Button({
             type:'help',
-            tooltip: 'Get Help',
+            tooltip: this.helpTitle,
             id: "helpIcon",
             handler: function(event, toolEl, panel) {
                 if (location.href.indexOf("mareano.html") === -1) {

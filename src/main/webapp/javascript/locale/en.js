@@ -3,7 +3,7 @@ GeoExt.Lang.add("en", {
         thematicText: "Thematic maps",
         legendTitle: "Legend",
         infoTitle: "Info about layers",
-        helpTitle: "Help",
+        helpTitle: "Get Help",
         helpText: "",
         mousePositionText: "Coordinates (WGS84): ",
         goToTooltip: "Go to coordinate",
@@ -23,6 +23,6 @@ GeoExt.Lang.add("en", {
         zoomScaleTip: "Zoom to make scale-dependent layer visible",
         queryableTip: "This layer is queryable",
         saveMapErrorTitle: "Cannot overwrite existing layer",
-        saveMapErrorMsg: "Cannot overwrite existing layer - go to http://www.mareano.no/kart/mareano_en.html to save - not http://www.mareano.no/kart/mareano_en.html#/maps/"        
+        saveMapErrorMsg: "Cannot overwrite existing layer - go to http://www.mareano.no/kart/mareano_en.html to save - not http://www.mareano.no/kart/mareano_en.html#/maps/"
     }
 });
