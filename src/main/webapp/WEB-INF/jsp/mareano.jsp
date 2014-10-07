@@ -44,37 +44,7 @@
                     /***********************************/
                     var rootRightTree = Ext.getCmp('layers');
                     rootRightTree.getRootNode().appendChild( addGenerelleLayerToGroup("generelle", "Generelle kart", this.map, this.mapPanel, generelleLayers, store, app) );
-                    /***********************************/
-                    
-                    var tmp = Ext.ComponentMgr.all.find(function(c) {
-                        if (c instanceof Ext.Button) {
-                            if (c.tooltip=="Publish map") {c.setTooltip("Publiser kartet");
-                            } else if (c.tooltip=="Save map") {c.setTooltip("Lagre kartet");
-                            } else if (c.tooltip=="Draw polygon") {c.setTooltip("tegn polygon");
-                            } else if (c.tooltip=="Draw line") {c.setTooltip("tegn linje");
-                            } else if (c.tooltip=="Add layer") {c.setTooltip("Legg til kartlag");
-                            } else if (c.tooltip=="Remove layer") {c.setTooltip("Fjern kartlag");
-                            } else if (c.tooltip=="Layer properties") {c.setTooltip("Kartlag egenskaper");
-                            } else if (c.tooltip=="Manage Layer stiles") {c.setTooltip("Behandle kartlagstiler");
-                            } else if (c.tooltip=="Pan") {c.setTooltip("panorere kartet");
-                            } else if (c.tooltip=="Get Feature Info") {c.setTooltip("Hent Feature Info");
-                            } else if (c.tooltip=="Create a new feature") {c.setTooltip("Lag en ny feature");
-                            } else if (c.tooltip=="Edit existing feature") {c.setTooltip("Editer eksisterende feature");
-                            } else if (c.tooltip=="Measure") {c.setTooltip("M&aring;l");
-                            } else if (c.tooltip=="Zoom in") {c.setTooltip("Zoom inn");
-                            } else if (c.tooltip=="Zoom out") {c.setTooltip("Zoom ut");
-                            } else if (c.tooltip=="Zoom to last extent") {c.setTooltip("Zoom til forrige utstrekning");
-                            } else if (c.tooltip=="Zoom to next extent") {c.setTooltip("Zoom til neste utstrekning");
-                            } else if (c.tooltip=="Zoom to visible extent") {c.setTooltip("Zoom til synlig utstrekning");
-                            } else if (c.tooltip=="Print map") {c.setTooltip("Skriv ut kartet");
-                            } else if (c.tooltip=="Go to coordinat") {c.setTooltip("til koordinat");}
-                        }
-                        if(c instanceof Ext.menu.CheckItem) {
-                            if(c.text=="Length") c.text = "Lengde";
-                            if(c.text=="Area") c.setText("Areal");
-                        }
-                    });
-                    
+                    /***********************************/                    
 					addDropdownmenuToMareanoMenuIfIe();
                   	
                 });
