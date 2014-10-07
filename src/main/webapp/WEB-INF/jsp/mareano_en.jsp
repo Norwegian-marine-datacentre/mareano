@@ -43,7 +43,7 @@
                              type: "OpenLayers.Layer.WMS",
                              group: "background",
                              args: [
-                                 "Nautical chart",
+                                 "<spring:message code="nauticalChart" text="nautical chart" />",
                                  "http://maps.imr.no/geoserver/gwc/service/wms",
                                  {layers: "Sjokart_Hovedkartserien2", format: "image/png", transparent: true, isBaseLayer: true}
                                  ,{singleTile:false}
@@ -53,7 +53,7 @@
                                 type: "OpenLayers.Layer.WMS",
                                 group: "background",
                                 args: [
-                                       "Norway",
+                                       "<spring:message code="norwayChart" text="norway" />",
                                        "http://wms.geonorge.no/skwms1/wms.toporaster2",
                                        {layers: "toporaster", format: "image/png", transparent: true, isBaseLayer: true}
                                        ,{singleTile:true}
@@ -63,7 +63,7 @@
                                 type: "OpenLayers.Layer.WMS",
                                 group: "background",
                                 args: [
-                                       "Norway (gray scale)",
+                                       "<spring:message code="norwayGray" text="norway gray scale" />",
                                        "http://wms.geonorge.no/skwms1/wms.topo2.graatone",
                                        {layers: "topo2_graatone_WMS", format: "image/png", transparent: true, isBaseLayer: true}
                                        ,{singleTile:true}
@@ -73,7 +73,7 @@
                                 type: "OpenLayers.Layer.WMS",
                                 group: "background",
                                 args: [
-                                     	"Europa",
+                                     	"<spring:message code="Europa" text="Europa" />",
                                       	"http://maps.imr.no/geoserver/gwc/service/wms",
                                       	{layers: "Europa_WMS", format: "image/jpeg", transparent: true, isBaseLayer: true}
                                       	,{singleTile:false}
@@ -83,7 +83,7 @@
                                 type: "OpenLayers.Layer.WMS",
                                 group: "background",
                                 args: [
-                                      	"Gebco shaded relief in grayscale",
+                                      	"<spring:message code="gebco" text="Gebco grayscale" />",
                                       	"http://maps.imr.no/geoserver/gwc/service/wms",
                                       	{layers: "geonorge:geonorge_norge_skyggerelieff", format: "image/jpeg", transparent: true, isBaseLayer: true},
                                       	{singleTile:false}
@@ -93,7 +93,7 @@
                                 type: "OpenLayers.Layer.WMS",
                                 group: "background",
                                 args: [
-                                      	"Europa - white background",
+                                      	"<spring:message code="europaWhite" text="Europa White background" />",
                                       	"http://maps.imr.no/geoserver/gwc/service/wms",
                                       	{layers: "geonorge_europa_hvit_bakgrunn",format: "image/jpeg", transparent: true, isBaseLayer: true}
                                       	,{singleTile:false}
@@ -103,7 +103,7 @@
                                type: "OpenLayers.Layer.WMS",
                                group: "background",
                                args: [
-                                     	"Europa og Gebco",
+                                     	"<spring:message code="europaAndGebco" text="Europa and Gebco" />",
                                      	"http://maps.imr.no/geoserver/gwc/service/wms",
                                      	{layers: "barents_watch_WMS", format: "image/jpeg", transparent: true, isBaseLayer: true}
                                      	,{singleTile:false}

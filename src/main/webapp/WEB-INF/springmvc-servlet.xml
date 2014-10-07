@@ -39,8 +39,8 @@
 		<property name="paramName" value="language" />
 	</bean>
 	<bean id="messageSource"
-		class="org.springframework.context.support.ResourceBundleMessageSource">
-		<property name="basename" value="propertiesMsg" />
+		class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+		<property name="basename" value="classpath:i18n/message" />
 	</bean>	
 	<context:annotation-config />
 	<context:component-scan base-package="no.imr.*" />

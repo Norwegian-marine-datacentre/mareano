@@ -34,8 +34,8 @@
                     printService: null,
                     about: {
                         title: "Mareano",
-                        "abstract": "<spring:message code="projectAbstract" text="text" />",
-                        contact: "For more information, contact <a href='http://www.imr.no'>Institute of Marine Research</a>."
+                        "abstract": "<spring:message code="projectAbstract" text="Abstract" />",
+                        contact: "<spring:message code="contact" text="Contact" />"
                     },
                     defaultSourceType: "gxp_wmscsource",
                     sources: {
@@ -56,7 +56,7 @@
                              type: "OpenLayers.Layer.WMS",
                              group: "background",
                              args: [
-                                 "Sj\u00F8kart",
+                                 "<spring:message code="nauticalChart" text="nautical chart" />",
                                  "http://maps.imr.no/geoserver/gwc/service/wms",
                                  {layers: "Sjokart_Hovedkartserien2", format: "image/png", transparent: true, isBaseLayer: true}
                                  ,{singleTile:false}
@@ -72,7 +72,7 @@
                                 type: "OpenLayers.Layer.WMS",
                                 group: "background",
                                 args: [
-                                    "Norgeskart",
+                                    "<spring:message code="norwayChart" text="norway" />",
                                     "http://wms.geonorge.no/skwms1/wms.toporaster2",
                                     {layers: "toporaster", format: "image/png", transparent: true, isBaseLayer: true}
                                     ,{singleTile:true}
@@ -82,7 +82,7 @@
                                 type: "OpenLayers.Layer.WMS",
                                 group: "background",
                                 args: [
-                                    "Norgeskart (gr\u00e5tone)",
+                                    "<spring:message code="norwayGray" text="norway gray scale" />",
                                     "http://wms.geonorge.no/skwms1/wms.topo2.graatone",
                                     {layers: "topo2_graatone_WMS", format: "image/png", transparent: true, isBaseLayer: true}
                                     ,{singleTile:true}
@@ -92,7 +92,7 @@
                                 type: "OpenLayers.Layer.WMS",
                                 group: "background",
                                 args: [
-                                      	"Europa",
+                                      	"<spring:message code="Europa" text="Europa" />",
                                       	"http://maps.imr.no/geoserver/gwc/service/wms",
                                       	{layers: "Europa_WMS", format: "image/jpeg", transparent: true, isBaseLayer: true}
                                       	,{singleTile:false}
@@ -102,7 +102,7 @@
                                 type: "OpenLayers.Layer.WMS",
                                 group: "background",
                                 args: [
-                                      	"Gebco skyggerelieff gråtoner",
+                                      	"<spring:message code="gebco" text="Gebco grayscale" />",
                                       	"http://maps.imr.no/geoserver/gwc/service/wms",
                                       	{layers: "geonorge:geonorge_norge_skyggerelieff", format: "image/jpeg", transparent: true, isBaseLayer: true},
                                       	{singleTile:false}
@@ -112,7 +112,7 @@
                                 type: "OpenLayers.Layer.WMS",
                                 group: "background",
                                 args: [
-                                      	"Europa -hvit bakgrunn",
+                                      	"<spring:message code="europaWhite" text="Europa White background" />",
                                       	"http://maps.imr.no/geoserver/gwc/service/wms",
                                       	{layers: "geonorge_europa_hvit_bakgrunn", format: "image/jpeg", transparent: true, isBaseLayer: true}
                                       	,{singleTile:false}
@@ -122,7 +122,7 @@
                                type: "OpenLayers.Layer.WMS",
                                group: "background",
                                args: [
-                                     	"Europa og Gebco",
+                                     	"<spring:message code="europaAndGebco" text="Europa and Gebco" />",
                                      	"http://maps.imr.no/geoserver/gwc/service/wms",
                                      	{layers: "barents_watch_WMS", format: "image/jpeg", transparent: true, isBaseLayer: true}
                                      	,{singleTile:false}
