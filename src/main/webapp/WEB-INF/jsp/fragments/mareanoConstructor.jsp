@@ -124,9 +124,7 @@ var OLRecord;
                     group: "${bilde.gruppe}",
                     queryable: ${kartlaget.queryable},
                     visibility: !(app.id > 0) ? ${bilde.visible} : false,
-                    properties: "mareano_wmslayerpanel",           
-                    //properties: "${kartlaget.id}",
-                    //id: "${kartlaget.id}",   
+                    properties: "mareano_wmslayerpanel",            
                     args: [
                         "${kartlaget.title}",
                         "${kartlaget.url}",

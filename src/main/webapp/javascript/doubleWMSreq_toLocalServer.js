@@ -5,7 +5,6 @@
 jQuery(document).ready(function() {
     jQuery('body').change(function(event) {
         if ( jQuery(event.target).is(':checkbox') ) {
-            alert("checkbox event");
             jQuery.ajax({
                 type: 'get',
                 url: "spesialpunkt",

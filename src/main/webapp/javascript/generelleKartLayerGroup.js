@@ -1,19 +1,10 @@
 function addGenerelleLayerToGroup( gruppeNavn, gruppeText, map, mapPanel, layers, store, app  ) {
     var indexOfWMSgruppe = [];
+    
     var layerName = [];
-    var childrenVisible = 0;
-    var count = 0;    
-    for (var i = layers.length-1;i>=0;--i) {
-        if ( layers[i].get("group") == gruppeNavn ) {
-        	count++;
-        	if (layers[i].getLayer().visibility === true) {
-        		childrenVisible++;
-        	} 
-            layerName.push(layers[i].getLayer().params.LAYERS);
-        }
-    }
-
-    var groupChecked = (childrenVisible === count);
+    var groupChecked = 
+    	getAllLayersForAGroupAndIsGroupChecked(gruppeNavn, layers, mapPanel, layerName);
+    
     var generelleLayerLoader = new GeoExt.tree.LayerLoader({
         store: store,
         filter: function(record) {
@@ -37,6 +28,13 @@ function addGenerelleLayerToGroup( gruppeNavn, gruppeText, map, mapPanel, layers
             attr.checked = layerRecord.getLayer().visibility;
             attr.id = layerRecord.data.id;
             attr.cls = "general-layers-w-checkbox";
+            
+//          if layer already in map, set checked
+            var idx = app.mapPanel.layers.findBy(function(record) {
+                return record.getLayer().metadata['kartlagId'] === attr.layer.metadata['kartlagId'];
+            });
+            attr.checked = (layerRecord.getLayer().visibility || (idx !== -1));
+            attr.id = layerRecord.data.id;
 
             attr.autoDisable = false;
             var node = GeoExt.tree.LayerLoader.prototype.createNode.call(this, attr);       
@@ -44,7 +42,7 @@ function addGenerelleLayerToGroup( gruppeNavn, gruppeText, map, mapPanel, layers
             	if (silent !== true && record.getLayer().metadata['kartlagId'] === attr.layer.metadata['kartlagId']) {
             		node.ui.toggleCheck(false);
             	}
-            });            
+            });  	        
             node.on("checkChange", function(event) {
             	var cb = node.getUI().checkbox;
             	if ( cb && Ext.get(cb).getAttribute('type') === 'checkbox' ) {
@@ -81,6 +79,7 @@ function addGenerelleLayerToGroup( gruppeNavn, gruppeText, map, mapPanel, layers
     	checked: groupChecked,
         expanded: groupChecked,    	
         text: gruppeText,   
+        expanded: true,
         cls: "general-layers-w-checkbox",
         listeners: {
             "checkchange": function(node, checked) { //setting all subnodes if parent is checked
@@ -94,6 +93,5 @@ function addGenerelleLayerToGroup( gruppeNavn, gruppeText, map, mapPanel, layers
         layerStore: store,
         loader: generelleLayerLoader
     });
-
     return layerContainerGruppe;
 }
