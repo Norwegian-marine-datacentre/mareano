@@ -6,6 +6,7 @@ function loadMareano(mapPanel, app) {
     
     addOverviewMapAndKeyboardDefaults(mapPanel.map);
     app.mapOfGMLspesialpunkt = new Object();        
+
     var layertree = Ext.getCmp("layers");
 
     var updateLegendScale = function() {
@@ -56,16 +57,31 @@ function loadMareano(mapPanel, app) {
     }, app);
 }
 
+var gfiCache = {};
+
 function addLayerToGroup( gruppeNavn, gruppeText, map, mapPanel, layers, store, app ) {
     var indexOfWMSgruppe = [];
-    
     var layerName = [];
-    var groupChecked = 
-    	getAllLayersForAGroupAndIsGroupChecked(gruppeNavn, layers, mapPanel, layerName);
-    
+    var childrenVisible = 0;
+    var count = 0;    
+    for (var i = layers.length-1;i>=0;--i) {
+        if ( layers[i].get("group") == gruppeNavn ) {
+            count++;
+            var idx = mapPanel.layers.findBy(function(record) {
+                return record.getLayer().metadata['kartlagId'] === layers[i].getLayer().metadata['kartlagId'];
+            });
+            if (layers[i].getLayer().visibility === true || idx !== -1) {
+                childrenVisible++;
+            } 
+            layerName.push(layers[i].getLayer().params.LAYERS);
+        }
+    }
+
+    var groupChecked = (childrenVisible === count);
     var tmpLoader = new GeoExt.tree.LayerLoader({
         store: store,
         filter: function(record) {
+            //featureInfoImpl(record, mapPanel, gruppeNavn, app, layerName);
             /** adding matching layer to matching container group */
             for( var i= layerName.length-1; i>=0; --i ) {
                 if ( record.get("group") == gruppeNavn) {
@@ -126,6 +142,7 @@ function addLayerToGroup( gruppeNavn, gruppeText, map, mapPanel, layers, store, 
                 });
                 node = origNode;
                 if (event.ui.checkbox.checked) {
+                    //app.mapPanel.layers.add(record);
                     /** bart code */
                     var doAdd = true;
                     app.mapPanel.layers.each(function(record) {
@@ -163,13 +180,14 @@ function addLayerToGroup( gruppeNavn, gruppeText, map, mapPanel, layers, store, 
         listeners: {
             "checkchange": function(node, checked) { //setting all subnodes if parent is checked
                 var extent = node.attributes.maxExtent;
-//              if (extent && checked) { //zoom to extent for map-pictures (kartbilde utstrekning)
+//              if (extent && checked) { //zoom to extent for pictures
 //              app.mapPanel.map.zoomToExtent(extent, true);
 //              }
                 node.expand();
+//              addKartbildeAbstractOrRemove(node, checked);
 
                 var cs = node.childNodes;
-                for(var c = cs.length-1; c >= 0; c--) { //add layers in reverse of reverse order 
+                for(var c = cs.length-1; c >= 0; c--) { //add layers in reverse of reverse order
                     cs[c].ui._silent = true;
                     cs[c].ui.toggleCheck(checked);
                     delete cs[c].ui._silent;
