@@ -18,6 +18,12 @@
  * @returns Boolean - groupChecked
  */
 var globalLayersFromSavedMapAlreadyAddedLegend = [];
+
+var KARTLAG_ID = "kartlagId";
+var GROUP = "group";
+var SAVED_MAP = "#maps/";
+var GROUP_GENERELLE = "generelle";
+
 function getAllLayersForAGroupAndIsGroupChecked(gruppeNavn, layers, mapPanel, layerNames) {
 	var childrenVisible = 0;
 	var count = 0;    
@@ -25,24 +31,22 @@ function getAllLayersForAGroupAndIsGroupChecked(gruppeNavn, layers, mapPanel, la
 	    if ( layers[i].get("group") == gruppeNavn ) {
 	        count++;
 	        var idx = mapPanel.layers.findBy(function(record) {
-	            return record.getLayer().metadata['kartlagId'] === layers[i].getLayer().metadata['kartlagId'];
+	            return record.getLayer().metadata[ KARTLAG_ID ] === layers[i].getLayer().metadata[ KARTLAG_ID ];
 	        });
-	        if(!gruppeNavn.indexOf("Gener") > 0) {
 	        if (layers[i].getLayer().visibility === true || idx !== -1) {
 	            childrenVisible++;
-	            layerId = layers[i].data.layer.metadata['kartlagId'];
+	            layerId = layers[i].data.layer.metadata[ KARTLAG_ID ];
 	            if ( globalLayersFromSavedMapAlreadyAddedLegend.indexOf (layerId) == -1) {
 	            	addLegend(layerId);
 	            	globalLayersFromSavedMapAlreadyAddedLegend.push(layerId);
 	            }
 	        } 
-	        }
 	        layerNames.push(layers[i].getLayer().params.LAYERS);
 	    }
 	}
 
 	var groupChecked = (childrenVisible === count);
-    if ( window.location.href.indexOf("#maps/") > -1 && childrenVisible > 0 && gruppeNavn.indexOf("Gener") > 0) {
+    if ( window.location.href.indexOf( SAVED_MAP ) > -1 && childrenVisible > 0 && gruppeNavn.indexOf( GROUP_GENERELLE ) > 0) {
     	groupChecked = true;		
     }
 	return groupChecked;
