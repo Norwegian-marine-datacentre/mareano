@@ -152,12 +152,6 @@
             <artifactId>jackson-mapper-asl</artifactId>
             <version>1.4.2</version>
         </dependency>
-        <dependency>
-            <groupId>org.apache.tomcat</groupId>
-            <artifactId>catalina</artifactId>
-            <version>6.0.29</version>
-            <scope>test</scope>
-        </dependency>   
     </dependencies>
     <build>
 <!--        <sourceDirectory>src</sourceDirectory>
