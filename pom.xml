@@ -232,6 +232,10 @@
                                 <copy todir="${war-src}/WEB-INF/app/static/externals/printpreview/resources">
                                     <fileset dir="externals2/suite/geoexplorer/app/static/externals/printpreview/resources"/>
                                 </copy>
+                                <!-- copy Mareano resources -->
+                                <copy todir="${war-src}/WEB-INF/app/static/theme/imr">
+                                    <fileset dir="app/static/theme/imr"/>
+                                </copy>
                                 <!-- build JavaScript -->
                                 <mkdir dir="${war-src}/WEB-INF/app/static/script"/>
                                 <!-- uncompressed -->

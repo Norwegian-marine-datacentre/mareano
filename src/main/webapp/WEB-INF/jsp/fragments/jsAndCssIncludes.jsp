@@ -34,9 +34,9 @@
 <link rel="stylesheet" type="text/css" href="externals/openlayers/theme/default/style.css">
 
 <!-- GeoExt resources -->
-<link rel="stylesheet" type="text/css" href="externals/GeoExt/resources/css/popup.css">
-<link rel="stylesheet" type="text/css" href="externals/GeoExt/resources/css/layerlegend.css">
-<link rel="stylesheet" type="text/css" href="externals/GeoExt/resources/css/gxtheme-gray.css">
+<link rel="stylesheet" type="text/css" href="externals/geoext/resources/css/popup.css">
+<link rel="stylesheet" type="text/css" href="externals/geoext/resources/css/layerlegend.css">
+<link rel="stylesheet" type="text/css" href="externals/geoext/resources/css/gxtheme-gray.css">
 
 <!-- gxp resources -->
 <link rel="stylesheet" type="text/css" href="externals/gxp/src/theme/all.css">
