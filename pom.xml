@@ -192,7 +192,7 @@
                         <configuration>
                             <tasks>
                                 <copy todir="${war-src}/WEB-INF/app">
-                                    <fileset dir="app">
+                                    <fileset dir="externals2/suite/geoexplorer/app">
                                         <exclude name="**/externals/**"/>
                                         <exclude name="**/script/**"/>
                                     </fileset>
