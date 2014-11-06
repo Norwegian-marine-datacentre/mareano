@@ -13,27 +13,12 @@
         <servlet-name>ringo</servlet-name>
         <servlet-class>org.ringojs.jsgi.JsgiServlet</servlet-class>
         <init-param>
-            <param-name>ringo-home</param-name>
-            <param-value>/WEB-INF</param-value>
+            <param-name>production</param-name>
+            <param-value>true</param-value>
         </init-param>
-        <init-param>
-            <param-name>module-path</param-name>
-            <param-value>app</param-value>
-        </init-param>
-        <init-param>
-            <param-name>config</param-name>
-            <param-value>config</param-value>
-        </init-param>
-        <init-param>
-            <param-name>app</param-name>
-            <param-value>app</param-value>
-        </init-param>
-        <init-param>
-        	<param-name>GEOEXPLORER_DATA</param-name>
-        	<param-value>/var/local/geoexplorer-data/</param-value>
-    	</init-param>
         <load-on-startup>1</load-on-startup>
     </servlet>
+
     <servlet-mapping>
         <servlet-name>ringo</servlet-name>
         <url-pattern>/ringo/*</url-pattern>

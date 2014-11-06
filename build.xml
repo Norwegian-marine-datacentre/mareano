@@ -34,8 +34,8 @@
             <sysproperty key="app.debug" value="1"/>
             <sysproperty key="app.proxy.geoserver" value="${app.proxy.geoserver}"/>
             <sysproperty key="ringo.home" path="${war.src}/WEB-INF"/>
-            <sysproperty key="ringo.modulepath" path="externals"/>
-            <arg path="app/main.js"/>
+            <sysproperty key="ringo.modulepath" path="externals2/suite/geoexplorer/externals"/>
+            <arg path="externals2/suite/geoexplorer/app/main.js"/>
             <arg line="-p ${app.port}"/>
         </java>
     </target>
@@ -51,9 +51,9 @@
             <sysproperty key="app.debug" value="1"/>
             <sysproperty key="app.proxy.geoserver" value="${app.proxy.geoserver}"/>
             <sysproperty key="ringo.home" path="${war.src}/WEB-INF"/>
-            <sysproperty key="ringo.modulepath" path="externals"/>
+            <sysproperty key="ringo.modulepath" path="externals2/suite/geoexplorer/externals"/>
             <arg value="-d"/>
-            <arg path="app/main.js"/>
+            <arg path="externals2/suite/geoexplorer/app/main.js"/>
             <arg line="-p ${app.port}"/>
         </java>
     </target>
@@ -66,7 +66,7 @@
                 </fileset>
             </classpath>
             <sysproperty key="ringo.home" path="${war.src}/WEB-INF"/>
-            <sysproperty key="ringo.modulepath" path="externals"/>
+            <sysproperty key="ringo.modulepath" path="externals2/suite/geoexplorer/externals"/>
             <arg path="tests/all.js"/>
         </java>
     </target>
