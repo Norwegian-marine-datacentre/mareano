@@ -255,6 +255,9 @@
                                 <move
                                     file="${war-src}/WEB-INF/app/static/script/GeoExplorer.js"
                                     tofile="${war-src}/WEB-INF/app/static/script/GeoExplorer-debug.js"/>
+                                <move
+                                    file="${war-src}/WEB-INF/app/static/script/mareano.js"
+                                    tofile="${war-src}/WEB-INF/app/static/script/mareano-debug.js"/>
                                 <!-- compressed -->
                                 <java classname="org.ringojs.tools.launcher.Main" failonerror="true" fork="true">
                                     <classpath>
