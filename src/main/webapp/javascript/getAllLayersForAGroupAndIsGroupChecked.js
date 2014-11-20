@@ -27,6 +27,8 @@ var GROUP_GENERELLE = "generelle";
 function getAllLayersForAGroupAndIsGroupChecked(gruppeNavn, layers, mapPanel, layerNames) {
 	var childrenVisible = 0;
 	var count = 0;    
+	var layerIds = [];
+	var hasBeenPushed = false;
 	for (var i = layers.length-1; i>=0; --i) {
 	    if ( layers[i].get("group") == gruppeNavn ) {
 	        count++;
@@ -39,6 +41,9 @@ function getAllLayersForAGroupAndIsGroupChecked(gruppeNavn, layers, mapPanel, la
 	            if ( globalLayersFromSavedMapAlreadyAddedLegend.indexOf (layerId) == -1) {
 	            	addLegend(layerId);
 	            	globalLayersFromSavedMapAlreadyAddedLegend.push(layerId);
+	            	
+	            	layerIds.push(layerId);
+	            	hasBeenPushed = true;
 	            }
 	        } 
 	        layerNames.push(layers[i].getLayer().params.LAYERS);
@@ -46,8 +51,13 @@ function getAllLayersForAGroupAndIsGroupChecked(gruppeNavn, layers, mapPanel, la
 	}
 
 	var groupChecked = (childrenVisible === count);
-    if ( window.location.href.indexOf( SAVED_MAP ) > -1 && childrenVisible > 0 && gruppeNavn.indexOf( GROUP_GENERELLE ) > 0) {
+    if ( window.location.href.indexOf( SAVED_MAP ) > -1 && childrenVisible > 0 && gruppeNavn.indexOf( GROUP_GENERELLE ) == -1 ) {
+    	//expand any group if it has 1 or more layers turned on and 
+    	//this is a saved map
     	groupChecked = true;		
+    }
+	if ( hasBeenPushed && layerIds.indexOf(10) > -1) {
+    	alert("layerIds:"+layerIds+ " groupchecked:"+groupChecked);
     }
 	return groupChecked;
 }

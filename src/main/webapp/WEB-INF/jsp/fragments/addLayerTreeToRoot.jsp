@@ -28,8 +28,8 @@ app.on("ready", function() {
 	            ${bilde.startextentMaxy}
 	        ];
 	        mergedSomeHovedtema.appendChild( group );
-	        </c:forEach>
-	        treeRoot.getRootNode().appendChild( mergedSomeHovedtema );
+        </c:forEach>
+	    treeRoot.getRootNode().appendChild( mergedSomeHovedtema );
 	    }
 	</c:forEach>
 	treeRoot.getRootNode().appendChild( mergedSomeHovedtema );

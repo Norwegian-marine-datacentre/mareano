@@ -35,7 +35,7 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
         requestConfig.url = requestConfig.url.replace('../maps', './maps');
         
         var mapNum = requestConfig.url.substr( 7, requestConfig.url.length); 
-        var mapsReadOnly = [3, 5, 6, 7, 8, 9, 10, 14,160,161,162,163,19,186,188,189,200,201,226];
+        var mapsReadOnly = [3, 5, 6, 7, 8, 9, 10, 14,160,161,162,163,19,186,188,189,200,201,226,300,301];
         if (mapsReadOnly.indexOf( parseInt(mapNum) ) !== -1) {
         	Ext.Msg.show( {
         		title: this.saveMapErrorTitle,
@@ -378,6 +378,11 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
                 handler: function() {
                     var tree = Ext.getCmp('thematic_tree');
                     var checked = tree.getChecked();
+                    for (var i=0, ii = checked.length; i<ii; ++i) {
+                        checked[i].ui.toggleCheck(false);
+                    }
+                    var rootRightTree = Ext.getCmp('layers');
+                    checked = rootRightTree.getChecked();
                     for (var i=0, ii = checked.length; i<ii; ++i) {
                         checked[i].ui.toggleCheck(false);
                     }

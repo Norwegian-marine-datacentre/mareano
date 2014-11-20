@@ -64,7 +64,10 @@ function addLayerToGroup( gruppeNavn, gruppeText, map, mapPanel, layers, store, 
     var layerName = [];
     var childrenVisible = 0;
     var count = 0;    
-    for (var i = layers.length-1;i>=0;--i) {
+    
+    var groupChecked = 
+    	getAllLayersForAGroupAndIsGroupChecked(gruppeNavn, layers, mapPanel, layerName)
+    /*for (var i = layers.length-1;i>=0;--i) {
         if ( layers[i].get("group") == gruppeNavn ) {
             count++;
             var idx = mapPanel.layers.findBy(function(record) {
@@ -77,7 +80,8 @@ function addLayerToGroup( gruppeNavn, gruppeText, map, mapPanel, layers, store, 
         }
     }
 
-    var groupChecked = (childrenVisible === count);
+    var groupChecked = (childrenVisible === count); */
+    
     var tmpLoader = new GeoExt.tree.LayerLoader({
         store: store,
         filter: function(record) {
