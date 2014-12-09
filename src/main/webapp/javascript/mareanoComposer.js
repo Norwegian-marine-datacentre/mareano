@@ -29,6 +29,14 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
         Mareano.Composer.superclass.constructor.apply(this, arguments);    
         this.on("beforesave", this.beforeSave, this);
         this.on("beforecreateportal", this.modifyPortal, this);
+        
+        //configure url of publish map to be correct
+        gxp.EmbedMapDialog.prototype.initComponent = function() {
+        	this.url = this.url.replace('../viewer/', './viewer/');
+        	Ext.apply(this, this.getConfig());
+        	gxp.EmbedMapDialog.superclass.initComponent.call(this);
+        };
+
     },
 
     beforeSave: function(requestConfig, callback) {
@@ -478,5 +486,4 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
         // add our new panels here
         this.portalItems[0].items.push(northPanel, westPanel2);
     }
-
 });
