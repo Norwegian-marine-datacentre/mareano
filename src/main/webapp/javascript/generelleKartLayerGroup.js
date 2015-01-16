@@ -1,6 +1,4 @@
 function addGenerelleLayerToGroup( gruppeNavn, gruppeText, map, mapPanel, layers, store, app  ) {
-    var indexOfWMSgruppe = [];
-    
     var layerName = [];
     var groupChecked = 
     	getAllLayersForAGroupAndIsGroupChecked(gruppeNavn, layers, mapPanel, layerName);
@@ -29,7 +27,7 @@ function addGenerelleLayerToGroup( gruppeNavn, gruppeText, map, mapPanel, layers
             attr.id = layerRecord.data.id;
             attr.cls = "general-layers-w-checkbox";
             
-//          if layer already in map, set checked
+            //If layer already in map, set checked
             var idx = app.mapPanel.layers.findBy(function(record) {
                 return record.getLayer().metadata['kartlagId'] === attr.layer.metadata['kartlagId'];
             });
@@ -39,10 +37,10 @@ function addGenerelleLayerToGroup( gruppeNavn, gruppeText, map, mapPanel, layers
             attr.autoDisable = false;
             var node = GeoExt.tree.LayerLoader.prototype.createNode.call(this, attr);       
             app.mapPanel.layers.on("remove", function(store, record) {
-            	if (silent !== true && record.getLayer().metadata['kartlagId'] === attr.layer.metadata['kartlagId']) {
-            		node.ui.toggleCheck(false);
-            	}
-            });  	        
+                if (silent !== true && record.getLayer().metadata['kartlagId'] === attr.layer.metadata['kartlagId']) {
+                    node.ui.toggleCheck(false);
+                }
+            });
             node.on("checkChange", function(event) {
             	var cb = node.getUI().checkbox;
             	if ( cb && Ext.get(cb).getAttribute('type') === 'checkbox' ) {
@@ -75,7 +73,7 @@ function addGenerelleLayerToGroup( gruppeNavn, gruppeText, map, mapPanel, layers
         }
     });
     
-    var layerContainerGruppe = new GeoExt.tree.LayerContainer({
+    var generelleLayerContainerGruppe = new GeoExt.tree.LayerContainer({
     	checked: groupChecked,
         expanded: groupChecked,    	
         text: gruppeText,   
@@ -93,5 +91,5 @@ function addGenerelleLayerToGroup( gruppeNavn, gruppeText, map, mapPanel, layers
         layerStore: store,
         loader: generelleLayerLoader
     });
-    return layerContainerGruppe;
+    return generelleLayerContainerGruppe;
 }

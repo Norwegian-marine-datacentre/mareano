@@ -1,5 +1,7 @@
+/** global variables in the window object (inside app.ready)*/
 var silent = false;
 var kartlagInfoState = ""; //used by removeLayerLegendAndInfo(mapOfGMLspesialpunkt, kartlagId)
+var orderOfLayerIdsCache = [10];
 
 function loadMareano(mapPanel, app) {
     OpenLayers.Util.alphaHackNeeded=false;
@@ -57,35 +59,14 @@ function loadMareano(mapPanel, app) {
     }, app);
 }
 
-var gfiCache = {};
-
 function addLayerToGroup( gruppeNavn, gruppeText, map, mapPanel, layers, store, app ) {
-    var indexOfWMSgruppe = [];
     var layerName = [];
-    var childrenVisible = 0;
-    var count = 0;    
-    
     var groupChecked = 
-    	getAllLayersForAGroupAndIsGroupChecked(gruppeNavn, layers, mapPanel, layerName)
-    /*for (var i = layers.length-1;i>=0;--i) {
-        if ( layers[i].get("group") == gruppeNavn ) {
-            count++;
-            var idx = mapPanel.layers.findBy(function(record) {
-                return record.getLayer().metadata['kartlagId'] === layers[i].getLayer().metadata['kartlagId'];
-            });
-            if (layers[i].getLayer().visibility === true || idx !== -1) {
-                childrenVisible++;
-            } 
-            layerName.push(layers[i].getLayer().params.LAYERS);
-        }
-    }
-
-    var groupChecked = (childrenVisible === count); */
+    	getAllLayersForAGroupAndIsGroupChecked(gruppeNavn, layers, mapPanel, layerName);
     
-    var tmpLoader = new GeoExt.tree.LayerLoader({
+    var layerLoader = new GeoExt.tree.LayerLoader({
         store: store,
         filter: function(record) {
-            //featureInfoImpl(record, mapPanel, gruppeNavn, app, layerName);
             /** adding matching layer to matching container group */
             for( var i= layerName.length-1; i>=0; --i ) {
                 if ( record.get("group") == gruppeNavn) {
@@ -103,7 +84,8 @@ function addLayerToGroup( gruppeNavn, gruppeText, map, mapPanel, layers, store, 
             }
             cssBgImg = getLayerIcon(url);
             attr.iconCls = cssBgImg;
-            // if layer already in map, set checked
+            
+            //If layer already in map, set checked
             var idx = app.mapPanel.layers.findBy(function(record) {
                 return record.getLayer().metadata['kartlagId'] === attr.layer.metadata['kartlagId'];
             });
@@ -116,7 +98,7 @@ function addLayerToGroup( gruppeNavn, gruppeText, map, mapPanel, layers, store, 
                 if (silent !== true && record.getLayer().metadata['kartlagId'] === attr.layer.metadata['kartlagId']) {
                     node.ui.toggleCheck(false);
                 }
-            });            
+            });
             node.on("checkchange", function(event) {
                 var layer = layerRecord.getLayer();
                 var record = event.layerStore.getByLayer(layer);
@@ -176,7 +158,7 @@ function addLayerToGroup( gruppeNavn, gruppeText, map, mapPanel, layers, store, 
             return node;
         }
     });
-
+    
     var layerContainerGruppe = new GeoExt.tree.LayerContainer({
         checked: groupChecked,
         expanded: groupChecked,    	
@@ -192,6 +174,10 @@ function addLayerToGroup( gruppeNavn, gruppeText, map, mapPanel, layers, store, 
 
                 var cs = node.childNodes;
                 for(var c = cs.length-1; c >= 0; c--) { //add layers in reverse of reverse order
+                	if ( checked == true ) {
+                		var kartlagFromKartbilde = cs[c].layer.metadata.kartlagId;
+                		orderOfLayerIdsCache.unshift( kartlagFromKartbilde );
+                	}
                     cs[c].ui._silent = true;
                     cs[c].ui.toggleCheck(checked);
                     delete cs[c].ui._silent;
@@ -199,7 +185,7 @@ function addLayerToGroup( gruppeNavn, gruppeText, map, mapPanel, layers, store, 
             }
         },                            
         layerStore: store,
-        loader: tmpLoader
+        loader: layerLoader
     });
     return layerContainerGruppe;
 } 
@@ -224,6 +210,10 @@ function getLanguage() {
 }
 
 function addKartbildeAbstractOrRemove(node, checked) {
+    addKartbildeAbstractOrRemoveWithName(node.attributes.text, checked);
+}
+    
+function addKartbildeAbstractOrRemoveWithName(text, checked) {
     if ( checked == true) {
         var languageChoosen = getLanguage();
         jQuery.ajax({
@@ -231,16 +221,16 @@ function addKartbildeAbstractOrRemove(node, checked) {
             url: "spring/infoKartBilde",
             contentType: "application/json",
             data: {
-                kartbildeNavn: node.attributes.text,
+                kartbildeNavn: text,
                 language: languageChoosen
             },
             success:function(data) {
-                var legendDiv = getKartlagBildeDiv(node.attributes.text)
+                var legendDiv = getKartlagBildeDiv(text)
                 visKartlagInfoHTML( legendDiv, data );
             }
         }); 
     } else if ( checked == false ) {
-        var legendDiv = getKartlagBildeDiv(node.attributes.text)
+        var legendDiv = getKartlagBildeDiv(attributes.text)
         fjernKartlagInfo(legendDiv);
     }
 }
@@ -261,26 +251,39 @@ function displayLegendGraphicsAndSpesialpunkt(extent, kartlagId, layer, event, a
             extent: extent
         },
         success:function(data) {
-            addLegendGraphics(kartlagId, data);
-            addSpesialpunkt(extent, kartlagId, layer, event, app, data);
+//        	if ( orderOfLayerIdsCache.length == 0 ) {
+        		addLegendGraphics(kartlagId, data);
+        		addSpesialpunkt(extent, kartlagId, layer, event, app, data);
+//        	} else {
+//        		if ( orderOfLayerIdsCache[0] == kartlagId) {
+//            		addLegendGraphics(kartlagId, data);
+//            		addSpesialpunkt(extent, kartlagId, layer, event, app, data);
+//        		} else {
+//            		setTimeout(function (){
+//            		addLegendGraphics(kartlagId, data);
+//            		addSpesialpunkt(extent, kartlagId, layer, event, app, data);
+//            		}, 5000);
+//            	}
+//        		orderOfLayerIdsCache.splice(0, 1);
+//        	}
         }
     }); 
 }
 
 function displayLegendGraphics(kartlagId) {
     var languageChoosen = getLanguage();
-    jQuery.ajax({
-        type: 'get',
-        url: "spring/legend",
-        contentType: "application/json",
-        data: {
-            kartlagId: kartlagId,
-            language: languageChoosen
-        },
-        success:function(data) {
-            addLegendGraphics(kartlagId, data);
-        }
-    }); 
+//    jQuery.ajax({
+//        type: 'get',
+//        url: "spring/legend",
+//        contentType: "application/json",
+//        data: {
+//            kartlagId: kartlagId,
+//            language: languageChoosen
+//        },
+//        success:function(data) {
+//            addLegendGraphics(kartlagId, data);
+//        }
+//    }); 
 }
 
 function addLegendGraphics(kartlagId, data) {

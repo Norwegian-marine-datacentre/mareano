@@ -28,7 +28,8 @@ function getAllLayersForAGroupAndIsGroupChecked(gruppeNavn, layers, mapPanel, la
 	var childrenVisible = 0;
 	var count = 0;    
 	var layerIds = [];
-	var hasBeenPushed = false;
+	var layersFromKartbildeAdded = false;
+	var gruppenavnFromKartbildeAdded = "";
 	for (var i = layers.length-1; i>=0; --i) {
 	    if ( layers[i].get("group") == gruppeNavn ) {
 	        count++;
@@ -43,21 +44,26 @@ function getAllLayersForAGroupAndIsGroupChecked(gruppeNavn, layers, mapPanel, la
 	            	globalLayersFromSavedMapAlreadyAddedLegend.push(layerId);
 	            	
 	            	layerIds.push(layerId);
-	            	hasBeenPushed = true;
+	            	layersFromKartbildeAdded = true;
 	            }
 	        } 
-	        layerNames.push(layers[i].getLayer().params.LAYERS);
+	        layerNames.push(layers[i].getLayer().params.LAYERS);     
 	    }
+        //treepanel not renedered yet
+//      var treePanel = Ext.getCmp('thematic_tree');
+//      var rootNode = treePanel.getRootNode();
+//      var c = rootNode.findChild("text","MAREANO-oversiktskart",true);
+//      c.expand();
+          if (layersFromKartbildeAdded && gruppenavnFromKartbildeAdded != gruppeNavn ) {
+              addKartbildeAbstractOrRemoveWithName(gruppeNavn, true);
+              gruppenavnFromKartbildeAdded = gruppeNavn;
+          }
 	}
 
 	var groupChecked = (childrenVisible === count);
     if ( window.location.href.indexOf( SAVED_MAP ) > -1 && childrenVisible > 0 && gruppeNavn.indexOf( GROUP_GENERELLE ) == -1 ) {
-    	//expand any group if it has 1 or more layers turned on and 
-    	//this is a saved map
+    	//expand any group if it has 1 or more layers turned on and this is a saved map
     	groupChecked = true;		
-    }
-	if ( hasBeenPushed && layerIds.indexOf(10) > -1) {
-    	alert("layerIds:"+layerIds+ " groupchecked:"+groupChecked);
     }
 	return groupChecked;
 }
