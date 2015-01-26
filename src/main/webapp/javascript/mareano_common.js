@@ -1,7 +1,7 @@
 /** global variables in the window object (inside app.ready)*/
 var silent = false;
 var kartlagInfoState = ""; //used by removeLayerLegendAndInfo(mapOfGMLspesialpunkt, kartlagId)
-var orderOfLayerIdsCache = [10];
+var layersInPicture = [];
 
 function loadMareano(mapPanel, app) {
     OpenLayers.Util.alphaHackNeeded=false;
@@ -166,22 +166,22 @@ function addLayerToGroup( gruppeNavn, gruppeText, map, mapPanel, layers, store, 
         listeners: {
             "checkchange": function(node, checked) { //setting all subnodes if parent is checked
                 var extent = node.attributes.maxExtent;
-//              if (extent && checked) { //zoom to extent for pictures
-//              app.mapPanel.map.zoomToExtent(extent, true);
-//              }
                 node.expand();
-//              addKartbildeAbstractOrRemove(node, checked);
 
-                var cs = node.childNodes;
-                for(var c = cs.length-1; c >= 0; c--) { //add layers in reverse of reverse order
-                	if ( checked == true ) {
-                		var kartlagFromKartbilde = cs[c].layer.metadata.kartlagId;
-                		orderOfLayerIdsCache.unshift( kartlagFromKartbilde );
-                	}
-                    cs[c].ui._silent = true;
-                    cs[c].ui.toggleCheck(checked);
-                    delete cs[c].ui._silent;
+                var childNodes = node.childNodes;
+                if ( checked == true) {
+                    for(var c = childNodes.length-1; c >= 0; c--) { 
+                        layersInPicture.unshift( childNodes[c].layer.metadata.kartlagId );
+                    }
+                }
+                //console.log("layersInPicture:"+layersInPicture);
+                for(var c = childNodes.length-1; c >= 0; c--) { //add layers in reverse of reverse order
+                    childNodes[c].ui._silent = true;
+                    childNodes[c].ui.toggleCheck(checked);
+                    delete childNodes[c].ui._silent;
+
                 } 
+                layersInPicture = [];
             }
         },                            
         layerStore: store,
@@ -190,7 +190,7 @@ function addLayerToGroup( gruppeNavn, gruppeText, map, mapPanel, layers, store, 
     return layerContainerGruppe;
 } 
 
-function getKartlagBildeDiv(nodeText) {   
+function getKartlagBildeDiv(nodeText) {
     nodeText = nodeText.toLowerCase();
     nodeText = nodeText.replace(/æ/g,'ae'); // /g global option
     nodeText = nodeText.replace(/ø/g,'oe');
@@ -230,7 +230,7 @@ function addKartbildeAbstractOrRemoveWithName(text, checked) {
             }
         }); 
     } else if ( checked == false ) {
-        var legendDiv = getKartlagBildeDiv(attributes.text)
+        var legendDiv = getKartlagBildeDiv(text)
         fjernKartlagInfo(legendDiv);
     }
 }
@@ -251,21 +251,8 @@ function displayLegendGraphicsAndSpesialpunkt(extent, kartlagId, layer, event, a
             extent: extent
         },
         success:function(data) {
-//        	if ( orderOfLayerIdsCache.length == 0 ) {
-        		addLegendGraphics(kartlagId, data);
-        		addSpesialpunkt(extent, kartlagId, layer, event, app, data);
-//        	} else {
-//        		if ( orderOfLayerIdsCache[0] == kartlagId) {
-//            		addLegendGraphics(kartlagId, data);
-//            		addSpesialpunkt(extent, kartlagId, layer, event, app, data);
-//        		} else {
-//            		setTimeout(function (){
-//            		addLegendGraphics(kartlagId, data);
-//            		addSpesialpunkt(extent, kartlagId, layer, event, app, data);
-//            		}, 5000);
-//            	}
-//        		orderOfLayerIdsCache.splice(0, 1);
-//        	}
+            addLegendGraphics(kartlagId, data);
+        	addSpesialpunkt(extent, kartlagId, layer, event, app, data);
         }
     }); 
 }
@@ -284,17 +271,6 @@ function displayLegendGraphics(kartlagId) {
 //            addLegendGraphics(kartlagId, data);
 //        }
 //    }); 
-}
-
-function addLegendGraphics(kartlagId, data) {
-    var currentLegend;
-    jQuery('#newLegend').children().each(function(index, value){
-        jQuery(value).children().each(function(index, value){
-            currentLegend = jQuery(value).html();
-        });	        
-    });
-    buildLegendGraphicsHTML( currentLegend, kartlagId, data );
-    visKartlagInfoHTML( kartlagId, data ); 
 }
 
 var controlSelectFeature = null;
@@ -341,30 +317,29 @@ function addSpesialpunkt(extent, kartlagId, layer, event, app, data) {
     }
 }
 
-function buildLegendGraphicsHTML( currentLegend, kartlagId, data ) {
-    var legendGraphicsHTML = currentLegend+'<div id="'+kartlagId+'">';
-    for ( var i=0; i < data.legends.length; i++ ) {
-        if ( i > 0 ) {
-            legendGraphicsHTML += '<div>';     
-        }
-        if ( data.legends[i].url != '') {
-            legendGraphicsHTML += '<table><tr><td><img src="' + data.legends[i].url + '"/></td>';
-            legendGraphicsHTML += '<td>' + data.legends[i].text + '</td></tr></table>';
-        } else {
-            legendGraphicsHTML += data.legends[i].text;
-        }
+function addLegendGraphics(kartlagId, data) {
+    var currentLegend;
+    jQuery('#newLegend').children().each(function(index, value){
+        jQuery(value).children().each(function(index, value){
+            currentLegend = jQuery(value).html();
+        });         
+    });
+    buildLegendGraphicsHTML( currentLegend, kartlagId, data );
+    visKartlagInfoHTML( kartlagId, data ); 
+}
 
-        if ( i > 0 ) {
-            legendGraphicsHTML += '</div>';     
-        }
-    } 
-    legendGraphicsHTML += '</div>';
-    Ext.getCmp('newLegend').update(legendGraphicsHTML);
+function buildLegendGraphicsHTML( currentLegend, kartlagId, data ) {
+    var insertAfterIndex = insertLegendAtIndex(currentLegend, kartlagId)
+    var newLegendFragment = createNewLegendFragment(kartlagId, data);
+    var arrayCurrentLegend = getArrayOfCurrentDivs(currentLegend);
+        
+    arrayCurrentLegend.splice(insertAfterIndex +1, 0, newLegendFragment);
+    Ext.getCmp('newLegend').update(arrayCurrentLegend.join(""));
 }
 
 /**
  * bug: I have a panel in a tab that is not shown. 
- * I call update(somehtml) on that panel. The panel's html body is not updated. 
+ * I call update(some html) on that panel. The panel's html body is not updated. 
  * After I show the panel for the first time, all future updates() behave correctly whether it is hidden or shown
  * http://www.sencha.com/forum/archive/index.php/t-103797.html
  **/
