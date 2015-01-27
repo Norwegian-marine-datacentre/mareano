@@ -5,7 +5,7 @@
         <groupId>org.opengeo</groupId>
         <artifactId>suite</artifactId>
         <version>4.1</version>
-        <relativePath>externals2/suite/</relativePath>
+        <relativePath>externals/suite/</relativePath>
     </parent>
     <groupId>org.opengeo</groupId>
     <artifactId>mareano</artifactId>
@@ -192,21 +192,21 @@
                         <configuration>
                             <tasks>
                                 <copy todir="${war-src}/WEB-INF/app">
-                                    <fileset dir="externals2/suite/geoexplorer/app">
-                                        <exclude name="**/externals/**"/>
+                                    <fileset dir="externals/suite/geoexplorer/app">
+                                        <!-- exclude name="**/externals/**"/ --> <!-- comment to include ext-all-debug-w-comments.js -->
                                         <exclude name="**/script/**"/>
                                     </fileset>
                                 </copy>
                                 <!-- copy stick -->
                                 <copy todir="${war-src}/WEB-INF/app/stick">
-                                    <fileset dir="externals2/suite/geoexplorer/externals/stick">
+                                    <fileset dir="externals/suite/geoexplorer/externals/stick">
                                         <include name="**/lib/**"/>
                                         <include name="package.json"/>
                                     </fileset>
                                 </copy>
                                 <!-- copy Ext resources -->
                                 <copy todir="${war-src}/WEB-INF/app/static/externals/ext">
-                                    <fileset dir="externals2/suite/geoexplorer/app/static/externals/ext">
+                                    <fileset dir="externals/suite/geoexplorer/app/static/externals/ext">
                                         <exclude name="**/*debug*.js"/>
                                         <exclude name="**/ext-all-notheme.css"/>
                                         <exclude name="**/xtheme-blue.css"/>
@@ -214,11 +214,11 @@
                                 </copy>
                                 <!-- copy OpenLayers resources -->
                                 <copy todir="${war-src}/WEB-INF/app/static/externals/openlayers/theme">
-                                    <fileset dir="externals2/suite/geoexplorer/app/static/externals/openlayers/theme"/>
+                                    <fileset dir="externals/suite/geoexplorer/app/static/externals/openlayers/theme"/>
                                 </copy>
                                 <!-- copy GeoExt resources -->
                                 <copy todir="${war-src}/WEB-INF/app/static/externals/geoext/resources">
-                                    <fileset dir="externals2/suite/geoexplorer/app/static/externals/geoext/resources">
+                                    <fileset dir="externals/suite/geoexplorer/app/static/externals/geoext/resources">
                                         <exclude name="**/geoext-all-debug.css"/>
                                         <exclude name="**/gxtheme-slate.css"/>
                                         <exclude name="**/slate/**"/>
@@ -226,11 +226,11 @@
                                 </copy>
                                 <!-- copy gxp resources -->
                                 <copy todir="${war-src}/WEB-INF/app/static/externals/gxp/src/theme">
-                                    <fileset dir="externals2/suite/geoexplorer/app/static/externals/gxp/src/theme"/>
+                                    <fileset dir="externals/suite/geoexplorer/app/static/externals/gxp/src/theme"/>
                                 </copy>
                                 <!-- copy PrintPreview resources -->
                                 <copy todir="${war-src}/WEB-INF/app/static/externals/printpreview/resources">
-                                    <fileset dir="externals2/suite/geoexplorer/app/static/externals/printpreview/resources"/>
+                                    <fileset dir="externals/suite/geoexplorer/app/static/externals/printpreview/resources"/>
                                 </copy>
                                 <!-- copy Mareano resources -->
                                 <copy todir="${war-src}/WEB-INF/app/static/theme/imr">
@@ -246,7 +246,7 @@
                                         </fileset>
                                     </classpath>
                                     <sysproperty key="ringo.home" path="${war-src}/WEB-INF"/>
-                                    <arg path="externals2/suite/geoexplorer/externals/buildkit/lib/buildkit/build.js"/>
+                                    <arg path="externals/suite/geoexplorer/externals/buildkit/lib/buildkit/build.js"/>
                                     <arg value="-u"/>
                                     <arg value="-o"/>
                                     <arg path="${war-src}/WEB-INF/app/static/script"/>
@@ -266,7 +266,8 @@
                                         </fileset>
                                     </classpath>
                                     <sysproperty key="ringo.home" path="${war-src}/WEB-INF"/>
-                                    <arg path="externals2/suite/geoexplorer/externals/buildkit/lib/buildkit/build.js"/>
+                                    <arg path="externals/suite/geoexplorer/externals/buildkit/lib/buildkit/build.js"/>
+                                    <arg value="-u"/>
                                     <arg value="-o"/>
                                     <arg path="${war-src}/WEB-INF/app/static/script"/>
                                     <arg path="buildjs.cfg"/>

@@ -6,12 +6,9 @@
 .classpath
 .project
 maven-eclipse.xml
-externals/ringojs/lib/ringo.jar
-externals/ringojs/run.jar
 
 #folders
 target/*
-externals/*
 .externalToolBuilders/*
 .settings/*
 lib/*
