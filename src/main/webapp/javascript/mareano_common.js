@@ -59,6 +59,7 @@ function loadMareano(mapPanel, app) {
     }, app);
 }
 
+/** code common with generelleKartLayerGroup.js */
 function addLayerToGroup( gruppeNavn, gruppeText, map, mapPanel, layers, store, app ) {
     var layerName = [];
     var groupChecked = 
@@ -173,15 +174,15 @@ function addLayerToGroup( gruppeNavn, gruppeText, map, mapPanel, layers, store, 
                     for(var c = childNodes.length-1; c >= 0; c--) { 
                         layersInPicture.unshift( childNodes[c].layer.metadata.kartlagId );
                     }
+                } else {
+                    layersInPicture = [];    
                 }
                 //console.log("layersInPicture:"+layersInPicture);
                 for(var c = childNodes.length-1; c >= 0; c--) { //add layers in reverse of reverse order
                     childNodes[c].ui._silent = true;
                     childNodes[c].ui.toggleCheck(checked);
                     delete childNodes[c].ui._silent;
-
                 } 
-                layersInPicture = [];
             }
         },                            
         layerStore: store,
@@ -252,13 +253,13 @@ function displayLegendGraphicsAndSpesialpunkt(extent, kartlagId, layer, event, a
         },
         success:function(data) {
             addLegendGraphics(kartlagId, data);
-        	addSpesialpunkt(extent, kartlagId, layer, event, app, data);
+            addSpesialpunkt(extent, kartlagId, layer, event, app, data);
         }
     }); 
 }
 
-function displayLegendGraphics(kartlagId) {
-    var languageChoosen = getLanguage();
+//function displayLegendGraphics(kartlagId) {
+//    var languageChoosen = getLanguage();
 //    jQuery.ajax({
 //        type: 'get',
 //        url: "spring/legend",
@@ -271,7 +272,7 @@ function displayLegendGraphics(kartlagId) {
 //            addLegendGraphics(kartlagId, data);
 //        }
 //    }); 
-}
+//}
 
 var controlSelectFeature = null;
 function addSpesialpunkt(extent, kartlagId, layer, event, app, data) {
@@ -332,7 +333,8 @@ function buildLegendGraphicsHTML( currentLegend, kartlagId, data ) {
     var insertAfterIndex = insertLegendAtIndex(currentLegend, kartlagId)
     var newLegendFragment = createNewLegendFragment(kartlagId, data);
     var arrayCurrentLegend = getArrayOfCurrentDivs(currentLegend);
-        
+
+//    console.log("insert:"+insertAfterIndex+1+" id:"+kartlagId+" layerPicture:"+layersInPicture);
     arrayCurrentLegend.splice(insertAfterIndex +1, 0, newLegendFragment);
     Ext.getCmp('newLegend').update(arrayCurrentLegend.join(""));
 }

@@ -38,7 +38,7 @@ app.on("ready", function() {
     var rootRightTree = Ext.getCmp('layers');
     rootRightTree.getRootNode().appendChild( addGenerelleLayerToGroup("generelle", "<spring:message code="generelleKart" text="Generelle kart" />", this.map, this.mapPanel, generelleLayers, store, app) );
     /***********************************/                    
-    addDropdownmenuToMareanoMenuIfIe();                
+    addDropdownmenuToMareanoMenuIfIe();              
 });	
 
 function addDropdownmenuToMareanoMenuIfIe() {

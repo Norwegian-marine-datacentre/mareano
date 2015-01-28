@@ -1,3 +1,4 @@
+/** code common with generelleKartLayerGroup.js */
 function addGenerelleLayerToGroup( gruppeNavn, gruppeText, map, mapPanel, layers, store, app  ) {
     var layerName = [];
     var groupChecked = 

@@ -1,3 +1,8 @@
+/** Code that copies selected layers and moves them to 
+ * Overlays folder when map is loaded first time.
+ * @param that
+ * @param store
+ */
 function turnOnDefaultLayers(that, store ) {
     that.mapPanel.layers.each(function(record) {
          if (record.get('visibility') === true && record.getLayer().metadata['kartlagId'] !== undefined) {
@@ -15,7 +20,7 @@ function turnOnDefaultLayers(that, store ) {
                 });
                 if (idx === -1) {
                     that.mapPanel.layers.add(clone);
-                    displayLegendGraphics(clone.getLayer().metadata['kartlagId']);
+//                    displayLegendGraphics(clone.getLayer().metadata['kartlagId']);
                 }
     	}
     }, that);

@@ -27,7 +27,6 @@ var GROUP_GENERELLE = "generelle";
 function getAllLayersForAGroupAndIsGroupChecked(gruppeNavn, layers, mapPanel, layerNames) {
 	var childrenVisible = 0;
 	var count = 0;    
-	var layerIds = [];
 	var layersFromKartbildeAdded = false;
 	var gruppenavnFromKartbildeAdded = "";
 	for (var i = layers.length-1; i>=0; --i) {
@@ -39,25 +38,24 @@ function getAllLayersForAGroupAndIsGroupChecked(gruppeNavn, layers, mapPanel, la
 	        if (layers[i].getLayer().visibility === true || idx !== -1) {
 	            childrenVisible++;
 	            layerId = layers[i].data.layer.metadata[ KARTLAG_ID ];
-	            if ( globalLayersFromSavedMapAlreadyAddedLegend.indexOf (layerId) == -1) {
-	            	addLegend(layerId);
+	            if ( globalLayersFromSavedMapAlreadyAddedLegend.indexOf(layerId) == -1) {
+	            	layersInPicture.push( layerId );
 	            	globalLayersFromSavedMapAlreadyAddedLegend.push(layerId);
-	            	
-	            	layerIds.push(layerId);
 	            	layersFromKartbildeAdded = true;
 	            }
 	        } 
 	        layerNames.push(layers[i].getLayer().params.LAYERS);     
 	    }
-        //treepanel not renedered yet
-//      var treePanel = Ext.getCmp('thematic_tree');
-//      var rootNode = treePanel.getRootNode();
-//      var c = rootNode.findChild("text","MAREANO-oversiktskart",true);
-//      c.expand();
-          if (layersFromKartbildeAdded && gruppenavnFromKartbildeAdded != gruppeNavn ) {
-              addKartbildeAbstractOrRemoveWithName(gruppeNavn, true);
-              gruppenavnFromKartbildeAdded = gruppeNavn;
-          }
+	    if (layersFromKartbildeAdded && gruppenavnFromKartbildeAdded != gruppeNavn ) {
+	        addKartbildeAbstractOrRemoveWithName(gruppeNavn, true);
+	        gruppenavnFromKartbildeAdded = gruppeNavn;
+	    }
+	}
+	//console.log(layersInPicture);
+	if ( layersFromKartbildeAdded == true ) {
+	    for ( var j=0; j < layersInPicture.length; j++ ) {
+	        addLegend( layersInPicture[j] );
+	    }
 	}
 
 	var groupChecked = (childrenVisible === count);
