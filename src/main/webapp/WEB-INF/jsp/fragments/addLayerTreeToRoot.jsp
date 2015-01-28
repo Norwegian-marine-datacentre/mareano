@@ -1,5 +1,6 @@
 <%@page pageEncoding="UTF-8"%>
-<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> 
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 /**
 * Whenever a layer is turned on or off - send a request to server to see
 * if layer also should include Spesialpunkt from Mareano.
@@ -35,7 +36,7 @@ app.on("ready", function() {
 	treeRoot.getRootNode().appendChild( mergedSomeHovedtema );
 	/***********************************/
     var rootRightTree = Ext.getCmp('layers');
-    rootRightTree.getRootNode().appendChild( addGenerelleLayerToGroup("generelle", "Generelle kart", this.map, this.mapPanel, generelleLayers, store, app) );
+    rootRightTree.getRootNode().appendChild( addGenerelleLayerToGroup("generelle", "<spring:message code="generelleKart" text="Generelle kart" />", this.map, this.mapPanel, generelleLayers, store, app) );
     /***********************************/                    
     addDropdownmenuToMareanoMenuIfIe();                
 });	
