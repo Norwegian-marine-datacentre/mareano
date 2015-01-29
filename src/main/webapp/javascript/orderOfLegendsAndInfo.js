@@ -32,8 +32,13 @@ function insertLegendAtIndex(currentLegend, kartlagId) {
     return insertAfterCurrentIdIndex;
 }
 
-//build an array of divs
-function getArrayOfCurrentDivs(currentLegend) {
+/** 
+ * build array of Legend divs
+ * 
+ * @param current legends as html fragment
+ * @returns Array - of html fragments divided by divs
+ */
+function getArrayOfLegendDivs(currentLegend) {
     
     var arrayCurrentLegend = currentLegend.split("<div id=");
     for ( var i = 0; i < arrayCurrentLegend.length; i++ ) {
@@ -45,6 +50,36 @@ function getArrayOfCurrentDivs(currentLegend) {
         arrayCurrentLegend.splice(arrayCurrentLegend.length-1, 1);
     }
     return arrayCurrentLegend;
+}
+
+/** 
+ * build array of Info divs
+ * 
+ * @param current Info as html fragment
+ * @returns Array - of html fragments divided by divs
+ */
+function getArrayOfInfoDivs( currentInfo ) {
+    
+    var arrayCurrentInfo = currentInfo.split( "<div id=" );
+//    console.log("arrayCurrentInfo"+arrayCurrentInfo);
+//    console.log("currentInfo:"+currentInfo);
+    for ( var i = 0; i < arrayCurrentInfo.length; i++ ) {
+        if ( i > 0 ) {
+            arrayCurrentInfo[i-1] = "<div id =" + arrayCurrentInfo[i];
+        }
+    }
+    if ( i > 0) {
+        arrayCurrentInfo.splice( arrayCurrentInfo.length-1, 1 );
+    }
+    return arrayCurrentInfo;
+}
+
+function createNewInfoFragment(kartlagId, data) {
+    var infoHTML = '<div id="'+kartlagId+'tips" style="margin-bottom: 0.1cm;"><font style="font-size: 12px;"><b>'+ 
+    data.kartlagInfo.kartlagInfoTitel+'</b>' + ':<br />' + 
+    data.kartlagInfo.text + '</font></div>';
+    
+    return infoHTML;
 }
 
 function createNewLegendFragment(kartlagId, data) {

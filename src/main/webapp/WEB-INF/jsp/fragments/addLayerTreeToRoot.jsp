@@ -36,7 +36,9 @@ app.on("ready", function() {
 	treeRoot.getRootNode().appendChild( mergedSomeHovedtema );
 	/***********************************/
     var rootRightTree = Ext.getCmp('layers');
-    rootRightTree.getRootNode().appendChild( addGenerelleLayerToGroup("generelle", "<spring:message code="generelleKart" text="Generelle kart" />", this.map, this.mapPanel, generelleLayers, store, app) );
+    var i18nGenerallMaps = "<spring:message code="generelleKart" text="Generelle kart" />";
+    rootRightTree.getRootNode().appendChild( 
+        addGenerelleLayerToGroup("generelle", i18nGenerallMaps, this.map, this.mapPanel, generelleLayers, store, app) );
     /***********************************/                    
     addDropdownmenuToMareanoMenuIfIe();              
 });	

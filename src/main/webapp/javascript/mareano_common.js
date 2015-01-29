@@ -1,6 +1,6 @@
 /** global variables in the window object (inside app.ready)*/
 var silent = false;
-var kartlagInfoState = ""; //used by removeLayerLegendAndInfo(mapOfGMLspesialpunkt, kartlagId)
+var kartlagInfoState = []; //used by removeLayerLegendAndInfo(mapOfGMLspesialpunkt, kartlagId)
 var layersInPicture = [];
 
 function loadMareano(mapPanel, app) {
@@ -226,7 +226,7 @@ function addKartbildeAbstractOrRemoveWithName(text, checked) {
                 language: languageChoosen
             },
             success:function(data) {
-                var legendDiv = getKartlagBildeDiv(text)
+                var legendDiv = getKartlagBildeDiv(text);                
                 visKartlagInfoHTML( legendDiv, data );
             }
         }); 
@@ -257,22 +257,6 @@ function displayLegendGraphicsAndSpesialpunkt(extent, kartlagId, layer, event, a
         }
     }); 
 }
-
-//function displayLegendGraphics(kartlagId) {
-//    var languageChoosen = getLanguage();
-//    jQuery.ajax({
-//        type: 'get',
-//        url: "spring/legend",
-//        contentType: "application/json",
-//        data: {
-//            kartlagId: kartlagId,
-//            language: languageChoosen
-//        },
-//        success:function(data) {
-//            addLegendGraphics(kartlagId, data);
-//        }
-//    }); 
-//}
 
 var controlSelectFeature = null;
 function addSpesialpunkt(extent, kartlagId, layer, event, app, data) {
@@ -326,17 +310,23 @@ function addLegendGraphics(kartlagId, data) {
         });         
     });
     buildLegendGraphicsHTML( currentLegend, kartlagId, data );
-    visKartlagInfoHTML( kartlagId, data ); 
+//    visKartlagInfoHTML( kartlagId, data ); 
 }
 
 function buildLegendGraphicsHTML( currentLegend, kartlagId, data ) {
     var insertAfterIndex = insertLegendAtIndex(currentLegend, kartlagId)
-    var newLegendFragment = createNewLegendFragment(kartlagId, data);
-    var arrayCurrentLegend = getArrayOfCurrentDivs(currentLegend);
-
-//    console.log("insert:"+insertAfterIndex+1+" id:"+kartlagId+" layerPicture:"+layersInPicture);
-    arrayCurrentLegend.splice(insertAfterIndex +1, 0, newLegendFragment);
+    var newLegendDiv = createNewLegendFragment(kartlagId, data);
+    var arrayCurrentLegend = getArrayOfLegendDivs(currentLegend);
+    
+    arrayCurrentLegend.splice(insertAfterIndex +1, 0, newLegendDiv); 
     Ext.getCmp('newLegend').update(arrayCurrentLegend.join(""));
+    
+    var newInfoDiv = createNewInfoFragment(kartlagId, data);
+    kartlagInfoState.splice(insertAfterIndex +1, 0, newInfoDiv);
+    //cannot use .update() as component isnt visible
+    //and extjs doesnt update hidden components - so have to 
+    //set html
+    updateOrSetKartlagInfo();
 }
 
 /**
@@ -346,12 +336,12 @@ function buildLegendGraphicsHTML( currentLegend, kartlagId, data ) {
  * http://www.sencha.com/forum/archive/index.php/t-103797.html
  **/
 function visKartlagInfoHTML(kartlagId, data) {
-    var infoHTML = '<div id="'+kartlagId+'tips" style="margin-bottom: 0.1cm;"><font style="font-size: 12px;"><b>'+ 
-    data.kartlagInfo.kartlagInfoTitel+'</b>' + ':<br />' + 
-    data.kartlagInfo.text + '</font></div>';
+    var newInfoDiv = '<div id="'+kartlagId+'tips" style="margin-bottom: 0.1cm;"><font style="font-size: 12px;"><b>'+ 
+        data.kartlagInfo.kartlagInfoTitel+'</b>' + ':<br />' + 
+        data.kartlagInfo.text + '</font></div>';
 
-    kartlagInfoState += infoHTML;
-    updateOrSetKartlagInfo(kartlagInfoState);
+    kartlagInfoState.push(newInfoDiv);
+    updateOrSetKartlagInfo(/*kartlagInfoState*/);
 }
 
 /**
@@ -378,20 +368,21 @@ function removeLayerLegendAndInfo(mapOfGMLspesialpunkt, kartlagId, record, layer
 }
 
 function fjernKartlagInfo(legendDiv) {
-    var temp = jQuery("<div>").html(kartlagInfoState); 
+    var temp = jQuery("<div>").html(kartlagInfoState.join("")); 
 
     legendDiv = getKartlagBildeDiv(legendDiv);
     jQuery(temp).find('#'+legendDiv+'tips').remove();
 
-    kartlagInfoState = jQuery(temp).html();
-    updateOrSetKartlagInfo(kartlagInfoState);
+    var newLegendFragment = jQuery(temp).html(); 
+    kartlagInfoState = getArrayOfInfoDivs( newLegendFragment );
+    updateOrSetKartlagInfo(/*kartlagInfoState*/);
 }
 
-function updateOrSetKartlagInfo(kartlagInfoState) {
+function updateOrSetKartlagInfo(/*kartlagInfoState*/) {
     if ( Ext.getCmp('tips').rendered ) {
-        Ext.getCmp('tips').update(kartlagInfoState);
+        Ext.getCmp('tips').update(kartlagInfoState.join(""));
     } else {
-        Ext.getCmp('tips').html = kartlagInfoState;
+        Ext.getCmp('tips').html = kartlagInfoState.join("**************");
     }	
 }
 
