@@ -3,7 +3,7 @@ GeoExt.Lang.add("en", {
         thematicText: "Thematic maps",
         legendTitle: "Legend",
         infoTitle: "Info about layers",
-        helpTitle: "Get Help",
+        helpTitle: "Help",
         helpText: "",
         mousePositionText: "Coordinates (WGS84): ",
         goToTooltip: "Go to coordinate",
