@@ -26,7 +26,10 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
     loadMapBaseUrl: "./",
 
     constructor: function() {
-        Mareano.Composer.superclass.constructor.apply(this, arguments);    
+        Mareano.Composer.superclass.constructor.apply(this, arguments);
+        if (this.mapItems.length > 0 && this.mapItems[0].xtype == "gxp_scaleoverlay") {
+            this.mapItems.splice(0, 1);
+        }        
         this.on("beforesave", this.beforeSave, this);
         this.on("beforecreateportal", this.modifyPortal, this);
         
