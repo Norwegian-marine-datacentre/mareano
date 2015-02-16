@@ -27,9 +27,7 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
 
     constructor: function() {
         Mareano.Composer.superclass.constructor.apply(this, arguments);
-        if (this.mapItems.length > 0 && this.mapItems[0].xtype == "gxp_scaleoverlay") {
-            this.mapItems.splice(0, 1);
-        }        
+        
         this.on("beforesave", this.beforeSave, this);
         this.on("beforecreateportal", this.modifyPortal, this);
         
@@ -57,6 +55,10 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
     },
 
     loadConfig: function(config) {
+        if (this.mapItems.length > 0 && this.mapItems[0].xtype == "gxp_scaleoverlay") {
+            this.mapItems.splice(0, 1);
+        }
+        
         var ptypes = ["gxp_featuremanager", "gxp_queryform", "gxp_featuregrid",
                       "gxp_zoomtoselectedfeatures", "gxp_layermanager", "gxp_legend", "gxp_addlayers",
                       "gxp_styler", "gxp_featureeditor", "gxp_googleearth"];
