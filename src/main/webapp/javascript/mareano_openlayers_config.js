@@ -19,6 +19,7 @@ function addOverviewMapAndKeyboardDefaults(thisMap) {
     var tmpLayerOptions = {layers: [ol_wms2], mapOptions: layerOptions, maximized: false, minRatio: 48, maxRatio: 72, size: {w: 300, h: 150}};
     thisMap.addControl(new OpenLayers.Control.OverviewMap(tmpLayerOptions));
     thisMap.addControl(new OpenLayers.Control.KeyboardDefaults());
+    thisMap.addControl(new OpenLayers.Control.ScaleLine({bottomOutUnits: ''}));
 
     /*** Fix to avoid vector layer below baselayers ***/
     for ( var i = thisMap.layers.length-1; i>=0; --i ) {

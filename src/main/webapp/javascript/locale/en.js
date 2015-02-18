@@ -24,5 +24,8 @@ GeoExt.Lang.add("en", {
         queryableTip: "This layer is queryable",
         saveMapErrorTitle: "Cannot overwrite existing layer",
         saveMapErrorMsg: "Cannot overwrite existing layer - go to http://www.mareano.no/kart/mareano_en.html to save - not http://www.mareano.no/kart/mareano_en.html#/maps/"
-    }
+    },
+    "GeoExplorer.prototype": {
+        zoomSliderText: "<div>Zoom Level: {zoom}</div>",
+    }    
 });

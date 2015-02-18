@@ -23,7 +23,9 @@ GeoExt.Lang.add("no", {
         zoomScaleTip: "Zoom til zoom-avhenging kartlags kartutstrekning",
         queryableTip: "Dette laget har FeatureInfo",
         saveMapErrorTitle: "Kan ikke overskrive kartlag",
-        saveMapErrorMsg: "Kan ikke overskrive eksisterende kart - g\u00e5 tilbake til http://www.mareano.no/kart/mareano.html for \u00e5 lagre kart - ikke http://www.mareano.no/kart/mareano.html#/maps/"
-        	
+        saveMapErrorMsg: "Kan ikke overskrive eksisterende kart - g\u00e5 tilbake til http://www.mareano.no/kart/mareano.html for \u00e5 lagre kart - ikke http://www.mareano.no/kart/mareano.html#/maps/"	
+    },
+    "GeoExplorer.prototype": {
+        zoomSliderText: "<div>Zoom nivå: {zoom}</div>"
     }
 });
