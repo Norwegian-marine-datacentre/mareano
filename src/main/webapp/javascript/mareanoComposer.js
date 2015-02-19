@@ -58,6 +58,47 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
         if (this.mapItems.length > 0 && this.mapItems[0].xtype == "gxp_scaleoverlay") {
             this.mapItems.splice(0, 1);
         }
+        if (this.mapItems.length > 0 && this.mapItems[0].xtype == "gx_zoomslider") {
+            this.mapItems.splice(0, 1);
+        }        
+        var zoomSliderRegionLookup = {                              
+                0: this.international,
+                1: this.international,
+                2: this.national,
+                3: this.national,
+                4: this.national,
+                5: this.regional,
+                6: this.regional,
+                7: this.regional,
+                8: this.localArea,
+                9: this.localArea,
+                10: this.localArea,
+                11: this.localArea,
+                12: this.localArea,
+                13: this.localArea,
+                14: this.localArea,
+                15: this.localArea,
+                16: this.localArea,
+                17: this.localArea
+        }; 
+
+        this.mapItems = [{
+            xtype: "gx_zoomslider",
+            vertical: true,
+            height: 100,
+            plugins: new GeoExt.ZoomSliderTip({
+                template: this.zoomSliderText,
+                getText: function(thumb) {                          
+                    var data = {
+                            zoom: thumb.value,
+                            resolution: this.slider.getResolution(),
+                            scale: Math.round(this.slider.getScale()),
+                            region: zoomSliderRegionLookup[thumb.value]
+                    };
+                    return this.compiledTemplate.apply(data);
+                }
+            })
+        }];
         
         var ptypes = ["gxp_featuremanager", "gxp_queryform", "gxp_featuregrid",
                       "gxp_zoomtoselectedfeatures", "gxp_layermanager", "gxp_legend", "gxp_addlayers",
