@@ -1,6 +1,6 @@
 function insertLegendAtIndex(currentLegend, kartlagId) {
     //snag when working with jQuery fragements - jQuery doesnt read outmost tag
-    //so have to append <div> ... </div> (<html> ... </html> doesnt work as it is removed by clean()
+    //so have to append <div> ... </div> (<html> ... </html> doesnt work as it is removed by clean())
     //See: http://stackoverflow.com/questions/3445680/is-it-possible-to-get-jquery-objects-from-an-html-string-thats-not-in-the-dom
     var divs = jQuery('<div>'+currentLegend+'</div>').find('div');
     var currentId = -1;
@@ -40,10 +40,11 @@ function insertLegendAtIndex(currentLegend, kartlagId) {
  */
 function getArrayOfLegendDivs(currentLegend) {
     
+    currentLegend = currentLegend.replace(' class=\" out-of-scale\"','');
     var arrayCurrentLegend = currentLegend.split("<div id=");
     for ( var i = 0; i < arrayCurrentLegend.length; i++ ) {
         if ( i > 0 ) {
-            arrayCurrentLegend[i-1] = "<div id =" + arrayCurrentLegend[i];
+            arrayCurrentLegend[i-1] = "<div id=" + arrayCurrentLegend[i];
         }
     }
     if ( i > 0) {

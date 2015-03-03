@@ -177,7 +177,6 @@ function addLayerToGroup( gruppeNavn, gruppeText, map, mapPanel, layers, store, 
                 } else {
                     layersInPicture = [];    
                 }
-                //console.log("layersInPicture:"+layersInPicture);
                 for(var c = childNodes.length-1; c >= 0; c--) { //add layers in reverse of reverse order
                     childNodes[c].ui._silent = true;
                     childNodes[c].ui.toggleCheck(checked);
@@ -193,9 +192,9 @@ function addLayerToGroup( gruppeNavn, gruppeText, map, mapPanel, layers, store, 
 
 function getKartlagBildeDiv(nodeText) {
     nodeText = nodeText.toLowerCase();
-    nodeText = nodeText.replace(/æ/g,'ae'); // /g global option
-    nodeText = nodeText.replace(/ø/g,'oe');
-    nodeText = nodeText.replace(/å/g,'aa');
+    nodeText = nodeText.replace(/ï¿½/g,'ae'); // /g global option
+    nodeText = nodeText.replace(/ï¿½/g,'oe');
+    nodeText = nodeText.replace(/ï¿½/g,'aa');
     nodeText = nodeText.replace(/ /g,'');
 
     nodeText = nodeText.replace(/[!"#$%&'()*+,.\/:;<=>?@[\\\]^`{|}~]/g, "");
@@ -227,12 +226,12 @@ function addKartbildeAbstractOrRemoveWithName(text, checked) {
             },
             success:function(data) {
                 var legendDiv = getKartlagBildeDiv(text);                
-                visKartlagInfoHTML( legendDiv, data );
+                addKartbildeInfo( legendDiv, data );
             }
         }); 
     } else if ( checked == false ) {
         var legendDiv = getKartlagBildeDiv(text)
-        fjernKartlagInfo(legendDiv);
+        removeInfo(legendDiv);
     }
 }
 
@@ -252,7 +251,7 @@ function displayLegendGraphicsAndSpesialpunkt(extent, kartlagId, layer, event, a
             extent: extent
         },
         success:function(data) {
-            addLegendGraphics(kartlagId, data);
+            addLegendAndInfo(kartlagId, data);
             addSpesialpunkt(extent, kartlagId, layer, event, app, data);
         }
     }); 
@@ -302,21 +301,14 @@ function addSpesialpunkt(extent, kartlagId, layer, event, app, data) {
     }
 }
 
-function addLegendGraphics(kartlagId, data) {
-    var currentLegend;
-    jQuery('#newLegend').children().each(function(index, value){
-        jQuery(value).children().each(function(index, value){
-            currentLegend = jQuery(value).html();
-        });         
-    });
-    buildLegendGraphicsHTML( currentLegend, kartlagId, data );
-//    visKartlagInfoHTML( kartlagId, data ); 
-}
-
-function buildLegendGraphicsHTML( currentLegend, kartlagId, data ) {
-    var insertAfterIndex = insertLegendAtIndex(currentLegend, kartlagId)
-    var newLegendDiv = createNewLegendFragment(kartlagId, data);
-    var arrayCurrentLegend = getArrayOfLegendDivs(currentLegend);
+function addLegendAndInfo( kartlagId, data ) {
+    
+    var currentLegends = getCurrentLegendFragment( kartlagId, data );
+    console.log("currentLegends:"+currentLegends);
+    
+    var insertAfterIndex = insertLegendAtIndex( currentLegends, kartlagId )
+    var newLegendDiv = createNewLegendFragment( kartlagId, data );
+    var arrayCurrentLegend = getArrayOfLegendDivs( currentLegends );
     
     arrayCurrentLegend.splice(insertAfterIndex +1, 0, newLegendDiv); 
     Ext.getCmp('newLegend').update(arrayCurrentLegend.join(""));
@@ -324,24 +316,32 @@ function buildLegendGraphicsHTML( currentLegend, kartlagId, data ) {
     var newInfoDiv = createNewInfoFragment(kartlagId, data);
     kartlagInfoState.splice(insertAfterIndex +1, 0, newInfoDiv);
     //cannot use .update() as component isnt visible
-    //and extjs doesnt update hidden components - so have to 
-    //set html
-    updateOrSetKartlagInfo();
+    //and extjs doesnt update hidden components - so have to set html
+    updateOrSetKartlagInfo(kartlagInfoState);
+}
+
+function getCurrentLegendFragment(kartlagId, data) {
+    var currentLegends;
+    jQuery('#newLegend').children().each(function(index, value){
+        jQuery(value).children().each(function(index, value){
+            currentLegends = jQuery(value).html();
+        });         
+    });
+    return currentLegends; 
 }
 
 /**
- * bug: I have a panel in a tab that is not shown. 
- * I call update(some html) on that panel. The panel's html body is not updated. 
- * After I show the panel for the first time, all future updates() behave correctly whether it is hidden or shown
+ * Bug: If panel that is updated is not visible - then the panel's html body is not updated. 
+ * After the panel is made visible first time- all future updates() behave correctly whether it is hidden or not.
  * http://www.sencha.com/forum/archive/index.php/t-103797.html
  **/
-function visKartlagInfoHTML(kartlagId, data) {
+function addKartbildeInfo(kartlagId, data) {
     var newInfoDiv = '<div id="'+kartlagId+'tips" style="margin-bottom: 0.1cm;"><font style="font-size: 12px;"><b>'+ 
         data.kartlagInfo.kartlagInfoTitel+'</b>' + ':<br />' + 
         data.kartlagInfo.text + '</font></div>';
 
     kartlagInfoState.push(newInfoDiv);
-    updateOrSetKartlagInfo(/*kartlagInfoState*/);
+    updateOrSetKartlagInfo( kartlagInfoState );
 }
 
 /**
@@ -364,25 +364,30 @@ function removeLayerLegendAndInfo(mapOfGMLspesialpunkt, kartlagId, record, layer
     var legendDiv = '#'+kartlagId; //fjern legend
     jQuery(legendDiv).remove();
     
-    fjernKartlagInfo(kartlagId);
+    removeInfo(kartlagId);
 }
 
-function fjernKartlagInfo(legendDiv) {
-    var temp = jQuery("<div>").html(kartlagInfoState.join("")); 
+function removeInfo(legendDiv) {
+    var infoDivsAsDom = jQuery("<div>").html(kartlagInfoState.join("")); 
 
     legendDiv = getKartlagBildeDiv(legendDiv);
-    jQuery(temp).find('#'+legendDiv+'tips').remove();
 
-    var newLegendFragment = jQuery(temp).html(); 
+    jQuery(infoDivsAsDom).find('#'+legendDiv+'tips').remove();
+
+    var newLegendFragment = jQuery(infoDivsAsDom).html(); 
     kartlagInfoState = getArrayOfInfoDivs( newLegendFragment );
-    updateOrSetKartlagInfo(/*kartlagInfoState*/);
+    updateOrSetKartlagInfo(kartlagInfoState);
 }
 
-function updateOrSetKartlagInfo(/*kartlagInfoState*/) {
+/**
+ * Update Info tab with text
+ * @param kartlagInfoState
+ */
+function updateOrSetKartlagInfo(kartlagInfoState) {
     if ( Ext.getCmp('tips').rendered ) {
         Ext.getCmp('tips').update(kartlagInfoState.join(""));
     } else {
-        Ext.getCmp('tips').html = kartlagInfoState.join("**************");
+        Ext.getCmp('tips').html = kartlagInfoState.join("");
     }	
 }
 

@@ -8,11 +8,11 @@
 <link rel="stylesheet" type="text/css" href="externals/ext/resources/css/xtheme-gray.css">
 <!-- script type="text/javascript" src="externals/ext/adapter/ext/ext-base-debug.js"></script -->
 <script type="text/javascript" src="externals/ext/adapter/ext/ext-base.js"></script>
-<!-- script type="text/javascript" src="externals/ext/ext-all-debug-w-comments.js"></script -->
-<script type="text/javascript" src="externals/ext/ext-all.js"></script>
+<script type="text/javascript" src="externals/ext/ext-all-debug-w-comments.js"></script>
+<!-- script type="text/javascript" src="externals/ext/ext-all.js"></script -->
 
 <meta http-equiv="X-UA-Compatible" content="IE=IE8" >
-<!--script type="text/javascript" src="javascript/googleAnalyticsStatistics.js"></script -->
+<script type="text/javascript" src="javascript/googleAnalyticsStatistics.js"></script>
 
 <script type="text/javascript" src="javascript/jquery-1.6.2.min.js"></script>
 <script type="text/javascript">jQuery.noConflict();</script>
@@ -50,4 +50,4 @@
 <link rel="stylesheet" type="text/css" href="theme/ux/colorpicker/color-picker.ux.css" />
 <script type="text/javascript" src="script/GeoExplorer.js"></script>
 
-<script type="text/javascript" src="script/mareano.js"></script>    
+<script type="text/javascript" src="script/mareano.js"></script>   
