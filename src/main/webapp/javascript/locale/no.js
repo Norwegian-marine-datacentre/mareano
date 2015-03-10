@@ -8,7 +8,7 @@ GeoExt.Lang.add("no", {
         mousePositionText: "Koordinater (WGS84): ",
         goToTooltip: "G&aring; til koordinat",
         goToText: "G&aring; til koordinat",
-        goToPrompt: "Posisjon i WGS84 (Breddegrad, Lengdegrad - for eksempel: 60.2,1.5):",
+        goToPrompt: "Posisjon i WGS84 (Breddegrad, Lengdegrad - for eksempel: 60.37,5.28):",
         zoomToItem1: "Barentshavet",
         zoomToItem2: "Norskehavet",
         zoomToItem3: "Nordsj\u00f8en",

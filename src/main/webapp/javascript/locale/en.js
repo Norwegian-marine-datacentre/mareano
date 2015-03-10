@@ -8,7 +8,7 @@ GeoExt.Lang.add("en", {
         mousePositionText: "Coordinates (WGS84): ",
         goToTooltip: "Go to coordinate",
         goToText: "Go to coordinate",
-        goToPrompt: "Position in WGS84 (Latitude, Longitude - eg. - 60.2,1.5):",
+        goToPrompt: "Position in WGS84 (Latitude, Longitude - eg. - 60.37,5.28):",
         zoomToItem1: "Barents Sea",
         zoomToItem2: "Norwegian Sea",
         zoomToItem3: "North Sea",

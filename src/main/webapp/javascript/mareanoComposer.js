@@ -240,16 +240,26 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
                         return c instanceof GeoExt.MapPanel;
                     });
                     var bar = text.split(",");
-                    for(var i = 0;i<bar.length;i++){
+                    for(var i = 0; i<bar.length; i++){
                         bar[i] = bar[i].split(",");
                     }
-                    var x = bar[0];
-                    var y = bar[1];
-                    var newPoint = new Proj4js.Point( y, x );
-                    newPoint.y = y;
+                    var y = bar[0];
+                    var x = bar[1];
+                    var newPoint = new Proj4js.Point( x, y );
                     newPoint.x = x;
+                    newPoint.y = y;
+                    
                     Proj4js.transform(new Proj4js.Proj('WGS84'),new Proj4js.Proj('EPSG:32633'), newPoint);
-                    thisMapPanel.map.panTo( new OpenLayers.LonLat( newPoint.y, newPoint.x ) ); // -1644,6934116 ) );
+                    thisMapPanel.map.panTo( new OpenLayers.LonLat( newPoint.x, newPoint.y ) ); 
+                    //use http://cs2cs.mygeodata.eu/ to convert
+                    
+                    var location = new OpenLayers.LonLat(newPoint.x, newPoint.y);
+                    var size = new OpenLayers.Size(21,25);
+                    var offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
+                    var icon = new OpenLayers.Icon('externals/openlayers/img/marker.png',size,offset);
+                    var markers = new OpenLayers.Layer.Markers( "(" + bar[0]+", "+bar[1]+")" );
+                    markers.addMarker(new OpenLayers.Marker(location,icon.clone()));
+                    thisMapPanel.map.addLayer(markers);  
                 };
             },
             scope: this

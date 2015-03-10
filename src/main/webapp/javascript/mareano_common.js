@@ -304,7 +304,6 @@ function addSpesialpunkt(extent, kartlagId, layer, event, app, data) {
 function addLegendAndInfo( kartlagId, data ) {
     
     var currentLegends = getCurrentLegendFragment( kartlagId, data );
-    console.log("currentLegends:"+currentLegends);
     
     var insertAfterIndex = insertLegendAtIndex( currentLegends, kartlagId )
     var newLegendDiv = createNewLegendFragment( kartlagId, data );
