@@ -285,16 +285,17 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
                         var thisMapPanel = Ext.ComponentMgr.all.find(function(c) {
                             return c instanceof GeoExt.MapPanel;
                         });
-                        if ( combo.getValue() == this.zoomToItem2 )
-                            thisMapPanel.map.panTo( new OpenLayers.LonLat( -1644,7334116 ) );
-                        else if ( combo.getValue() == this.zoomToItem1 )
-                            thisMapPanel.map.panTo( new OpenLayers.LonLat( 1088474,8089849 ) );
-                        else if ( combo.getValue() == this.zoomToItem3 )
-                            thisMapPanel.map.panTo( new OpenLayers.LonLat( -1644,6934116 ) );
-                        else if ( combo.getValue() == this.zoomToItem4 )
-                            thisMapPanel.map.panTo( new OpenLayers.LonLat( -1644,6434116 ) );
-                        else if ( combo.getValue() == this.zoomToItem5 )
-                            thisMapPanel.map.panTo( new OpenLayers.LonLat( 1000000,8999999 ) );
+                        if ( combo.getValue() == this.zoomToItem2 ) {
+                            thisMapPanel.map.setCenter( new OpenLayers.LonLat( -1644,7334116 ), 4 );
+                        } else if ( combo.getValue() == this.zoomToItem1 ) {
+                            thisMapPanel.map.setCenter( new OpenLayers.LonLat( 1088474,8089849 ), 4 );
+                        } else if ( combo.getValue() == this.zoomToItem3 ) {
+                            thisMapPanel.map.setCenter( new OpenLayers.LonLat( -1644,6934116 ), 4 );
+                        }else if ( combo.getValue() == this.zoomToItem4 ) {
+                            thisMapPanel.map.setCenter( new OpenLayers.LonLat( -1644,6434116 ), 4 );
+                        }else if ( combo.getValue() == this.zoomToItem5 ) {
+                            thisMapPanel.map.setCenter( new OpenLayers.LonLat( 1000000,8999999 ), 4 );
+                        }
                     },
                     scope: this
                 }
