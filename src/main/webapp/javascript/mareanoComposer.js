@@ -31,7 +31,7 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
         this.on("beforesave", this.beforeSave, this);
         this.on("beforecreateportal", this.modifyPortal, this);
         
-        //configure url of publish map to be correct
+        //configure url for publish map to be correct
         gxp.EmbedMapDialog.prototype.initComponent = function() {
         	this.url = this.url.replace('../viewer/', './viewer/');
         	Ext.apply(this, this.getConfig());
@@ -41,14 +41,15 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
     },
 
     beforeSave: function(requestConfig, callback) {
+        console.log("url:"+window.location.href);
         requestConfig.url = requestConfig.url.replace('../maps', './maps');
         
-        var mapNum = requestConfig.url.substr( 7, requestConfig.url.length); 
-        var mapsReadOnly = [3, 5, 6, 7, 8, 9, 10, 14,160,161,162,163,19,186,188,189,200,201,226,300,301];
-        if (mapsReadOnly.indexOf( parseInt(mapNum) ) !== -1) {
+//        var mapNum = requestConfig.url.substr( 7, requestConfig.url.length); 
+//        var mapsReadOnly = [3, 5, 6, 7, 8, 9, 10, 14,160,161,162,163,19,186,188,189,200,201,226,300,301];
+        if ( window.location.href.indexOf( "#maps/") !== -1) {
         	Ext.Msg.show( {
         		title: this.saveMapErrorTitle,
-        		msg: this.saveMapErrorMsg + mapNum
+        		msg: this.saveMapErrorMsg 
     		});
         	return false;
         }        
