@@ -91,7 +91,7 @@ function createNewLegendFragment(kartlagId, data) {
         }
         if ( data.legends[i].url != '') {
             newLegendFragment += '<table><tr><td><img src="' + data.legends[i].url + '"/></td>';
-            newLegendFragment += '<td>' + data.legends[i].text + '</td></tr></table>';
+            newLegendFragment += '<td id="legend_text">' + data.legends[i].text + '</td></tr></table>';
         } else {
             newLegendFragment += data.legends[i].text;
         }

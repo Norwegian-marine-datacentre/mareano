@@ -480,4 +480,6 @@ h5 a:hover, h3 a:active { text-decoration: underline; }
 #debug_buttons { float: left; clear: both; }
 #debug_buttons div { float: left; margin-right: 5px; padding: 5px; }
 
+#legend_text {font: 11px arial,tahoma,helvetica,sans-serif}
+
 
