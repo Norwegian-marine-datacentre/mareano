@@ -39,20 +39,29 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
         };
 
     },
+    
+    save: function(callback, scope) {
+        var configStr = Ext.util.JSON.encode(this.getState());
+        var requestConfig = {
+            method: "POST",
+            url: "../maps/",
+            data: configStr
+        };
+        if (this.fireEvent("beforesave", requestConfig, callback) !== false) {
+            OpenLayers.Request.issue(Ext.apply(requestConfig, {
+                callback: function(request) {
+                    this.handleSave(request);
+                    if (callback) {
+                        callback.call(scope || this, request);
+                    }
+                },
+                scope: this
+            }));
+        }
+    },
 
     beforeSave: function(requestConfig, callback) {
-        console.log("url:"+window.location.href);
         requestConfig.url = requestConfig.url.replace('../maps', './maps');
-        
-//        var mapNum = requestConfig.url.substr( 7, requestConfig.url.length); 
-//        var mapsReadOnly = [3, 5, 6, 7, 8, 9, 10, 14,160,161,162,163,19,186,188,189,200,201,226,300,301];
-        if ( window.location.href.indexOf( "#maps/") !== -1) {
-        	Ext.Msg.show( {
-        		title: this.saveMapErrorTitle,
-        		msg: this.saveMapErrorMsg 
-    		});
-        	return false;
-        }        
     },
 
     loadConfig: function(config) {
