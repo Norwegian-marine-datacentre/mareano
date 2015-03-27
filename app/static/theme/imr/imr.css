@@ -482,4 +482,9 @@ h5 a:hover, h3 a:active { text-decoration: underline; }
 
 #legend_text {font: 11px arial,tahoma,helvetica,sans-serif}
 
+.ext-gecko .x-form-text , .ext-ie8 .x-form-text {
+    padding-top:2px !important; /* FF won't center the text vertically */
+    padding-bottom:0 !important; 
+}
+
 
