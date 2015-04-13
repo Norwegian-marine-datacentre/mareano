@@ -482,9 +482,34 @@ h5 a:hover, h3 a:active { text-decoration: underline; }
 
 #legend_text {font: 11px arial,tahoma,helvetica,sans-serif}
 
+/** Fix that tekst in layer properties isnt shown in ff og ie */
 .ext-gecko .x-form-text , .ext-ie8 .x-form-text {
     padding-top:2px !important; /* FF won't center the text vertically */
     padding-bottom:0 !important; 
 }
 
+/** changes made to ext-all.css to make top menu overflow geoexplorer (green-menu bar) */
+.x-toolbar{
+    left:0; !important;
+    overflow:visible; !important; 
+}
+.x-panel-body {
+    overflow:visible; !important;
+}
+.x-panel-bwrap {
+    overflow:visible; !important;
+}
+.x-panel-body {
+    overflow:visible; !important;
+}
+.x-plain-body { 
+    overflow:visible; !important;
+}
+.x-plain-bwrap {
+    overflow:visible; !important;
+}
+.x-plain { 
+    overflow:visible; !important;
+}
+ 
 

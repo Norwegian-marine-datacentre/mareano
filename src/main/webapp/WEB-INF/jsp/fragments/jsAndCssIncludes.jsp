@@ -2,8 +2,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="shortcut icon" href="theme/app/img/mareanoLogo.png">
 <!-- Ext resources -->
-<!--         <link rel="stylesheet" type="text/css" href="externals/ext/resources/css/ext-all.css"> DONT use default ext-all or green mareano menu wount work-->
-<link rel="stylesheet" type="text/css" href="css/ext-all.css">
+<link rel="stylesheet" type="text/css" href="externals/ext/resources/css/ext-all.css"> <!-- DONT use default ext-all or green mareano menu wount work-->
          
 <link rel="stylesheet" type="text/css" href="externals/ext/resources/css/xtheme-gray.css">
 <!-- script type="text/javascript" src="externals/ext/adapter/ext/ext-base-debug.js"></script -->
@@ -50,4 +49,4 @@
 <link rel="stylesheet" type="text/css" href="theme/ux/colorpicker/color-picker.ux.css" />
 <script type="text/javascript" src="script/GeoExplorer.js"></script>
 
-<script type="text/javascript" src="script/mareano.js"></script>   
+<script type="text/javascript" src="script/mareano.js"></script>
