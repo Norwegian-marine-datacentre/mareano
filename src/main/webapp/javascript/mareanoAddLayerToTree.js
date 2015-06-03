@@ -2,6 +2,7 @@
 var silent = false;
 var kartlagInfoState = []; //used by removeLayerLegendAndInfo(mapOfGMLspesialpunkt, kartlagId)
 var layersInPicture = [];
+var bakgrunnInfoDiv;   // Used to hold background layer info
 
 function loadMareano(mapPanel, app) {
     OpenLayers.Util.alphaHackNeeded=false;
@@ -29,6 +30,17 @@ function loadMareano(mapPanel, app) {
     app.mapPanel.on('afterlayout', updateLegendScale);
     app.mapPanel.map.events.register('zoomend', app, updateLegendScale);
 
+    //Hacky approach to find current background layer on initial map display
+    changeBakgrunnsInfo(app.mapPanel.map.getLayersBy("visibility", true)[1]);  
+    var mapLayerChanged = function(e) {
+	if (e.layer.visibility){
+	    changeBakgrunnsInfo(e.layer);
+	} 
+    };
+    
+    app.mapPanel.map.events.register('changelayer', app, mapLayerChanged);
+
+    
     layertree.on('startdrag', function() {
         silent = true;
     });
@@ -319,6 +331,18 @@ function addLegendAndInfo( kartlagId, data ) {
     updateOrSetKartlagInfo(kartlagInfoState);
 }
 
+function changeBakgrunnsInfo(layer)
+{
+    var kartInfo ={kartlagInfo:
+		   {kartlagInfoTitel: layer.name,
+		    text: layer.longDesc?layer.longDesc:"No description set"}};
+    
+    bakgrunnInfoDiv = createNewInfoFragment("bakgrunn",kartInfo);
+    updateOrSetKartlagInfo(kartlagInfoState);
+}
+
+
+
 function getCurrentLegendFragment(kartlagId, data) {
     var currentLegends;
     jQuery('#newLegend').children().each(function(index, value){
@@ -384,9 +408,9 @@ function removeInfo(legendDiv) {
  */
 function updateOrSetKartlagInfo(kartlagInfoState) {
     if ( Ext.getCmp('tips').rendered ) {
-        Ext.getCmp('tips').update(kartlagInfoState.join(""));
+        Ext.getCmp('tips').update(kartlagInfoState.join("")+bakgrunnInfoDiv);
     } else {
-        Ext.getCmp('tips').html = kartlagInfoState.join("");
+        Ext.getCmp('tips').html = kartlagInfoState.join("")+bakgrunnInfoDiv;
     }	
 }
 
