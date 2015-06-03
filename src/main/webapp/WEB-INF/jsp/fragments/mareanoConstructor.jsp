@@ -63,7 +63,9 @@ var app = new Mareano.Composer({
 		            "<spring:message code="norwayGray" text="norway gray scale" />",
 		            "http://wms.geonorge.no/skwms1/wms.topo2.graatone",
 		            {layers: "topo2_graatone_WMS", format: "image/png", transparent: true, isBaseLayer: true},
-		            {singleTile:true}
+		            {singleTile:true,  
+			     longDesc:"<spring:message code="norwayGrayDesc" text="norway gray scale" />"}
+			    
 		        ]
 		    }, {
 		        source: "ol",
@@ -93,7 +95,8 @@ var app = new Mareano.Composer({
 		            "<spring:message code="europaWhite" text="Europa White background" />",
 		            "http://maps.imr.no/geoserver/gwc/service/wms",
 		            {layers: "geonorge_europa_hvit_bakgrunn", format: "image/jpeg", transparent: true, isBaseLayer: true},
-		            {singleTile:false}
+		            {singleTile:false,
+			     longDesc:"<spring:message code="europaWhiteDesc" text="Europa white" />"}
 		        ]
 		    }, {
 		        source: "ol",
@@ -103,8 +106,9 @@ var app = new Mareano.Composer({
 		            "<spring:message code="europaAndGebco" text="Europa and Gebco" />",
 		            "http://maps.imr.no/geoserver/gwc/service/wms",
 		            {layers: "barents_watch_WMS", format: "image/jpeg", transparent: true, isBaseLayer: true},
-		            {singleTile:false}
-		        ]
+		            {singleTile:false,
+			     longDesc:"<spring:message code="europaAndGebcoDesc" text="Europa and Gebco" />"}
+			]
 		    }                    
 	   ],
 	   center: [450000, 7550000],
