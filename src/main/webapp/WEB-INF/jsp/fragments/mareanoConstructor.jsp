@@ -111,19 +111,28 @@ var app = new Mareano.Composer({
 	   zoom: 2
 	}
 });
-        
+
 var layers = [];
+var generelleLayers = [];
 var OLRecord;
 <c:forEach var="hovedtema" items="${hovedtemaer}">
-    if ( !("${hovedtema.hovedtema}" == "generelle") ) {
-        <c:forEach var="bilde" items="${hovedtema.bilder}">
-            <c:forEach var="kartlaget" items="${bilde.kart}">
+       <c:set value="${hovedtema.hovedtema ne 'generelle'}"  var="notGeneralle" />
+       <c:forEach var="bilde" items="${hovedtema.bilder}">
+           <c:forEach var="kartlaget" items="${bilde.kart}">
                 OLRecord = gxp.plugins.OLSource.prototype.createLayerRecord({
                     source: "ol",
                     type: "OpenLayers.Layer.WMS",
                     group: "${bilde.gruppe}",
                     queryable: ${kartlaget.queryable},
-                    visibility: !(app.id > 0) ? ${bilde.visible} : false,
+		    <%-- What does app.id signify and why is it only test for in non general layers? --%>
+		     <c:choose>  
+ 			<c:when test="${notGeneralle}">
+			visibility: !(app.id > 0) ? ${bilde.visible} : false,
+		    	</c:when>
+			<c:otherwise>
+			visibility: ${bilde.visible},
+		        </c:otherwise>
+		     </c:choose>
                     properties: "mareano_wmslayerpanel",            
                     args: [
                         "${kartlaget.title}",
@@ -135,9 +144,11 @@ var OLRecord;
                                 keyword: "${kartlaget.keyword}",
                                 'kartlagId': '${kartlaget.id}'
                             },
+		            <c:if test="${notGeneralle}">
                             minScale: ${kartlaget.scalemax}*(96/0.0254),
                             maxScale: (${kartlaget.scalemin} > 0) ? ${kartlaget.scalemin}*(96/0.0254) : 0.001,
                             units: "m",
+			    </c:if>
                             maxExtent: [
                                 ${kartlaget.exGeographicBoundingBoxWestBoundLongitude},
                                 ${kartlaget.exGeographicBoundingBoxSouthBoundLatitude},
@@ -150,54 +161,17 @@ var OLRecord;
                         }
                     ]
                 });
-                layers.push(OLRecord);
+	          <c:choose>  
+ 	          <c:when test="${notGeneralle}">
+	            layers.push(OLRecord);
+	          </c:when>
+	          <c:otherwise>
+	            generelleLayers.push(OLRecord);
+	          </c:otherwise>
+		  </c:choose>
             </c:forEach>
         </c:forEach>
-    }
 </c:forEach>                                
 var store = new GeoExt.data.LayerStore();
 store.add(layers);   
-
-var generelleLayers = []; 
-var OLRecord2;
-<c:forEach var="hovedtema" items="${hovedtemaer}">
-    if ( "${hovedtema.hovedtema}" == "generelle" ) {
-        <c:forEach var="bilde" items="${hovedtema.bilder}">
-            <c:forEach var="kartlaget" items="${bilde.kart}">
-                OLRecord2 = gxp.plugins.OLSource.prototype.createLayerRecord({
-                    source: "ol",
-                    type: "OpenLayers.Layer.WMS",
-                    group: "${bilde.gruppe}",
-                    queryable: ${kartlaget.queryable}, //needed to make getFeatureInfo work with gx_olsource  
-                    visibility: ${bilde.visible},
-                    properties: "mareano_wmslayerpanel",           
-                    //properties: "${kartlaget.id}",
-                    //id: "${kartlaget.id}",   
-                    args: [
-                        "${kartlaget.title}",
-                        "${kartlaget.url}",
-                        {layers: "${kartlaget.layers}", format: "image/png", transparent: true},
-                        {
-                            opacity: 1,
-                            metadata: {
-                                keyword: "${kartlaget.keyword}",
-                                'kartlagId': '${kartlaget.id}'
-                            },
-                            maxExtent: [
-                                ${kartlaget.exGeographicBoundingBoxWestBoundLongitude},
-                                ${kartlaget.exGeographicBoundingBoxSouthBoundLatitude},
-                                ${kartlaget.exGeographicBoundingBoxEastBoundLongitude},
-                                ${kartlaget.exGeographicBoundingBoxNorthBoundLatitude}
-                            ],
-                            singleTile:true,
-                            buffer: 0, //getting no boarder around image - so panning will get a new image.
-                            ratio: 1 //http://dev.openlayers.org/releases/OpenLayers-2.12/doc/apidocs/files/OpenLayers/Layer/Grid-js.html#OpenLayers.Layer.Grid.ratio                                        
-                        }
-                    ]
-                });
-                generelleLayers.push(OLRecord2);
-            </c:forEach>
-        </c:forEach>
-    }
-</c:forEach> 
-store.add(generelleLayers);  
+store.add(generelleLayers);
