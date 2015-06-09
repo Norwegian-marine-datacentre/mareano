@@ -128,15 +128,7 @@ var OLRecord;
                     type: "OpenLayers.Layer.WMS",
                     group: "${bilde.gruppe}",
                     queryable: ${kartlaget.queryable},
-		    <%-- What does app.id signify and why is it only test for in non general layers? --%>
-		     <c:choose>  
- 			<c:when test="${notGeneralle}">
-			visibility: !(app.id > 0) ? ${bilde.visible} : false,
-		    	</c:when>
-			<c:otherwise>
-			visibility: ${bilde.visible},
-		        </c:otherwise>
-		     </c:choose>
+                    visibility: ${bilde.visible},
                     properties: "mareano_wmslayerpanel",            
                     args: [
                         "${kartlaget.title}",
@@ -148,11 +140,9 @@ var OLRecord;
                                 keyword: "${kartlaget.keyword}",
                                 'kartlagId': '${kartlaget.id}'
                             },
-		            <c:if test="${notGeneralle}">
                             minScale: ${kartlaget.scalemax}*(96/0.0254),
                             maxScale: (${kartlaget.scalemin} > 0) ? ${kartlaget.scalemin}*(96/0.0254) : 0.001,
                             units: "m",
-			    </c:if>
                             maxExtent: [
                                 ${kartlaget.exGeographicBoundingBoxWestBoundLongitude},
                                 ${kartlaget.exGeographicBoundingBoxSouthBoundLatitude},
