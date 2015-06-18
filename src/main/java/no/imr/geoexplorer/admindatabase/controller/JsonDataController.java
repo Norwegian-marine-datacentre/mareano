@@ -141,7 +141,11 @@ public class JsonDataController {
 
     protected SpesialpunktStatus getKartlagInfo(String kartlagId, SpesialpunktStatus spesialpunktJSON, String noOrEn) {
         KartlagInfo kartlagInfo = dao.getKartlagInfo(new Long(kartlagId), noOrEn);
-        spesialpunktJSON.setKartlagInfo(new KartlagInfos(kartlagInfo.getTitle(), kartlagInfo.getAbstracts()));
+	if (kartlagInfo == null ) {
+	    spesialpunktJSON.setKartlagInfo(new KartlagInfos("No title set", "No abstract set"));
+	} else {
+	    spesialpunktJSON.setKartlagInfo(new KartlagInfos(kartlagInfo.getTitle(), kartlagInfo.getAbstracts()));
+	}
         return spesialpunktJSON;
     }
 
