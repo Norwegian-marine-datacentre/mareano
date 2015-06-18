@@ -5,7 +5,8 @@ public class KartlagVisning {
 	private String title;
 	private String layers;
 	private String gruppe;
-	private String url;
+        private String url;
+        private String format;
 	private double exGeographicBoundingBoxEastBoundLongitude;
 	private double exGeographicBoundingBoxWestBoundLongitude;
 	private double exGeographicBoundingBoxNorthBoundLatitude;
@@ -52,11 +53,17 @@ public class KartlagVisning {
 	public void setGruppe(String gruppe) {
 		this.gruppe = gruppe;
 	}
-	public String getUrl() {
+        public String getUrl() {
 		return url;
 	}
 	public void setUrl(String url) {
 		this.url = url;
+	}
+        public String getFormat() {
+		return format;
+	}
+	public void setFormat(String format) {
+		this.format = format;
 	}
 	public double getExGeographicBoundingBoxEastBoundLongitude() {
 		return exGeographicBoundingBoxEastBoundLongitude;
