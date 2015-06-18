@@ -104,7 +104,6 @@ function addLayerToGroup( gruppeNavn, gruppeText, map, mapPanel, layers, store, 
             });
             attr.checked = (layerRecord.getLayer().visibility || (idx !== -1));
             attr.id = layerRecord.data.id;
-
             attr.autoDisable = false;
             var node = GeoExt.tree.LayerLoader.prototype.createNode.call(this, attr);       
             app.mapPanel.layers.on("remove", function(store, record) {
@@ -171,7 +170,7 @@ function addLayerToGroup( gruppeNavn, gruppeText, map, mapPanel, layers, store, 
             return node;
         }
     });
-    
+   
     var layerContainerGruppe = new GeoExt.tree.LayerContainer({
         checked: groupChecked,
         expanded: groupChecked,    	
@@ -333,12 +332,31 @@ function addLegendAndInfo( kartlagId, data ) {
 
 function changeBakgrunnsInfo(layer)
 {
-    var kartInfo ={kartlagInfo:
-		   {kartlagInfoTitel: layer.name,
-		    text: layer.longDesc?layer.longDesc:"No description set"}};
-    
-    bakgrunnInfoDiv = createNewInfoFragment("bakgrunn",kartInfo);
-    updateOrSetKartlagInfo(kartlagInfoState);
+    var languageChoosen = getLanguage();
+    jQuery.ajax({
+        type: 'get',
+        url: "spring/legendAndSpesialpunkt",
+        contentType: "application/json",
+        data: {
+            kartlagId: layer.metadata['kartlagId'],
+            language: languageChoosen,
+            extent: ""
+        },
+        success:function(data) {
+         //   addLegendAndInfo(layer.metadata['kartlagId'], data);
+	    bakgrunnInfoDiv = createNewInfoFragment("bakgrunn",data);
+	    updateOrSetKartlagInfo(kartlagInfoState);
+        },
+	error:function() {
+	    bakgrunnInfoDiv = "";
+	    updateOrSetKartlagInfo(kartlagInfoState);
+	}
+    }); 
+      
+    //var kartInfo ={kartlagInfo:
+    //		   {kartlagInfoTitel: layer.name,
+    //		    text: layer.longDesc?layer.longDesc:"No description set"}};
+
 }
 
 
