@@ -6,41 +6,45 @@
 * if layer also should include Spesialpunkt from Mareano.
 */
 app.on("ready", function() {
+    console.time("on ready start");
     Ext.getCmp('topPanelHeading').update('${heading}');
     loadMareano( this.mapPanel, app, layers );
     turnOnDefaultLayers( this, store );
     /***********************************/
     var treeRoot = Ext.getCmp('thematic_tree'); 
     var mergedSomeHovedtema;
-	<c:forEach var="hovedtema" items="${hovedtemaer}">
-	    if ( !("${hovedtema.hovedtema}" == "generelle") ) {
-	        mergedSomeHovedtema = new Ext.tree.TreeNode({
-	            text: "${hovedtema.hovedtema}"
-	        });         
-	    <c:forEach var="bilde" items="${hovedtema.bilder}">
-	        var group = addLayerToGroup("${bilde.gruppe}","${bilde.gruppe}", this.map, this.mapPanel, layers, store, app);
-	        if (group.attributes.expanded === true) {
-	            mergedSomeHovedtema.expanded = true;
-	        }
-	        group.attributes.maxExtent = [
-	            ${bilde.startextentMinx},
-	            ${bilde.startextentMiny},
-	            ${bilde.startextentMaxx},
-	            ${bilde.startextentMaxy}
-	        ];
-	        mergedSomeHovedtema.appendChild( group );
-        </c:forEach>
-	    treeRoot.getRootNode().appendChild( mergedSomeHovedtema );
+    for (var i=0;i<hovedtemaer.length;i++)
+    {
+	mergedSomeHovedtema = new Ext.tree.TreeNode({
+	    text: hovedtemaer[i].hovedtema
+	});
+	for (var j=0;j<hovedtemaer[i].bilder.length;j++)
+	{
+	    var group = addLayerToGroup(hovedtemaer[i].bilder[j].gruppe,hovedtemaer[i].bilder[j].gruppe, this.map, this.mapPanel, layers, store, app);
+	    if (group.attributes.expanded === true) {
+	        mergedSomeHovedtema.expanded = true;
 	    }
-	</c:forEach>
+	    group.attributes.maxExtent = [
+	        hovedtemaer[i].bilder[j].startextentMinx,
+	        hovedtemaer[i].bilder[j].startextentMiny,
+	        hovedtemaer[i].bilder[j].startextentMaxx,
+	        hovedtemaer[i].bilder[j].startextentMaxy
+	        ];
+	    mergedSomeHovedtema.appendChild( group );
+	}
+	
 	treeRoot.getRootNode().appendChild( mergedSomeHovedtema );
+    }
+//    treeRoot.getRootNode().appendChild( mergedSomeHovedtema );
+ 
 	/***********************************/
     var rootRightTree = Ext.getCmp('layers');
     var i18nGenerallMaps = "<spring:message code="generelleKart" text="Generelle kart" />";
     rootRightTree.getRootNode().appendChild( 
         addGenerelleLayerToGroup("generelle", i18nGenerallMaps, this.map, this.mapPanel, generelleLayers, store, app) );
     /***********************************/                    
-    addDropdownmenuToMareanoMenuIfIe();              
+    addDropdownmenuToMareanoMenuIfIe();
+    console.timeEnd("on ready start");
 });	
 
 function addDropdownmenuToMareanoMenuIfIe() {
