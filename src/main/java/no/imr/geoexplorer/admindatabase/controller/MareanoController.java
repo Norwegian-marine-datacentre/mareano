@@ -27,6 +27,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import org.codehaus.jackson.JsonFactory;
+import org.codehaus.jackson.map.ObjectMapper;
 /**
  * Gets data from the mareano admin database and returns jsp friendly pojos with
  * the mav. An update to the database is sent if it last was updated more than
@@ -93,7 +95,14 @@ public class MareanoController {
             visninger = listOrganizedToBrowser(language);
             lastupdated = new Date().getTime();
         }
-        mav.addObject("hovedtemaer", visninger);
+        //mav.addObject("hovedtemaer", visninger);
+	
+	ObjectMapper mapper = new ObjectMapper();
+	String json = mapper.writeValueAsString(visninger);
+
+	mav.addObject("hovedtemaer_json", json);
+	
+	
         return mav;
     }
 
@@ -173,6 +182,7 @@ public class MareanoController {
                         kart.setScalemin(kartlag.getScalemin());
                         kart.setScalemax(kartlag.getScalemax());
                         kart.setQueryable(kartlag.isQueryable());
+			
 
                         if (language.equals("en")) {
                             List<KartlagEnNo> en = dao.getKartlagEn(kart.getId());
@@ -193,6 +203,7 @@ public class MareanoController {
                         }
 
                         kart.setUrl(kartlag.getKarttjeneste().getUrl());
+			kart.setFormat(kartlag.getKarttjeneste().getFormat());
                         kartbilderVisining.addKart(kart);
                     }
                 }
