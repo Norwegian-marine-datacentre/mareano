@@ -343,7 +343,6 @@ function changeBakgrunnsInfo(layer)
             extent: ""
         },
         success:function(data) {
-         //   addLegendAndInfo(layer.metadata['kartlagId'], data);
 	    bakgrunnInfoDiv = createNewInfoFragment("bakgrunn",data);
 	    updateOrSetKartlagInfo(kartlagInfoState);
         },
