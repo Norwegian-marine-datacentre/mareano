@@ -82,3 +82,12 @@
 #layers *.general-layers-w-checkbox input.x-tree-node-cb[type="checkbox"] {
     display:inline;
 }
+
+.expand-image-window {
+    width: 24px;
+    height: 24px;
+    position: absolute;
+    bottom:5px;
+    right:5px;
+    cursor: hand;
+}
