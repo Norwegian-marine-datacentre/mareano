@@ -431,15 +431,70 @@ function updateOrSetKartlagInfo(kartlagInfoState) {
     }	
 }
 
+function showBilder(imageTitle,imageURL)
+{
+    var preloadImage = new Image();
+    preloadImage.onload = function() {
+	var wind =new Ext.Window({
+	    width:Math.min(preloadImage.width,Ext.getBody().getViewSize().width/2),
+	    y:200,
+	    x:200,
+	    boxMaxWidth:preloadImage.width,
+	    title:imageTitle,
+	    closeAction:'destroy',
+	    items: [{
+		xtype: 'box',
+		autoEl:{ tag: 'a',
+			 href: imageURL,
+			 target: '_blank'
+		       },
+		html: { tag: 'img',
+			src: imageURL,
+			width:"100%"
+		      }
+	    }, {
+		xtype: 'box',
+		html: { tag: 'img',
+			width:'100%',
+			src: 'theme/imr/img/arrow_down_right.png'
+		      },
+		cls:"expand-image-window",
+		listeners: {
+		    render: function(c){
+			c.getEl().on({
+			    click: function() {
+				//Calc new window width
+				//First constrain to image size
+				var newWidth=Math.min(wind.getWidth()*2,preloadImage.width);
+				//Then constrain to fit in browser window
+				newWidth=Math.min(newWidth,Ext.getBody().getViewSize().width-wind.x);
+				wind.setWidth(newWidth);
+			    }})}}
+		
+	    }],
+	    layout: 'fit'
+	}).show();
+	
+
+    };
+    preloadImage.onerror = function() { //Is this enough of a message?
+	Ext.MessageBox.show({
+	    title:imageTitle,
+	    buttons: Ext.Msg.OK,
+	    msg:'Unable to load image at this time'
+	});
+    }
+    preloadImage.src=imageURL;
+ 
+}
+
+
 /**
  * Show popup box with spesialpunkt
  */
 function GMLselected (event) {
     if ( event.feature.data.type == "bilder" ) {
-        Ext.MessageBox.show({
-            title:event.feature.data.name, 
-            msg:'<a href="' + event.feature.data.description + '" TARGET="_blank"><img src=" '+event.feature.data.description+'" width=150 height=100 /></a>'
-        });
+	showBilder(event.feature.data.name,event.feature.data.description);
     } else if ( event.feature.data.type == "video" ) {
         Ext.MessageBox.show({
             title:event.feature.data.name, 
