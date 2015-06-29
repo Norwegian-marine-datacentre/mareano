@@ -98,7 +98,7 @@ var app = new Mareano.Composer({
 		            {singleTile:false,
 			     longDesc:"<spring:message code="europaWhiteDesc" text="Europa white" />"}
 		        ]
-		    }, {
+		    }/*, {
 		        source: "ol",
 		        type: "OpenLayers.Layer.WMS",
 		        group: "background",
@@ -109,7 +109,7 @@ var app = new Mareano.Composer({
 		            {singleTile:false,
 			     longDesc:"<spring:message code="europaAndGebcoDesc" text="Europa and Gebco" />"}
 			]
-		    }                    
+		    }*/                    
 	   ],
 	   center: [450000, 7550000],
 	   zoom: 2
