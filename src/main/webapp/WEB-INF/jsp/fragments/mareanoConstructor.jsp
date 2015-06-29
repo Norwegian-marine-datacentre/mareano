@@ -119,11 +119,12 @@ var app = new Mareano.Composer({
 //Global vars
 var layers = [];
 var generelleLayers = [];
+var generelleLayerNames = {};
 var OLRecord;
 
 var hovedtemaer=[];  //Non generelle and non background
 var generelle=[];
-var bakgrunn=[];
+var bakgrunn=[]; 
 
 //JSON of all layers
 var alleHovedtemaer=${hovedtemaer_json};
@@ -181,7 +182,7 @@ function createLayerRecord(panelGroup,isVisible,layer)
                 opacity: 1,
                 metadata: {
                     keyword: layer.keyword,
-                    'kartlagId': layer.id
+                    'kartlagId': ''+layer.id
                 },
                 minScale: layer.scalemax*(96/0.0254),
                 maxScale: (layer.scalemin > 0) ? layer.scalemin*(96/0.0254) : 0.001,
@@ -230,6 +231,8 @@ for (var i=0;i<alleHovedtemaer.length;i++)
 		OLRecord = createLayerRecord(gruppe.gruppe,gruppe.visible,layer);
  		if (gruppe.gruppe == "generelle") {
 		    generelleLayers.push(OLRecord);
+		    generelleLayerNames[layer.title]=true;
+
 		} else {
 		    layers.push(OLRecord);
 		}
