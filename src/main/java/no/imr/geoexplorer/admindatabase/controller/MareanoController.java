@@ -2,7 +2,9 @@ package no.imr.geoexplorer.admindatabase.controller;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.DataInputStream;
 import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
 import java.net.InetAddress;
 import java.net.URL;
 import java.util.ArrayList;
@@ -224,7 +226,18 @@ public class MareanoController {
             } else {
                 url = new URL("http://www.mareano.no/");
             }
-            BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
+	    BufferedReader reader;
+	    HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+	    if (connection.getResponseMessage().equals("Not Implemented")){
+		DataInputStream inStream = new DataInputStream(connection.getErrorStream());
+		reader = new BufferedReader(new InputStreamReader(inStream));
+
+	    }
+	    else {
+		 reader = new BufferedReader(new InputStreamReader(url.openStream()));
+	    }
+	    
+        
             String line;
             boolean headerContent = false;
             while ((line = reader.readLine()) != null) {
@@ -239,6 +252,7 @@ public class MareanoController {
                 }
 
             }
+	    connection.disconnect();
             reader.close();
         } catch (Exception e) {
             e.printStackTrace();
