@@ -94,9 +94,20 @@ public class JsonDataController {
 
     	KartBilderEnNo kartBildeInfo = dao.getKartBildeInfo(kartbildeNavn, language);
     	
-    	info.setKartlagInfoTitel(kartBildeInfo.getAlternateTitle());
-    	info.setText(kartBildeInfo.getAbstracts());
-    	json.setKartlagInfo(info);
+        if ( kartBildeInfo != null ) {
+            info.setKartlagInfoTitel(kartBildeInfo.getAlternateTitle());
+            info.setText(kartBildeInfo.getAbstracts());
+            json.setKartlagInfo(info);
+        } else {
+            if ( language.equals("en") ) {
+                info.setKartlagInfoTitel("No layer info for layer:"+kartbildeNavn );
+                info.setText("No abstract info for layer:"+kartbildeNavn );
+            } else {
+                info.setKartlagInfoTitel("Ingen info for kartlag:"+kartbildeNavn );
+                info.setText("Ingen Abstract for kartlag:"+kartbildeNavn );
+            }
+            json.setKartlagInfo(info);
+        }
     	return json;
     }
     
