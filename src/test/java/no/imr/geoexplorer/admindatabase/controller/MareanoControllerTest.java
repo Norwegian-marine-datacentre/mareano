@@ -47,7 +47,7 @@ public class MareanoControllerTest {
 	@SuppressWarnings("unchecked")
 	@Test
 	public void getHovedtemaer() throws Exception{
-		ModelAndView mav = mareanoController.getMareanoTest(new MockHttpServletResponse());
+		ModelAndView mav = mareanoController.getMareano(new MockHttpServletResponse());
 		Map<String, Object> mavMap = mav.getModel();
 		List<HovedtemaVisning> hovedtemaer = (List<HovedtemaVisning>) mavMap.get("hovedtemaer");
 		assertNotNull(hovedtemaer);

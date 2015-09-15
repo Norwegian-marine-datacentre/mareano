@@ -59,15 +59,23 @@ public class MareanoController {
     public ModelAndView updateMareano(HttpServletResponse resp) throws IOException {
     	mavNo = null;
     	mavEn = null;
-    	return getMareanoTest( resp );
+    	return getMareano( resp );
     }
     
     @RequestMapping("/mareano")
-    public ModelAndView getMareanoTest(HttpServletResponse resp) throws IOException {
+    public ModelAndView getMareano(HttpServletResponse resp) throws IOException {
     	if (mavNo == null || (System.currentTimeMillis() - mavLastUpdated) > ONEHOUR) {
     		mavNo = commonGetMareano(resp, "no", "mareano");
     	} 
     	return mavNo;
+    }
+    
+    @RequestMapping("/mareanoPolar")
+    public ModelAndView getMareanoPolarTest(HttpServletResponse resp) throws IOException {
+        if (mavNo == null || (System.currentTimeMillis() - mavLastUpdated) > ONEHOUR) {
+            mavNo = commonGetMareano(resp, "no", "mareanoPolar");
+        } 
+        return mavNo;
     }
     
     @RequestMapping("/mareano_en")

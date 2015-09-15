@@ -46,16 +46,7 @@ var app = new Mareano.Composer({
 		    * 2. opencache.statkart.no/gatekeeper - open loesning men begresning paa 10 000 kall pr dag. Tilet loesning
 		    * 3. gatekeeper1.geonorge.no - ubegrenset med tilet tilgang men hver request krever en token som krever paalogging og som har timeout. Saa token forrandrer seg over tid
 		    */
-		    source: "ol",
-		    type: "OpenLayers.Layer.WMS",
-		    group: "background",
-		    args: [
-		        "<spring:message code="norwayChart" text="norway" />",
-		        "http://wms.geonorge.no/skwms1/wms.toporaster2",
-		        {layers: "toporaster", format: "image/png", transparent: true, isBaseLayer: true},
-		        {singleTile:true}
-		        ]
-		    },/* {
+            /* {
 		        source: "ol",
 		        type: "OpenLayers.Layer.WMS",
 		        group: "background",
