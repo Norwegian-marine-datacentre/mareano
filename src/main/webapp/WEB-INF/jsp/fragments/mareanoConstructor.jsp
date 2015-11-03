@@ -39,7 +39,7 @@ var app = new Mareano.Composer({
 		            {layers: "Sjokart_Hovedkartserien2", format: "image/png", transparent: true, isBaseLayer: true},
 		            {singleTile:false}
 		        ]
-		    }, {
+		    }, 
 		    /*
 		    * Kartloesninger fra geonorge.
 		    * 1. http://wms.geonorge.no - ubegrenset tilgang for HI (fordi de har IP rangen vaar) men en begrensning paa ca 3 kall i sekundet. Kjoerer raskest med singleTile
@@ -217,7 +217,9 @@ for (var i=0;i<alleHovedtemaer.length;i++)
 	{
 	    layer = gruppe.kart[k];
 	    if (gruppe.gruppe == backgroundGroupName) {
-		app.map.layers.push(createBackgroundLayerObject(layer));
+		if (app.map) { // If map does not exist at this point then GeoExplorer is loading saved map
+		    app.map.layers.push(createBackgroundLayerObject(layer));
+		}
 	    } else {
 		OLRecord = createLayerRecord(gruppe.gruppe,gruppe.visible,layer);
  		if (gruppe.gruppe == "generelle") {
