@@ -140,6 +140,17 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
         var me = this;
         config.tools.splice(0, 0 ,{
             ptype: "mareano_layertree",
+            groups: {
+                "default": "Overlays", // title can be overridden with overlayNodeText
+                "background": {
+                    title: "Base Layers", // can be overridden with baseNodeText
+                    exclusive: true
+                },
+                "backgroundSea": {
+                    title: "Base Layers Sea", 
+                    exclusive: true
+                }
+            },      
             outputConfig: {
                 tbar: [],
                 id: "layers",
@@ -175,7 +186,9 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
         }, {
             actions: ["-", "mouseposition"], actionTarget: "paneltbar"
         }, {
-            actions: ["->", "support"], actionTarget: "paneltbar"
+            actions: ["->", "saveImage"], actionTarget: "paneltbar"
+        }, {
+            actions: ["support"], actionTarget: "paneltbar"
         }, {
             actions: ["helpIcon"], actionTarget: "paneltbar"
         }, {
@@ -361,7 +374,18 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
             },
             iconCls: "icon-english",
             scope: this
-        });    
+        });  
+        
+        var saveImage = new Ext.Button({
+            id: "saveImage",
+            tooltip: "Print",
+            buttonAlign: "right",
+            handler: function() {
+                toPrintMenuButton.call(this);
+            },
+            iconCls: "icon-printer",
+            scope: this
+        });          
     },
 
     modifyPortal: function() {
@@ -495,7 +519,7 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
                     autoScroll: true,
                     enableDrag: true,
                     enableDrop: false,
-                    loader: new Ext.tree.TreeLoader(),
+                    loader: new Ext.tree.TreeLoader(),      
                     root: new Ext.tree.AsyncTreeNode(),
                     rootVisible: false,
                     title: this.thematicText,

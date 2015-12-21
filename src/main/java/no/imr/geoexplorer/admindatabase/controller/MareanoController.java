@@ -29,8 +29,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import org.codehaus.jackson.JsonFactory;
-import org.codehaus.jackson.map.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+
+//import org.codehaus.jackson.JsonFactory;
+//import org.codehaus.jackson.map.ObjectMapper;
 /**
  * Gets data from the mareano admin database and returns jsp friendly pojos with
  * the mav. An update to the database is sent if it last was updated more than

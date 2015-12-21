@@ -6,7 +6,7 @@
  * 2. Create hovedtema, kartbilde, and kartlag structure in left layer panel 
  * 3. Create Generelle folder in right most layer panel
  */
-var app = new Mareano.Composer({
+app = new Mareano.Composer({
 	<!-- authStatus: < status >, -->
 	proxy: "proxy/?url=",
 	printService: null,
@@ -192,45 +192,37 @@ function createLayerRecord(panelGroup,isVisible,layer)
     });
 }
 
-
-for (var i=0;i<alleHovedtemaer.length;i++)
-{
+for (var i=0; i < alleHovedtemaer.length; i++) {
     hovedtema=alleHovedtemaer[i];
 
-    
     //Split into three groups so have lists of each type of layers for later use
     //Test is a bit sloppy as it assumes each tema does not have mix of groups
     if (hovedtema.bilder[0].gruppe == backgroundGroupName) {
-	bakgrunn.push(hovedtema);
+	   bakgrunn.push(hovedtema);
     } else if (hovedtema.bilder[0].gruppe == "generelle") {
-	generelle.push(hovedtema);
-    }
-    else
-    {
-	hovedtemaer.push(hovedtema);
+	   generelle.push(hovedtema);
+    } else {
+        hovedtemaer.push(hovedtema);
     }
     
-    for (var j=0;j<hovedtema.bilder.length;j++)
-    {
-	gruppe=hovedtema.bilder[j];
-	for (var k=0;k<gruppe.kart.length;k++)
-	{
-	    layer = gruppe.kart[k];
-	    if (gruppe.gruppe == backgroundGroupName) {
-		if (app.map) { // If map does not exist at this point then GeoExplorer is loading saved map
-		    app.map.layers.push(createBackgroundLayerObject(layer));
-		}
-	    } else {
-		OLRecord = createLayerRecord(gruppe.gruppe,gruppe.visible,layer);
- 		if (gruppe.gruppe == "generelle") {
-		    generelleLayers.push(OLRecord);
-		    generelleLayerNames[layer.title]=true;
-
-		} else {
-		    layers.push(OLRecord);
-		}
-	    }
-	}
+    for (var j=0; j < hovedtema.bilder.length; j++) {
+        gruppe=hovedtema.bilder[j];
+        for (var k=0; k < gruppe.kart.length; k++) {
+            layer = gruppe.kart[k];
+            if (gruppe.gruppe == backgroundGroupName) {
+                if (app.map) { // If map does not exist at this point then GeoExplorer is loading saved map
+                    app.map.layers.push(createBackgroundLayerObject(layer));
+                }
+            } else {
+                OLRecord = createLayerRecord(gruppe.gruppe,gruppe.visible,layer);
+                if (gruppe.gruppe == "generelle") {
+                    generelleLayers.push(OLRecord);
+                    generelleLayerNames[layer.title]=true;
+                } else {
+                    layers.push(OLRecord);
+                }
+            }
+        }
     }
 }
 

@@ -314,7 +314,7 @@ function addSpesialpunkt(extent, kartlagId, layer, event, app, data) {
 
 function addLegendAndInfo( kartlagId, data ) {
     
-    var currentLegends = getCurrentLegendFragment( kartlagId, data );
+    var currentLegends = getCurrentLegendFragment();
     
     var insertAfterIndex = insertLegendAtIndex( currentLegends, kartlagId )
     var newLegendDiv = createNewLegendFragment( kartlagId, data );
@@ -342,14 +342,14 @@ function changeBakgrunnsInfo(layer)
             language: languageChoosen,
             extent: ""
         },
-        success:function(data) {
-	    bakgrunnInfoDiv = createNewInfoFragment("bakgrunn",data);
-	    updateOrSetKartlagInfo(kartlagInfoState);
+        success: function(data) {
+            bakgrunnInfoDiv = createNewInfoFragment("bakgrunn",data);
+            updateOrSetKartlagInfo(kartlagInfoState);
         },
-	error:function() {
-	    bakgrunnInfoDiv = "";
-	    updateOrSetKartlagInfo(kartlagInfoState);
-	}
+        error:function() {
+            bakgrunnInfoDiv = "";
+            updateOrSetKartlagInfo(kartlagInfoState);
+        }
     }); 
       
     //var kartInfo ={kartlagInfo:
@@ -360,7 +360,7 @@ function changeBakgrunnsInfo(layer)
 
 
 
-function getCurrentLegendFragment(kartlagId, data) {
+function getCurrentLegendFragment() {
     var currentLegends;
     jQuery('#newLegend').children().each(function(index, value){
         jQuery(value).children().each(function(index, value){

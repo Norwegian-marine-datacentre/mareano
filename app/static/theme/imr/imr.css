@@ -10,6 +10,10 @@
     background-image: url(img/tillegg/english.gif);
 }
 
+.x-btn .icon-printer {
+    background-image: url(../app/img/silk/printer.png);
+}
+
 .x-btn .icon-question {
 	background-image: url(img/geosilk/help.png);
 }

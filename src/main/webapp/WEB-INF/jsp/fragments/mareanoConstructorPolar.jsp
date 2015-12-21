@@ -6,7 +6,7 @@
  * 2. Create hovedtema, kartbilde, and kartlag structure in left layer panel 
  * 3. Create Generelle folder in right most layer panel
  */
-var app = new Mareano.Composer({
+app = new Mareano.Composer({
     <!-- authStatus: < status >, -->
     proxy: "proxy/?url=",
     printService: null,

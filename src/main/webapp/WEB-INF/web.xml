@@ -50,7 +50,7 @@
         <session-timeout>30</session-timeout>
     </session-config>
     <welcome-file-list>
-        <welcome-file>redirect.jsp</welcome-file>
+        <welcome-file>mareano.html</welcome-file>
     </welcome-file-list>
 	<filter>
 	<filter-name>encoding-filter</filter-name>
@@ -69,5 +69,5 @@
 	<filter-mapping>
 		<filter-name>encoding-filter</filter-name>
 		<url-pattern>/*</url-pattern>
-	</filter-mapping>    
+	</filter-mapping>
 </web-app>

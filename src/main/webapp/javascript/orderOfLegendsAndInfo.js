@@ -83,9 +83,18 @@ function createNewInfoFragment(kartlagId, data) {
     return infoHTML;
 }
 
+var layerIdHash = [];
+function getlayerIdHash() {
+    return layerIdHash;
+}
+
 function createNewLegendFragment(kartlagId, data) {
+    
     var newLegendFragment = '<div id="'+kartlagId+'">';
+    var legendHash = [];
+    var lengendHashLength = legendHash.length; 
     for ( var i=0; i < data.legends.length; i++ ) {
+        legendHash[ i + lengendHashLength] = {"url": data.legends[i].url, "text": data.legends[i].text};
         if ( i > 0 ) {
             newLegendFragment += '<div>';     
         }
@@ -95,11 +104,13 @@ function createNewLegendFragment(kartlagId, data) {
         } else {
             newLegendFragment += data.legends[i].text;
         }
-
         if ( i > 0 ) {
             newLegendFragment += '</div>';     
         }
     } 
     newLegendFragment += '</div>';
+    
+    layerIdHash.push( { "kartlagId": kartlagId, "legend":legendHash} );
+    
     return newLegendFragment;
 }

@@ -13,27 +13,24 @@ app.on("ready", function() {
     /***********************************/
     var treeRoot = Ext.getCmp('thematic_tree'); 
     var mergedSomeHovedtema;
-    for (var i=0;i<hovedtemaer.length;i++)
-    {
-	mergedSomeHovedtema = new Ext.tree.TreeNode({
-	    text: hovedtemaer[i].hovedtema
-	});
-	for (var j=0;j<hovedtemaer[i].bilder.length;j++)
-	{
-	    var group = addLayerToGroup(hovedtemaer[i].bilder[j].gruppe,hovedtemaer[i].bilder[j].gruppe, this.map, this.mapPanel, layers, store, app);
-	    if (group.attributes.expanded === true) {
-	        mergedSomeHovedtema.expanded = true;
-	    }
-	    group.attributes.maxExtent = [
-	        hovedtemaer[i].bilder[j].startextentMinx,
-	        hovedtemaer[i].bilder[j].startextentMiny,
-	        hovedtemaer[i].bilder[j].startextentMaxx,
-	        hovedtemaer[i].bilder[j].startextentMaxy
-	        ];
-	    mergedSomeHovedtema.appendChild( group );
-	}
-	
-	treeRoot.getRootNode().appendChild( mergedSomeHovedtema );
+    for (var i=0; i < hovedtemaer.length; i++) {
+        mergedSomeHovedtema = new Ext.tree.TreeNode({
+            text: hovedtemaer[i].hovedtema
+        });
+        for (var j=0; j < hovedtemaer[i].bilder.length; j++) {
+            var group = addLayerToGroup(hovedtemaer[i].bilder[j].gruppe,hovedtemaer[i].bilder[j].gruppe, this.map, this.mapPanel, layers, store, app);
+            if (group.attributes.expanded === true) {
+                mergedSomeHovedtema.expanded = true;
+            }
+            group.attributes.maxExtent = [
+                hovedtemaer[i].bilder[j].startextentMinx,
+                hovedtemaer[i].bilder[j].startextentMiny,
+                hovedtemaer[i].bilder[j].startextentMaxx,
+                hovedtemaer[i].bilder[j].startextentMaxy
+            ];
+            mergedSomeHovedtema.appendChild( group );
+        }
+        treeRoot.getRootNode().appendChild( mergedSomeHovedtema );
     }
 //    treeRoot.getRootNode().appendChild( mergedSomeHovedtema );
  
