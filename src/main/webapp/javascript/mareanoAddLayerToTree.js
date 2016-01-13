@@ -389,6 +389,7 @@ function addKartbildeInfo(kartlagId, data) {
  */
 function removeLayerLegendAndInfo(mapOfGMLspesialpunkt, kartlagId, record, layer, app) {
 
+    removeKartlagFromHash(kartlagId);
     app.mapPanel.layers.each(function(record) {
         if (record.getLayer().metadata['kartlagId'] === kartlagId) {
             this.remove(record);

@@ -30,6 +30,14 @@ var toPrintMenuButton = function printImageHelper() {
     }, this);   
     
 //    console.log("layerObjectArray:"+JSON.stringify({ 'values':layerObjectArray}) );
+//    var scaleLine = Ext.Element.select(".olControlScaleLineTop");
+//    console.log("select olControlScaleLineTop:"+scaleLine.elements[0]);
+//    var scaleLine2 = Ext.DomQuery.select('.olControlScaleLineTop');
+//    console.log("olControlScaleLineTop:"+scaleLine2.);
+    var scaleLineTxt = jQuery('.olControlScaleLineTop').css('width');
+    var scaleLine = parseInt(scaleLineTxt);
+    var scaleLineText = jQuery('.olControlScaleLineTop').text();
+    
     var currentLegends = getCurrentLegendFragment();
     jQuery.ajax({
         type: 'post',
@@ -38,7 +46,9 @@ var toPrintMenuButton = function printImageHelper() {
             'printlayers': layerObjectArray,
             'width': this.mapPanel.map.getSize().w,
             'height': this.mapPanel.map.getSize().h,
-            'layers': getlayerIdHash()
+            'layers': getlayerIdHash(),
+            'scaleLine': scaleLine,
+            'scaleLineText': scaleLineText
         }),
         dataType: "json",
         contentType: "application/json; charset=utf-8",

@@ -2,15 +2,12 @@ package no.imr.geoexplorer.admindatabase.controller;
 
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.util.List;
-import java.util.Map;
 
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletResponse;
 
 import no.imr.geoexplorer.admindatabase.dao.MareanoAdminDbDao;
-import no.imr.geoexplorer.admindatabase.mybatis.pojo.Kartlag;
 import no.imr.geoexplorer.admindatabase.mybatis.pojo.KartlagEnNo;
 import no.imr.geoexplorer.printmap.TilesToImage;
 import no.imr.geoexplorer.printmap.pojo.BoundingBox;
@@ -19,6 +16,8 @@ import no.imr.geoexplorer.printmap.pojo.PrintLayer;
 import no.imr.geoexplorer.printmap.pojo.PrintLayerList;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -38,14 +37,13 @@ public class PrintMapController {
     @Autowired(required = true)
     private MareanoAdminDbDao dao;
     
+    @Autowired
+    private ApplicationContext appContext;
+    
     @RequestMapping(value="/getMapImage.json", method = RequestMethod.POST, produces = "image/png")
     public @ResponseBody byte[] getMapImage( @RequestBody PrintLayerList pll, HttpServletResponse resp) throws Exception {
         
-        PrintLayer p = pll.getPrintlayers().get(0);
-//        System.out.println("getColumnSize:"+p.getColumnSize()+" url:"+p.getUrl()+" bbox:"+p.getGridBoundingBoxes()+" position"+p.getPosition());
         List<Layer> layers = pll.getLayers();
-//        Layer l = layers.get(0);
-//        System.out.println("layers:"+l.getKartlagId()+ "text:"+l.getLegend().get(0).getText()+"url:"+l.getLegend().get(0).getUrl());
         for ( Layer layer : layers) {
             List<KartlagEnNo> kartlagene = dao.getKartlagNo(new Long(layer.getKartlagId()));
             layer.setKartlagNavn(kartlagene.get(0).getAlternateTitle());
@@ -68,10 +66,6 @@ public class PrintMapController {
         }
         for ( PrintLayer printLayer : printLayers) {
             //assert gridArray.size % columnSize == 0
-            System.out.println("gridset:" + printLayer.getGridBoundingBoxes());
-            System.out.println("url:" + printLayer.getUrl());
-            System.out.println("columnSize:" + printLayer.getColumnSize());
-            System.out.println("position:" + position.get(0) + position.get(1) );
 
             if ( printLayer.getColumnSize() > 1) {
                 if ( backgroundImage != null) {
@@ -106,13 +100,24 @@ public class PrintMapController {
         }
         mapImage = tilesUtil.cropImage( mapImage, position, width, height );
         
-        mapImage = tilesUtil.writeLegend( mapImage, layers);
+        mapImage = tilesUtil.writeLegend( mapImage, layers );
+        
+        mapImage = addNorthArrow( mapImage );
+        
+        mapImage = tilesUtil.addScaleBar( mapImage, pll);
         
         ByteArrayOutputStream bao = new ByteArrayOutputStream();
         ImageIO.write(mapImage, "png", bao);
         return bao.toByteArray();
-        
-        
+    }
+    
+    private final static String NORTH_ARROW = "northArrow.gif";
+    protected BufferedImage addNorthArrow( BufferedImage mapImage ) throws Exception {
+        Resource resource = appContext.getResource("classpath:"+NORTH_ARROW);
+        System.out.println("resource.getFile:"+resource.getFile());
+        BufferedImage northArrow = ImageIO.read(resource.getFile());
+        mapImage = tilesUtil.writeNorthArrow(mapImage, northArrow);
+        return mapImage;
     }
         
     protected BufferedImage getTiledImage( BufferedImage aimage, PrintLayer printLayer ) throws Exception {
@@ -128,7 +133,6 @@ public class PrintMapController {
             url = firstHalf + secondHalf.substring( secondHalf.indexOf("&")+1, secondHalf.length() );
         }
         
-        System.out.println("array:"+gridArray+" size:"+gridArray.size()+ " columnSize:"+columnSize);
         int rows = gridArray.size() / columnSize;
         String[][] gridSet = new String[rows][columnSize];
         String[][] urlSet = new String[rows][columnSize];
@@ -145,7 +149,6 @@ public class PrintMapController {
         }
         
         BufferedImage tiledImage = tilesUtil.stitchTiles( tileSet );
-        System.out.println("image:" + tiledImage);
         return tiledImage;
     }
     

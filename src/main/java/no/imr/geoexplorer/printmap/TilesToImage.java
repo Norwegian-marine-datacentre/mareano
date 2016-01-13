@@ -1,24 +1,27 @@
 package no.imr.geoexplorer.printmap;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
-import java.awt.font.TextAttribute;
+import java.awt.Shape;
+import java.awt.Stroke;
+import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.net.URL;
-import java.text.AttributedString;
 import java.util.List;
 
 import javax.imageio.ImageIO;
 
 import no.imr.geoexplorer.printmap.pojo.Layer;
 import no.imr.geoexplorer.printmap.pojo.Legend;
+import no.imr.geoexplorer.printmap.pojo.PrintLayerList;
 
 import org.springframework.stereotype.Component;
+
+
 
 @Component
 public class TilesToImage {
@@ -76,48 +79,97 @@ public class TilesToImage {
         return c;
     }
     
+    private final static int LAYER_TEXT_SPACE = 17;
+    private final static int LEGEND_TEXT_SPACE = 15;
+    private final static int LEGEND_WIDTH = 198;
+    private final static int LEGEND_BOARDER_WIDTH = 200;
+    
     public BufferedImage writeLegend( BufferedImage mapImage, List<Layer> layers) throws Exception {
         Graphics2D g2 = (Graphics2D)mapImage.getGraphics();
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        Font LayerFont = new Font("Serif", Font.PLAIN, 20);
         g2.setColor(Color.black);
-        Font legendFont = new Font("Serif", Font.PLAIN, 14);  
+        Font legendFont = new Font("Serif", Font.PLAIN, 14);
+        Font layerFont = new Font("Serif", Font.BOLD, 14); 
         
         int imageWidth = mapImage.getWidth();
-
-        int writeWidth = imageWidth - 200;
-        int writeHeight = 15;
+        int writeLegendWidth = imageWidth - LEGEND_WIDTH;
+        int fillLegendWidth = imageWidth - LEGEND_BOARDER_WIDTH;
+        int writeHeight = LAYER_TEXT_SPACE;
         
-        AttributedString as1 = null;
+        int legendHeight = 0;
+        for ( Layer l : layers ) {
+            legendHeight += LAYER_TEXT_SPACE + (LEGEND_TEXT_SPACE * l.getLegend().size()); 
+        }
+        legendHeight += 4;
+        fillRectangleWhite(g2, fillLegendWidth, 0, imageWidth, legendHeight);
+         
         for ( int i=0; i < layers.size(); i++) {
-            g2.setFont(LayerFont);
             Layer layer = layers.get(i);
             
-            as1 = new AttributedString(layer.getKartlagNavn());
-            as1.addAttribute(TextAttribute.BACKGROUND, Color.WHITE);
-            g2.drawString(as1.getIterator(), writeWidth, writeHeight );
-            writeHeight += 15;
-            
-//            System.out.println("layer:"+layer.getKartlagNavn()+ "layer_size:"+layer.getLegend().size());
+            g2.setFont( layerFont );
+            g2.drawString(layer.getKartlagNavn(), writeLegendWidth, writeHeight );
+            writeHeight += LAYER_TEXT_SPACE;
             
             List<Legend> legends = layer.getLegend();
             g2.setFont(legendFont);
             for ( int j=0; j < legends.size(); j++ ) {
                 Legend legend = legends.get(j);
-                URL url = new URL(legend.getUrl());
-                BufferedImage legendImg = ImageIO.read(url);
-                int legendWidth = imageWidth - 200;
-//                System.out.println("width:"+legendWidth);
-//                System.out.println("height:"+writeHeight);
-                g2.drawImage(legendImg, legendWidth, writeHeight - legendImg.getHeight() + 4, null);
-//                System.out.println("legendString:"+legend.getText());
+                System.out.println("legend url:"+legend.getUrl());
+                if ( legend.getUrl() != null && !legend.getUrl().equals("") ) {
+                    URL url = new URL(legend.getUrl());
+                    BufferedImage legendImg = ImageIO.read(url);
+                    g2.drawImage(legendImg, writeLegendWidth, writeHeight - legendImg.getHeight() + 4, null);
                 
-                as1 = new AttributedString(legend.getText());
-                as1.addAttribute(TextAttribute.BACKGROUND, Color.WHITE);
-                g2.drawString(as1.getIterator(), legendWidth + legendImg.getWidth(), writeHeight);
-                writeHeight += 15;
+                    g2.setFont( legendFont );
+                    g2.drawString(legend.getText(), writeLegendWidth + legendImg.getWidth(), writeHeight);
+                    writeHeight += LEGEND_TEXT_SPACE;
+                }
             }
         }
+        addBoarder(g2, fillLegendWidth, 0, fillLegendWidth+LEGEND_BOARDER_WIDTH, legendHeight);
+        return mapImage;
+    }
+    
+    private void addBoarder(Graphics2D g2, int x, int y, int width, int height) {
+        float thickness = 1;
+        Stroke oldStroke = g2.getStroke();
+        g2.setStroke(new BasicStroke(thickness));
+        g2.drawRect(x, y, width, height);
+        g2.setStroke(oldStroke);
+    }
+    
+    private void fillRectangleWhite(Graphics2D g2, int x, int y, int width, int height) {
+        Color color = g2.getColor();
+        g2.setPaint(Color.white);
+        g2.fill(new Rectangle2D.Double(x, y, width, height));
+        g2.setColor(color);
+    }
+    
+    public BufferedImage writeNorthArrow( BufferedImage mapImage, BufferedImage northArrow ) {
+        Graphics2D g2 = (Graphics2D)mapImage.getGraphics();
+        int imageWidth = mapImage.getWidth();
+        int imageHeight = mapImage.getHeight();
+        
+        g2.drawImage(northArrow, imageWidth -35, imageHeight -50, null);
+        return mapImage;
+    }
+    
+    public BufferedImage addScaleBar(BufferedImage mapImage, PrintLayerList pll) {
+        Graphics2D g2 = (Graphics2D)mapImage.getGraphics();
+        int imageWidth = mapImage.getWidth();
+        int imageHeight = mapImage.getHeight();
+        
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        Font LayerFont = new Font("Serif", Font.PLAIN, 14);
+        g2.setColor(Color.black);
+        g2.setFont(LayerFont);
+        
+        Shape l = new Line2D.Double( imageWidth - (60 + pll.getScaleLine()), imageHeight -15, imageWidth - 60, imageHeight - 15 );
+        Stroke stroke = g2.getStroke();
+        g2.draw(l);
+        
+        g2.setStroke(stroke);
+        g2.drawString( pll.getScaleLineText(), imageWidth - (62 + pll.getScaleLine()), imageHeight -17 );
         return mapImage;
     }
 }

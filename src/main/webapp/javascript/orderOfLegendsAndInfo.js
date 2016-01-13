@@ -88,6 +88,16 @@ function getlayerIdHash() {
     return layerIdHash;
 }
 
+function removeKartlagFromHash(kartlagIdRemoved) {
+    for(var i = layerIdHash.length - 1; i >= 0; i--) {
+        if(layerIdHash[i].kartlagId === kartlagIdRemoved) {
+           delete layerIdHash[i];
+           layerIdHash.splice(i, 1);
+           break;
+        }
+    }
+}
+
 function createNewLegendFragment(kartlagId, data) {
     
     var newLegendFragment = '<div id="'+kartlagId+'">';

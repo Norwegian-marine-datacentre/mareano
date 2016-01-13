@@ -44,4 +44,10 @@ public class RenderLegendGraphics {
         ImageIO.write(image2, "png", new File("testDrawLegendGraphics.png"));
         
     }
+    
+    @Test
+    public void testNorthArrow() throws Exception {
+        BufferedImage dummyImage = new BufferedImage(500, 500, BufferedImage.TYPE_INT_ARGB);
+        printMap.addNorthArrow(dummyImage);
+    }
 }
