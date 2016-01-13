@@ -29,11 +29,6 @@ var toPrintMenuButton = function printImageHelper() {
         }
     }, this);   
     
-//    console.log("layerObjectArray:"+JSON.stringify({ 'values':layerObjectArray}) );
-//    var scaleLine = Ext.Element.select(".olControlScaleLineTop");
-//    console.log("select olControlScaleLineTop:"+scaleLine.elements[0]);
-//    var scaleLine2 = Ext.DomQuery.select('.olControlScaleLineTop');
-//    console.log("olControlScaleLineTop:"+scaleLine2.);
     var scaleLineTxt = jQuery('.olControlScaleLineTop').css('width');
     var scaleLine = parseInt(scaleLineTxt);
     var scaleLineText = jQuery('.olControlScaleLineTop').text();
@@ -89,9 +84,7 @@ var sendGridedLayer = function drawGridHelper(layer) {
     for ( var i=0; i < layer.grid.length; i++ ) {
         for ( var j=0; j < layer.grid[i].length; j++) {
             var gridObj = layer.grid[i][j];
-//            console.log("bbox:"+gridObj.bounds);
             gridUrls[flatArray++] = gridObj.bounds;
-//            console.log("flatArray:"+flatArray);
         }
     }   
     return gridUrls;

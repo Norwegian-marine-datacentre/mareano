@@ -62,8 +62,6 @@ function getArrayOfLegendDivs(currentLegend) {
 function getArrayOfInfoDivs( currentInfo ) {
     
     var arrayCurrentInfo = currentInfo.split( "<div id=" );
-//    console.log("arrayCurrentInfo"+arrayCurrentInfo);
-//    console.log("currentInfo:"+currentInfo);
     for ( var i = 0; i < arrayCurrentInfo.length; i++ ) {
         if ( i > 0 ) {
             arrayCurrentInfo[i-1] = "<div id =" + arrayCurrentInfo[i];
@@ -91,7 +89,6 @@ function getlayerIdHash() {
 function removeKartlagFromHash(kartlagIdRemoved) {
     for(var i = layerIdHash.length - 1; i >= 0; i--) {
         if(layerIdHash[i].kartlagId === kartlagIdRemoved) {
-           delete layerIdHash[i];
            layerIdHash.splice(i, 1);
            break;
         }
