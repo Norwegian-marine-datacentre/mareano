@@ -61,7 +61,11 @@ public class PrintMapController {
         List<Layer> layers = pll.getLayers();
         for ( Layer layer : layers) {
             List<KartlagEnNo> kartlagene = dao.getKartlagNo(new Long(layer.getKartlagId()));
-            layer.setKartlagNavn(kartlagene.get(0).getAlternateTitle());
+            if ( kartlagene != null && kartlagene.size() > 0) {
+                layer.setKartlagNavn(kartlagene.get(0).getAlternateTitle());
+            } else {
+                layer.setKartlagNavn("Map id:"+layer.getKartlagId()+" not found");
+            }
         }
         
         List<PrintLayer> printLayers = pll.getPrintlayers();
