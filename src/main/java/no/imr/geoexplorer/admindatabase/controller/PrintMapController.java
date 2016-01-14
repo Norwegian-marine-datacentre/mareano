@@ -2,6 +2,9 @@ package no.imr.geoexplorer.admindatabase.controller;
 
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URLDecoder;
 import java.util.List;
 
 import javax.imageio.ImageIO;
@@ -22,7 +25,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Controller
 public class PrintMapController {
@@ -40,8 +46,17 @@ public class PrintMapController {
     @Autowired
     private ApplicationContext appContext;
     
-    @RequestMapping(value="/getMapImage.json", method = RequestMethod.POST, produces = "image/png")
-    public @ResponseBody byte[] getMapImage( @RequestBody PrintLayerList pll, HttpServletResponse resp) throws Exception {
+    @RequestMapping(value="/getMapImage", method = RequestMethod.POST)
+    public void getMapImage( @RequestParam("printImage") String jsonOfPrintLayer, HttpServletResponse resp) throws Exception {
+        
+        
+        String decodeJson = URLDecoder.decode(jsonOfPrintLayer, "utf-8"); 
+        PrintLayerList pll = 
+                new ObjectMapper().readValue(decodeJson, PrintLayerList.class);
+        getMapImage( pll, resp);
+    }
+    
+    protected void getMapImage( PrintLayerList pll, HttpServletResponse resp) throws Exception {
         
         List<Layer> layers = pll.getLayers();
         for ( Layer layer : layers) {
@@ -64,8 +79,10 @@ public class PrintMapController {
                 position = printLayer.getPosition();
             }
         }
-        for ( PrintLayer printLayer : printLayers) {
+        for ( int i=0; i< printLayers.size(); i++ ) {
+            
             //assert gridArray.size % columnSize == 0
+            PrintLayer printLayer = printLayers.get(i);
 
             if ( printLayer.getColumnSize() > 1) {
                 if ( backgroundImage != null) {
@@ -76,7 +93,12 @@ public class PrintMapController {
                 if (overlayImage != null) {
                     System.out.println("OVERWRITING OVERLAY IMAGE");
                 }
-                overlayImage = getOverlay( printLayer.getUrl() );
+                try {
+                    overlayImage = getOverlay( printLayer.getUrl() );
+                } catch(IOException e) {
+                    Layer l = layers.get(i);
+                    l.setKartlagNavn(l.getKartlagNavn() + " - Unable to get overlay");
+                }
             }
 
             if (mapImage == null ) {
@@ -106,15 +128,19 @@ public class PrintMapController {
         
         mapImage = tilesUtil.addScaleBar( mapImage, pll);
         
-        ByteArrayOutputStream bao = new ByteArrayOutputStream();
-        ImageIO.write(mapImage, "png", bao);
-        return bao.toByteArray();
+        resp.setContentType("image/png");
+        resp.setHeader("Content-Disposition", " attachment; filename=image.png");
+//        resp.getOutputStream().write();
+//        ByteArrayOutputStream bao = new ByteArrayOutputStream();
+        ImageIO.write(mapImage, "png", resp.getOutputStream());
+        resp.flushBuffer();
+//        return bao.toByteArray();
     }
     
-    private final static String NORTH_ARROW = "northArrow.gif";
+    private final static String NORTH_ARROW = "northArrow.png";
+    
     protected BufferedImage addNorthArrow( BufferedImage mapImage ) throws Exception {
         Resource resource = appContext.getResource("classpath:"+NORTH_ARROW);
-        System.out.println("resource.getFile:"+resource.getFile());
         BufferedImage northArrow = ImageIO.read(resource.getFile());
         mapImage = tilesUtil.writeNorthArrow(mapImage, northArrow);
         return mapImage;
@@ -152,7 +178,7 @@ public class PrintMapController {
         return tiledImage;
     }
     
-    public BufferedImage getOverlay( String url ) throws Exception {
+    public BufferedImage getOverlay( String url ) throws IllegalArgumentException, IOException {
         
         BufferedImage overlay = tilesUtil.requestImage( url );
         return overlay;

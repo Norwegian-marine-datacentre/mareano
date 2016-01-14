@@ -180,15 +180,15 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
         });
         config.tools = config.tools.concat(mapTools.reverse());
         config.tools.push({
-            actions: ["-", "gaaTilKoordButton"], actionTarget: "paneltbar"
+            actions: ["-", "saveImage"], actionTarget: "paneltbar"
+        }, {
+            actions: ["gaaTilKoordButton"], actionTarget: "paneltbar"
         }, {
             actions: ["gaaTilHavCombo"], actionTarget: "paneltbar"
         }, {
             actions: ["-", "mouseposition"], actionTarget: "paneltbar"
-        }, {
-            actions: ["->", "saveImage"], actionTarget: "paneltbar"
-        }, {
-            actions: ["support"], actionTarget: "paneltbar"
+        },  {
+            actions: ["->", "support"], actionTarget: "paneltbar"
         }, {
             actions: ["helpIcon"], actionTarget: "paneltbar"
         }, {
@@ -378,7 +378,7 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
         
         var saveImage = new Ext.Button({
             id: "saveImage",
-            tooltip: "Print",
+            tooltip: "Export",
             buttonAlign: "right",
             handler: function() {
                 toPrintMenuButton.call(this);

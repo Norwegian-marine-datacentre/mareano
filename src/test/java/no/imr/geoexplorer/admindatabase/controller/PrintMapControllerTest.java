@@ -17,10 +17,10 @@ import no.imr.geoexplorer.printmap.pojo.PrintLayer;
 import no.imr.geoexplorer.printmap.pojo.PrintLayerList;
 
 import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mock.web.MockHttpServletResponse;
 
 public class PrintMapControllerTest {
-    
+
     @Test
     public BufferedImage createPDFReportForBarentswatchBackgroundRequestTest() throws Exception {
         PrintMapController printMap = new PrintMapController();
@@ -28,7 +28,9 @@ public class PrintMapControllerTest {
 
         PrintLayerList printLayers = setupMap();
         
-        byte[] byteImage = printMap.getMapImage(printLayers, null );
+        MockHttpServletResponse respo = new MockHttpServletResponse();
+        printMap.getMapImage(printLayers, respo );
+        byte[] byteImage = respo.getContentAsByteArray(); 
         ByteArrayInputStream imputStream = new ByteArrayInputStream(byteImage); 
         BufferedImage image = ImageIO.read(imputStream);
         return image;

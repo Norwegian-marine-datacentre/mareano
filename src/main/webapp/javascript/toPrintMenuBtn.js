@@ -34,45 +34,20 @@ var toPrintMenuButton = function printImageHelper() {
     var scaleLineText = jQuery('.olControlScaleLineTop').text();
     
     var currentLegends = getCurrentLegendFragment();
-    jQuery.ajax({
-        type: 'post',
-        url: "spring/getMapImage.json",
-        data: JSON.stringify({ 
-            'printlayers': layerObjectArray,
-            'width': this.mapPanel.map.getSize().w,
-            'height': this.mapPanel.map.getSize().h,
-            'layers': getlayerIdHash(),
-            'scaleLine': scaleLine,
-            'scaleLineText': scaleLineText
-        }),
-        dataType: "json",
-        contentType: "application/json; charset=utf-8",
-        success:function(data) {
-            var base64Data = 'data:image/png;base64,'+data;
-            b64toBlob(base64Data,
-                function(blob) {
-                    var url = window.URL.createObjectURL(blob);
-                    var link = document.createElement('a');
-                    link.href = url;
-                    var MAREANO_MAP = "mareanoMap.png";
-                    link.download = MAREANO_MAP;
-                    
-                    //Firefox requires the link to be in the body
-                    if (! ("ActiveXObject" in window)) {
-                        document.body.appendChild(link);
-                        link.click();
-                        document.body.removeChild(link);
-                    } else { //any IE browser
-                        window.navigator.msSaveBlob(blob, MAREANO_MAP);
-                    }
-                }, function(error) {
-                    alert("The request failed: " + error);
-                });            
-        },
-        error: function (request, status, error) {
-            alert("The request failed: " + request.responseText);
-        }
-    });                 
+
+    var jsonString = JSON.stringify({ 
+        'printlayers': layerObjectArray,
+        'width': this.mapPanel.map.getSize().w,
+        'height': this.mapPanel.map.getSize().h,
+        'layers': getlayerIdHash(),
+        'scaleLine': scaleLine,
+        'scaleLineText': scaleLineText});
+    
+    jsonString = encodeURI(jsonString);
+    var mapForm = jQuery('<form id="mapform" action="spring/getMapImage" method="post"></form>');
+    mapForm.append('<input type="hidden" name="printImage"  value="'+jsonString+'" />');
+    jQuery('body').append(mapForm);
+    mapForm.submit();                 
 }
 
 var sendGridedLayer = function drawGridHelper(layer) {

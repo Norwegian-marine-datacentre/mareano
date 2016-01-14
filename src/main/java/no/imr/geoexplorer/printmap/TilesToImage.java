@@ -10,7 +10,10 @@ import java.awt.Stroke;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.List;
 
 import javax.imageio.ImageIO;
@@ -51,10 +54,28 @@ public class TilesToImage {
         return map;
     }
     
-    public BufferedImage requestImage(String url) throws Exception {
+    private URLConnection con = null;
+    private InputStream in = null;
+    /**
+     * If url is null or empty - returns 1x1 empty BufferedImage
+     * @param url
+     * @return
+     * @throws Exception
+     */
+    public BufferedImage requestImage(String wmsUrl) throws IllegalArgumentException, IOException {
         
-        BufferedImage img = ImageIO.read(new URL(url));
-        return img;
+        if ( wmsUrl != null && !wmsUrl.equals("") ) {
+            URL url = new URL(wmsUrl);
+            
+            con = url.openConnection();
+            con.setConnectTimeout(2000);
+            con.setReadTimeout(2000);
+            in = con.getInputStream();
+            
+            BufferedImage img = ImageIO.read(in);
+            return img;
+        }
+        return new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
     }
     
     public BufferedImage appendImage( BufferedImage appendTo, BufferedImage appendThis) {
@@ -79,10 +100,13 @@ public class TilesToImage {
         return c;
     }
     
-    private final static int LAYER_TEXT_SPACE = 17;
+    private final static int LAYER_TEXT_SPACE = 19;
     private final static int LEGEND_TEXT_SPACE = 15;
-    private final static int LEGEND_WIDTH = 198;
+    private final static int LEGEND_WIDTH = 230;
+    private final static int LEGEND_WIDTH_WRITE_SPACE = 228;
     private final static int LEGEND_BOARDER_WIDTH = 200;
+    private final static int LEGEND_BOARDER_HEIGHT = 5;
+    private final static int LEGEND_BOARDER_HEIGHT_BOTTOM_FILL = 4;
     
     public BufferedImage writeLegend( BufferedImage mapImage, List<Layer> layers) throws Exception {
         Graphics2D g2 = (Graphics2D)mapImage.getGraphics();
@@ -92,16 +116,16 @@ public class TilesToImage {
         Font layerFont = new Font("Serif", Font.BOLD, 14); 
         
         int imageWidth = mapImage.getWidth();
-        int writeLegendWidth = imageWidth - LEGEND_WIDTH;
-        int fillLegendWidth = imageWidth - LEGEND_BOARDER_WIDTH;
+        int writeLegendWidth = imageWidth - LEGEND_WIDTH_WRITE_SPACE;
+        int fillLegendWidth = imageWidth - LEGEND_WIDTH;
         int writeHeight = LAYER_TEXT_SPACE;
         
-        int legendHeight = 0;
+        int legendHeight = LEGEND_BOARDER_HEIGHT;
         for ( Layer l : layers ) {
             legendHeight += LAYER_TEXT_SPACE + (LEGEND_TEXT_SPACE * l.getLegend().size()); 
         }
-        legendHeight += 4;
-        fillRectangleWhite(g2, fillLegendWidth, 0, imageWidth, legendHeight);
+        legendHeight += LEGEND_BOARDER_HEIGHT_BOTTOM_FILL;
+        fillRectangleWhite(g2, fillLegendWidth, LEGEND_BOARDER_HEIGHT, LEGEND_BOARDER_WIDTH, legendHeight);
          
         for ( int i=0; i < layers.size(); i++) {
             Layer layer = layers.get(i);
@@ -114,7 +138,6 @@ public class TilesToImage {
             g2.setFont(legendFont);
             for ( int j=0; j < legends.size(); j++ ) {
                 Legend legend = legends.get(j);
-                System.out.println("legend url:"+legend.getUrl());
                 if ( legend.getUrl() != null && !legend.getUrl().equals("") ) {
                     URL url = new URL(legend.getUrl());
                     BufferedImage legendImg = ImageIO.read(url);
@@ -126,7 +149,9 @@ public class TilesToImage {
                 }
             }
         }
-        addBoarder(g2, fillLegendWidth, 0, fillLegendWidth+LEGEND_BOARDER_WIDTH, legendHeight);
+        addBoarder(g2, fillLegendWidth, LEGEND_BOARDER_HEIGHT, LEGEND_BOARDER_WIDTH, legendHeight);
+        addBoarder(g2, 0, 0, imageWidth-1, mapImage.getHeight()-1);
+
         return mapImage;
     }
     
@@ -138,7 +163,7 @@ public class TilesToImage {
         g2.setStroke(oldStroke);
     }
     
-    private void fillRectangleWhite(Graphics2D g2, int x, int y, int width, int height) {
+    private void fillRectangleWhite(Graphics2D g2, double x, double y, double width, double height) {
         Color color = g2.getColor();
         g2.setPaint(Color.white);
         g2.fill(new Rectangle2D.Double(x, y, width, height));
@@ -150,7 +175,7 @@ public class TilesToImage {
         int imageWidth = mapImage.getWidth();
         int imageHeight = mapImage.getHeight();
         
-        g2.drawImage(northArrow, imageWidth -35, imageHeight -50, null);
+        g2.drawImage(northArrow, imageWidth -35, imageHeight -60, null);
         return mapImage;
     }
     
