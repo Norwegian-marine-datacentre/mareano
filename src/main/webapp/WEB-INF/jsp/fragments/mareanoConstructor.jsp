@@ -81,7 +81,7 @@ app = new Mareano.Composer({
 		    }, {
 		        source: "ol",
 		        type: "OpenLayers.Layer.WMS",
-		        group: "background",
+		        group: "backgroundSea",
 		        args: [
 		            "<spring:message code="europaWhite" text="Europa White background" />",
 		            "http://maps.imr.no/geoserver/gwc/service/wms",
@@ -120,7 +120,8 @@ var bakgrunn=[];
 //JSON of all layers
 var alleHovedtemaer=${hovedtemaer_json};
 //TODO discuss how background layers should be flagged
-var backgroundGroupName ="alt";
+var backgroundGroupName ="background";
+var backgroundSeaGroupName ="backgroundSea";
 
 var hovedtema,gruppe;
 
@@ -133,26 +134,27 @@ var hovedtema,gruppe;
  * to create layer part of layer record. Would need to check extra atttributes that
  * createLayerRecord adds are valid for background layers as well
 */
-function createBackgroundLayerObject(layer)
-{
-    return  {source: "ol",
-	     type: "OpenLayers.Layer.WMS",
-	     group: "background",
-	     args: [
-		 layer.title,
-		 layer.url,
-		 {layers: layer.layers,
-		  format: layer.format,
-		  transparent: true,
-		  isBaseLayer: true},
-		 {
-		     metadata: {
-			 keyword: layer.keyword,
-			 'kartlagId': layer.id
-                     },
-		     singleTile:false
-		 }
-	     ]};
+function createBackgroundLayerObject(layer) {
+    return  {
+        source: "ol",
+        type: "OpenLayers.Layer.WMS",
+        group: layer.gruppe,
+        args: [
+            layer.title,
+            layer.url,
+            {
+                layers: layer.layers,
+                format: layer.format,
+                transparent: true,
+                isBaseLayer: true
+            },{
+            metadata: {
+                keyword: layer.keyword,
+                'kartlagId': layer.id
+            },
+            singleTile:false
+        }
+    ]};
 }
 
 
@@ -166,7 +168,7 @@ function createLayerRecord(panelGroup,isVisible,layer)
         visibility: isVisible,
         properties: "mareano_wmslayerpanel",            
         args: [
-            layer.title,
+        layer.title,
 	    layer.url,
             {layers: layer.layers, format: layer.format, transparent: true},
             {
@@ -197,10 +199,10 @@ for (var i=0; i < alleHovedtemaer.length; i++) {
 
     //Split into three groups so have lists of each type of layers for later use
     //Test is a bit sloppy as it assumes each tema does not have mix of groups
-    if (hovedtema.bilder[0].gruppe == backgroundGroupName) {
-	   bakgrunn.push(hovedtema);
+    if (hovedtema.bilder[0].gruppe == backgroundGroupName ) {
+       bakgrunn.push(hovedtema);
     } else if (hovedtema.bilder[0].gruppe == "generelle") {
-	   generelle.push(hovedtema);
+       generelle.push(hovedtema);
     } else {
         hovedtemaer.push(hovedtema);
     }
@@ -209,8 +211,9 @@ for (var i=0; i < alleHovedtemaer.length; i++) {
         gruppe=hovedtema.bilder[j];
         for (var k=0; k < gruppe.kart.length; k++) {
             layer = gruppe.kart[k];
-            if (gruppe.gruppe == backgroundGroupName) {
+            if (gruppe.gruppe == backgroundGroupName || gruppe.gruppe == backgroundSeaGroupName) {
                 if (app.map) { // If map does not exist at this point then GeoExplorer is loading saved map
+					console.log("background:"+layer.gruppe);
                     app.map.layers.push(createBackgroundLayerObject(layer));
                 }
             } else {

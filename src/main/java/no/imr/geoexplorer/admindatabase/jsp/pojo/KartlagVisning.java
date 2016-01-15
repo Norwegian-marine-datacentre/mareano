@@ -5,8 +5,8 @@ public class KartlagVisning {
 	private String title;
 	private String layers;
 	private String gruppe;
-        private String url;
-        private String format;
+    private String url;
+    private String format;
 	private double exGeographicBoundingBoxEastBoundLongitude;
 	private double exGeographicBoundingBoxWestBoundLongitude;
 	private double exGeographicBoundingBoxNorthBoundLatitude;

@@ -195,7 +195,7 @@ public class MareanoController {
                         kart.setScalemin(kartlag.getScalemin());
                         kart.setScalemax(kartlag.getScalemax());
                         kart.setQueryable(kartlag.isQueryable());
-			
+                        kart.setGruppe( kartbilderVisining.getGruppe());
 
                         if (language.equals("en")) {
                             List<KartlagEnNo> en = dao.getKartlagEn(kart.getId());
@@ -216,7 +216,7 @@ public class MareanoController {
                         }
 
                         kart.setUrl(kartlag.getKarttjeneste().getUrl());
-			kart.setFormat(kartlag.getKarttjeneste().getFormat());
+                        kart.setFormat(kartlag.getKarttjeneste().getFormat());
                         kartbilderVisining.addKart(kart);
                     }
                 }
