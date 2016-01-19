@@ -1,19 +1,23 @@
 package no.imr.geoexplorer.admindatabase.controller;
 
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.net.URI;
 import java.net.URLDecoder;
 import java.util.List;
 
 import javax.imageio.ImageIO;
+import javax.imageio.stream.ImageOutputStream;
 import javax.servlet.http.HttpServletResponse;
 
 import no.imr.geoexplorer.admindatabase.dao.MareanoAdminDbDao;
 import no.imr.geoexplorer.admindatabase.mybatis.pojo.KartlagEnNo;
 import no.imr.geoexplorer.printmap.TilesToImage;
 import no.imr.geoexplorer.printmap.pojo.BoundingBox;
+import no.imr.geoexplorer.printmap.pojo.ImageFilenameResponse;
 import no.imr.geoexplorer.printmap.pojo.Layer;
 import no.imr.geoexplorer.printmap.pojo.PrintLayer;
 import no.imr.geoexplorer.printmap.pojo.PrintLayerList;
@@ -21,6 +25,7 @@ import no.imr.geoexplorer.printmap.pojo.PrintLayerList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -46,18 +51,20 @@ public class PrintMapController {
     @Autowired
     private ApplicationContext appContext;
     
-    @RequestMapping(value="/getMapImage", method = RequestMethod.POST)
-    public void getMapImage( @RequestParam("printImage") String jsonOfPrintLayer, HttpServletResponse resp) throws Exception {
-        
-        
-        String decodeJson = URLDecoder.decode(jsonOfPrintLayer, "utf-8"); 
-        PrintLayerList pll = 
-                new ObjectMapper().readValue(decodeJson, PrintLayerList.class);
-        getMapImage( pll, resp);
-    }
+//    @RequestMapping(value="/postMapImage", method = RequestMethod.POST)
+//    public @ResponseBody ImageFilenameResponse postMapImage( @RequestParam("printImage") String jsonOfPrintLayer, HttpServletResponse resp) throws Exception {
+//        
+//        String decodeJson = URLDecoder.decode(jsonOfPrintLayer, "utf-8"); 
+//        PrintLayerList pll = 
+//                new ObjectMapper().readValue(decodeJson, PrintLayerList.class);
+//        return getMapImage( pll, resp);
+//    }
     
-    protected void getMapImage( PrintLayerList pll, HttpServletResponse resp) throws Exception {
+    @RequestMapping(value="/postMapImage", method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+    protected @ResponseBody ImageFilenameResponse postMapImage( @RequestBody PrintLayerList pll, HttpServletResponse resp) throws Exception {
         
+        Long startTime = System.currentTimeMillis();
+        System.out.println("startTime:"+startTime);
         List<Layer> layers = pll.getLayers();
         for ( Layer layer : layers) {
             List<KartlagEnNo> kartlagene = dao.getKartlagNo(new Long(layer.getKartlagId()));
@@ -92,16 +99,21 @@ public class PrintMapController {
                 if ( backgroundImage != null) {
                     System.out.println("OVERWRITING BACKGROUND IMAGE");
                 }
-                backgroundImage = getTiledImage( mapImage, printLayer);
+                try {
+                    backgroundImage = getTiledImage( mapImage, printLayer);
+                } catch( IOException ioe) {
+                    Layer l = layers.get(i);
+                    l.setKartlagNavn(l.getKartlagNavn() + "err:"+ ioe.getMessage());
+                }
             } else {
                 if (overlayImage != null) {
                     System.out.println("OVERWRITING OVERLAY IMAGE");
                 }
                 try {
                     overlayImage = getOverlay( printLayer.getUrl() );
-                } catch(IOException e) {
+                } catch(IOException ioe) {
                     Layer l = layers.get(i);
-                    l.setKartlagNavn(l.getKartlagNavn() + " - Unable to get overlay");
+                    l.setKartlagNavn(l.getKartlagNavn() + "err:"+ ioe.getMessage());
                 }
             }
 
@@ -132,13 +144,45 @@ public class PrintMapController {
         
         mapImage = tilesUtil.addScaleBar( mapImage, pll);
         
+        
+        String fileName = "printMap";        
+        File temp = File.createTempFile(fileName, "."+PNG);
+        System.out.println("BeforeSave image:"+(System.currentTimeMillis()-startTime));
+        ImageIO.write(mapImage, PNG, temp);
+        System.out.println("AfterSave image:"+(System.currentTimeMillis()-startTime));
+        //System.out.println("filename:"+temp.getAbsolutePath()+" name:"+temp.getName());
+
+        ImageFilenameResponse respJson = new ImageFilenameResponse();
+        respJson.setFilename(temp.getName());
+        System.out.println("complete:"+(System.currentTimeMillis()-startTime));
+        return respJson;
+    }
+    
+    private final static String PNG = "png";
+    private String tempImageFilePath = "";
+    
+    @RequestMapping(value="/getMapImage", method = RequestMethod.GET)
+    public void getMapImage(@RequestParam("printFilename") String filename, HttpServletResponse resp) throws Exception {
+        
+        if ( tempImageFilePath.equals("")) {
+            //Get tempropary file path
+            File temp2 = File.createTempFile("temp-file-name", ".tmp"); 
+            System.out.println("Temp file : " + temp2.getAbsolutePath());
+            
+            String absolutePath = temp2.getAbsolutePath();
+            String tempFilePath = absolutePath.
+                substring(0,absolutePath.lastIndexOf(File.separator));
+            
+            tempImageFilePath = tempFilePath;
+            System.out.println(tempImageFilePath + File.separator + filename);
+        }
+        
+        File temp = new File(tempImageFilePath + File.separator + filename);
+        BufferedImage mapImage = ImageIO.read(temp); 
         resp.setContentType("image/png");
-        resp.setHeader("Content-Disposition", " attachment; filename=image.png");
-//        resp.getOutputStream().write();
-//        ByteArrayOutputStream bao = new ByteArrayOutputStream();
-        ImageIO.write(mapImage, "png", resp.getOutputStream());
-        resp.flushBuffer();
-//        return bao.toByteArray();
+        resp.setHeader("Content-Disposition", "attachment; filename="+filename);
+        ImageIO.write(mapImage, PNG, resp.getOutputStream());        
+        resp.flushBuffer();        
     }
     
     private final static String NORTH_ARROW = "northArrow.png";

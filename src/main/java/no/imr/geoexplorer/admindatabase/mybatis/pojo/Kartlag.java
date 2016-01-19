@@ -9,11 +9,21 @@ public class Kartlag {
 	private String layers;
 	private double scalemin;
 	private double scalemax;
+	
+	private double scaleminPolar;
+	private double scalemaxPolar;
+	    
 	private String downloadurl;
 	private double exGeographicBoundingBoxWestBoundLongitude;
 	private double exGeographicBoundingBoxEastBoundLongitude;
 	private double exGeographicBoundingBoxSouthBoundLatitude;
 	private double exGeographicBoundingBoxNorthBoundLatitude;
+
+	private double westPolar;
+	private double eastPolar;
+	private double soutPolar;
+	private double northPolar;
+	
 	private String keyword;
 	private boolean queryable;
 	private int sort;
@@ -138,4 +148,40 @@ public class Kartlag {
 	public void setKarttjeneste(Karttjenester karttjeneste) {
 		this.karttjeneste = karttjeneste;
 	}
+	public double getWestPolar() {
+        return westPolar;
+    }
+    public void setWestPolar(double westPolar) {
+        this.westPolar = westPolar;
+    }
+    public double getEastPolar() {
+        return eastPolar;
+    }
+    public void setEastPolar(double eastPolar) {
+        this.eastPolar = eastPolar;
+    }
+    public double getSoutPolar() {
+        return soutPolar;
+    }
+    public void setSoutPolar(double soutPolar) {
+        this.soutPolar = soutPolar;
+    }
+    public double getNorthPolar() {
+        return northPolar;
+    }
+    public void setNorthPolar(double northPolar) {
+        this.northPolar = northPolar;
+    }
+    public double getScaleminPolar() {
+        return scaleminPolar;
+    }
+    public void setScaleminPolar(double scaleminPolar) {
+        this.scaleminPolar = scaleminPolar;
+    }
+    public double getScalemaxPolar() {
+        return scalemaxPolar;
+    }
+    public void setScalemaxPolar(double scalemaxPolar) {
+        this.scalemaxPolar = scalemaxPolar;
+    }
 }

@@ -61,7 +61,7 @@ public class MareanoControllerTest {
 	
 	@Test
 	public void getListOrganizedToBrowser() throws Exception {
-		mareanoController.listOrganizedToBrowser("en");
+		mareanoController.listOrganizedToBrowser("en", "mareano");
 	}
 
 	private String dummyGML(String boundingBox) {

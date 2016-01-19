@@ -1,13 +1,9 @@
 package no.imr.geoexplorer.admindatabase.controller;
 
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.StringTokenizer;
-
-import javax.imageio.ImageIO;
 
 import no.imr.geoexplorer.printmap.TilesToImage;
 import no.imr.geoexplorer.printmap.pojo.BoundingBox;
@@ -17,23 +13,26 @@ import no.imr.geoexplorer.printmap.pojo.PrintLayer;
 import no.imr.geoexplorer.printmap.pojo.PrintLayerList;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = {"classpath:test-context-dont-check-inn.xml"})
 public class PrintMapControllerTest {
 
+    @Autowired(required=true)
+    private PrintMapController printMap;
+    
     @Test
-    public BufferedImage createPDFReportForBarentswatchBackgroundRequestTest() throws Exception {
-        PrintMapController printMap = new PrintMapController();
-        printMap.setTilesToImage(new TilesToImage());
+    public void createTempFileWithBackgroundImage() throws Exception {
 
         PrintLayerList printLayers = setupMap();
         
         MockHttpServletResponse respo = new MockHttpServletResponse();
-        printMap.getMapImage(printLayers, respo );
-        byte[] byteImage = respo.getContentAsByteArray(); 
-        ByteArrayInputStream imputStream = new ByteArrayInputStream(byteImage); 
-        BufferedImage image = ImageIO.read(imputStream);
-        return image;
+        printMap.postMapImage(printLayers, respo );
     }
     
     public PrintLayerList setupMap() {
@@ -71,6 +70,8 @@ public class PrintMapControllerTest {
         printLayers.setPrintlayers(plls);
         printLayers.setWidth(1300);
         printLayers.setHeight(270);
+        printLayers.setScaleLine(37);
+        printLayers.setScaleLineText("100km");
         
         printLayers.setLayers(createLegendInfo());
         

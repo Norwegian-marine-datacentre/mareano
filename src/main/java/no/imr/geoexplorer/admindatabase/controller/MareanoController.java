@@ -92,7 +92,7 @@ public class MareanoController {
     private ModelAndView commonGetMareano(HttpServletResponse resp, String language, String mareanoJSP) throws IOException {
     	
 		ModelAndView mav = new ModelAndView(mareanoJSP);
-		getMareano(mav, language);
+		getMareano(mav, language, mareanoJSP);
 
 		String heading = getMareanoHeading(language);
 		mav.addObject("heading", heading);
@@ -102,24 +102,23 @@ public class MareanoController {
 		return mav;    	
     }
 
-    protected ModelAndView getMareano(ModelAndView mav, String language) throws IOException {
+    protected ModelAndView getMareano(ModelAndView mav, String language, String mareanoJSP) throws IOException {
         long now = new Date().getTime();
         if (visninger == null || (lastupdated + TENMIN) < now) {
-            visninger = listOrganizedToBrowser(language);
+            visninger = listOrganizedToBrowser(language, mareanoJSP);
             lastupdated = new Date().getTime();
         }
         //mav.addObject("hovedtemaer", visninger);
 	
-	ObjectMapper mapper = new ObjectMapper();
-	String json = mapper.writeValueAsString(visninger);
+        ObjectMapper mapper = new ObjectMapper();
+        String json = mapper.writeValueAsString(visninger);
 
-	mav.addObject("hovedtemaer_json", json);
-	
+        mav.addObject("hovedtemaer_json", json);
 	
         return mav;
     }
 
-    protected List<HovedtemaVisning> listOrganizedToBrowser(String language)  throws IOException{
+    protected List<HovedtemaVisning> listOrganizedToBrowser(String language, String mareanoJSP)  throws IOException{
 
         List<Hovedtema> hovedtemaer = dao.getHovedtemaer();
         List<HovedtemaVisning> hovedtemaVisninger = new ArrayList<HovedtemaVisning>(hovedtemaer.size());
@@ -128,15 +127,15 @@ public class MareanoController {
         for (Hovedtema hovedtema : hovedtemaer) {
         	
         	if ( hostname.equals("webtest1.nodc.no") ) { //for webtest1
-        		addToList(hovedtemaVisninger, hovedtema, language);
+        		addToList(hovedtemaVisninger, hovedtema, language, mareanoJSP);
             } else if (!hovedtema.getGenericTitle().equals("Under utvikling") ) { //for prod 
-            	addToList(hovedtemaVisninger, hovedtema, language);
+            	addToList(hovedtemaVisninger, hovedtema, language, mareanoJSP);
             }
         }
         return hovedtemaVisninger;
     }
     
-    protected List<HovedtemaVisning> addToList(List<HovedtemaVisning> hovedtemaVisninger, Hovedtema hovedtema, String language) {
+    protected List<HovedtemaVisning> addToList(List<HovedtemaVisning> hovedtemaVisninger, Hovedtema hovedtema, String language, String mareanoJSP) {
             HovedtemaVisning hovedtemaVisning = new HovedtemaVisning();
             if (language.equals("en")) {
                 List<HovedtemaEnNo> en = dao.getHovedtemaEn(hovedtema.getHovedtemaerId());
@@ -188,12 +187,21 @@ public class MareanoController {
                         kart.setId(kartlag.getKartlagId());
                         kart.setLayers(kartlag.getLayers());
                         kart.setKeyword(kartlag.getKeyword());
-                        kart.setExGeographicBoundingBoxEastBoundLongitude(kartlag.getExGeographicBoundingBoxEastBoundLongitude());
-                        kart.setExGeographicBoundingBoxWestBoundLongitude(kartlag.getExGeographicBoundingBoxWestBoundLongitude());
-                        kart.setExGeographicBoundingBoxNorthBoundLatitude(kartlag.getExGeographicBoundingBoxNorthBoundLatitude());
-                        kart.setExGeographicBoundingBoxSouthBoundLatitude(kartlag.getExGeographicBoundingBoxSouthBoundLatitude());
-                        kart.setScalemin(kartlag.getScalemin());
-                        kart.setScalemax(kartlag.getScalemax());
+                        if ( mareanoJSP.equals("mareanoPolar")) {
+                            kart.setExGeographicBoundingBoxEastBoundLongitude(kartlag.getEastPolar());
+                            kart.setExGeographicBoundingBoxWestBoundLongitude(kartlag.getWestPolar());
+                            kart.setExGeographicBoundingBoxNorthBoundLatitude(kartlag.getNorthPolar());
+                            kart.setExGeographicBoundingBoxSouthBoundLatitude(kartlag.getSoutPolar());
+                            kart.setScalemin(kartlag.getScalemin());
+                            kart.setScalemax(kartlag.getScalemax());                            
+                        } else {
+                            kart.setExGeographicBoundingBoxEastBoundLongitude(kartlag.getExGeographicBoundingBoxEastBoundLongitude());
+                            kart.setExGeographicBoundingBoxWestBoundLongitude(kartlag.getExGeographicBoundingBoxWestBoundLongitude());
+                            kart.setExGeographicBoundingBoxNorthBoundLatitude(kartlag.getExGeographicBoundingBoxNorthBoundLatitude());
+                            kart.setExGeographicBoundingBoxSouthBoundLatitude(kartlag.getExGeographicBoundingBoxSouthBoundLatitude());
+                            kart.setScalemin(kartlag.getScalemin());
+                            kart.setScalemax(kartlag.getScalemax());
+                        }
                         kart.setQueryable(kartlag.isQueryable());
                         kart.setGruppe( kartbilderVisining.getGruppe());
 

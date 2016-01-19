@@ -15,6 +15,12 @@
     	<result property="exGeographicBoundingBoxEastBoundLongitude" column="ex_geographic_bounding_box_east_bound_longitude"/>
     	<result property="exGeographicBoundingBoxSouthBoundLatitude" column="ex_geographic_bounding_box_south_bound_latitude"/>
     	<result property="exGeographicBoundingBoxNorthBoundLatitude" column="ex_geographic_bounding_box_north_bound_latitude"/>
+        <result property="westPolar" column="polar_bounding_box_west"/>
+        <result property="southPolar" column="polar_bounding_box_south"/>
+        <result property="eastPolar" column="polar_bounding_box_east"/>
+        <result property="northPolar" column="polar_bounding_box_north"/>
+        <result property="scaleminPolar" column="polar_scalemin"/>
+        <result property="scalemaxPolar" column="polar_scalemax"/>    	
     	<result property="keyword" column="keyword"/>
     	<result property="queryable" column="queryable"/>
     	<result property="sort" column="sort"/>

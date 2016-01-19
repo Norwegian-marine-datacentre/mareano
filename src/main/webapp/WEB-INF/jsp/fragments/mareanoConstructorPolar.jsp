@@ -59,7 +59,8 @@ var bakgrunn=[];
 //JSON of all layers
 var alleHovedtemaer=${hovedtemaer_json};
 //TODO discuss how background layers should be flagged
-var backgroundGroupName ="alt";
+var backgroundGroupName ="background";
+var backgroundSeaGroupName ="backgroundSea";
 
 var hovedtema,gruppe;
 
@@ -155,7 +156,7 @@ for (var i=0;i<alleHovedtemaer.length;i++)
     for (var k=0;k<gruppe.kart.length;k++)
     {
         layer = gruppe.kart[k];
-        if (gruppe.gruppe == backgroundGroupName) {
+        if (gruppe.gruppe == backgroundGroupName || gruppe.gruppe == backgroundSeaGroupName) {
         app.map.layers.push(createBackgroundLayerObject(layer));
         } else {
         OLRecord = createLayerRecord(gruppe.gruppe,gruppe.visible,layer);

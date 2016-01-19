@@ -37,7 +37,7 @@ public class RenderLegendGraphics {
         printLayers.setLayers(layers);
         
         MockHttpServletResponse respo = new MockHttpServletResponse();
-        printMap.getMapImage(printLayers, respo );
+        printMap.postMapImage(printLayers, respo );
         byte[] byteImage = respo.getContentAsByteArray(); 
         ByteArrayInputStream imputStream = new ByteArrayInputStream(byteImage); 
         BufferedImage image = ImageIO.read(imputStream);

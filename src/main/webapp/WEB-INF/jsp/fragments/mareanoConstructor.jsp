@@ -213,7 +213,6 @@ for (var i=0; i < alleHovedtemaer.length; i++) {
             layer = gruppe.kart[k];
             if (gruppe.gruppe == backgroundGroupName || gruppe.gruppe == backgroundSeaGroupName) {
                 if (app.map) { // If map does not exist at this point then GeoExplorer is loading saved map
-					console.log("background:"+layer.gruppe);
                     app.map.layers.push(createBackgroundLayerObject(layer));
                 }
             } else {
