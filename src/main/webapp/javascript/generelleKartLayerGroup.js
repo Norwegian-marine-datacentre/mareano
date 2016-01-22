@@ -64,7 +64,7 @@ function addGenerelleLayerToGroup( gruppeNavn, gruppeText, map, mapPanel, layers
                             clone.getLayer().metadata['kartlagId'] = id;
                             app.mapPanel.layers.add(clone);
                         }                      
-		                displayLegendGraphicsAndSpesialpunkt(app.mapPanel.map.getExtent() + "", layer.metadata['kartlagId'], layerRecord.getLayer(), event, app);   
+		                displayLegendGraphicsAndSpesialpunkt(app.mapPanel.map.getExtent() + "", layerRecord.getLayer(), event, app);   
             		} else {
             			removeLayerLegendAndInfo(app.mapOfGMLspesialpunkt, layer.metadata['kartlagId'], record, layer, app);
             		}

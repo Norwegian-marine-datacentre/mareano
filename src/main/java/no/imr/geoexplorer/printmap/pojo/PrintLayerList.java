@@ -10,7 +10,6 @@ public class PrintLayerList {
     private List<PrintLayer> printlayers;
     private Integer width;
     private Integer height;
-    private List<Layer> layers;
     private Integer scaleLine;
     private String scaleLineText;
     
@@ -31,12 +30,6 @@ public class PrintLayerList {
     }
     public void setHeight(Integer height) {
         this.height = height;
-    }
-    public List<Layer> getLayers() {
-        return layers;
-    }
-    public void setLayers(List<Layer> layers) {
-        this.layers = layers;
     }
     public Integer getScaleLine() {
         return scaleLine;

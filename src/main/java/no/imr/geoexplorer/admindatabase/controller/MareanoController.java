@@ -51,6 +51,8 @@ public class MareanoController {
     private final static long TENMIN = 10 * 1000;
     private final static long ONEHOUR = 60 * 1000;
     private final static String ENGLISH = "en";
+    private final static String TEST_SERVER = "webtest1.nodc.no";
+    private final static String HOVEDTEMA_NOT_IN_PRODUCTION = "Under utvikling";
     
     @Autowired(required = true)
     private MareanoAdminDbDao dao;
@@ -126,9 +128,9 @@ public class MareanoController {
         String hostname =InetAddress.getLocalHost().getHostName();
         for (Hovedtema hovedtema : hovedtemaer) {
         	
-        	if ( hostname.equals("webtest1.nodc.no") ) { //for webtest1
+        	if ( hostname.equals(TEST_SERVER) ) { //for webtest1
         		addToList(hovedtemaVisninger, hovedtema, language, mareanoJSP);
-            } else if (!hovedtema.getGenericTitle().equals("Under utvikling") ) { //for prod 
+            } else if (!hovedtema.getGenericTitle().equals(HOVEDTEMA_NOT_IN_PRODUCTION) ) { //for prod 
             	addToList(hovedtemaVisninger, hovedtema, language, mareanoJSP);
             }
         }

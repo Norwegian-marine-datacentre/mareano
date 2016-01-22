@@ -1,16 +1,12 @@
 package no.imr.geoexplorer.admindatabase.controller;
 
 import java.awt.image.BufferedImage;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URLDecoder;
 import java.util.List;
 
 import javax.imageio.ImageIO;
-import javax.imageio.stream.ImageOutputStream;
 import javax.servlet.http.HttpServletResponse;
 
 import no.imr.geoexplorer.admindatabase.dao.MareanoAdminDbDao;
@@ -18,10 +14,10 @@ import no.imr.geoexplorer.admindatabase.mybatis.pojo.KartlagEnNo;
 import no.imr.geoexplorer.printmap.TilesToImage;
 import no.imr.geoexplorer.printmap.pojo.BoundingBox;
 import no.imr.geoexplorer.printmap.pojo.ImageFilenameResponse;
-import no.imr.geoexplorer.printmap.pojo.Layer;
 import no.imr.geoexplorer.printmap.pojo.PrintLayer;
 import no.imr.geoexplorer.printmap.pojo.PrintLayerList;
 
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
@@ -33,10 +29,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 @Controller
 public class PrintMapController {
+    
+    private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(PrintMapController.class);
     
     @Autowired
     private TilesToImage tilesUtil;
@@ -65,15 +61,6 @@ public class PrintMapController {
         
         Long startTime = System.currentTimeMillis();
         System.out.println("startTime:"+startTime);
-        List<Layer> layers = pll.getLayers();
-        for ( Layer layer : layers) {
-            List<KartlagEnNo> kartlagene = dao.getKartlagNo(new Long(layer.getKartlagId()));
-            if ( kartlagene != null && kartlagene.size() > 0) {
-                layer.setKartlagNavn(kartlagene.get(0).getAlternateTitle());
-            } else {
-                layer.setKartlagNavn("Map id:"+layer.getKartlagId()+" not found");
-            }
-        }
         
         List<PrintLayer> printLayers = pll.getPrintlayers();
         int width = pll.getWidth();
@@ -94,26 +81,28 @@ public class PrintMapController {
             
             //assert gridArray.size % columnSize == 0
             PrintLayer printLayer = printLayers.get(i);
-
             if ( printLayer.getColumnSize() > 1) {
                 if ( backgroundImage != null) {
-                    System.out.println("OVERWRITING BACKGROUND IMAGE");
+                    System.out.println("sysout: OVERWRITING BACKGROUND IMAGE");
+                    LOG.error("OVERWRITING BACKGROUND IMAGE");
                 }
+                
                 try {
+                    System.out.println("tiledImage:"+printLayer.getKartlagTitle()+" "+(System.currentTimeMillis()-startTime));
                     backgroundImage = getTiledImage( mapImage, printLayer);
                 } catch( IOException ioe) {
-                    Layer l = layers.get(i);
-                    l.setKartlagNavn(l.getKartlagNavn() + "err:"+ ioe.getMessage());
+                    printLayer.setKartlagTitle(printLayer.getKartlagTitle() + " err:"+ ioe.getMessage());
                 }
             } else {
                 if (overlayImage != null) {
-                    System.out.println("OVERWRITING OVERLAY IMAGE");
+                    LOG.error("OVERWRITING OVERLAY IMAGE");
                 }
                 try {
+                    System.out.println("overlay:"+printLayer.getKartlagTitle()+" "+(System.currentTimeMillis()-startTime));
+                    System.out.println("url overlay:"+printLayer.getUrl() );
                     overlayImage = getOverlay( printLayer.getUrl() );
                 } catch(IOException ioe) {
-                    Layer l = layers.get(i);
-                    l.setKartlagNavn(l.getKartlagNavn() + "err:"+ ioe.getMessage());
+                    printLayer.setKartlagTitle(printLayer.getKartlagTitle() + " err:"+ ioe.getMessage());
                 }
             }
 
@@ -136,14 +125,14 @@ public class PrintMapController {
                 overlayImage = null;
             }
         }
+        System.out.println("crop:"+(System.currentTimeMillis()-startTime));
         mapImage = tilesUtil.cropImage( mapImage, position, width, height );
-        
-        mapImage = tilesUtil.writeLegend( mapImage, layers );
-        
+        System.out.println("legend:"+(System.currentTimeMillis()-startTime));
+        mapImage = tilesUtil.writeLegend( mapImage, printLayers );
+        System.out.println("northarrow:"+(System.currentTimeMillis()-startTime));
         mapImage = addNorthArrow( mapImage );
         
         mapImage = tilesUtil.addScaleBar( mapImage, pll);
-        
         
         String fileName = "printMap";        
         File temp = File.createTempFile(fileName, "."+PNG);

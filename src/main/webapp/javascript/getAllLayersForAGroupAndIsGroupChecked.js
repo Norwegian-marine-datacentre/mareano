@@ -39,7 +39,7 @@ function getAllLayersForAGroupAndIsGroupChecked(gruppeNavn, layers, mapPanel, la
 	            childrenVisible++;
 	            layerId = layers[i].data.layer.metadata[ KARTLAG_ID ];
 	            if ( globalLayersFromSavedMapAlreadyAddedLegend.indexOf(layerId) == -1) {
-	            	layersInPicture.push( layerId );
+	            	layersInPicture.push( layers[i].data.layer );
 	            	globalLayersFromSavedMapAlreadyAddedLegend.push(layerId);
 	            	layersFromKartbildeAdded = true;
 	            }
@@ -51,7 +51,6 @@ function getAllLayersForAGroupAndIsGroupChecked(gruppeNavn, layers, mapPanel, la
 	        gruppenavnFromKartbildeAdded = gruppeNavn;
 	    }
 	}
-	//console.log(layersInPicture);
 	if ( layersFromKartbildeAdded == true ) {
 	    for ( var j=0; j < layersInPicture.length; j++ ) {
 	        addLegend( layersInPicture[j] );

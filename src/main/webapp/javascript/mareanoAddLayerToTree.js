@@ -159,7 +159,7 @@ function addLayerToGroup( gruppeNavn, gruppeText, map, mapPanel, layers, store, 
 //                      if (event.ui._silent !== true && maxExtent) {
 //                      app.mapPanel.map.zoomToExtent(maxExtent, true);
 //                      }
-                        displayLegendGraphicsAndSpesialpunkt(app.mapPanel.map.getExtent() + "", layer.metadata['kartlagId'], layerRecord.getLayer(), event, app);
+                        displayLegendGraphicsAndSpesialpunkt(app.mapPanel.map.getExtent() + "", layerRecord.getLayer(), event, app);
                     }
                     //app.mapPanel.map.addLayer(layer); //adds layer to Overlay but mareano_wmslayerpanel is missing from properties and no layer properties are shown                        
                     //displayLegendGraphicsAndSpesialpunkt(app.mapPanel.map.getExtent() + "", layer.metadata['kartlagId'], layerRecord.getLayer(), event, app);   
@@ -246,24 +246,26 @@ function addKartbildeAbstractOrRemoveWithName(text, checked) {
     }
 }
 
-function addLegend(kartlagId) {
-	displayLegendGraphicsAndSpesialpunkt(null, kartlagId, null, null, null);
+function addLegend(layer) {
+	displayLegendGraphicsAndSpesialpunkt(null, layer, null, null);
 }
 
-function displayLegendGraphicsAndSpesialpunkt(extent, kartlagId, layer, event, app) {
+function displayLegendGraphicsAndSpesialpunkt(extent, layer, event, app) {
     var languageChoosen = getLanguage();
+    var id = layer.metadata['kartlagId'];
+    var title = layer.metadata['kartlagTitle'];
     jQuery.ajax({
         type: 'get',
         url: "spring/legendAndSpesialpunkt",
         contentType: "application/json",
         data: {
-            kartlagId: kartlagId,
+            kartlagId: id,
             language: languageChoosen,
             extent: extent
         },
         success:function(data) {
-            addLegendAndInfo(kartlagId, data);
-            addSpesialpunkt(extent, kartlagId, layer, event, app, data);
+            addLegendAndInfo(id, title, data);
+            addSpesialpunkt(extent, id, layer, event, app, data);
         }
     }); 
 }
@@ -312,12 +314,12 @@ function addSpesialpunkt(extent, kartlagId, layer, event, app, data) {
     }
 }
 
-function addLegendAndInfo( kartlagId, data ) {
+function addLegendAndInfo( kartlagId, kartlagTitle, data ) {
     
     var currentLegends = getCurrentLegendFragment();
     
     var insertAfterIndex = insertLegendAtIndex( currentLegends, kartlagId )
-    var newLegendDiv = createNewLegendFragment( kartlagId, data );
+    var newLegendDiv = createNewLegendFragment( kartlagId, kartlagTitle, data );
     var arrayCurrentLegend = getArrayOfLegendDivs( currentLegends );
     
     arrayCurrentLegend.splice(insertAfterIndex +1, 0, newLegendDiv); 

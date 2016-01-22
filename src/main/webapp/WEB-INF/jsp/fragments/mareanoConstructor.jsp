@@ -125,9 +125,6 @@ var backgroundSeaGroupName ="backgroundSea";
 
 var hovedtema,gruppe;
 
-
-
-
 /**
  * Creates layers for background layers.
  * This could be merged into generic function that createLayerRecord could use
@@ -150,7 +147,8 @@ function createBackgroundLayerObject(layer) {
             },{
             metadata: {
                 keyword: layer.keyword,
-                'kartlagId': layer.id
+                'kartlagId': layer.id,
+                'kartlagTitle': layer.title
             },
             singleTile:false
         }
@@ -175,7 +173,8 @@ function createLayerRecord(panelGroup,isVisible,layer)
                 opacity: 1,
                 metadata: {
                     keyword: layer.keyword,
-                    'kartlagId': ''+layer.id
+                    'kartlagId': ''+layer.id,
+                    'kartlagTitle': layer.title 
                 },
                 minScale: layer.scalemax*(96/0.0254),
                 maxScale: (layer.scalemin > 0) ? layer.scalemin*(96/0.0254) : 0.001,

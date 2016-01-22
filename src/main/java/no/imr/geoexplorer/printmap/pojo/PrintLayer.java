@@ -11,6 +11,10 @@ public class PrintLayer {
     private List<BoundingBox> gridBoundingBoxes;
     private int columnSize;
     private List<String> position;
+    private List<Legend> legend;
+    private String kartlagTitle;
+    private String kartlagId;
+    private boolean visible;
     
     public String getUrl() {
         return url;
@@ -36,4 +40,30 @@ public class PrintLayer {
     public void setPosition(List<String> position) {
         this.position = position;
     }
+    public List<Legend> getLegend() {
+        return legend;
+    }
+    public void setLegend(List<Legend> legend) {
+        this.legend = legend;
+    }
+    public String getKartlagTitle() {
+        return kartlagTitle;
+    }
+    public void setKartlagTitle(String kartlagTitle) {
+        this.kartlagTitle = kartlagTitle;
+    }
+    
+    public String getKartlagId() {
+        return kartlagId;
+    }
+    public void setKartlagId(String kartlagId) {
+        this.kartlagId = kartlagId;
+    }
+    public boolean isVisible() {
+        return visible;
+    }
+    public void setVisible(boolean visible) {
+        this.visible = visible;
+    }
+    
 }

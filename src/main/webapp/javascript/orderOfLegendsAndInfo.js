@@ -95,7 +95,7 @@ function removeKartlagFromHash(kartlagIdRemoved) {
     }
 }
 
-function createNewLegendFragment(kartlagId, data) {
+function createNewLegendFragment(kartlagId, kartlagTitle, data) {
     
     var newLegendFragment = '<div id="'+kartlagId+'">';
     var legendHash = [];
@@ -117,7 +117,7 @@ function createNewLegendFragment(kartlagId, data) {
     } 
     newLegendFragment += '</div>';
     
-    layerIdHash.push( { "kartlagId": kartlagId, "legend":legendHash} );
+    layerIdHash.push( { "kartlagId": kartlagId, "legend":legendHash, "kartlagTitle": kartlagTitle } );
     
     return newLegendFragment;
 }

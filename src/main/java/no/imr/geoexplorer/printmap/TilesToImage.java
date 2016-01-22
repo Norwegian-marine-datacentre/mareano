@@ -14,12 +14,16 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.URLDecoder;
 import java.util.List;
 
 import javax.imageio.ImageIO;
 
-import no.imr.geoexplorer.printmap.pojo.Layer;
+
+
+
 import no.imr.geoexplorer.printmap.pojo.Legend;
+import no.imr.geoexplorer.printmap.pojo.PrintLayer;
 import no.imr.geoexplorer.printmap.pojo.PrintLayerList;
 
 import org.springframework.stereotype.Component;
@@ -73,9 +77,13 @@ public class TilesToImage {
             in = con.getInputStream();
             
             BufferedImage img = ImageIO.read(in);
+            System.out.println("getting image for url:"+wmsUrl);
+            if (img != null) {
+                System.out.println("and img:"+img.toString());
+            } else { System.out.println("image empty!"+img);}
             return img;
         }
-        return new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
+        return null;
     }
     
     public BufferedImage appendImage( BufferedImage appendTo, BufferedImage appendThis) {
@@ -108,7 +116,7 @@ public class TilesToImage {
     private final static int LEGEND_BOARDER_HEIGHT = 5;
     private final static int LEGEND_BOARDER_HEIGHT_BOTTOM_FILL = 4;
     
-    public BufferedImage writeLegend( BufferedImage mapImage, List<Layer> layers) throws Exception {
+    public BufferedImage writeLegend( BufferedImage mapImage, List<PrintLayer> printLayers) throws Exception {
         Graphics2D g2 = (Graphics2D)mapImage.getGraphics();
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2.setColor(Color.black);
@@ -121,20 +129,25 @@ public class TilesToImage {
         int writeHeight = LAYER_TEXT_SPACE;
         
         int legendHeight = LEGEND_BOARDER_HEIGHT;
-        for ( Layer l : layers ) {
-            legendHeight += LAYER_TEXT_SPACE + (LEGEND_TEXT_SPACE * l.getLegend().size()); 
+        for ( PrintLayer printlayer : printLayers ) {
+            legendHeight += LAYER_TEXT_SPACE + (LEGEND_TEXT_SPACE * printlayer.getLegend().size()); 
         }
         legendHeight += LEGEND_BOARDER_HEIGHT_BOTTOM_FILL;
         fillRectangleWhite(g2, fillLegendWidth, LEGEND_BOARDER_HEIGHT, LEGEND_BOARDER_WIDTH, legendHeight);
          
-        for ( int i=0; i < layers.size(); i++) {
-            Layer layer = layers.get(i);
+        for ( int i=0; i < printLayers.size(); i++) {
+            PrintLayer printlayer = printLayers.get(i);
             
             g2.setFont( layerFont );
-            g2.drawString(layer.getKartlagNavn(), writeLegendWidth, writeHeight );
+            String title = printlayer.getKartlagTitle();
+            if ( !title.equals("") ) {
+                g2.drawString( title, writeLegendWidth, writeHeight );
+            } else {
+                g2.drawString("No title for layer", writeLegendWidth, writeHeight);
+            }
             writeHeight += LAYER_TEXT_SPACE;
             
-            List<Legend> legends = layer.getLegend();
+            List<Legend> legends = printlayer.getLegend();
             g2.setFont(legendFont);
             for ( int j=0; j < legends.size(); j++ ) {
                 Legend legend = legends.get(j);

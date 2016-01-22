@@ -5,9 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.StringTokenizer;
 
-import no.imr.geoexplorer.printmap.TilesToImage;
 import no.imr.geoexplorer.printmap.pojo.BoundingBox;
-import no.imr.geoexplorer.printmap.pojo.Layer;
 import no.imr.geoexplorer.printmap.pojo.Legend;
 import no.imr.geoexplorer.printmap.pojo.PrintLayer;
 import no.imr.geoexplorer.printmap.pojo.PrintLayerList;
@@ -65,7 +63,8 @@ public class PrintMapControllerTest {
         printLayer.setUrl( url );
         printLayer.setPosition( Arrays.asList(position) );
         
-        List<PrintLayer> plls = new ArrayList<PrintLayer>(1);
+        List<PrintLayer> plls = new ArrayList<PrintLayer>(2);
+        plls.add(printLayer);
         plls.add(printLayer);
         printLayers.setPrintlayers(plls);
         printLayers.setWidth(1300);
@@ -73,15 +72,16 @@ public class PrintMapControllerTest {
         printLayers.setScaleLine(37);
         printLayers.setScaleLineText("100km");
         
-        printLayers.setLayers(createLegendInfo());
+        createLegendInfo(plls);
         
         return printLayers;
     }
     
-    public List<Layer> createLegendInfo() {
-        List<Layer> layers = new ArrayList<Layer>(2);
-        Layer layer = new Layer();
-        layer.setKartlagId("242");
+    public void createLegendInfo(List<PrintLayer> plls) {
+        
+        PrintLayer pll = plls.get(0);
+        pll.setKartlagId("242");
+        pll.setKartlagTitle("Videostasjoner");
         List<Legend> legends = new ArrayList<Legend>(2);
         Legend legend1 = new Legend();
         legend1.setText("Beamtrawl");
@@ -91,10 +91,11 @@ public class PrintMapControllerTest {
         legend2.setUrl("http://www.mareano.no/kart/images/legends/mareano_stations/rp-slead.png");
         legends.add(legend1);
         legends.add(legend2);
-        layer.setLegend(legends);
+        pll.setLegend(legends);
         
-        Layer layer2 = new Layer();
-        layer2.setKartlagId("243");
+        PrintLayer pll2 = plls.get(1);
+        pll2.setKartlagId("243");
+        pll2.setKartlagTitle("Bomtrål");
         List<Legend> legends2 = new ArrayList<Legend>(2);
         Legend legend3 = new Legend();
         legend3.setText("Boxcore");
@@ -104,10 +105,6 @@ public class PrintMapControllerTest {
         legend4.setUrl("http://www.mareano.no/kart/images/legends/mareano_stations/vanveen.png");     
         legends2.add(legend3);
         legends2.add(legend4);
-        layer2.setLegend(legends2);
-        
-        layers.add(layer);
-        layers.add(layer2);
-        return layers;
+        pll2.setLegend(legends2);
     }
 }

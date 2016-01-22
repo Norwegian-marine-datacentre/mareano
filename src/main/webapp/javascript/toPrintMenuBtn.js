@@ -6,30 +6,9 @@ var toPrintMenuButton = function printImageHelper() {
     var height = this.mapPanel.map.getSize().h;
     
     var layerObjectArray = new Array();
-    this.mapPanel.layers.each(function(record) {
-        var layer = record.getLayer();
-        if ( record.getLayer().getVisibility() ) {
-            var layer = record.getLayer();
-            var params = layer.params;
-            if ( params != undefined ) {
-                var isSendt = false;
-                var gridUrls = [];
-                if ( isSendt == false && layer.grid != '' && layer.grid.length > 1) {
-                    gridUrls = sendGridedLayer.call( this, layer );
-                } 
-                if (layer.grid[0] != null ) {
-                    layerObject = {
-                            url: layer.grid[0][0].url,
-                            gridBoundingBoxes: gridUrls,
-                            columnSize: layer.grid[0].length,
-                            position: [layer.grid[0][0].position.x, layer.grid[0][0].position.y]
-                    }
-                    layerObjectArray.push( layerObject );
-                }
-            }
-        }
-    }, this);   
-    
+    layersToJSON.call(this, layerObjectArray);
+    addLegendsToJSON_AndAddHiddenLayersWithLegend(layerObjectArray);
+
     var scaleLineTxt = jQuery('.olControlScaleLineTop').css('width');
     var scaleLine = parseInt(scaleLineTxt);
     var scaleLineText = jQuery('.olControlScaleLineTop').text();
@@ -43,7 +22,6 @@ var toPrintMenuButton = function printImageHelper() {
             'printlayers': layerObjectArray,
             'width': this.mapPanel.map.getSize().w,
             'height': this.mapPanel.map.getSize().h,
-            'layers': getlayerIdHash(),
             'scaleLine': scaleLine,
             'scaleLineText': scaleLineText
         }),
@@ -63,7 +41,7 @@ var toPrintMenuButton = function printImageHelper() {
     
 }
 
-var sendGridedLayer = function drawGridHelper(layer) {
+var getBBoxFromGriddedLayer = function getBBoxFromGriddedLayerAsFlattendArray(layer) {
     isSendt = true;
     var sizeFlatenArray = layer.grid.length * layer.grid[0].length;
 
@@ -77,3 +55,106 @@ var sendGridedLayer = function drawGridHelper(layer) {
     }   
     return gridUrls;
 };
+
+/**
+ * Adds all the visible layers from the map
+ * like background layer and all visible overlays
+ * but does not add legend info 
+ * @param layerObjectArray
+ */
+var layersToJSON = function addVisibleLayersToJSON( layerObjectArray ) {
+    this.mapPanel.layers.each(function(record) {
+        var layer = record.getLayer();
+        if ( record.getLayer().getVisibility() ) {
+            var layer = record.getLayer();
+            var params = layer.params;
+            
+            if ( params != undefined ) {
+                var isSendt = false;
+                var gridUrls = [];
+                if ( isSendt == false && layer.grid != '' && layer.grid.length > 1) {
+                    gridUrls = getBBoxFromGriddedLayer.call( this, layer );
+                } 
+                var layerId = "";
+                var layerTitle = "";
+                if ( layer.metadata != null && layer.metadata['kartlagId'] != undefined) {
+                    var layerId = layer.metadata['kartlagId'] + "";            
+                }
+                if ( layer.metadata != null && layer.metadata['kartlagTitle'] != undefined) {
+                    layerTitle = layer.metadata['kartlagTitle'];
+                }
+                if (layer.grid[0] != null ) {
+                    var layerObject = {
+                            url: layer.grid[0][0].url,
+                            gridBoundingBoxes: gridUrls,
+                            columnSize: layer.grid[0].length,
+                            position: [layer.grid[0][0].position.x, layer.grid[0][0].position.y],
+                            kartlagId: layerId,
+                            kartlagTitle: layerTitle,
+                            visible: true,
+                            legend: []
+                    }
+                    layerObjectArray.push( layerObject );
+                }
+            }
+        }
+    }, this);
+}
+
+/**
+ * Adds legend info to already added layers that are visible
+ * and adds layer info and legend info to hidden layers.
+ * That is layers that are not visible in that zoom resolution
+ *  
+ * @param layerObjectArray
+ */
+function addLegendsToJSON_AndAddHiddenLayersWithLegend(layerObjectArray) {
+    var idsFromVisibleLayers = jQuery.map(layerObjectArray, function(v, i){
+        return v.kartlagId;
+    });
+    var legendLayers = getlayerIdHash();
+    var idsFromLegend = jQuery.map(legendLayers, function(v, i){
+        return v.kartlagId;
+    });
+    
+    var layerObject;
+    for ( var i=0; i < idsFromLegend.length; i++) {
+        var layerId = idsFromLegend[i];
+        
+        var kartlagTitle = jQuery.map(legendLayers, function(v, i){
+            if ( v.kartlagId == layerId) {
+                return v.kartlagTitle;
+            }
+        });
+        kartlagTitle = kartlagTitle.toString(); //object is array;
+        
+        if ( idsFromVisibleLayers.indexOf(layerId) == -1) {
+            // overlay layer has not been added because it is not visible
+            layerObject = {
+                    url: '',
+                    gridBoundingBoxes: [],
+                    columnSize: 0,
+                    position:  [0,0],
+                    kartlagId: layerId,
+                    kartlagTitle: kartlagTitle, 
+                    visible: false,
+                    legend: []
+            }
+            layerObjectArray.push( layerObject );
+        } else {
+            layerObject = jQuery.map(layerObjectArray, function(v, i){
+                if ( v.kartlagId == layerId) {
+                    return v;
+                }
+            });    
+            layerObject = layerObject[0];
+        }
+        //overlay or background layer already added - append legend too
+        var legendObj = jQuery.map(legendLayers, function(v, i){
+            if ( v.kartlagId == layerId) {
+                return v.legend;
+            }
+        });
+        layerObject['legend'] = legendObj;
+    }    
+}
