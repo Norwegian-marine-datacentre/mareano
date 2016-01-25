@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import no.imr.geoexplorer.admindatabase.dao.MareanoAdminDbDao;
 import no.imr.geoexplorer.admindatabase.mybatis.pojo.KartlagEnNo;
+import no.imr.geoexplorer.printmap.PrintedMapUtils;
 import no.imr.geoexplorer.printmap.TilesToImage;
 import no.imr.geoexplorer.printmap.pojo.BoundingBox;
 import no.imr.geoexplorer.printmap.pojo.ImageFilenameResponse;
@@ -46,6 +47,9 @@ public class PrintMapController {
     
     @Autowired
     private ApplicationContext appContext;
+    
+    @Autowired
+    private PrintedMapUtils printedMapUtils;
     
 //    @RequestMapping(value="/postMapImage", method = RequestMethod.POST)
 //    public @ResponseBody ImageFilenameResponse postMapImage( @RequestParam("printImage") String jsonOfPrintLayer, HttpServletResponse resp) throws Exception {
@@ -128,11 +132,11 @@ public class PrintMapController {
         System.out.println("crop:"+(System.currentTimeMillis()-startTime));
         mapImage = tilesUtil.cropImage( mapImage, position, width, height );
         System.out.println("legend:"+(System.currentTimeMillis()-startTime));
-        mapImage = tilesUtil.writeLegend( mapImage, printLayers );
+        mapImage = printedMapUtils.writeLegend( mapImage, printLayers );
         System.out.println("northarrow:"+(System.currentTimeMillis()-startTime));
         mapImage = addNorthArrow( mapImage );
         
-        mapImage = tilesUtil.addScaleBar( mapImage, pll);
+        mapImage = printedMapUtils.addScaleBar( mapImage, pll);
         
         String fileName = "printMap";        
         File temp = File.createTempFile(fileName, "."+PNG);
@@ -179,7 +183,7 @@ public class PrintMapController {
     protected BufferedImage addNorthArrow( BufferedImage mapImage ) throws Exception {
         Resource resource = appContext.getResource("classpath:"+NORTH_ARROW);
         BufferedImage northArrow = ImageIO.read(resource.getFile());
-        mapImage = tilesUtil.writeNorthArrow(mapImage, northArrow);
+        mapImage = printedMapUtils.writeNorthArrow(mapImage, northArrow);
         return mapImage;
     }
         

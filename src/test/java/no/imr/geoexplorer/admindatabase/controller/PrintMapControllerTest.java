@@ -27,13 +27,13 @@ public class PrintMapControllerTest {
     @Test
     public void createTempFileWithBackgroundImage() throws Exception {
 
-        PrintLayerList printLayers = setupMap();
+        PrintLayerList printLayers = setupPrintLayers();
         
         MockHttpServletResponse respo = new MockHttpServletResponse();
         printMap.postMapImage(printLayers, respo );
     }
     
-    public PrintLayerList setupMap() {
+    public static PrintLayerList setupPrintLayers() {
         String url = "http://opencache.statkart.no/gatekeeper/gk/gk.open?&layers=barentswatch_grunnkart&FORMAT=image/png&TRANSPARENT=TRUE&ISBASELAYER=true&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&STYLES=&SRS=EPSG:32633&BBOX=-1806752,7659488,-1113504,8352736&WIDTH=256&HEIGHT=256";
         String[] gridSet = {
                 "-1806752,7659488,-1113504,8352736","-1113504,7659488,-420256,8352736","-420256,7659488,272992,8352736","272992,7659488,966240,8352736","966240,7659488,1659488,8352736","1659488,7659488,2352736,8352736","2352736,7659488,3045984,8352736",
@@ -77,7 +77,7 @@ public class PrintMapControllerTest {
         return printLayers;
     }
     
-    public void createLegendInfo(List<PrintLayer> plls) {
+    public static void createLegendInfo(List<PrintLayer> plls) {
         
         PrintLayer pll = plls.get(0);
         pll.setKartlagId("242");
@@ -95,7 +95,7 @@ public class PrintMapControllerTest {
         
         PrintLayer pll2 = plls.get(1);
         pll2.setKartlagId("243");
-        pll2.setKartlagTitle("Bomtr�l");
+        pll2.setKartlagTitle("BomtrålBomtrålBomtrålBomtrålBomtrålBomtrål");
         List<Legend> legends2 = new ArrayList<Legend>(2);
         Legend legend3 = new Legend();
         legend3.setText("Boxcore");

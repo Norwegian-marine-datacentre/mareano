@@ -1,38 +1,42 @@
 package no.imr.geoexplorer.printmap;
 
-import java.awt.BasicStroke;
 import java.awt.Color;
-import java.awt.Font;
 import java.awt.Graphics2D;
-import java.awt.RenderingHints;
-import java.awt.Shape;
-import java.awt.Stroke;
-import java.awt.geom.Line2D;
-import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
-import java.net.URLDecoder;
 import java.util.List;
 
 import javax.imageio.ImageIO;
 
-
-
-
-import no.imr.geoexplorer.printmap.pojo.Legend;
-import no.imr.geoexplorer.printmap.pojo.PrintLayer;
-import no.imr.geoexplorer.printmap.pojo.PrintLayerList;
-
 import org.springframework.stereotype.Component;
 
 
-
+/**
+ * Provides utility functions to assemble
+ * a map with overlays. Like croping, stitching and
+ * overlaying map layers
+ * 
+ * @author endrem
+ *
+ */
 @Component
 public class TilesToImage {
     
+    private URLConnection con = null;
+    private InputStream in = null;
+    
+    /**
+     * Crops image to x, y from List<String> position.
+     * @param src
+     * @param position
+     * @param width
+     * @param height
+     * @return
+     * @throws Exception
+     */
     public BufferedImage cropImage( BufferedImage src, List<String> position, int width, int height ) throws Exception {
         
         int x = new Integer(position.get(0) );
@@ -43,6 +47,12 @@ public class TilesToImage {
         return dest; 
     }
 
+    /**
+     * Stiches tiles from the given 2-d array of BufferedImages
+     * @param tileSet
+     * @return
+     * @throws Exception
+     */
     public BufferedImage stitchTiles(BufferedImage[][] tileSet) throws Exception {
         
         BufferedImage map = new BufferedImage(256 * tileSet[0].length, 256 * tileSet.length, BufferedImage.TYPE_INT_ARGB);
@@ -58,10 +68,8 @@ public class TilesToImage {
         return map;
     }
     
-    private URLConnection con = null;
-    private InputStream in = null;
     /**
-     * If url is null or empty - returns 1x1 empty BufferedImage
+     * If url is null or empty - return null
      * @param url
      * @return
      * @throws Exception
@@ -77,10 +85,6 @@ public class TilesToImage {
             in = con.getInputStream();
             
             BufferedImage img = ImageIO.read(in);
-            System.out.println("getting image for url:"+wmsUrl);
-            if (img != null) {
-                System.out.println("and img:"+img.toString());
-            } else { System.out.println("image empty!"+img);}
             return img;
         }
         return null;
@@ -108,106 +112,5 @@ public class TilesToImage {
         return c;
     }
     
-    private final static int LAYER_TEXT_SPACE = 19;
-    private final static int LEGEND_TEXT_SPACE = 15;
-    private final static int LEGEND_WIDTH = 230;
-    private final static int LEGEND_WIDTH_WRITE_SPACE = 228;
-    private final static int LEGEND_BOARDER_WIDTH = 200;
-    private final static int LEGEND_BOARDER_HEIGHT = 5;
-    private final static int LEGEND_BOARDER_HEIGHT_BOTTOM_FILL = 4;
-    
-    public BufferedImage writeLegend( BufferedImage mapImage, List<PrintLayer> printLayers) throws Exception {
-        Graphics2D g2 = (Graphics2D)mapImage.getGraphics();
-        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g2.setColor(Color.black);
-        Font legendFont = new Font("Serif", Font.PLAIN, 14);
-        Font layerFont = new Font("Serif", Font.BOLD, 14); 
-        
-        int imageWidth = mapImage.getWidth();
-        int writeLegendWidth = imageWidth - LEGEND_WIDTH_WRITE_SPACE;
-        int fillLegendWidth = imageWidth - LEGEND_WIDTH;
-        int writeHeight = LAYER_TEXT_SPACE;
-        
-        int legendHeight = LEGEND_BOARDER_HEIGHT;
-        for ( PrintLayer printlayer : printLayers ) {
-            legendHeight += LAYER_TEXT_SPACE + (LEGEND_TEXT_SPACE * printlayer.getLegend().size()); 
-        }
-        legendHeight += LEGEND_BOARDER_HEIGHT_BOTTOM_FILL;
-        fillRectangleWhite(g2, fillLegendWidth, LEGEND_BOARDER_HEIGHT, LEGEND_BOARDER_WIDTH, legendHeight);
-         
-        for ( int i=0; i < printLayers.size(); i++) {
-            PrintLayer printlayer = printLayers.get(i);
-            
-            g2.setFont( layerFont );
-            String title = printlayer.getKartlagTitle();
-            if ( !title.equals("") ) {
-                g2.drawString( title, writeLegendWidth, writeHeight );
-            } else {
-                g2.drawString("No title for layer", writeLegendWidth, writeHeight);
-            }
-            writeHeight += LAYER_TEXT_SPACE;
-            
-            List<Legend> legends = printlayer.getLegend();
-            g2.setFont(legendFont);
-            for ( int j=0; j < legends.size(); j++ ) {
-                Legend legend = legends.get(j);
-                if ( legend.getUrl() != null && !legend.getUrl().equals("") ) {
-                    URL url = new URL(legend.getUrl());
-                    BufferedImage legendImg = ImageIO.read(url);
-                    g2.drawImage(legendImg, writeLegendWidth, writeHeight - legendImg.getHeight() + 4, null);
-                
-                    g2.setFont( legendFont );
-                    g2.drawString(legend.getText(), writeLegendWidth + legendImg.getWidth(), writeHeight);
-                    writeHeight += LEGEND_TEXT_SPACE;
-                }
-            }
-        }
-        addBoarder(g2, fillLegendWidth, LEGEND_BOARDER_HEIGHT, LEGEND_BOARDER_WIDTH, legendHeight);
-        addBoarder(g2, 0, 0, imageWidth-1, mapImage.getHeight()-1);
 
-        return mapImage;
-    }
-    
-    private void addBoarder(Graphics2D g2, int x, int y, int width, int height) {
-        float thickness = 1;
-        Stroke oldStroke = g2.getStroke();
-        g2.setStroke(new BasicStroke(thickness));
-        g2.drawRect(x, y, width, height);
-        g2.setStroke(oldStroke);
-    }
-    
-    private void fillRectangleWhite(Graphics2D g2, double x, double y, double width, double height) {
-        Color color = g2.getColor();
-        g2.setPaint(Color.white);
-        g2.fill(new Rectangle2D.Double(x, y, width, height));
-        g2.setColor(color);
-    }
-    
-    public BufferedImage writeNorthArrow( BufferedImage mapImage, BufferedImage northArrow ) {
-        Graphics2D g2 = (Graphics2D)mapImage.getGraphics();
-        int imageWidth = mapImage.getWidth();
-        int imageHeight = mapImage.getHeight();
-        
-        g2.drawImage(northArrow, imageWidth -35, imageHeight -60, null);
-        return mapImage;
-    }
-    
-    public BufferedImage addScaleBar(BufferedImage mapImage, PrintLayerList pll) {
-        Graphics2D g2 = (Graphics2D)mapImage.getGraphics();
-        int imageWidth = mapImage.getWidth();
-        int imageHeight = mapImage.getHeight();
-        
-        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        Font LayerFont = new Font("Serif", Font.PLAIN, 14);
-        g2.setColor(Color.black);
-        g2.setFont(LayerFont);
-        
-        Shape l = new Line2D.Double( imageWidth - (60 + pll.getScaleLine()), imageHeight -15, imageWidth - 60, imageHeight - 15 );
-        Stroke stroke = g2.getStroke();
-        g2.draw(l);
-        
-        g2.setStroke(stroke);
-        g2.drawString( pll.getScaleLineText(), imageWidth - (62 + pll.getScaleLine()), imageHeight -17 );
-        return mapImage;
-    }
 }
