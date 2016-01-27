@@ -5,10 +5,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.StringTokenizer;
 
-import no.imr.geoexplorer.printmap.pojo.BoundingBox;
-import no.imr.geoexplorer.printmap.pojo.Legend;
-import no.imr.geoexplorer.printmap.pojo.PrintLayer;
-import no.imr.geoexplorer.printmap.pojo.PrintLayerList;
+import no.imr.geoexplorer.printmap.json.pojo.BoundingBox;
+import no.imr.geoexplorer.printmap.json.pojo.Legend;
+import no.imr.geoexplorer.printmap.json.pojo.PrintLayer;
+import no.imr.geoexplorer.printmap.json.pojo.PrintLayerList;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

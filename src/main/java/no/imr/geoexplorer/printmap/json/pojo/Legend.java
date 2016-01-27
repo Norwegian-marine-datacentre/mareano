@@ -1,4 +1,4 @@
-package no.imr.geoexplorer.printmap.pojo;
+package no.imr.geoexplorer.printmap.json.pojo;
 
 public class Legend {
     

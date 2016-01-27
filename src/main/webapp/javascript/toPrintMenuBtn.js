@@ -28,9 +28,12 @@ var toPrintMenuButton = function printImageHelper() {
         dataType: "json",
         contentType: "application/json; charset=utf-8",
         success:function(data) {
+            console.log("filename to get:"+data.filename);
             var mapImageLink = jQuery("<a id='downloadPrintMap' href='spring/getMapImage?printFilename="+data.filename+"' download hidden></a>");
             jQuery('body').append(mapImageLink);
-            document.getElementById("downloadPrintMap").click();
+            var formDocument = document.getElementById("downloadPrintMap");
+            formDocument.click();
+            formDocument.remove();
             myMask.hide();
         },
         error: function (request, status, error) {

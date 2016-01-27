@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.List;
+import java.util.concurrent.Future;
 
 import javax.imageio.ImageIO;
 
@@ -53,7 +54,7 @@ public class TilesToImage {
      * @return
      * @throws Exception
      */
-    public BufferedImage stitchTiles(BufferedImage[][] tileSet) throws Exception {
+    public BufferedImage stitchTiles(Future<BufferedImage>[][] tileSet) throws Exception {
         
         BufferedImage map = new BufferedImage(256 * tileSet[0].length, 256 * tileSet.length, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g = (Graphics2D)map.getGraphics();
@@ -61,7 +62,7 @@ public class TilesToImage {
         g.fillRect(0, 0, 256 * tileSet[0].length, 256 * tileSet.length);
         for (int i = 0; i < tileSet.length; i++) {
             for (int j = 0; j < tileSet[i].length; j++) {
-                final BufferedImage tile = tileSet[i][j];
+                final BufferedImage tile = tileSet[i][j].get();
                 g.drawImage(tile, null, j * 256, i * 256);
             }
         }
@@ -74,18 +75,19 @@ public class TilesToImage {
      * @return
      * @throws Exception
      */
-    public BufferedImage requestImage(String wmsUrl) throws IllegalArgumentException, IOException {
+    public Future<BufferedImage> requestImage(String wmsUrl) throws IllegalArgumentException, IOException {
         
         if ( wmsUrl != null && !wmsUrl.equals("") ) {
             URL url = new URL(wmsUrl);
             
-            con = url.openConnection();
-            con.setConnectTimeout(2000);
-            con.setReadTimeout(2000);
-            in = con.getInputStream();
+//            con = url.openConnection();
+//            con.setConnectTimeout(2000);
+//            con.setReadTimeout(2000);
+//            in = con.getInputStream();
             
-            BufferedImage img = ImageIO.read(in);
-            return img;
+//            BufferedImage img = ImageIO.read(in);
+//            return img;
+            return DownloadConcurrent.startDownloading(url);
         }
         return null;
     }

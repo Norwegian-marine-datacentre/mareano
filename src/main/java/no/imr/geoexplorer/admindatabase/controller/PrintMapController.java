@@ -3,20 +3,23 @@ package no.imr.geoexplorer.admindatabase.controller;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.net.URLDecoder;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletResponse;
 
 import no.imr.geoexplorer.admindatabase.dao.MareanoAdminDbDao;
-import no.imr.geoexplorer.admindatabase.mybatis.pojo.KartlagEnNo;
 import no.imr.geoexplorer.printmap.PrintedMapUtils;
 import no.imr.geoexplorer.printmap.TilesToImage;
-import no.imr.geoexplorer.printmap.pojo.BoundingBox;
+import no.imr.geoexplorer.printmap.json.pojo.BoundingBox;
+import no.imr.geoexplorer.printmap.json.pojo.PrintLayer;
+import no.imr.geoexplorer.printmap.json.pojo.PrintLayerList;
+import no.imr.geoexplorer.printmap.pojo.FutureImageOrTiles;
 import no.imr.geoexplorer.printmap.pojo.ImageFilenameResponse;
-import no.imr.geoexplorer.printmap.pojo.PrintLayer;
-import no.imr.geoexplorer.printmap.pojo.PrintLayerList;
 
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,15 +54,6 @@ public class PrintMapController {
     @Autowired
     private PrintedMapUtils printedMapUtils;
     
-//    @RequestMapping(value="/postMapImage", method = RequestMethod.POST)
-//    public @ResponseBody ImageFilenameResponse postMapImage( @RequestParam("printImage") String jsonOfPrintLayer, HttpServletResponse resp) throws Exception {
-//        
-//        String decodeJson = URLDecoder.decode(jsonOfPrintLayer, "utf-8"); 
-//        PrintLayerList pll = 
-//                new ObjectMapper().readValue(decodeJson, PrintLayerList.class);
-//        return getMapImage( pll, resp);
-//    }
-    
     @RequestMapping(value="/postMapImage", method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     protected @ResponseBody ImageFilenameResponse postMapImage( @RequestBody PrintLayerList pll, HttpServletResponse resp) throws Exception {
         
@@ -71,8 +65,10 @@ public class PrintMapController {
         int height = pll.getHeight();
         
         BufferedImage mapImage = null;
-        BufferedImage backgroundImage = null;
-        BufferedImage overlayImage = null;
+        Future<BufferedImage>[][] backgroundTilesFuture = null;
+        Future<BufferedImage> overlayFuture = null;
+        Map<Integer, FutureImageOrTiles> layerMap = 
+                new HashMap<Integer, FutureImageOrTiles>(printLayers.size());
         List<String> position = null;
         
         //get position only from background grid
@@ -82,53 +78,60 @@ public class PrintMapController {
             }
         }
         for ( int i=0; i< printLayers.size(); i++ ) {
-            
             //assert gridArray.size % columnSize == 0
             PrintLayer printLayer = printLayers.get(i);
-            if ( printLayer.getColumnSize() > 1) {
-                if ( backgroundImage != null) {
-                    System.out.println("sysout: OVERWRITING BACKGROUND IMAGE");
-                    LOG.error("OVERWRITING BACKGROUND IMAGE");
-                }
-                
+            if ( printLayer.getColumnSize() > 1) {                
                 try {
                     System.out.println("tiledImage:"+printLayer.getKartlagTitle()+" "+(System.currentTimeMillis()-startTime));
-                    backgroundImage = getTiledImage( mapImage, printLayer);
+                    backgroundTilesFuture = getTiledImage( printLayer);
+                    FutureImageOrTiles tiles = new FutureImageOrTiles();
+                    tiles.setTiles(backgroundTilesFuture);
+                    layerMap.put(i, tiles);
                 } catch( IOException ioe) {
-                    printLayer.setKartlagTitle(printLayer.getKartlagTitle() + " err:"+ ioe.getMessage());
+                    String errorMsg = printLayer.getKartlagTitle() + " err:"+ ioe.getMessage();
+                    printLayer.setKartlagTitle(errorMsg);
+                    LOG.error(errorMsg);
+                    ioe.printStackTrace();
                 }
             } else {
-                if (overlayImage != null) {
-                    LOG.error("OVERWRITING OVERLAY IMAGE");
-                }
                 try {
                     System.out.println("overlay:"+printLayer.getKartlagTitle()+" "+(System.currentTimeMillis()-startTime));
                     System.out.println("url overlay:"+printLayer.getUrl() );
-                    overlayImage = getOverlay( printLayer.getUrl() );
+                    overlayFuture = getOverlay( printLayer.getUrl() );
+                    FutureImageOrTiles overlay = new FutureImageOrTiles();
+                    overlay.setImage(overlayFuture);
+                    layerMap.put(i, overlay);
                 } catch(IOException ioe) {
-                    printLayer.setKartlagTitle(printLayer.getKartlagTitle() + " err:"+ ioe.getMessage());
+                    String errorMsg = printLayer.getKartlagTitle() + " err:"+ ioe.getMessage();
+                    printLayer.setKartlagTitle(errorMsg);
+                    LOG.error(errorMsg);
+                    ioe.printStackTrace();
                 }
-            }
-
-            if (mapImage == null ) {
-                if (backgroundImage != null ) {
-                    mapImage = backgroundImage;
-                    backgroundImage = null;
-                } else if ( overlayImage != null ) {
-                    mapImage = overlayImage;
-                    overlayImage = null;
-                }
-            }
-            
-            if ( backgroundImage != null ) {
-                mapImage = tilesUtil.appendImage(mapImage, backgroundImage);
-                backgroundImage = null;
-            }
-            if ( overlayImage != null ) {
-                mapImage = tilesUtil.appendOverlay(mapImage, overlayImage, position);
-                overlayImage = null;
             }
         }
+        
+        for ( int i=0; i < printLayers.size(); i++ ) {
+            FutureImageOrTiles futureImage =  layerMap.get(i);
+            try {
+                if ( futureImage.getTiles() != null ) {
+                    Future<BufferedImage>[][] futureTiles = futureImage.getTiles();
+                    BufferedImage backgroundImage = tilesUtil.stitchTiles(futureTiles);
+                    if ( mapImage != null)
+                        mapImage = tilesUtil.appendImage(mapImage, backgroundImage);
+                    else 
+                        mapImage = backgroundImage;
+                } else if ( futureImage.getImage() != null ) {
+                    BufferedImage overlayImage = futureImage.getImage().get();
+                    mapImage = tilesUtil.appendOverlay(mapImage, overlayImage, position);
+                    overlayFuture = null;
+                }
+            } catch (ExecutionException ee) {
+                PrintLayer pl = printLayers.get(i);
+                String title = pl.getKartlagTitle();
+                pl.setKartlagTitle(title + " "+ ee.getMessage());
+            }
+        }
+        
         System.out.println("crop:"+(System.currentTimeMillis()-startTime));
         mapImage = tilesUtil.cropImage( mapImage, position, width, height );
         System.out.println("legend:"+(System.currentTimeMillis()-startTime));
@@ -157,21 +160,15 @@ public class PrintMapController {
     @RequestMapping(value="/getMapImage", method = RequestMethod.GET)
     public void getMapImage(@RequestParam("printFilename") String filename, HttpServletResponse resp) throws Exception {
         
-        if ( tempImageFilePath.equals("")) {
-            //Get tempropary file path
-            File temp2 = File.createTempFile("temp-file-name", ".tmp"); 
-            System.out.println("Temp file : " + temp2.getAbsolutePath());
-            
-            String absolutePath = temp2.getAbsolutePath();
-            String tempFilePath = absolutePath.
-                substring(0,absolutePath.lastIndexOf(File.separator));
-            
+        if ( tempImageFilePath.equals("")) { //Get temporary file path
+            File findDir = File.createTempFile("temp-file-name", ".tmp"); 
+            String path = findDir.getAbsolutePath();
+            String tempFilePath = path.substring(0,path.lastIndexOf(File.separator));
             tempImageFilePath = tempFilePath;
-            System.out.println(tempImageFilePath + File.separator + filename);
         }
         
-        File temp = new File(tempImageFilePath + File.separator + filename);
-        BufferedImage mapImage = ImageIO.read(temp); 
+        File tempMapFile = new File(tempImageFilePath + File.separator + filename);
+        BufferedImage mapImage = ImageIO.read(tempMapFile); 
         resp.setContentType("image/png");
         resp.setHeader("Content-Disposition", "attachment; filename="+filename);
         ImageIO.write(mapImage, PNG, resp.getOutputStream());        
@@ -187,7 +184,7 @@ public class PrintMapController {
         return mapImage;
     }
         
-    protected BufferedImage getTiledImage( BufferedImage aimage, PrintLayer printLayer ) throws Exception {
+    protected Future<BufferedImage>[][] getTiledImage( PrintLayer printLayer ) throws Exception {
 
         String url = printLayer.getUrl();
         int columnSize = printLayer.getColumnSize();
@@ -203,7 +200,7 @@ public class PrintMapController {
         int rows = gridArray.size() / columnSize;
         String[][] gridSet = new String[rows][columnSize];
         String[][] urlSet = new String[rows][columnSize];
-        BufferedImage[][] tileSet = new BufferedImage[rows][columnSize];
+        Future<BufferedImage>[][] tileSet = new Future[rows][columnSize];
         int k = 0;
         int j = 0;
         for ( int i=0; i< gridArray.size(); i++) {
@@ -211,17 +208,16 @@ public class PrintMapController {
             j = i / columnSize;
             gridSet[j][k] = gridArray.get(i).toString();
             urlSet[j][k] = url + "&BBOX=" + gridSet[j][k];
-            BufferedImage aTile = tilesUtil.requestImage(urlSet[j][k]);
+            Future<BufferedImage> aTile = tilesUtil.requestImage(urlSet[j][k]);
             tileSet[j][k] = aTile;
         }
-        
-        BufferedImage tiledImage = tilesUtil.stitchTiles( tileSet );
-        return tiledImage;
+        return tileSet;
     }
     
-    public BufferedImage getOverlay( String url ) throws IllegalArgumentException, IOException {
+    
+    public Future<BufferedImage> getOverlay( String url ) throws IllegalArgumentException, IOException {
         
-        BufferedImage overlay = tilesUtil.requestImage( url );
+        Future<BufferedImage> overlay = tilesUtil.requestImage( url );
         return overlay;
 
     }
