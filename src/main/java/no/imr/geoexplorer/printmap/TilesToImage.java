@@ -4,13 +4,12 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
-import java.net.URLConnection;
 import java.util.List;
 import java.util.concurrent.Future;
 
-import javax.imageio.ImageIO;
+import no.imr.geoexplorer.printmap.json.pojo.BoundingBox;
+import no.imr.geoexplorer.printmap.json.pojo.PrintLayer;
 
 import org.springframework.stereotype.Component;
 
@@ -26,8 +25,35 @@ import org.springframework.stereotype.Component;
 @Component
 public class TilesToImage {
     
-    private URLConnection con = null;
-    private InputStream in = null;
+    public Future<BufferedImage>[][] getTiledImage( PrintLayer printLayer ) throws IllegalArgumentException, IOException {
+
+        String url = printLayer.getUrl();
+        int columnSize = printLayer.getColumnSize();
+        List<BoundingBox> gridArray = printLayer.getGridBoundingBoxes();
+        
+        if ( url.contains("BBOX")) {
+            int indexOfBBOX = url.indexOf("BBOX");
+            String firstHalf = url.substring(0, indexOfBBOX);
+            String secondHalf = url.substring( indexOfBBOX, url.length() );
+            url = firstHalf + secondHalf.substring( secondHalf.indexOf("&")+1, secondHalf.length() );
+        }
+        
+        int rows = gridArray.size() / columnSize;
+        String[][] gridSet = new String[rows][columnSize];
+        String[][] urlSet = new String[rows][columnSize];
+        Future<BufferedImage>[][] tileSet = new Future[rows][columnSize];
+        int k = 0;
+        int j = 0;
+        for ( int i=0; i< gridArray.size(); i++) {
+            k = i % columnSize;
+            j = i / columnSize;
+            gridSet[j][k] = gridArray.get(i).toString();
+            urlSet[j][k] = url + "&BBOX=" + gridSet[j][k];
+            Future<BufferedImage> aTile = requestImage(urlSet[j][k]);
+            tileSet[j][k] = aTile;
+        }
+        return tileSet;
+    }
     
     /**
      * Crops image to x, y from List<String> position.
@@ -113,6 +139,4 @@ public class TilesToImage {
         
         return c;
     }
-    
-
 }
