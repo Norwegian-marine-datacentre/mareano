@@ -105,14 +105,6 @@ public class TilesToImage {
         
         if ( wmsUrl != null && !wmsUrl.equals("") ) {
             URL url = new URL(wmsUrl);
-            
-//            con = url.openConnection();
-//            con.setConnectTimeout(2000);
-//            con.setReadTimeout(2000);
-//            in = con.getInputStream();
-            
-//            BufferedImage img = ImageIO.read(in);
-//            return img;
             return DownloadConcurrent.startDownloading(url);
         }
         return null;
