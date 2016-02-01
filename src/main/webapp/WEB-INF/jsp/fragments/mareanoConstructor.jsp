@@ -6,6 +6,14 @@
  * 2. Create hovedtema, kartbilde, and kartlag structure in left layer panel 
  * 3. Create Generelle folder in right most layer panel
  */
+
+/*
+ * Kartloesninger fra geonorge.
+ * 1. http://wms.geonorge.no - ubegrenset tilgang for HI (fordi de har IP rangen vaar) men en begrensning paa ca 3 kall i sekundet. Kjoerer raskest med singleTile
+ * 2. opencache.statkart.no/gatekeeper - open loesning men begresning paa 10 000 kall pr dag. Tilet loesning
+ * 3. gatekeeper1.geonorge.no - ubegrenset med tilet tilgang men hver request krever en token som krever paalogging og som har timeout. Saa token forrandrer seg over tid
+*/
+
 app = new Mareano.Composer({
 	<!-- authStatus: < status >, -->
 	proxy: "proxy/?url=",
@@ -22,85 +30,24 @@ app = new Mareano.Composer({
 	    }
 	},
 	map: {
-	    projection: "EPSG:32633",
+        projection: "${projection}",
 	    units: "m",
-	    maxResolution: 10832.0,
-	    maxExtent: [-2500000.0,3500000.0,3045984.0,9045984.0],
+	    maxResolution: "${maxResolution}",
+	    maxExtent: ${maxExtent},
 	    numZoomLevels: 18,
 	    wrapDateLine: false,
 	    layers: [
-	    {
-		    source: "ol",
-		    type: "OpenLayers.Layer.WMS",
-		    group: "background",
-		    args: [
-		            "<spring:message code="nauticalChart" text="nautical chart" />",
-		            "http://maps.imr.no/geoserver/gwc/service/wms",
-		            {layers: "Sjokart_Hovedkartserien2", format: "image/png", transparent: true, isBaseLayer: true},
-		            {singleTile:false}
-		        ]
-		    }, 
-		    /*
-		    * Kartloesninger fra geonorge.
-		    * 1. http://wms.geonorge.no - ubegrenset tilgang for HI (fordi de har IP rangen vaar) men en begrensning paa ca 3 kall i sekundet. Kjoerer raskest med singleTile
-		    * 2. opencache.statkart.no/gatekeeper - open loesning men begresning paa 10 000 kall pr dag. Tilet loesning
-		    * 3. gatekeeper1.geonorge.no - ubegrenset med tilet tilgang men hver request krever en token som krever paalogging og som har timeout. Saa token forrandrer seg over tid
-		    */
-            /* {
-		        source: "ol",
-		        type: "OpenLayers.Layer.WMS",
-		        group: "background",
-		        args: [
-		            "<spring:message code="norwayGray" text="norway gray scale" />",
-		            "http://wms.geonorge.no/skwms1/wms.topo2.graatone",
-		            {layers: "topo2_graatone_WMS", format: "image/png", transparent: true, isBaseLayer: true},
-		            {singleTile:true,  
-			     longDesc:"<spring:message code="norwayGrayDesc" text="norway gray scale" />"}
-			    
-		        ]
-		    }, {
-		        source: "ol",
-		        type: "OpenLayers.Layer.WMS",
-		        group: "background",
-		        args: [
-		            "<spring:message code="Europa" text="Europa" />",
-		            "http://maps.imr.no/geoserver/gwc/service/wms",
-		            {layers: "Europa_WMS", format: "image/jpeg", transparent: true, isBaseLayer: true},
-		            {singleTile:false}
-		        ]
-		    },*/ {
-		        source: "ol",
-		        type: "OpenLayers.Layer.WMS",
-		        group: "background",
-		        args: [
-		            "<spring:message code="gebco" text="Gebco grayscale" />",
-		            "http://maps.imr.no/geoserver/gwc/service/wms",
-		            {layers: "geonorge:geonorge_norge_skyggerelieff", format: "image/jpeg", transparent: true, isBaseLayer: true},
-		            {singleTile:false}
-		        ]                            
-		    }, {
-		        source: "ol",
-		        type: "OpenLayers.Layer.WMS",
-		        group: "backgroundSea",
-		        args: [
-		            "<spring:message code="europaWhite" text="Europa White background" />",
-		            "http://maps.imr.no/geoserver/gwc/service/wms",
-		            {layers: "geonorge_europa_hvit_bakgrunn", format: "image/jpeg", transparent: true, isBaseLayer: true},
-		            {singleTile:false,
-			     longDesc:"<spring:message code="europaWhiteDesc" text="Europa white" />"}
-		        ]
-		    }/*, {
-		        source: "ol",
-		        type: "OpenLayers.Layer.WMS",
-		        group: "background",
-		        args: [
-		            "<spring:message code="europaAndGebco" text="Europa and Gebco" />",
-		            "http://maps.imr.no/geoserver/gwc/service/wms",
-		            {layers: "barents_watch_WMS", format: "image/jpeg", transparent: true, isBaseLayer: true},
-		            {singleTile:false,
-			     longDesc:"<spring:message code="europaAndGebcoDesc" text="Europa and Gebco" />"}
-			]
-		    }*/                    
+            {
+		      source: "ol",
+		      type: "OpenLayers.Layer.WMS",
+		      group: "background",
+		      args: [
+		          "<spring:message code="gebco" text="Gebco grayscale" />",
+		          "http://maps.imr.no/geoserver/gwc/service/wms",
+		          {layers: "geonorge:geonorge_norge_skyggerelieff", format: "image/jpeg", transparent: true, isBaseLayer: true},
+		          {singleTile:false}
+              ]                            
+            }                  
 	   ],
 	   center: [450000, 7550000],
 	   zoom: 2
@@ -122,6 +69,7 @@ var alleHovedtemaer=${hovedtemaer_json};
 //TODO discuss how background layers should be flagged
 var backgroundGroupName ="background";
 var backgroundSeaGroupName ="backgroundSea";
+var backgroundPolarName = "backgroundPolar";
 
 var hovedtema,gruppe;
 
@@ -210,11 +158,16 @@ for (var i=0; i < alleHovedtemaer.length; i++) {
         gruppe=hovedtema.bilder[j];
         for (var k=0; k < gruppe.kart.length; k++) {
             layer = gruppe.kart[k];
-            if (gruppe.gruppe == backgroundGroupName || gruppe.gruppe == backgroundSeaGroupName) {
+            
+            if ( (gruppe.gruppe == backgroundGroupName || gruppe.gruppe == backgroundSeaGroupName) && "${projection}" == "epsg:32633") {
                 if (app.map) { // If map does not exist at this point then GeoExplorer is loading saved map
                     app.map.layers.push(createBackgroundLayerObject(layer));
                 }
-            } else {
+            } else if (gruppe.gruppe == backgroundPolarName && "${projection}" == "epsg:3575") {
+                if (app.map) { // If map does not exist at this point then GeoExplorer is loading saved map
+                    app.map.layers.push(createBackgroundLayerObject(layer));
+                }
+            } else if ( gruppe.gruppe != backgroundGroupName && gruppe.gruppe != backgroundSeaGroupName && gruppe.gruppe != backgroundPolarName ) {
                 OLRecord = createLayerRecord(gruppe.gruppe,gruppe.visible,layer);
                 if (gruppe.gruppe == "generelle") {
                     generelleLayers.push(OLRecord);
