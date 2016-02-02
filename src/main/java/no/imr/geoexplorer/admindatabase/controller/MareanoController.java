@@ -57,13 +57,12 @@ public class MareanoController {
     private final static String UTM33 = "EPSG:32633";
     private final static Double UTM33_MAX_RESOLUTION = 10832.0;
     private final static double[] UTM33_BBOX = {-2500000.0,3500000.0,3045984.0,9045984.0};
-    private final static double[] UTM33_CENTER = {-433382.43932, -2457833.949055};
+    private final static double[] UTM33_CENTER = {450000, 7550000};
     
     private final static String POLAR = "EPSG:3575";
     private final static Double POLAR_MAX_RESOLUTION = 38197.92815;
     private final static double[] POLAR_BBOX = {-4889334.802954878,-4889334.802954878,4889334.802954878,4889334.802954878};
-    private final static double[] POLAR_CENTER = {450000, 7550000};
-    
+    private final static double[] POLAR_CENTER = {-433382.43932, -2457833.949055};
     
     @Autowired(required = true)
     private MareanoAdminDbDao dao;
