@@ -178,6 +178,7 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
             },
             outputTarget: "tree"
         });
+        config.tools.push({actions: ["saveImage"], actionTarget: {target: "paneltbar", index: 4}}); //add print icon next to save and publish icons 
         config.tools = config.tools.concat(mapTools.reverse());
         config.tools.push({
             actions: ["-", "saveImage"], actionTarget: "paneltbar"
