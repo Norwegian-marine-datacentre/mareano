@@ -137,47 +137,58 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
                 config.tools.splice(i, 1);
             }
         }
+        
         var me = this;
-        config.tools.splice(0, 0 ,{
-            ptype: "mareano_layertree",
-            groups: {
-                "default": "Overlays", // title can be overridden with overlayNodeText
-                "background": {
-                    title: "Base Layers", // can be overridden with baseNodeText
-                    exclusive: true
-                },
-                "backgroundSea": {
-                    title: "Base Layers Sea", 
-                    exclusive: true
-                }
-            },      
-            outputConfig: {
-                tbar: [],
-                id: "layers",
-                enableDD:true,
-                plugins: [{
-                    ptype: "gx_treenodeactions",
-                    actions: [{
-                        action: "zoomscale",
-                        qtip: me.zoomScaleTip
-                    }, {
-                        action: "queryable",
-                        qtip: me.queryableTip
-                    }],
-                    listeners: {
-                        action: function(node, action, evt) {
-                            if (action === 'zoomscale') {
-                                var layer = node.layer;
-                                if (layer.maxExtent) {
-                                    layer.map.zoomToExtent(layer.maxExtent, true);
+        var layerTreeGroups = {
+                ptype: "mareano_layertree",
+                groups: {
+                    "default": "Overlays", // title can be overridden with overlayNodeText
+                    "background": {
+                        title: "Base Layers", // can be overridden with baseNodeText
+                        exclusive: true
+                    },
+                    "backgroundSea": {
+                        title: "Base Layers Sea", 
+                        exclusive: true
+                    }
+                },      
+                outputConfig: {
+                    tbar: [],
+                    id: "layers",
+                    enableDD:true,
+                    plugins: [{
+                        ptype: "gx_treenodeactions",
+                        actions: [{
+                            action: "zoomscale",
+                            qtip: me.zoomScaleTip
+                        }, {
+                            action: "queryable",
+                            qtip: me.queryableTip
+                        }],
+                        listeners: {
+                            action: function(node, action, evt) {
+                                if (action === 'zoomscale') {
+                                    var layer = node.layer;
+                                    if (layer.maxExtent) {
+                                        layer.map.zoomToExtent(layer.maxExtent, true);
+                                    }
                                 }
                             }
                         }
+                    }]
+                },
+                outputTarget: "tree"
+            };
+            if ( config.map.projection == EPSG3575 ) {
+                layerTreeGroups["groups"] = {
+                    "default": "Overlays", 
+                    "backgroundPolar": {
+                        title: "Base Layers", 
+                        exclusive: true
                     }
-                }]
-            },
-            outputTarget: "tree"
-        });
+                }
+            }        
+        config.tools.splice(0, 0 ,layerTreeGroups);
         config.tools.push({actions: ["saveImage"], actionTarget: {target: "paneltbar", index: 4}}); //add print icon next to save and publish icons 
         config.tools = config.tools.concat(mapTools.reverse());
         config.tools.push({

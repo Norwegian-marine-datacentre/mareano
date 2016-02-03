@@ -33,8 +33,6 @@ import org.springframework.web.servlet.ModelAndView;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 
-//import org.codehaus.jackson.JsonFactory;
-//import org.codehaus.jackson.map.ObjectMapper;
 /**
  * Gets data from the mareano admin database and returns jsp friendly pojos with
  * the mav. An update to the database is sent if it last was updated more than
@@ -46,7 +44,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class MareanoController {
 
     private List<HovedtemaVisning> visninger = null;
-    private long mavLastUpdated = new Date().getTime();
+    private long mavLastUpdatedNo = new Date().getTime();
+    private long mavLastUpdatedEn = new Date().getTime();
     private long mavLastUpdatedPolar = new Date().getTime();
 
     private final static long ONEHOUR = 60 * 1000;
@@ -64,32 +63,52 @@ public class MareanoController {
     private final static double[] POLAR_BBOX = {-4889334.802954878,-4889334.802954878,4889334.802954878,4889334.802954878};
     private final static double[] POLAR_CENTER = {-433382.43932, -2457833.949055};
     
+    private final static String NO = "no";
+    private final static String EN = "en";
+    
     @Autowired(required = true)
     private MareanoAdminDbDao dao;
 
-    ModelAndView mavNo = null;
-    ModelAndView mavPolar = null;
+    private ModelAndView mavNo = null;
+    private ModelAndView mavEn = null;
+    private ModelAndView mavPolar = null;
     
     @RequestMapping("/update")
     public ModelAndView updateMareano(HttpServletResponse resp) throws IOException {
     	mavNo = null;
+    	mavEn = null;
     	mavPolar = null;
     	return getMareano( resp );
     }
     
     @RequestMapping("/mareano")
     public ModelAndView getMareano(HttpServletResponse resp) throws IOException {
-        ModelAndView mav = checkCacheAndUpdate( resp, "no", "mareano");
-        UTM33Config(mav);
-        return mav;
+        if (mavNo == null || (System.currentTimeMillis() - mavLastUpdatedNo) > ONEHOUR) {
+            mavNo = commonGetMareano(resp, NO, "mareano");
+            mavLastUpdatedNo = new Date().getTime();
+        } 
+        UTM33Config(mavNo);
+        return mavNo;
     }
     
-    
     @RequestMapping("/mareano_en")
-    public ModelAndView getMareanoEN(HttpServletResponse resp) throws IOException {
-        ModelAndView mav = checkCacheAndUpdate( resp, "en", "mareano_en");
-        mav.addObject("projection", UTM33);
-        return mav;
+    public ModelAndView getMareanoEn(HttpServletResponse resp) throws IOException {
+        if (mavEn == null || (System.currentTimeMillis() - mavLastUpdatedEn) > ONEHOUR) {
+            mavEn = commonGetMareano(resp, EN, "mareano_en");
+            mavLastUpdatedEn = new Date().getTime();
+        } 
+        UTM33Config(mavEn);
+        return mavEn;
+    }
+    
+    @RequestMapping("/mareanoPolar")
+    public ModelAndView getMareanoPolar(HttpServletResponse resp) throws IOException {
+        if (mavPolar == null || (System.currentTimeMillis() - mavLastUpdatedPolar) > ONEHOUR) {
+            mavPolar = commonGetMareano(resp, NO, "mareanoPolar");
+            mavLastUpdatedPolar = new Date().getTime();
+        } 
+        polarConfig(mavPolar);
+        return mavPolar;
     }
     
     private void UTM33Config(ModelAndView mav) {
@@ -99,32 +118,11 @@ public class MareanoController {
         mav.addObject("center", Arrays.toString(UTM33_CENTER));
     }
     
-    @RequestMapping("/mareanoPolar")
-    public ModelAndView getMareanoPolarTest(HttpServletResponse resp) throws IOException {
-        ModelAndView mav = checkCacheAndUpdatePolar( resp, "no", "mareano");
-        polarConfig(mav);
-        return mav;
-    }
-    
     private void polarConfig(ModelAndView mav) {
         mav.addObject("projection", POLAR);
         mav.addObject("maxResolution", POLAR_MAX_RESOLUTION);
         mav.addObject("maxExtent", Arrays.toString(POLAR_BBOX));
         mav.addObject("center", Arrays.toString(POLAR_CENTER));
-    }
-    
-    private ModelAndView checkCacheAndUpdate(HttpServletResponse resp, String language, String viewName) throws IOException {
-        if (mavNo == null || (System.currentTimeMillis() - mavLastUpdated) > ONEHOUR) {
-            mavNo = commonGetMareano(resp, language, viewName);
-        } 
-        return mavNo;        
-    }
-    
-    private ModelAndView checkCacheAndUpdatePolar(HttpServletResponse resp, String language, String viewName) throws IOException {
-        if (mavPolar == null || (System.currentTimeMillis() - mavLastUpdatedPolar) > ONEHOUR) {
-            mavPolar = commonGetMareano(resp, language, viewName);
-        } 
-        return mavPolar;        
     }
     
     private ModelAndView commonGetMareano(HttpServletResponse resp, String language, String mareanoJSP) throws IOException {
@@ -136,11 +134,6 @@ public class MareanoController {
 		mav.addObject("heading", heading);
 
 		resp.setCharacterEncoding("UTF-8");
-		if ( mareanoJSP.equals("mareano_en") || mareanoJSP.equals("mareano")) {
-		    mavLastUpdated = new Date().getTime();
-		} else if (mareanoJSP.equals("mareanoPolar") ) {
-	        mavLastUpdatedPolar = new Date().getTime();
-		}
 		return mav;    	
     }
 

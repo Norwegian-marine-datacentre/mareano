@@ -10,7 +10,7 @@
             function init() {
                 OpenLayers.ImgPath = "theme/imr/img/";
                 GeoExt.Lang.set('no');
-                <jsp:include page = "fragments/mareanoConstructorPolar.jsp" />
+                <jsp:include page = "fragments/mareanoConstructor.jsp" />
                 <jsp:include page = "fragments/addLayerTreeToRoot.jsp" />
             }
         </script>

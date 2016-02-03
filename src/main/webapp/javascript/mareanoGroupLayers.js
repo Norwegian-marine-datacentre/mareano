@@ -15,6 +15,7 @@ var backgroundSeaGroupName ="backgroundSea";
 var backgroundPolarName = "backgroundPolar";
 
 var hovedtemaBakgrunn = "Bakgrunnskart";
+var hovedtemaBakgrunnEn = "Background map";
 var hovedtemaGenerelle = "generelle";
 
 var EPSG32633 = "EPSG:32633";
@@ -95,7 +96,8 @@ function addLayersToHovedTemaOrBackgroundLayer(alleHovedtemaer, projection) {
     
         //Split into three groups so have lists of each type of layers for later use
         //Test is a bit sloppy as it assumes each tema does not have mix of groups
-        if ( !( hovedtema.hovedtema ==  hovedtemaBakgrunn || hovedtema.hovedtema == hovedtemaGenerelle) ) {
+        if ( !( hovedtema.hovedtema ==  hovedtemaBakgrunn || hovedtema.hovedtema ==  hovedtemaBakgrunnEn 
+                || hovedtema.hovedtema == hovedtemaGenerelle) ) {
             hovedtemaer.push(hovedtema);
         }   
         
