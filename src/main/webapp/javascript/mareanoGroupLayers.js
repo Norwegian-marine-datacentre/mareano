@@ -14,6 +14,12 @@ var backgroundGroupName ="background";
 var backgroundSeaGroupName ="backgroundSea";
 var backgroundPolarName = "backgroundPolar";
 
+var hovedtemaBakgrunn = "Bakgrunnskart";
+var hovedtemaGenerelle = "generelle";
+
+var EPSG32633 = "EPSG:32633";
+var EPSG3575 = "EPSG:3575";
+
 var hovedtema,gruppe;
 
 /**
@@ -89,24 +95,20 @@ function addLayersToHovedTemaOrBackgroundLayer(alleHovedtemaer, projection) {
     
         //Split into three groups so have lists of each type of layers for later use
         //Test is a bit sloppy as it assumes each tema does not have mix of groups
-        if (hovedtema.bilder[0].gruppe == backgroundGroupName ) {
-           bakgrunn.push(hovedtema);
-        } else if (hovedtema.bilder[0].gruppe == "generelle") {
-           generelle.push(hovedtema);
-        } else {
+        if ( !( hovedtema.hovedtema ==  hovedtemaBakgrunn || hovedtema.hovedtema == hovedtemaGenerelle) ) {
             hovedtemaer.push(hovedtema);
-        }
+        }   
         
         for (var j=0; j < hovedtema.bilder.length; j++) {
             gruppe=hovedtema.bilder[j];
             for (var k=0; k < gruppe.kart.length; k++) {
                 layer = gruppe.kart[k];
                 
-                if ( (gruppe.gruppe == backgroundGroupName || gruppe.gruppe == backgroundSeaGroupName) && projection == "epsg:32633") {
+                if ( (gruppe.gruppe == backgroundGroupName || gruppe.gruppe == backgroundSeaGroupName) && projection == EPSG32633) {
                     if (app.map) { // If map does not exist at this point then GeoExplorer is loading saved map
                         app.map.layers.push(createBackgroundLayerObject(layer));
                     }
-                } else if (gruppe.gruppe == backgroundPolarName && projection == "epsg:3575") {
+                } else if (gruppe.gruppe == backgroundPolarName && projection == EPSG3575) {
                     if (app.map) { // If map does not exist at this point then GeoExplorer is loading saved map
                         app.map.layers.push(createBackgroundLayerObject(layer));
                     }
