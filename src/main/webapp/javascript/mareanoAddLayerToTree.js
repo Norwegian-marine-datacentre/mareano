@@ -33,13 +33,12 @@ function loadMareano(mapPanel, app) {
     //Hacky approach to find current background layer on initial map display
     changeBakgrunnsInfo(app.mapPanel.map.getLayersBy("visibility", true)[1]);  
     var mapLayerChanged = function(e) {
-	if (e.layer.visibility){
-	    changeBakgrunnsInfo(e.layer);
-	} 
+    	if (e.layer.visibility) {
+    	    changeBakgrunnsInfo(e.layer);
+    	} 
     };
     
     app.mapPanel.map.events.register('changelayer', app, mapLayerChanged);
-
     
     layertree.on('startdrag', function() {
         silent = true;
@@ -345,7 +344,8 @@ function changeBakgrunnsInfo(layer)
             extent: ""
         },
         success: function(data) {
-            bakgrunnInfoDiv = createNewInfoFragment("bakgrunn",data);
+            bakgrunnInfoDiv = createNewInfoFragment("bakgrunn",data) + 
+                createNewInfoFragment("bakgrunnSea",data);
             updateOrSetKartlagInfo(kartlagInfoState);
         },
         error:function() {
@@ -359,8 +359,6 @@ function changeBakgrunnsInfo(layer)
     //		    text: layer.longDesc?layer.longDesc:"No description set"}};
 
 }
-
-
 
 function getCurrentLegendFragment() {
     var currentLegends;

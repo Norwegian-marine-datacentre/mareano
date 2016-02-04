@@ -55,12 +55,27 @@
 	</select>
 	
 	<select id="getKartlagFromKartbilder" resultMap="KartlagResult" resultType="java.util.ArrayList">
-		SELECT k.kartlag_id, k.karttjenester_id, k.layers, k.scalemin,  k.scalemax, k.downloadurl, 
+		SELECT 
+            k.kartlag_id, 
+            k.karttjenester_id, 
+            k.layers, 
+            k.scalemin,  
+            k.scalemax, 
+            k.downloadurl, 
    			k.ex_geographic_bounding_box_west_bound_longitude, 
    			k.ex_geographic_bounding_box_east_bound_longitude, 
    			k.ex_geographic_bounding_box_south_bound_latitude, 
    			k.ex_geographic_bounding_box_north_bound_latitude,
-   			k.keyword, k.queryable, k.sort, k.available, k.generic_title, k.modified, k.info_format
+            polar_bounding_box_west,
+            polar_bounding_box_south,
+            polar_bounding_box_east,
+            polar_bounding_box_north,
+            polar_scalemin,
+            polar_scalemax,
+   			k.keyword,
+   			k.queryable,
+   			k.sort,
+   			k.available, k.generic_title, k.modified, k.info_format
     	FROM kartlag k, kartbilder_kartlag kk WHERE kk.kartbilder_id=#{kartbilder_id} and k.kartlag_id=kk.kartlag_id order by kk.sort DESC
 	</select>
 	

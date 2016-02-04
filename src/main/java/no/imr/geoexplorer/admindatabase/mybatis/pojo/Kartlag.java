@@ -21,7 +21,7 @@ public class Kartlag {
 
 	private double westPolar;
 	private double eastPolar;
-	private double soutPolar;
+	private double southPolar;
 	private double northPolar;
 	
 	private String keyword;
@@ -160,11 +160,11 @@ public class Kartlag {
     public void setEastPolar(double eastPolar) {
         this.eastPolar = eastPolar;
     }
-    public double getSoutPolar() {
-        return soutPolar;
+    public double getSouthPolar() {
+        return southPolar;
     }
-    public void setSoutPolar(double soutPolar) {
-        this.soutPolar = soutPolar;
+    public void setSouthPolar(double southPolar) {
+        this.southPolar = southPolar;
     }
     public double getNorthPolar() {
         return northPolar;

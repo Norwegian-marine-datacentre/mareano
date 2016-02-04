@@ -204,6 +204,8 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
         }, {
             actions: ["helpIcon"], actionTarget: "paneltbar"
         }, {
+            actions: ["mareanoPolarBtn"], actionTarget: "paneltbar"
+        }, {
             actions: ["mareanoNorskBtn"], actionTarget: "paneltbar"
         }, {
             actions: ["mareanoEngelskBtn"], actionTarget: "paneltbar"
@@ -353,10 +355,16 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
             tooltip: this.helpTitle,
             id: "helpIcon",
             handler: function(event, toolEl, panel) {
-                if (location.href.indexOf("mareano.html") === -1) {
-                    window.open( location.href.substring(0,location.href.lastIndexOf('/mareano_en.html')) + "/javascript/GeoExplorer toolbar_Mareano_Engelsk.pdf" );
-                } else if (location.href.indexOf("mareano_en.html") === -1) {   
-                	window.open( location.href.substring(0,location.href.lastIndexOf('/mareano.html')) + "/javascript/GeoExplorer toolbar_Mareano_Norsk.pdf" );
+                var url  = location.href; 
+                var indexMareano = url.indexOf("mareano.html");
+                var indexMareanoEn = url.indexOf("mareano_en.html");
+                var indexMareanoPolar = url.indexOf("mareanoPolar.html");
+                if ( indexMareano > -1) {
+                    window.open( url.substring(0, indexMareano) + "/javascript/GeoExplorer toolbar_Mareano_Norsk.pdf" );
+                } else if ( indexMareanoPolar > -1) {
+                        window.open( url.substring(0, indexMareanoPolar) + "/javascript/GeoExplorer toolbar_Mareano_Norsk.pdf" );                    
+                } else if ( indexMareanoEn > -1) {   
+                    window.open( url.substring(0,indexMareanoEn) + "/javascript/GeoExplorer toolbar_Mareano_Engelsk.pdf" );
                 }
             },
             iconCls: "icon-question",
@@ -368,9 +376,15 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
             id: "mareanoNorskBtn",
             buttonAlign: "center",
             handler: function(){
-                if (location.href.indexOf("mareano.html") === -1) {
-                    location.href = location.href.substring(0,location.href.lastIndexOf('/mareano_en.html')) + "/mareano.html?language=no";
-                }
+                var url  = location.href; 
+                var indexMareano = url.indexOf("mareano.html");
+                var indexMareanoEn = url.indexOf("mareano_en.html");
+                var indexMareanoPolar = url.indexOf("mareanoPolar.html");
+                if ( indexMareanoPolar > -1) {
+                    location.href = url.substring(0,indexMareanoPolar) + "mareano.html?language=no";                    
+                } else if ( indexMareanoEn > -1) {   
+                    location.href = url.substring(0,indexMareanoEn) + "mareano.html?language=no";
+                }                
             },
             iconCls: "icon-norsk",
             scope: this
@@ -380,13 +394,40 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
             tooltip: "English",
             buttonAlign: "right",
             handler: function(){
-                if (location.href.indexOf("mareano_en.html") === -1) {
-                    location.href = location.href.substring(0,location.href.lastIndexOf('/mareano.html')) + "/mareano_en.html?language=en";
+                var url  = location.href; 
+                var indexMareano = url.indexOf("mareano.html");
+                var indexMareanoEn = url.indexOf("mareano_en.html");
+                var indexMareanoPolar = url.indexOf("mareanoPolar.html");
+                if ( indexMareanoPolar > -1) {
+                    location.href = url.substring(0,indexMareanoPolar) + "mareano_en.html?language=en";                    
+                } else if ( indexMareano > -1) {   
+                    location.href = url.substring(0,indexMareanoEn) + "mareano_en.html?language=en";
                 }
             },
             iconCls: "icon-english",
             scope: this
-        });  
+        }); 
+        
+        var mareanoPolarBtn = new Ext.Button({
+            id: "mareanoPolarBtn",
+            tooltip: "Polar",
+            buttonAlign: "right",
+            handler: function(){
+                var url  = location.href; 
+                var indexMareano = url.indexOf("mareano.html");
+                var indexMareanoEn = url.indexOf("mareano_en.html");
+                var indexMareanoPolar = url.indexOf("mareanoPolar.html");
+                if ( indexMareanoPolar > -1) {
+                    location.href = url.substring(0,indexMareanoPolar) + "mareano.html?language=no";                    
+                } else if ( indexMareano > -1) {   
+                    location.href = url.substring(0,indexMareano) + "mareanoPolar.html?language=no";
+                } else if ( indexMareanoEn > -1) {   
+                    location.href = url.substring(0,indexMareanoEn) + "mareanoPolar.html?language=no";
+                }
+            },
+            iconCls: "icon-polar",
+            scope: this
+        });   
         
         var saveImage = new Ext.Button({
             id: "saveImage",

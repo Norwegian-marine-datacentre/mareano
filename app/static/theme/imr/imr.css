@@ -10,6 +10,10 @@
     background-image: url(img/tillegg/english.gif);
 }
 
+.x-btn .icon-polar {
+    background-image: url(img/tillegg/polar.jpg);
+}
+
 .x-btn .icon-printer {
     background-image: url(../app/img/silk/printer.png);
 }

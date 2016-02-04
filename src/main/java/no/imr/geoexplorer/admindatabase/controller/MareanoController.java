@@ -165,105 +165,104 @@ public class MareanoController {
     }
     
     protected List<HovedtemaVisning> addToList(List<HovedtemaVisning> hovedtemaVisninger, Hovedtema hovedtema, String language, String mareanoJSP) {
-            HovedtemaVisning hovedtemaVisning = new HovedtemaVisning();
+        HovedtemaVisning hovedtemaVisning = new HovedtemaVisning();
+        if (language.equals("en")) {
+            List<HovedtemaEnNo> en = dao.getHovedtemaEn(hovedtema.getHovedtemaerId());
+            if (en.size() > 0) {
+                hovedtemaVisning.setHovedtema(en.get(0).getAlternateTitle());
+            } else {
+                hovedtemaVisning.setHovedtema(hovedtema.getGenericTitle());
+            }
+        } else {
+            List<HovedtemaEnNo> norsk = dao.getHovedtemaNo(hovedtema.getHovedtemaerId());
+            if (norsk.size() > 0) {
+                hovedtemaVisning.setHovedtema(norsk.get(0).getAlternateTitle());
+            } else {
+                hovedtemaVisning.setHovedtema(hovedtema.getGenericTitle());
+            }
+        }
+
+        for (Kartbilder kartbilde : hovedtema.getKartbilder()) {
+            KartbilderVisning kartbilderVisining = new KartbilderVisning();
+
             if (language.equals("en")) {
-                List<HovedtemaEnNo> en = dao.getHovedtemaEn(hovedtema.getHovedtemaerId());
+                List<KartBilderEnNo> en = dao.getKartbilderEn(kartbilde.getKartbilderId());
                 if (en.size() > 0) {
-                    hovedtemaVisning.setHovedtema(en.get(0).getAlternateTitle());
+                    kartbilderVisining.setGruppe(en.get(0).getAlternateTitle());
                 } else {
-                    hovedtemaVisning.setHovedtema(hovedtema.getGenericTitle());
+                    kartbilderVisining.setGruppe(kartbilde.getGenericTitle());
                 }
             } else {
-                List<HovedtemaEnNo> norsk = dao.getHovedtemaNo(hovedtema.getHovedtemaerId());
+                List<KartBilderEnNo> norsk = dao.getKartbilderNo(kartbilde.getKartbilderId());
                 if (norsk.size() > 0) {
-                    hovedtemaVisning.setHovedtema(norsk.get(0).getAlternateTitle());
+                    kartbilderVisining.setGruppe(norsk.get(0).getAlternateTitle());
                 } else {
-                    hovedtemaVisning.setHovedtema(hovedtema.getGenericTitle());
+                    kartbilderVisining.setGruppe(kartbilde.getGenericTitle());
                 }
             }
+            kartbilderVisining.setStartextentMaxx( kartbilde.getStartextentMaxx() );
+            kartbilderVisining.setStartextentMaxy( kartbilde.getStartextentMaxy() );
+            kartbilderVisining.setStartextentMinx( kartbilde.getStartextentMinx() );
+            kartbilderVisining.setStartextentMiny( kartbilde.getStartextentMiny() );
 
-            for (Kartbilder kartbilde : hovedtema.getKartbilder()) {
-                KartbilderVisning kartbilderVisining = new KartbilderVisning();
-
-                if (language.equals("en")) {
-                    List<KartBilderEnNo> en = dao.getKartbilderEn(kartbilde.getKartbilderId());
-                    if (en.size() > 0) {
-                        kartbilderVisining.setGruppe(en.get(0).getAlternateTitle());
+            if (kartbilderVisining.getGruppe().equals("MAREANO-stasjoner") || kartbilderVisining.getGruppe().equals("MAREANO-stations")) {
+                kartbilderVisining.setVisible(true);
+            }
+            List<Kartlag> kartlagene = dao.getKartlagene(kartbilde.getKartbilderId());
+            for (Kartlag kartlag : kartlagene) {
+                if (kartlag.isAvailable()) {
+                    KartlagVisning kart = new KartlagVisning();
+                    kart.setId(kartlag.getKartlagId());
+                    kart.setLayers(kartlag.getLayers());
+                    kart.setKeyword(kartlag.getKeyword());
+                    if ( mareanoJSP.equals("mareanoPolar")) {
+                        kart.setExGeographicBoundingBoxEastBoundLongitude(kartlag.getEastPolar());
+                        kart.setExGeographicBoundingBoxWestBoundLongitude(kartlag.getWestPolar());
+                        kart.setExGeographicBoundingBoxNorthBoundLatitude(kartlag.getNorthPolar());
+                        kart.setExGeographicBoundingBoxSouthBoundLatitude(kartlag.getSouthPolar());
+                        kart.setScalemin(kartlag.getScalemin());
+                        kart.setScalemax(kartlag.getScalemax());                            
                     } else {
-                        kartbilderVisining.setGruppe(kartbilde.getGenericTitle());
+                        kart.setExGeographicBoundingBoxEastBoundLongitude(kartlag.getExGeographicBoundingBoxEastBoundLongitude());
+                        kart.setExGeographicBoundingBoxWestBoundLongitude(kartlag.getExGeographicBoundingBoxWestBoundLongitude());
+                        kart.setExGeographicBoundingBoxNorthBoundLatitude(kartlag.getExGeographicBoundingBoxNorthBoundLatitude());
+                        kart.setExGeographicBoundingBoxSouthBoundLatitude(kartlag.getExGeographicBoundingBoxSouthBoundLatitude());
+                        kart.setScalemin(kartlag.getScalemin());
+                        kart.setScalemax(kartlag.getScalemax());
                     }
-                } else {
-                    List<KartBilderEnNo> norsk = dao.getKartbilderNo(kartbilde.getKartbilderId());
-                    if (norsk.size() > 0) {
-                        kartbilderVisining.setGruppe(norsk.get(0).getAlternateTitle());
+                    kart.setQueryable(kartlag.isQueryable());
+                    kart.setGruppe( kartbilderVisining.getGruppe());
+
+                    if (language.equals("en")) {
+                        List<KartlagEnNo> en = dao.getKartlagEn(kart.getId());
+                        if (en.size() > 0) {
+                            kart.setTitle(en.get(0).getAlternateTitle());
+                            kart.setAbstracts(en.get(0).getAbstracts());
+                        } else {
+                            kart.setTitle(kartlag.getGenericTitle());
+                        }
                     } else {
-                        kartbilderVisining.setGruppe(kartbilde.getGenericTitle());
-                    }
-                    
-                }
-                kartbilderVisining.setStartextentMaxx( kartbilde.getStartextentMaxx() );
-                kartbilderVisining.setStartextentMaxy( kartbilde.getStartextentMaxy() );
-                kartbilderVisining.setStartextentMinx( kartbilde.getStartextentMinx() );
-                kartbilderVisining.setStartextentMiny( kartbilde.getStartextentMiny() );
-
-                if (kartbilderVisining.getGruppe().equals("MAREANO-stasjoner") || kartbilderVisining.getGruppe().equals("MAREANO-stations")) {
-                    kartbilderVisining.setVisible(true);
-                }
-                List<Kartlag> kartlagene = dao.getKartlagene(kartbilde.getKartbilderId());
-                for (Kartlag kartlag : kartlagene) {
-                    if (kartlag.isAvailable()) {
-                        KartlagVisning kart = new KartlagVisning();
-                        kart.setId(kartlag.getKartlagId());
-                        kart.setLayers(kartlag.getLayers());
-                        kart.setKeyword(kartlag.getKeyword());
-                        if ( mareanoJSP.equals("mareanoPolar")) {
-                            kart.setExGeographicBoundingBoxEastBoundLongitude(kartlag.getEastPolar());
-                            kart.setExGeographicBoundingBoxWestBoundLongitude(kartlag.getWestPolar());
-                            kart.setExGeographicBoundingBoxNorthBoundLatitude(kartlag.getNorthPolar());
-                            kart.setExGeographicBoundingBoxSouthBoundLatitude(kartlag.getSoutPolar());
-                            kart.setScalemin(kartlag.getScalemin());
-                            kart.setScalemax(kartlag.getScalemax());                            
+                        List<KartlagEnNo> norsk = dao.getKartlagNo(kart.getId());
+                        if (norsk.size() > 0) {
+                            kart.setTitle(norsk.get(0).getAlternateTitle());
+                            kart.setAbstracts(norsk.get(0).getAbstracts());
                         } else {
-                            kart.setExGeographicBoundingBoxEastBoundLongitude(kartlag.getExGeographicBoundingBoxEastBoundLongitude());
-                            kart.setExGeographicBoundingBoxWestBoundLongitude(kartlag.getExGeographicBoundingBoxWestBoundLongitude());
-                            kart.setExGeographicBoundingBoxNorthBoundLatitude(kartlag.getExGeographicBoundingBoxNorthBoundLatitude());
-                            kart.setExGeographicBoundingBoxSouthBoundLatitude(kartlag.getExGeographicBoundingBoxSouthBoundLatitude());
-                            kart.setScalemin(kartlag.getScalemin());
-                            kart.setScalemax(kartlag.getScalemax());
+                            kart.setTitle(kartlag.getGenericTitle());
                         }
-                        kart.setQueryable(kartlag.isQueryable());
-                        kart.setGruppe( kartbilderVisining.getGruppe());
-
-                        if (language.equals("en")) {
-                            List<KartlagEnNo> en = dao.getKartlagEn(kart.getId());
-                            if (en.size() > 0) {
-                                kart.setTitle(en.get(0).getAlternateTitle());
-                                kart.setAbstracts(en.get(0).getAbstracts());
-                            } else {
-                                kart.setTitle(kartlag.getGenericTitle());
-                            }
-                        } else {
-                            List<KartlagEnNo> norsk = dao.getKartlagNo(kart.getId());
-                            if (norsk.size() > 0) {
-                                kart.setTitle(norsk.get(0).getAlternateTitle());
-                                kart.setAbstracts(norsk.get(0).getAbstracts());
-                            } else {
-                                kart.setTitle(kartlag.getGenericTitle());
-                            }
-                        }
-
-                        kart.setUrl(kartlag.getKarttjeneste().getUrl());
-                        kart.setFormat(kartlag.getKarttjeneste().getFormat());
-                        kartbilderVisining.addKart(kart);
                     }
+
+                    kart.setUrl(kartlag.getKarttjeneste().getUrl());
+                    kart.setFormat(kartlag.getKarttjeneste().getFormat());
+                    kartbilderVisining.addKart(kart);
                 }
-                hovedtemaVisning.addBilder(kartbilderVisining);
             }
-            if (hovedtemaVisning.getBilder().size() > 0) {
-                hovedtemaVisninger.add(hovedtemaVisning);
-            }
-            return hovedtemaVisninger;
+            hovedtemaVisning.addBilder(kartbilderVisining);
         }
+        if (hovedtemaVisning.getBilder().size() > 0) {
+            hovedtemaVisninger.add(hovedtemaVisning);
+        }
+        return hovedtemaVisninger;
+    }
 
     protected String getMareanoHeading(String language) {
         StringBuffer heading = new StringBuffer();
@@ -274,18 +273,15 @@ public class MareanoController {
             } else {
                 url = new URL("http://www.mareano.no/");
             }
-	    BufferedReader reader;
-	    HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-	    if (connection.getResponseMessage().equals("Not Implemented")){
-		DataInputStream inStream = new DataInputStream(connection.getErrorStream());
-		reader = new BufferedReader(new InputStreamReader(inStream));
-
-	    }
-	    else {
-		 reader = new BufferedReader(new InputStreamReader(url.openStream()));
-	    }
-	    
-        
+    	    BufferedReader reader;
+    	    HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+    	    if (connection.getResponseMessage().equals("Not Implemented")){
+    	        DataInputStream inStream = new DataInputStream(connection.getErrorStream());
+    	        reader = new BufferedReader(new InputStreamReader(inStream));
+    	    } else {
+    	        reader = new BufferedReader(new InputStreamReader(url.openStream()));
+    	    }
+    	            
             String line;
             boolean headerContent = false;
             while ((line = reader.readLine()) != null) {
@@ -298,10 +294,9 @@ public class MareanoController {
                 if (line.contains("<!--mainmenuend-->")) {
                     headerContent = false;
                 }
-
             }
-	    connection.disconnect();
-            reader.close();
+    	    connection.disconnect();
+    	    reader.close();
         } catch (Exception e) {
             e.printStackTrace();
         }

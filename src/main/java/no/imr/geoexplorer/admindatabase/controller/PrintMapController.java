@@ -115,7 +115,6 @@ public class PrintMapController {
         System.out.println("BeforeSave image:"+(System.currentTimeMillis()-startTime));
         ImageIO.write(mapImage, PNG, temp);
         System.out.println("AfterSave image:"+(System.currentTimeMillis()-startTime));
-        //System.out.println("filename:"+temp.getAbsolutePath()+" name:"+temp.getName());
 
         ImageFilenameResponse respJson = new ImageFilenameResponse();
         respJson.setFilename(temp.getName());
@@ -156,7 +155,6 @@ public class PrintMapController {
             PrintLayer printLayer = printLayers.get(i);
             if ( printLayer.getColumnSize() > 1) {                
                 try {
-                    
                     backgroundTilesFuture = tilesUtil.getTiledImage( printLayer);
                     FutureImageOrTiles tiles = new FutureImageOrTiles();
                     tiles.setTiles(backgroundTilesFuture);
@@ -164,6 +162,7 @@ public class PrintMapController {
                 } catch( IOException ioe) {
                     String errorMsg = printLayer.getKartlagTitle() + " err:"+ ioe.getMessage();
                     printLayer.setKartlagTitle(errorMsg);
+                    System.out.println("tiles io exception:"+errorMsg);
                     LOG.error(errorMsg);
                     ioe.printStackTrace();
                 }
@@ -175,6 +174,7 @@ public class PrintMapController {
                     layerMap.put(i, overlay);
                 } catch(IOException ioe) {
                     String errorMsg = printLayer.getKartlagTitle() + " err:"+ ioe.getMessage();
+                    System.out.println("overlay io exception:"+errorMsg);
                     printLayer.setKartlagTitle(errorMsg);
                     LOG.error(errorMsg);
                     ioe.printStackTrace();
