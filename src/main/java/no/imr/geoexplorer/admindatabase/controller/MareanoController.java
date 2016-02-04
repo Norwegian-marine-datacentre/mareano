@@ -47,6 +47,7 @@ public class MareanoController {
     private long mavLastUpdatedNo = new Date().getTime();
     private long mavLastUpdatedEn = new Date().getTime();
     private long mavLastUpdatedPolar = new Date().getTime();
+    private long mavLastUpdatedPolarEn = new Date().getTime();
 
     private final static long ONEHOUR = 60 * 1000;
     private final static String ENGLISH = "en";
@@ -72,12 +73,14 @@ public class MareanoController {
     private ModelAndView mavNo = null;
     private ModelAndView mavEn = null;
     private ModelAndView mavPolar = null;
+    private ModelAndView mavPolarEn = null;
     
     @RequestMapping("/update")
     public ModelAndView updateMareano(HttpServletResponse resp) throws IOException {
     	mavNo = null;
     	mavEn = null;
     	mavPolar = null;
+    	mavPolarEn = null;
     	return getMareano( resp );
     }
     
@@ -109,6 +112,16 @@ public class MareanoController {
         } 
         polarConfig(mavPolar);
         return mavPolar;
+    }
+    
+    @RequestMapping("/mareanoPolar_en")
+    public ModelAndView getMareanoPolarEn(HttpServletResponse resp) throws IOException {
+        if (mavPolarEn == null || (System.currentTimeMillis() - mavLastUpdatedPolar) > ONEHOUR) {
+            mavPolarEn = commonGetMareano(resp, EN, "mareanoPolar_en");
+            mavLastUpdatedPolarEn = new Date().getTime();
+        } 
+        polarConfig(mavPolarEn);
+        return mavPolarEn;
     }
     
     private void UTM33Config(ModelAndView mav) {
@@ -215,7 +228,7 @@ public class MareanoController {
                     kart.setId(kartlag.getKartlagId());
                     kart.setLayers(kartlag.getLayers());
                     kart.setKeyword(kartlag.getKeyword());
-                    if ( mareanoJSP.equals("mareanoPolar")) {
+                    if ( mareanoJSP.equals("mareanoPolar") || mareanoJSP.equals("mareanoPolar_en")) {
                         kart.setExGeographicBoundingBoxEastBoundLongitude(kartlag.getEastPolar());
                         kart.setExGeographicBoundingBoxWestBoundLongitude(kartlag.getWestPolar());
                         kart.setExGeographicBoundingBoxNorthBoundLatitude(kartlag.getNorthPolar());
