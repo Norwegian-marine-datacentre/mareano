@@ -183,7 +183,7 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
                 layerTreeGroups["groups"] = {
                     "default": "Overlays", 
                     "backgroundPolar": {
-                        title: "Base Layers", 
+                        title: "Polar Base Layers", 
                         exclusive: true
                     }
                 }
@@ -350,26 +350,7 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
             scope: this
         });
 
-        var helpIcon = new Ext.Button({
-            type:'help',
-            tooltip: this.helpTitle,
-            id: "helpIcon",
-            handler: function(event, toolEl, panel) {
-                var url  = location.href; 
-                var indexMareano = url.indexOf("mareano.html");
-                var indexMareanoEn = url.indexOf("mareano_en.html");
-                var indexMareanoPolar = url.indexOf("mareanoPolar.html");
-                if ( indexMareano > -1) {
-                    window.open( url.substring(0, indexMareano) + "/javascript/GeoExplorer toolbar_Mareano_Norsk.pdf" );
-                } else if ( indexMareanoPolar > -1) {
-                        window.open( url.substring(0, indexMareanoPolar) + "/javascript/GeoExplorer toolbar_Mareano_Norsk.pdf" );                    
-                } else if ( indexMareanoEn > -1) {   
-                    window.open( url.substring(0,indexMareanoEn) + "/javascript/GeoExplorer toolbar_Mareano_Engelsk.pdf" );
-                }
-            },
-            iconCls: "icon-question",
-            scope: this
-        });
+
 
         var url  = location.href; 
         var indexMareano = url.indexOf("mareano.html");
@@ -380,6 +361,25 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
         if ( indexMareanoPolar > -1 || indexMareanoPolarEn > -1) {
             polarBtnTooltip = "UTM33";
         }
+        
+        var helpIcon = new Ext.Button({
+            type:'help',
+            tooltip: this.helpTitle,
+            id: "helpIcon",
+            handler: function(event, toolEl, panel) {
+                if ( indexMareano > -1) {
+                    window.open( url.substring(0, indexMareano) + "javascript/GeoExplorer toolbar_Mareano_Norsk.pdf" );
+                } else if ( indexMareanoPolar > -1) {
+                        window.open( url.substring(0, indexMareanoPolar) + "javascript/GeoExplorer toolbar_Mareano_Norsk.pdf" );                    
+                } else if ( indexMareanoEn > -1) {   
+                    window.open( url.substring(0,indexMareanoEn) + "javascript/GeoExplorer toolbar_Mareano_Engelsk.pdf" );
+                } else if ( indexMareanoPolarEn > -1) {   
+                    window.open( url.substring(0,indexMareanoPolarEn) + "javascript/GeoExplorer toolbar_Mareano_Engelsk.pdf" );
+            },
+            iconCls: "icon-question",
+            scope: this
+        });
+        
         var mareanoNorskBtn = new Ext.Button({
             tooltip: "Norsk",
             id: "mareanoNorskBtn",
