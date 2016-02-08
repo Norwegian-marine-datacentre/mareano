@@ -11,7 +11,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import no.imr.geoexplorer.admindatabase.dao.MareanoAdminDbDao;
@@ -30,6 +32,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 
@@ -43,7 +47,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Controller
 public class MareanoController {
 
-    private List<HovedtemaVisning> visninger = null;
     private long mavLastUpdatedNo = new Date().getTime();
     private long mavLastUpdatedEn = new Date().getTime();
     private long mavLastUpdatedPolar = new Date().getTime();
@@ -116,7 +119,7 @@ public class MareanoController {
     
     @RequestMapping("/mareanoPolar_en")
     public ModelAndView getMareanoPolarEn(HttpServletResponse resp) throws IOException {
-        if (mavPolarEn == null || (System.currentTimeMillis() - mavLastUpdatedPolar) > ONEHOUR) {
+        if (mavPolarEn == null || (System.currentTimeMillis() - mavLastUpdatedPolarEn) > ONEHOUR) {
             mavPolarEn = commonGetMareano(resp, EN, "mareanoPolar_en");
             mavLastUpdatedPolarEn = new Date().getTime();
         } 
@@ -151,8 +154,8 @@ public class MareanoController {
     }
 
     protected ModelAndView getMareano(ModelAndView mav, String language, String mareanoJSP) throws IOException {
-        visninger = listOrganizedToBrowser(language, mareanoJSP);
-
+        
+        List<HovedtemaVisning> visninger = listOrganizedToBrowser(language, mareanoJSP);
         ObjectMapper mapper = new ObjectMapper();
         String json = mapper.writeValueAsString(visninger);
 
@@ -326,7 +329,4 @@ public class MareanoController {
         newHeading = newHeading.replaceAll("href=\"/", "href=\"http://www.mareano.no/");
         return someHeading + newHeading;
     }
-    
-//    @Value("${propertiesMsg_no.advanced}") 
-//    private String test;
 }

@@ -55,6 +55,9 @@ function createBackgroundLayerObject(layer) {
 
 
 function createLayerRecord(panelGroup,isVisible,layer){
+    if ( window.location.href.indexOf("#") > -1 ) {
+        isVisible = false;
+    }
     return gxp.plugins.OLSource.prototype.createLayerRecord({
         source: "ol",
         type: "OpenLayers.Layer.WMS",
