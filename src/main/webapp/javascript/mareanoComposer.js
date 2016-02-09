@@ -350,8 +350,6 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
             scope: this
         });
 
-
-
         var url  = location.href; 
         var indexMareano = url.indexOf("mareano.html");
         var indexMareanoEn = url.indexOf("mareano_en.html");
@@ -360,8 +358,7 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
         var polarBtnTooltip = "Polar";
         if ( indexMareanoPolar > -1 || indexMareanoPolarEn > -1) {
             polarBtnTooltip = "UTM33";
-        }
-        
+        }        
         var helpIcon = new Ext.Button({
             type:'help',
             tooltip: this.helpTitle,
@@ -375,6 +372,7 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
                     window.open( url.substring(0,indexMareanoEn) + "javascript/GeoExplorer toolbar_Mareano_Engelsk.pdf" );
                 } else if ( indexMareanoPolarEn > -1) {   
                     window.open( url.substring(0,indexMareanoPolarEn) + "javascript/GeoExplorer toolbar_Mareano_Engelsk.pdf" );
+                }
             },
             iconCls: "icon-question",
             scope: this

@@ -73,10 +73,16 @@ function getArrayOfInfoDivs( currentInfo ) {
     return arrayCurrentInfo;
 }
 
-function createNewInfoFragment(kartlagId, data) {
+function createNewInfoFragment(layer, data) {
+
+    var service = layer.url;
+    var layers = layer.params.LAYERS;
+    var kartlagTitle = layer.metadata['kartlagTitle'];
+    var kartlagId = layer.metadata['kartlagId'];
     var infoHTML = '<div id="'+kartlagId+'tips" style="margin-bottom: 0.1cm;"><font style="font-size: 12px;"><b>'+ 
     data.kartlagInfo.kartlagInfoTitel+'</b>' + ':<br />' + 
-    data.kartlagInfo.text + '</font></div>';
+    data.kartlagInfo.text + '<br />' +
+    'wms service:<a href="' + service + '">'+service +' and layer(s):'+layers+'</a></font></div>';
     
     return infoHTML;
 }

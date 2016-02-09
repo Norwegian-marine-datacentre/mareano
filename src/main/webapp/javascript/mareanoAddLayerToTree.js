@@ -263,7 +263,7 @@ function displayLegendGraphicsAndSpesialpunkt(extent, layer, event, app) {
             extent: extent
         },
         success:function(data) {
-            addLegendAndInfo(id, title, data);
+            addLegendAndInfo(layer, data);
             addSpesialpunkt(extent, id, layer, event, app, data);
         }
     }); 
@@ -313,8 +313,10 @@ function addSpesialpunkt(extent, kartlagId, layer, event, app, data) {
     }
 }
 
-function addLegendAndInfo( kartlagId, kartlagTitle, data ) {
-    
+function addLegendAndInfo( layer, data ) {
+
+    var kartlagId = layer.metadata['kartlagId'];
+    var kartlagTitle = layer.metadata['kartlagTitle'];
     var currentLegends = getCurrentLegendFragment();
     
     var insertAfterIndex = insertLegendAtIndex( currentLegends, kartlagId )
@@ -324,15 +326,14 @@ function addLegendAndInfo( kartlagId, kartlagTitle, data ) {
     arrayCurrentLegend.splice(insertAfterIndex +1, 0, newLegendDiv); 
     Ext.getCmp('newLegend').update(arrayCurrentLegend.join(""));
     
-    var newInfoDiv = createNewInfoFragment(kartlagId, data);
+    var newInfoDiv = createNewInfoFragment(layer, data);
     kartlagInfoState.splice(insertAfterIndex +1, 0, newInfoDiv);
     //cannot use .update() as component isnt visible
     //and extjs doesnt update hidden components - so have to set html
     updateOrSetKartlagInfo(kartlagInfoState);
 }
 
-function changeBakgrunnsInfo(layer)
-{
+function changeBakgrunnsInfo(layer) {
     var languageChoosen = getLanguage();
     jQuery.ajax({
         type: 'get',
@@ -344,8 +345,7 @@ function changeBakgrunnsInfo(layer)
             extent: ""
         },
         success: function(data) {
-            bakgrunnInfoDiv = createNewInfoFragment("bakgrunn",data) + 
-                createNewInfoFragment("bakgrunnSea",data);
+            bakgrunnInfoDiv = createNewInfoFragment(layer ,data); 
             updateOrSetKartlagInfo(kartlagInfoState);
         },
         error:function() {
@@ -353,11 +353,6 @@ function changeBakgrunnsInfo(layer)
             updateOrSetKartlagInfo(kartlagInfoState);
         }
     }); 
-      
-    //var kartInfo ={kartlagInfo:
-    //		   {kartlagInfoTitel: layer.name,
-    //		    text: layer.longDesc?layer.longDesc:"No description set"}};
-
 }
 
 function getCurrentLegendFragment() {

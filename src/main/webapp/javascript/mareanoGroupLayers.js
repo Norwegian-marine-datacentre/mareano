@@ -68,27 +68,27 @@ function createLayerRecord(panelGroup,isVisible,layer){
         args: [
         layer.title,
         layer.url,
-            {layers: layer.layers, format: layer.format, transparent: true},
-            {
-                opacity: 1,
-                metadata: {
-                    keyword: layer.keyword,
-                    'kartlagId': ''+layer.id,
-                    'kartlagTitle': layer.title 
-                },
-                minScale: layer.scalemax*(96/0.0254),
-                maxScale: (layer.scalemin > 0) ? layer.scalemin*(96/0.0254) : 0.001,
-                units: "m",
-                maxExtent: [
-                    layer.exGeographicBoundingBoxWestBoundLongitude,
-                    layer.exGeographicBoundingBoxSouthBoundLatitude,
-                    layer.exGeographicBoundingBoxEastBoundLongitude,
-                    layer.exGeographicBoundingBoxNorthBoundLatitude
-                ],
-                singleTile:true,
-                buffer: 0, //getting no boarder around image - so panning will get a new image.
-                ratio: 1 //http://dev.openlayers.org/releases/OpenLayers-2.12/doc/apidocs/files/OpenLayers/Layer/Grid-js.html#OpenLayers.Layer.Grid.ratio                                        
-            }
+        {layers: layer.layers, format: layer.format, transparent: true},
+        {
+            opacity: 1,
+            metadata: {
+                keyword: layer.keyword,
+                'kartlagId': ''+layer.id,
+                'kartlagTitle': layer.title 
+            },
+            minScale: layer.scalemax*(96/0.0254),
+            maxScale: (layer.scalemin > 0) ? layer.scalemin*(96/0.0254) : 0.001,
+            units: "m",
+            maxExtent: [
+                layer.exGeographicBoundingBoxWestBoundLongitude,
+                layer.exGeographicBoundingBoxSouthBoundLatitude,
+                layer.exGeographicBoundingBoxEastBoundLongitude,
+                layer.exGeographicBoundingBoxNorthBoundLatitude
+            ],
+            singleTile:true,
+            buffer: 0, //getting no boarder around image - so panning will get a new image.
+            ratio: 1 //http://dev.openlayers.org/releases/OpenLayers-2.12/doc/apidocs/files/OpenLayers/Layer/Grid-js.html#OpenLayers.Layer.Grid.ratio                                        
+        }
         ]
     });
 }

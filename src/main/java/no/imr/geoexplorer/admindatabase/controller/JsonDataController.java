@@ -8,7 +8,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
-import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.List;
 
@@ -153,7 +152,7 @@ public class JsonDataController {
     protected SpesialpunktStatus getKartlagInfo(String kartlagId, SpesialpunktStatus spesialpunktJSON, String noOrEn) {
         KartlagInfo kartlagInfo = dao.getKartlagInfo(new Long(kartlagId), noOrEn);
 	if (kartlagInfo == null ) {
-	    spesialpunktJSON.setKartlagInfo(new KartlagInfos("No title set", "No abstract set"));
+	    spesialpunktJSON.setKartlagInfo(new KartlagInfos("No title set for kartlagId:"+kartlagId, "No abstract set"));
 	} else {
 	    spesialpunktJSON.setKartlagInfo(new KartlagInfos(kartlagInfo.getTitle(), kartlagInfo.getAbstracts()));
 	}
