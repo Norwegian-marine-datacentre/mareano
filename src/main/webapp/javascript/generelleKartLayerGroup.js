@@ -1,4 +1,6 @@
-/** code common with generelleKartLayerGroup.js */
+/** code common with generelleKartLayerGroup.js 
+ * Method is used in addLayerTreeToRoot.jsp
+*/
 function addGenerelleLayerToGroup( gruppeNavn, gruppeText, map, mapPanel, layers, store, app  ) {
     var layerName = [];
     var groupChecked = 
@@ -22,20 +24,19 @@ function addGenerelleLayerToGroup( gruppeNavn, gruppeText, map, mapPanel, layers
             if ( layerRecord.getLayer() instanceof OpenLayers.Layer.WMS ) {
                 url = layerRecord.getLayer().url;
             }
-            cssBgImg = getLayerIcon(url);
-            attr.iconCls = cssBgImg;
-            attr.checked = layerRecord.getLayer().visibility;
-            attr.id = layerRecord.data.id;
-            attr.cls = "general-layers-w-checkbox";
             
             //If layer already in map, set checked
             var idx = app.mapPanel.layers.findBy(function(record) {
                 return record.getLayer().metadata['kartlagId'] === attr.layer.metadata['kartlagId'];
             });
+            cssBgImg = getLayerIcon(url);
+            attr.iconCls = cssBgImg;
+            attr.cls = "general-layers-w-checkbox";
             attr.checked = (layerRecord.getLayer().visibility || (idx !== -1));
             attr.id = layerRecord.data.id;
-
             attr.autoDisable = false;
+            attr.qtip = layerRecord.getLayer().metadata['kartlagTitle'];
+            
             var node = GeoExt.tree.LayerLoader.prototype.createNode.call(this, attr);       
             app.mapPanel.layers.on("remove", function(store, record) {
                 if (silent !== true && record.getLayer().metadata['kartlagId'] === attr.layer.metadata['kartlagId']) {
@@ -78,6 +79,7 @@ function addGenerelleLayerToGroup( gruppeNavn, gruppeText, map, mapPanel, layers
     	checked: groupChecked,
         expanded: groupChecked,    	
         text: gruppeText,   
+        qtip: gruppeText,
         expanded: true,
         cls: "general-layers-w-checkbox",
         listeners: {

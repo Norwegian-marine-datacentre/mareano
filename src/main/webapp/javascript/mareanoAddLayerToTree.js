@@ -94,16 +94,18 @@ function addLayerToGroup( gruppeNavn, gruppeText, map, mapPanel, layers, store, 
             if ( layerRecord.getLayer() instanceof OpenLayers.Layer.WMS ) {
                 url = layerRecord.getLayer().url;
             }
-            cssBgImg = getLayerIcon(url);
-            attr.iconCls = cssBgImg;
             
             //If layer already in map, set checked
             var idx = app.mapPanel.layers.findBy(function(record) {
                 return record.getLayer().metadata['kartlagId'] === attr.layer.metadata['kartlagId'];
             });
+            cssBgImg = getLayerIcon(url);
+            attr.iconCls = cssBgImg;
             attr.checked = (layerRecord.getLayer().visibility || (idx !== -1));
             attr.id = layerRecord.data.id;
             attr.autoDisable = false;
+            attr.qtip = layerRecord.getLayer().metadata['kartlagTitle'];
+            
             var node = GeoExt.tree.LayerLoader.prototype.createNode.call(this, attr);       
             app.mapPanel.layers.on("remove", function(store, record) {
                 if (silent !== true && record.getLayer().metadata['kartlagId'] === attr.layer.metadata['kartlagId']) {
@@ -174,6 +176,7 @@ function addLayerToGroup( gruppeNavn, gruppeText, map, mapPanel, layers, store, 
         checked: groupChecked,
         expanded: groupChecked,    	
         text: gruppeText,   
+        qtip: gruppeText,
         listeners: {
             "checkchange": function(node, checked) { //setting all subnodes if parent is checked
                 var extent = node.attributes.maxExtent;

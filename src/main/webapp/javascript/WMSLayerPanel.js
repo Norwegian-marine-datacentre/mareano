@@ -7,7 +7,8 @@ Mareano.WMSLayerPanel = Ext.extend(Ext.form.FormPanel, {
     abstractLabel: "Layer Abstract",
     keywordLabel: "Keywords",
     urlLabel: "GetCapabilities URL",
-
+    scaleMin: "Scale Min",
+    scaleMax: "Scale Max",
     bodyStyle: "padding: 5px",
     border: false,
     plain: true,
@@ -51,6 +52,20 @@ Mareano.WMSLayerPanel = Ext.extend(Ext.form.FormPanel, {
                 readOnly: true,
                 fieldLabel: this.urlLabel,
                 value: url
+            }, {
+                xtype: 'textfield',
+                width: '100%',
+                anchor: '99%',
+                readOnly: true,
+                fieldLabel: this.scaleMin,
+                value: layer.minScale
+            }, {
+                xtype: 'textfield',
+                width: '100%',
+                anchor: '99%',
+                readOnly: true,
+                fieldLabel: this.scaleMax,
+                value: layer.maxScale
             }]);
             if (layer.metadata["abstract"]) {
                 this.add({

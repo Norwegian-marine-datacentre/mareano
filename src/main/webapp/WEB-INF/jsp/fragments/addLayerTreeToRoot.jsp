@@ -15,7 +15,8 @@ app.on("ready", function() {
     var mergedSomeHovedtema;
     for (var i=0; i < hovedtemaer.length; i++) {
         mergedSomeHovedtema = new Ext.tree.TreeNode({
-            text: hovedtemaer[i].hovedtema
+            text: hovedtemaer[i].hovedtema,
+            qtip: hovedtemaer[i].hovedtema
         });
         for (var j=0; j < hovedtemaer[i].bilder.length; j++) {
             var group = addLayerToGroup(hovedtemaer[i].bilder[j].gruppe,hovedtemaer[i].bilder[j].gruppe, this.map, this.mapPanel, layers, store, app);
