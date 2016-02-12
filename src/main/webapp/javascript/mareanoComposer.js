@@ -1,5 +1,4 @@
 (function() {
-    Proj4js.defs["EPSG:32633"] = "+proj=utm +zone=33 +ellps=WGS84 +datum=WGS84 +units=m +no_defs";
     OpenLayers.DOTS_PER_INCH = 96.047217;
 })();
 
@@ -10,6 +9,7 @@ Mareano.plugins.LayerTree = Ext.extend(gxp.plugins.LayerTree, {
     configureLayerNode: function(loader, attr) {
         attr.iconCls = getLayerIcon(attr.layer.url);
         var record = attr.layerStore.getByLayer(attr.layer);
+        record.set('abstract', attr.layer.name); //adds tooltip (qtip) to overlays and background layers  - see https://github.com/boundlessgeo/gxp/blob/5f2ae367f84e4f01eaeaca73a464a16acd0e8a71/src/script/plugins/LayerTree.js#L218
         if (record.get('queryable') === true) {
             attr.cls = 'feature-info';
         }
@@ -110,7 +110,7 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
             })
         }];
         
-        var ptypes = ["gxp_featuremanager", "gxp_queryform", "gxp_featuregrid",
+        var ptypes = ["gxp_loadingindicator", "gxp_featuremanager", "gxp_queryform", "gxp_featuregrid",
                       "gxp_zoomtoselectedfeatures", "gxp_layermanager", "gxp_legend", "gxp_addlayers",
                       "gxp_styler", "gxp_featureeditor", "gxp_googleearth"];
         var map_ptypes = ["gxp_navigation", "gxp_zoom", "gxp_navigationhistory", "gxp_zoomtoextent"];
@@ -237,10 +237,11 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
             scope: this,
             iconCls: "icon-save"
         });
+        
         var oSrcPrj = new Proj4js.Proj('WGS84');
         var oDestPrj = new Proj4js.Proj('EPSG:32633');
         var me = this;
-        function formatLonlats(lonLat) {
+        function formatLonLats(lonLat) {
             var lat = lonLat.lat;
             var longi = lonLat.lon;
             var aPoint = new Proj4js.Point( longi, lat );
@@ -251,7 +252,7 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
 
             return me.mousePositionText + ns + ', ' + ew;
             // + ' - EPSG:32633: (' + lat + ', ' + longi + ')';
-        }
+        } 
         MousePositionBox = Ext.extend(Ext.BoxComponent, {
             map: null,
             afterRender: function() {
@@ -259,7 +260,7 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
                     div: this.getEl().dom,
                     numDigits: 0,
                     prefix: "",
-                    formatOutput: formatLonlats
+                    formatOutput: formatLonLats
                 });
                 this.map.addControl(control);
                 MousePositionBox.superclass.afterRender.apply(this, arguments);
@@ -280,23 +281,27 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
                     for(var i = 0; i<bar.length; i++){
                         bar[i] = bar[i].split(",");
                     }
-                    var y = bar[0];
-                    var x = bar[1];
+                    var y = parseInt( bar[0] );
+                    var x = parseInt( bar[1] );
                     var newPoint = new Proj4js.Point( x, y );
-                    newPoint.x = x;
-                    newPoint.y = y;
                     
-                    Proj4js.transform(new Proj4js.Proj('WGS84'),new Proj4js.Proj('EPSG:32633'), newPoint);
+                    if ( location.href.indexOf( "Polar" ) == -1 ) {
+                        Proj4js.transform(new Proj4js.Proj('WGS84'), new Proj4js.Proj('EPSG:32633'), newPoint);
+                    }
+                    
                     thisMapPanel.map.panTo( new OpenLayers.LonLat( newPoint.x, newPoint.y ) ); 
                     //use http://cs2cs.mygeodata.eu/ to convert
                     
-                    var location = new OpenLayers.LonLat(newPoint.x, newPoint.y);
                     var size = new OpenLayers.Size(21,25);
                     var offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
                     var icon = new OpenLayers.Icon('externals/openlayers/img/marker.png',size,offset);
-                    var markers = new OpenLayers.Layer.Markers( "(" + bar[0]+", "+bar[1]+")" );
-                    markers.addMarker(new OpenLayers.Marker(location,icon.clone()));
-                    thisMapPanel.map.addLayer(markers);  
+                    var vectorLayer = new OpenLayers.Layer.Vector("point("+newPoint.x+", "+newPoint.y+")");
+                    var feature = new OpenLayers.Feature.Vector(
+                            new OpenLayers.Geometry.Point( newPoint.x, newPoint.y ),
+                            {externalGraphic: icon}
+                    );
+                    vectorLayer.addFeatures(feature);
+                    thisMapPanel.map.addLayer(vectorLayer);  
                 };
             },
             scope: this
