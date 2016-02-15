@@ -36,18 +36,7 @@ app = new Mareano.Composer({
 	    maxExtent: ${maxExtent},
 	    numZoomLevels: 18,
 	    wrapDateLine: false,
-	    layers: [
-            {
-            source: "ol",
-            type: "OpenLayers.Layer.WMS",
-            group: "background",
-            args: [
-                    "barentswatch_grunnkart hardkodet",
-                    "http://opencache.statkart.no/gatekeeper/gk/gk.open",
-                    {layers: "barentswatch_grunnkart", format: "image/png", transparent: true, isBaseLayer: true},
-                    {singleTile:false}
-                ]
-            }                  
+	    layers: [             
 	   ],
 	   center:${center},
 	   zoom: 2
