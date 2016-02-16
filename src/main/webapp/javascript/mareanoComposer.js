@@ -113,7 +113,7 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
             })
         }];
         
-        var ptypes = ["gxp_loadingindicator", "gxp_featuremanager", "gxp_queryform", "gxp_featuregrid",
+        var ptypes = ["gxp_featuremanager", "gxp_queryform", "gxp_featuregrid",
                       "gxp_zoomtoselectedfeatures", "gxp_layermanager", "gxp_legend", "gxp_addlayers",
                       "gxp_styler", "gxp_featureeditor", "gxp_googleearth"];
         var map_ptypes = ["gxp_navigation", "gxp_zoom", "gxp_navigationhistory", "gxp_zoomtoextent"];
@@ -195,9 +195,9 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
         config.tools.push({actions: ["saveImage"], actionTarget: {target: "paneltbar", index: 4}}); //add print icon next to save and publish icons 
         config.tools = config.tools.concat(mapTools.reverse());
         config.tools.push({
-            actions: ["-", "saveImage"], actionTarget: "paneltbar"
+            actions: ["gxp_loadingindicator"], actionTarget: "paneltbar"
         }, {
-            actions: ["gaaTilKoordButton"], actionTarget: "paneltbar"
+            actions: ["-", "gaaTilKoordButton"], actionTarget: "paneltbar"
         }, {
             actions: ["gaaTilHavCombo"], actionTarget: "paneltbar"
         }, {
@@ -287,6 +287,7 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
                     var y = parseInt( bar[0] );
                     var x = parseInt( bar[1] );
                     var newPoint = new Proj4js.Point( x, y );
+                    var geometryPoint
                     
                     if ( location.href.indexOf( "Polar" ) == -1 ) {
                         Proj4js.transform(new Proj4js.Proj('WGS84'), new Proj4js.Proj('EPSG:32633'), newPoint);
@@ -295,16 +296,18 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
                     thisMapPanel.map.panTo( new OpenLayers.LonLat( newPoint.x, newPoint.y ) ); 
                     //use http://cs2cs.mygeodata.eu/ to convert
                     
-                    var size = new OpenLayers.Size(21,25);
-                    var offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
-                    var icon = new OpenLayers.Icon('externals/openlayers/img/marker.png',size,offset);
                     var vectorLayer = new OpenLayers.Layer.Vector("point("+newPoint.x+", "+newPoint.y+")");
                     var feature = new OpenLayers.Feature.Vector(
-                            new OpenLayers.Geometry.Point( newPoint.x, newPoint.y ),
-                            {externalGraphic: icon}
+                            new OpenLayers.Geometry.Point( newPoint.x, newPoint.y )
                     );
+                    feature.style = {
+                            externalGraphic: "externals/openlayers/img/marker.png",
+                            graphicWidth: 21,
+                            graphicHeight: 25,
+                            fillOpacity: 1
+                    };
                     vectorLayer.addFeatures(feature);
-                    thisMapPanel.map.addLayer(vectorLayer);  
+                    thisMapPanel.map.addLayer(vectorLayer);   
                 };
             },
             scope: this
