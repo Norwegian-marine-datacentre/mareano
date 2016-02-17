@@ -156,6 +156,7 @@ function addLayerToGroup( gruppeNavn, gruppeText, map, mapPanel, layers, store, 
                         clone.getLayer().setVisibility(true);
                         clone.getLayer().metadata['kartlagId'] = id;
                         app.mapPanel.layers.add(clone);
+                        ga('send','event', "kategori","addLayer",record.getLayer().metadata['kartlagTitle']);
 //                      var maxExtent = clone.getLayer().maxExtent; //zoom to extent for layers
 //                      if (event.ui._silent !== true && maxExtent) {
 //                      app.mapPanel.map.zoomToExtent(maxExtent, true);
