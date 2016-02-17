@@ -270,6 +270,7 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
             }
         });
         var tmpMouseP = new MousePositionBox( {id: "mouseposition", map: this.mapPanel.map} );
+        var theMap = this.mapPanel.map;
         var gaaTilKoord = new Ext.Button({
             id: "gaaTilKoordButton",
             tooltip: this.goToTooltip,
@@ -291,27 +292,54 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
                     
                     if ( location.href.indexOf( "Polar" ) == -1 ) {
                         Proj4js.transform(new Proj4js.Proj('WGS84'), new Proj4js.Proj('EPSG:32633'), newPoint);
+                    } else {
+                        Proj4js.transform(new Proj4js.Proj('WGS84'), new Proj4js.Proj(EPSG3575), newPoint);
                     }
-                    
-                    thisMapPanel.map.panTo( new OpenLayers.LonLat( newPoint.x, newPoint.y ) ); 
-                    //use http://cs2cs.mygeodata.eu/ to convert
-                    
-                    var vectorLayer = new OpenLayers.Layer.Vector("point("+newPoint.x+", "+newPoint.y+")");
-                    var feature = new OpenLayers.Feature.Vector(
-                            new OpenLayers.Geometry.Point( newPoint.x, newPoint.y )
-                    );
-                    feature.style = {
-                            externalGraphic: "externals/openlayers/img/marker.png",
-                            graphicWidth: 21,
-                            graphicHeight: 25,
-                            fillOpacity: 1
-                    };
-                    vectorLayer.addFeatures(feature);
-                    thisMapPanel.map.addLayer(vectorLayer);   
+                    var geomPoint = new OpenLayers.Geometry.Point( newPoint.x, newPoint.y);
+                    addMarker( "point("+newPoint.x+", "+newPoint.y+")", geomPoint, "panTo");
                 };
             },
             scope: this
         });
+        var vectorLayer = null; 
+        function addMarker( vectorText, geomPoint, panFunc) {       
+            var x = geomPoint.x;
+            var y = geomPoint.y;
+            
+            var feature = new OpenLayers.Feature.Vector(geomPoint);
+            feature.style = {
+                externalGraphic: "externals/openlayers/img/marker.png",
+                graphicWidth: 21,
+                graphicHeight: 25,
+                fillOpacity: 1
+            };
+ 
+            var lonLatPoint = new OpenLayers.LonLat( x, y );
+            if ( panFunc == "panTo") {
+                theMap.panTo( lonLatPoint ); 
+                //use http://cs2cs.mygeodata.eu/ to convert
+            } else {
+                theMap.setCenter( lonLatPoint, 2 );
+            }
+            if (vectorLayer != null) {
+                theMap.removeLayer(vectorLayer);
+            }
+            vectorLayer = new OpenLayers.Layer.Vector( vectorText );
+            vectorLayer.addFeatures(feature);
+            theMap.addLayer(vectorLayer);  
+        }
+        var barentshavet = new OpenLayers.Geometry.Point(1088474,8089849);
+        var norskehavet = new OpenLayers.Geometry.Point(-1644,7334116);
+        var nordsjoen = new OpenLayers.Geometry.Point(-164400,6734116);
+        var skagerak = new OpenLayers.Geometry.Point(164400,6484116);
+        var polhavet = new OpenLayers.Geometry.Point(1000000,8999999);
+        if ( window.location.href.indexOf("Polar") > -1) {
+            barentshavet = Proj4js.transform(new Proj4js.Proj(EPSG32633), new Proj4js.Proj(EPSG3575), barentshavet);
+            norskehavet = Proj4js.transform(new Proj4js.Proj(EPSG32633), new Proj4js.Proj(EPSG3575), norskehavet);
+            nordsjoen = Proj4js.transform(new Proj4js.Proj(EPSG32633), new Proj4js.Proj(EPSG3575), nordsjoen);
+            skagerak = Proj4js.transform(new Proj4js.Proj(EPSG32633), new Proj4js.Proj(EPSG3575), skagerak);
+            polhavet = Proj4js.transform(new Proj4js.Proj(EPSG32633), new Proj4js.Proj(EPSG3575), polhavet);
+        }        
         var gaaTilHav = new Ext.form.ComboBox({
             id: "gaaTilHavCombo",
             fieldLabel: 'Number',
@@ -330,19 +358,16 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
             listeners: {
                 select: {
                     fn:function(combo, value) {
-                        var thisMapPanel = Ext.ComponentMgr.all.find(function(c) {
-                            return c instanceof GeoExt.MapPanel;
-                        });
-                        if ( combo.getValue() == this.zoomToItem2 ) {
-                            thisMapPanel.map.setCenter( new OpenLayers.LonLat( -1644,7334116 ), 4 );
-                        } else if ( combo.getValue() == this.zoomToItem1 ) {
-                            thisMapPanel.map.setCenter( new OpenLayers.LonLat( 1088474,8089849 ), 4 );
+                        if ( combo.getValue() == this.zoomToItem1 ) {
+                            addMarker( combo.getValue(), barentshavet, "setCenter" );
+                        } else if ( combo.getValue() == this.zoomToItem2 ) {
+                            addMarker( combo.getValue(), norskehavet, "setCenter" );
                         } else if ( combo.getValue() == this.zoomToItem3 ) {
-                            thisMapPanel.map.setCenter( new OpenLayers.LonLat( -1644,6934116 ), 4 );
+                            addMarker( combo.getValue(), nordsjoen, "setCenter" );
                         }else if ( combo.getValue() == this.zoomToItem4 ) {
-                            thisMapPanel.map.setCenter( new OpenLayers.LonLat( -1644,6434116 ), 4 );
+                            addMarker( combo.getValue(), skagerak, "setCenter" );
                         }else if ( combo.getValue() == this.zoomToItem5 ) {
-                            thisMapPanel.map.setCenter( new OpenLayers.LonLat( 1000000,8999999 ), 4 );
+                            addMarker( combo.getValue(), polhavet, "setCenter" );
                         }
                     },
                     scope: this
