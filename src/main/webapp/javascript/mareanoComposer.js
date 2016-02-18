@@ -195,7 +195,7 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
         config.tools.push({actions: ["saveImage"], actionTarget: {target: "paneltbar", index: 4}}); //add print icon next to save and publish icons 
         config.tools = config.tools.concat(mapTools.reverse());
         config.tools.push({
-            actions: ["gxp_loadingindicator"], actionTarget: "paneltbar"
+            ptype: "gxp_loadingindicator"
         }, {
             actions: ["-", "gaaTilKoordButton"], actionTarget: "paneltbar"
         }, {
