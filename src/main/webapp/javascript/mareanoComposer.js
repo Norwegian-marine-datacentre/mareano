@@ -401,13 +401,13 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
             id: "helpIcon",
             handler: function(event, toolEl, panel) {
                 if ( indexMareano > -1) {
-                    window.open( url.substring(0, indexMareano) + "javascript/GeoExplorer toolbar_Mareano_Norsk.pdf" );
+                    window.open( url.substring(0, indexMareano) + "pdf/GeoExplorer toolbar_Mareano_Norsk.pdf" );
                 } else if ( indexMareanoPolar > -1) {
-                        window.open( url.substring(0, indexMareanoPolar) + "javascript/GeoExplorer toolbar_Mareano_Norsk.pdf" );                    
+                        window.open( url.substring(0, indexMareanoPolar) + "pdf/GeoExplorer toolbar_Mareano_Norsk.pdf" );                    
                 } else if ( indexMareanoEn > -1) {   
-                    window.open( url.substring(0,indexMareanoEn) + "javascript/GeoExplorer toolbar_Mareano_Engelsk.pdf" );
+                    window.open( url.substring(0,indexMareanoEn) + "pdf/GeoExplorer toolbar_Mareano_Engelsk.pdf" );
                 } else if ( indexMareanoPolarEn > -1) {   
-                    window.open( url.substring(0,indexMareanoPolarEn) + "javascript/GeoExplorer toolbar_Mareano_Engelsk.pdf" );
+                    window.open( url.substring(0,indexMareanoPolarEn) + "pdf/GeoExplorer toolbar_Mareano_Engelsk.pdf" );
                 }
             },
             iconCls: "icon-question",

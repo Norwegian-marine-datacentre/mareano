@@ -66,6 +66,19 @@ Mareano.WMSLayerPanel = Ext.extend(Ext.form.FormPanel, {
                 readOnly: true,
                 fieldLabel: this.scaleMax,
                 value: layer.maxScale
+            },{
+                xtype: "gx_opacityslider",
+                name: "opacity",
+                anchor: "99%",
+                isFormField: true,
+                fieldLabel: this.opacityText,
+                listeners: {
+                    change: function() {
+                        this.fireEvent("change");
+                    },
+                    scope: this
+                },
+                layer: this.layerRecord
             }]);
             if (layer.metadata["abstract"]) {
                 this.add({
