@@ -20,7 +20,9 @@ Mareano.WMSLayerPanel = Ext.extend(Ext.form.FormPanel, {
         var layer = record.getLayer();
         if (layer instanceof OpenLayers.Layer.WMS) {
             var params = {
-                "REQUEST": "GetCapabilities"
+                "REQUEST": "GetCapabilities",
+                "SERVICE": "wms",
+                "VERSION": "1.1.1"
             };
             var url = gxp.plugins.WMSSource.prototype.trimUrl(layer.url, params);
             url = Ext.urlAppend(url, Ext.urlEncode(params));
