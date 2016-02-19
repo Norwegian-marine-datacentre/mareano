@@ -232,8 +232,8 @@ public class MareanoController {
                         kart.setExGeographicBoundingBoxWestBoundLongitude(kartlag.getWestPolar());
                         kart.setExGeographicBoundingBoxNorthBoundLatitude(kartlag.getNorthPolar());
                         kart.setExGeographicBoundingBoxSouthBoundLatitude(kartlag.getSouthPolar());
-                        kart.setScalemin(kartlag.getScalemin());
-                        kart.setScalemax(kartlag.getScalemax());                            
+                        kart.setScalemin(kartlag.getScaleminPolar());
+                        kart.setScalemax(kartlag.getScalemaxPolar());                            
                     } else {
                         kart.setExGeographicBoundingBoxEastBoundLongitude(kartlag.getExGeographicBoundingBoxEastBoundLongitude());
                         kart.setExGeographicBoundingBoxWestBoundLongitude(kartlag.getExGeographicBoundingBoxWestBoundLongitude());
@@ -246,18 +246,21 @@ public class MareanoController {
                     kart.setGruppe( kartbilderVisining.getGruppe());
 
                     if (language.equals("en")) {
-                        List<KartlagEnNo> en = dao.getKartlagEn(kart.getId());
+                        List<KartlagEnNo> en = dao.getKartlagEn(kart.getId());                 
                         if (en.size() > 0) {
                             kart.setTitle(en.get(0).getAlternateTitle());
-                            kart.setAbstracts(en.get(0).getAbstracts());
+                            kart.setTitleTooltip(en.get(0).getTitle());
+                            kart.setAbstracts(en.get(0).getAbstracts());       
                         } else {
                             kart.setTitle(kartlag.getGenericTitle());
                         }
                     } else {
                         List<KartlagEnNo> norsk = dao.getKartlagNo(kart.getId());
+                     
                         if (norsk.size() > 0) {
                             kart.setTitle(norsk.get(0).getAlternateTitle());
-                            kart.setAbstracts(norsk.get(0).getAbstracts());
+                            kart.setTitleTooltip(norsk.get(0).getTitle());
+                            kart.setAbstracts(norsk.get(0).getAbstracts());     
                         } else {
                             kart.setTitle(kartlag.getGenericTitle());
                         }

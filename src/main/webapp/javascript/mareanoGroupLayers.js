@@ -77,10 +77,13 @@ function createLayerRecord(panelGroup,isVisible,layer){
                     keyword: layer.keyword,
                     'kartlagId': ''+layer.id,
                     'kartlagTitle': layer.title,
+                    'kartlagTitleTooltip': layer.titleTooltip,
                 },
                 abstracts : layer.abstracts,
                 minScale: layer.scalemax*(96/0.0254),
                 maxScale: (layer.scalemin > 0) ? layer.scalemin*(96/0.0254) : 0.001,
+                minScaleDisplay: layer.scalemin,
+                maxScaleDisplay: layer.scalemax,
                 units: "m",
                 maxExtent: [
                     layer.exGeographicBoundingBoxWestBoundLongitude,

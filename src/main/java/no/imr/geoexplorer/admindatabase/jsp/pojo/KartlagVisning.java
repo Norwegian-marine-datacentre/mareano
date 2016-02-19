@@ -3,6 +3,7 @@ package no.imr.geoexplorer.admindatabase.jsp.pojo;
 public class KartlagVisning {
 	private long id;
 	private String title;
+	private String titleTooltip;
 	private String layers;
 	private String gruppe;
     private String url;
@@ -106,5 +107,11 @@ public class KartlagVisning {
     }
     public void setQueryable(Boolean queryable) {
         this.queryable = queryable;
+    }
+    public String getTitleTooltip() {
+        return titleTooltip;
+    }
+    public void setTitleTooltip(String titleTooltip) {
+        this.titleTooltip = titleTooltip;
     }
 }

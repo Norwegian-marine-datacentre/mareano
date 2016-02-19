@@ -41,12 +41,12 @@ Mareano.WMSLayerPanel = Ext.extend(Ext.form.FormPanel, {
                 fieldLabel: this.nameLabel,
                 value: layer.params.LAYERS
             }, {
-                xtype: 'textfield',
+                xtype: 'textarea',
                 width: '100%', 
                 anchor: '99%',
                 readOnly: true,
                 fieldLabel: this.titleLabel,
-                value: layer.name
+                value: layer.metadata['kartlagTitleTooltip']
             }, {
                 xtype: 'textfield',
                 width: '100%',
@@ -60,14 +60,14 @@ Mareano.WMSLayerPanel = Ext.extend(Ext.form.FormPanel, {
                 anchor: '99%',
                 readOnly: true,
                 fieldLabel: this.scaleMin,
-                value: layer.minScale
+                value: layer.minScaleDisplay
             }, {
                 xtype: 'textfield',
                 width: '100%',
                 anchor: '99%',
                 readOnly: true,
                 fieldLabel: this.scaleMax,
-                value: layer.maxScale
+                value: layer.maxScaleDisplay
             },{
                 xtype: "gx_opacityslider",
                 name: "opacity",
@@ -82,14 +82,14 @@ Mareano.WMSLayerPanel = Ext.extend(Ext.form.FormPanel, {
                 },
                 layer: this.layerRecord
             }]);
-            if (layer.metadata["abstract"]) {
+            if (layer.abstracts != null ) {
                 this.add({
                     xtype: 'textarea',
                     width: '100%',
                     anchor: '99%',
                     readOnly: true,
                     fieldLabel: this.abstractLabel,
-                    value: layer.metadata["abstract"]
+                    value: layer.abstracts
                 });
             }
             if (keywords.length > 0) {
