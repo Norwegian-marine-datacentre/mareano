@@ -12,7 +12,12 @@ Mareano.plugins.LayerTree = Ext.extend(gxp.plugins.LayerTree, {
         
         //Adds tooltip (qtip) to overlays and background layers 
         //see https://github.com/boundlessgeo/gxp/blob/5f2ae367f84e4f01eaeaca73a464a16acd0e8a71/src/script/plugins/LayerTree.js#L218
-        record.set('abstract', attr.layer.name); 
+        if (attr.layer.abstracts != null && attr.layer.abstracts != undefined) {
+            record.set('abstract', attr.layer.abstracts); 
+        } else {
+            record.set('abstract', attr.layer.name);
+        }
+        
         if (record.get('queryable') === true) {
             attr.cls = 'feature-info';
         }

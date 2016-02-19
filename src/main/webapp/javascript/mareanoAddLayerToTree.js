@@ -104,7 +104,11 @@ function addLayerToGroup( gruppeNavn, gruppeText, map, mapPanel, layers, store, 
             attr.checked = (layerRecord.getLayer().visibility || (idx !== -1));
             attr.id = layerRecord.data.id;
             attr.autoDisable = false;
-            attr.qtip = layerRecord.getLayer().metadata['kartlagTitle'];
+            if (attr.layer.abstracts != null && attr.layer.abstracts != undefined) {
+                attr.qtip = layerRecord.getLayer().abstracts;
+            } else {
+                attr.qtip = layerRecord.getLayer().name;
+            }
             
             var node = GeoExt.tree.LayerLoader.prototype.createNode.call(this, attr);       
             app.mapPanel.layers.on("remove", function(store, record) {
