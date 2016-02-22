@@ -130,6 +130,7 @@ function addLayerToGroup( gruppeNavn, gruppeText, map, mapPanel, layers, store, 
                     });
                     node.parentNode.ui.checkbox.checked = allChildrenChecked;
                 };
+                
                 setGroupChecked(node);
                 addKartbildeAbstractOrRemove(node.parentNode, node.parentNode.ui.checkbox.checked);
                 // the layer can be associated with multiple nodes, so search the tree
@@ -168,8 +169,14 @@ function addLayerToGroup( gruppeNavn, gruppeText, map, mapPanel, layers, store, 
                         displayLegendGraphicsAndSpesialpunkt(app.mapPanel.map.getExtent() + "", layerRecord.getLayer(), event, app);
                     }
                     //app.mapPanel.map.addLayer(layer); //adds layer to Overlay but mareano_wmslayerpanel is missing from properties and no layer properties are shown                        
-                    //displayLegendGraphicsAndSpesialpunkt(app.mapPanel.map.getExtent() + "", layer.metadata['kartlagId'], layerRecord.getLayer(), event, app);   
+                    //displayLegendGraphicsAndSpesialpunkt(app.mapPanel.map.getExtent() + "", layer.metadata['kartlagId'], layerRecord.getLayer(), event, app);
+                    
+                    //set Hovedtema to bold if any of the child layers are checked
+                    node.parentNode.parentNode.setCls("bold-text-hovedtema");
                 } else {
+                    //set Hovedtema to bold if any of the child layers are checked
+                    node.parentNode.parentNode.setCls("normal-text-hovedtema");
+                    
                     removeLayerLegendAndInfo(app.mapOfGMLspesialpunkt, layer.metadata['kartlagId'], record, layer, app);
                 }
             });                                    

@@ -71,6 +71,14 @@
     title: "SEAPOP";
 }
 
+.normal-text-hovedtema {
+	font-weight: normal
+}
+
+.bold-text-hovedtema {
+    font-weight: bold
+}
+
 html { width: 100%; height: 100%}
 body { width: 100%; margin: 0px; padding: 0px;  font-family: arial, verdana, helvetica, sans-serif; font-size: 1.0em; height: 100% }
 img { border: 0; }
