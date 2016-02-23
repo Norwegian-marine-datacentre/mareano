@@ -26,6 +26,9 @@ app.on("ready", function() {
         });
         for (var j=0; j < hovedtemaer[i].bilder.length; j++) {
             var group = addLayerToGroup(hovedtemaer[i].bilder[j].gruppe,hovedtemaer[i].bilder[j].gruppe, this.map, this.mapPanel, layers, store, app);
+            if ( group.attributes.text == "MAREANO-stasjoner" || group.attributes.text == "MAREANO-stations" ) {
+                group.setCls("bold-text-hovedtema");
+            }
             if (group.attributes.expanded === true) {
                 mergedSomeHovedtema.expanded = true;
             }

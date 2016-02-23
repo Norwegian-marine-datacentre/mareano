@@ -171,7 +171,8 @@ function addLayerToGroup( gruppeNavn, gruppeText, map, mapPanel, layers, store, 
                     //displayLegendGraphicsAndSpesialpunkt(app.mapPanel.map.getExtent() + "", layer.metadata['kartlagId'], layerRecord.getLayer(), event, app);
                     
                     //set Hovedtema to bold if any of the child layers are checked
-                    node.parentNode.parentNode.setCls("bold-text-hovedtema");            
+                    node.parentNode.parentNode.setCls("bold-text-hovedtema");
+                    node.parentNode.setCls("bold-text-hovedtema");      
                 } else {
                     //set Hovedtema to bold if any of the child layers are checked
                     var setHovedtemaBold = function(node) {
@@ -179,8 +180,9 @@ function addLayerToGroup( gruppeNavn, gruppeText, map, mapPanel, layers, store, 
                         node.parentNode.parentNode.eachChild(function(groupChild) {
                             if ( aHovedtemaGroupOrLayerChecked != true ) {
                                 groupChild.eachChild(function(layerChild) {
-                                    if ( layerChild.ui.checkbox.checked) {                  
+                                    if ( layerChild.ui.checkbox.checked ) {                  
                                         aHovedtemaGroupOrLayerChecked = true;
+                                        
                                     }
                                 });
                             }
@@ -188,7 +190,16 @@ function addLayerToGroup( gruppeNavn, gruppeText, map, mapPanel, layers, store, 
                         if ( aHovedtemaGroupOrLayerChecked == false) {
                             node.parentNode.parentNode.setCls("normal-text-hovedtema"); 
                         }
-                    }   
+                        var layersInGroupChecked = false;
+                        node.parentNode.eachChild(function(layerChild) {
+                            if ( layerChild.ui.checkbox.checked ) {
+                                layersInGroupChecked = true;
+                            }
+                        })
+                        if ( layersInGroupChecked == false ) {
+                            node.parentNode.setCls("normal-text-hovedtema"); 
+                        }
+                    }  
                     setHovedtemaBold(node);
                     removeLayerLegendAndInfo(app.mapOfGMLspesialpunkt, layer.metadata['kartlagId'], record, layer, app);
                 }
