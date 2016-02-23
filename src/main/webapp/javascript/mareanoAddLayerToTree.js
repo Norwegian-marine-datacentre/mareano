@@ -130,7 +130,6 @@ function addLayerToGroup( gruppeNavn, gruppeText, map, mapPanel, layers, store, 
                     });
                     node.parentNode.ui.checkbox.checked = allChildrenChecked;
                 };
-                
                 setGroupChecked(node);
                 addKartbildeAbstractOrRemove(node.parentNode, node.parentNode.ui.checkbox.checked);
                 // the layer can be associated with multiple nodes, so search the tree
@@ -172,11 +171,25 @@ function addLayerToGroup( gruppeNavn, gruppeText, map, mapPanel, layers, store, 
                     //displayLegendGraphicsAndSpesialpunkt(app.mapPanel.map.getExtent() + "", layer.metadata['kartlagId'], layerRecord.getLayer(), event, app);
                     
                     //set Hovedtema to bold if any of the child layers are checked
-                    node.parentNode.parentNode.setCls("bold-text-hovedtema");
+                    node.parentNode.parentNode.setCls("bold-text-hovedtema");            
                 } else {
                     //set Hovedtema to bold if any of the child layers are checked
-                    node.parentNode.parentNode.setCls("normal-text-hovedtema");
-                    
+                    var setHovedtemaBold = function(node) {
+                        var aHovedtemaGroupOrLayerChecked = false;
+                        node.parentNode.parentNode.eachChild(function(groupChild) {
+                            if ( aHovedtemaGroupOrLayerChecked != true ) {
+                                groupChild.eachChild(function(layerChild) {
+                                    if ( layerChild.ui.checkbox.checked) {                  
+                                        aHovedtemaGroupOrLayerChecked = true;
+                                    }
+                                });
+                            }
+                        });
+                        if ( aHovedtemaGroupOrLayerChecked == false) {
+                            node.parentNode.parentNode.setCls("normal-text-hovedtema"); 
+                        }
+                    }   
+                    setHovedtemaBold(node);
                     removeLayerLegendAndInfo(app.mapOfGMLspesialpunkt, layer.metadata['kartlagId'], record, layer, app);
                 }
             });                                    

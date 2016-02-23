@@ -14,10 +14,15 @@ app.on("ready", function() {
     var treeRoot = Ext.getCmp('thematic_tree'); 
     var mergedSomeHovedtema;
     for (var i=0; i < hovedtemaer.length; i++) {
+        var hovedTemaCls = "normal-text-hovedtema";
+        //when loading map there are default maps turned on in Mareano oversiktskart - make hovedtema bold
+        if ( hovedtemaer[i].hovedtema == "MAREANO oversiktskart" || hovedtemaer[i].hovedtema == "MAREANO overviewmap") {
+            hovedTemaCls = "bold-text-hovedtema";
+        }
         mergedSomeHovedtema = new Ext.tree.TreeNode({
             text: hovedtemaer[i].hovedtema,
             qtip: hovedtemaer[i].hovedtema,
-            cls: "normal-text-hovedtema"
+            cls: hovedTemaCls
         });
         for (var j=0; j < hovedtemaer[i].bilder.length; j++) {
             var group = addLayerToGroup(hovedtemaer[i].bilder[j].gruppe,hovedtemaer[i].bilder[j].gruppe, this.map, this.mapPanel, layers, store, app);
