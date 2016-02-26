@@ -481,6 +481,7 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
 
     modifyPortal: function() {
         var mareanoLegendContainer = new Ext.Panel({
+            draggable:true,
             region: 'center',
             layout: 'fit',
             autoScroll: true,
@@ -553,6 +554,7 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
             ]
         });
 
+        var filteredNodes = [];
         var btnPostfix = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
         var expandDiv = '<div style="position:absolute; top: 5px; right: 5px;" class="x-tool x-tool-toggle x-tool-collapse-east">&nbsp;</div>';
         var collapseDiv = '<div style="position:absolute; top: 5px; right: 5px;" class="x-tool x-tool-toggle x-tool-collapse-west">&nbsp;</div>';
@@ -613,7 +615,101 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
                     loader: new Ext.tree.TreeLoader(),      
                     root: new Ext.tree.AsyncTreeNode(),
                     rootVisible: false,
-                    title: this.thematicText,
+                    //title: this.thematicText,
+                    
+                    tbar: [{
+                        text: '<b>'+this.thematicText +'</b>'
+                    }, '->', {
+                        xtype: 'textfield',
+                        value: 'Layer:',
+                        enableKeyEvents: true,
+                        listeners: {
+                            keyup: function(form, e) {
+                                if ( e != undefined) {
+                                    form.value += this.getValue();
+                                } else {
+                                    console.log("keystroke undefined");
+                                }
+                                //console.log(String.fromCharCode(e.getKey())); //this is work
+                                //console.log("form.value:"+form.value); //this is work
+                                
+                                var tree = Ext.getCmp('thematic_tree');
+                                var treeRoot = tree.getRootNode();
+                                
+                                treeRoot.expandChildNodes(true);
+                                
+                                var re = new RegExp(Ext.escapeRe(this.getValue()), 'i');
+                                console.log("re:"+this.getValue());
+                                var visibleSum = 0;
+                                var count = 0;
+
+                                var filter = function(node) {// descends into child nodes
+                                    var nodeId="";
+                                    if ( node.parentNode != null) {
+                                        nodeId = "node:"+node.attributes.text+ " > "+node.parentNode.attributes.text
+                                        console.log(nodeId)
+                                    } else {
+                                        nodeId = "node:"+node.attributes.text;
+                                        console.log(nodeId)
+                                    }
+                                    
+                                    if( node.hasChildNodes() && node.childNodes.length == 0) { //has childnodes but not expanded
+                                        //node.expand();
+                                    }
+                                    if(node.hasChildNodes()) {
+                                        visibleSum = 0
+                                        var childLen = node.childNodes.length;
+                                        for(var i = childLen-1; i >= 0; i--) { //node.eachChild(function(childNode) {
+                                            var childNode = node.childNodes[i];
+                                            if(childNode.isLeaf()) {
+                                                console.log("re:"+re+" name:"+childNode.layer.name+" test:"+!re.test(childNode.layer.name))
+                                                if(!re.test(childNode.layer.name)) {
+                                                    filteredNodes.push(childNode);
+                                                    //node.removeChild(childNode);
+                                                } else {
+                                                    visibleSum++;
+                                                }
+                                            } else if(!childNode.hasChildNodes() && re.test(childNode.attributes.text)) {// empty folder, but name matches
+                                                visibleSum++;
+                                            } else {
+                                                filter(childNode);
+                                            }
+                                        } //);
+                                        if(visibleSum == 0 && !re.test(node.attributes.text)) {
+                                            filteredNodes.push(node);
+                                        }
+                                    } else if(node.layer != null && !re.test(node.layer.name)) {
+                                        filteredNodes.push(node);
+                                    } 
+                                }
+                                filter(treeRoot); 
+
+                                Ext.each(filteredNodes, function(n) {
+                                    var indexEl = treeRoot.indexOf(n);
+                                    var el = tree.root.item(indexEl);
+                                    if (el != null) {
+                                        el.getUI().hide();
+                                    } 
+                                });  
+                            },
+                            focus : {
+                                fn : function(view, record, item, index, even) {
+                                    this.setValue("");
+                                    var tree = Ext.getCmp('thematic_tree');
+                                    var treeRoot = tree.getRootNode();
+                                    treeRoot.collapseChildNodes( true );
+                                    Ext.each(filteredNodes, function(n) {
+                                        //var el = Ext.fly(tree.getView().getNodeByRecord(n));
+                                        var indexEl = tree.root.indexOf(n);
+                                        var el = tree.root.item(indexEl);
+                                        if (el != null) {
+                                            el.getUI().show();
+                                        }
+                                    });
+                                }
+                            }                       
+                        }
+                    }],              
                     layout: "fit",
                     id: "thematic_tree"
                 }, legendContainerContainer]

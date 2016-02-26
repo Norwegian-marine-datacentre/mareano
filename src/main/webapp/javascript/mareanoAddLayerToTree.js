@@ -77,6 +77,7 @@ function addLayerToGroup( gruppeNavn, gruppeText, map, mapPanel, layers, store, 
     	getAllLayersForAGroupAndIsGroupChecked(gruppeNavn, layers, mapPanel, layerName);
     
     var layerLoader = new GeoExt.tree.LayerLoader({
+        id: 'thematicTreeLayerloader',
         store: store,
         filter: function(record) {
             /** adding matching layer to matching container group */
@@ -231,7 +232,7 @@ function addLayerToGroup( gruppeNavn, gruppeText, map, mapPanel, layers, store, 
                     childNodes[c].ui.toggleCheck(checked);
                     delete childNodes[c].ui._silent;
                 } 
-            }
+            },
         },                            
         layerStore: store,
         loader: layerLoader
