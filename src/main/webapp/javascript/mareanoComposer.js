@@ -624,6 +624,11 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
                         value: 'Layer:',
                         enableKeyEvents: true,
                         listeners: {
+                            keydown: function(form, e) {
+                                var tree = Ext.getCmp('thematic_tree');
+                                var treeRoot = tree.getRootNode();
+                                treeRoot.expandChildNodes(true);
+                            },                          
                             keyup: function(form, e) {
                                 if ( e != undefined) {
                                     form.value += this.getValue();
@@ -636,60 +641,42 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
                                 var tree = Ext.getCmp('thematic_tree');
                                 var treeRoot = tree.getRootNode();
                                 
-                                treeRoot.expandChildNodes(true);
-                                
                                 var re = new RegExp(Ext.escapeRe(this.getValue()), 'i');
                                 console.log("re:"+this.getValue());
-                                var visibleSum = 0;
-                                var count = 0;
 
-                                var filter = function(node) {// descends into child nodes
-                                    var nodeId="";
-                                    if ( node.parentNode != null) {
-                                        nodeId = "node:"+node.attributes.text+ " > "+node.parentNode.attributes.text
-                                        console.log(nodeId)
-                                    } else {
-                                        nodeId = "node:"+node.attributes.text;
-                                        console.log(nodeId)
+                                var filter = function(node) { // descends into child nodes recursivly)
+                                    if ( node.attributes != null && node.attributes.text != null) { //its a parent folder
+                                        if ( re.test(node.attributes.text) ) { //basecase 1: If match on folder name - ignore children
+                                            console.log("text:"+node.attributes.text+" test:"+re.test(node.attributes.text))
+                                            return true;
+                                        }
                                     }
-                                    
-                                    if( node.hasChildNodes() && node.childNodes.length == 0) { //has childnodes but not expanded
-                                        //node.expand();
-                                    }
+                                    var hasLeafMatch = false;
                                     if(node.hasChildNodes()) {
-                                        visibleSum = 0
-                                        var childLen = node.childNodes.length;
-                                        for(var i = childLen-1; i >= 0; i--) { //node.eachChild(function(childNode) {
+                                        for ( var i=0; i < node.childNodes.length && hasLeafMatch == false; i++) {
                                             var childNode = node.childNodes[i];
                                             if(childNode.isLeaf()) {
-                                                console.log("re:"+re+" name:"+childNode.layer.name+" test:"+!re.test(childNode.layer.name))
-                                                if(!re.test(childNode.layer.name)) {
-                                                    filteredNodes.push(childNode);
-                                                    //node.removeChild(childNode);
-                                                } else {
-                                                    visibleSum++;
+                                                if ( childNode.layer != null) {
+                                                    if ( re.test(childNode.layer.name) ) {
+                                                        console.log("name:"+childNode.layer.name+" test:"+re.test(childNode.layer.name) )
+                                                        hasLeafMatch = true;
+                                                    }
                                                 }
-                                            } else if(!childNode.hasChildNodes() && re.test(childNode.attributes.text)) {// empty folder, but name matches
-                                                visibleSum++;
-                                            } else {
-                                                filter(childNode);
-                                            }
-                                        } //);
-                                        if(visibleSum == 0 && !re.test(node.attributes.text)) {
+                                            } else filter(childNode);
+                                        }
+                                        if ( !childNode.isLeaf() && hasLeafMatch == false ) {
+                                            console.log("no match:"+node.attributes.text)
                                             filteredNodes.push(node);
                                         }
-                                    } else if(node.layer != null && !re.test(node.layer.name)) {
-                                        filteredNodes.push(node);
-                                    } 
+                                    }
+                                    return hasLeafMatch;
                                 }
-                                filter(treeRoot); 
+                                treeRoot.eachChild( function(childNode) {
+                                    filter(childNode);
+                                }); 
 
                                 Ext.each(filteredNodes, function(n) {
-                                    var indexEl = treeRoot.indexOf(n);
-                                    var el = tree.root.item(indexEl);
-                                    if (el != null) {
-                                        el.getUI().hide();
-                                    } 
+                                    n.getUI().hide();
                                 });  
                             },
                             focus : {
@@ -697,19 +684,19 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
                                     this.setValue("");
                                     var tree = Ext.getCmp('thematic_tree');
                                     var treeRoot = tree.getRootNode();
-                                    treeRoot.collapseChildNodes( true );
                                     Ext.each(filteredNodes, function(n) {
                                         //var el = Ext.fly(tree.getView().getNodeByRecord(n));
-                                        var indexEl = tree.root.indexOf(n);
-                                        var el = tree.root.item(indexEl);
+                                        var indexEl = treeRoot.indexOf(n);
+                                        var el = treeRoot.item(indexEl);
                                         if (el != null) {
                                             el.getUI().show();
                                         }
                                     });
+                                    treeRoot.collapseChildNodes( true );
                                 }
                             }                       
                         }
-                    }],              
+                    }],           
                     layout: "fit",
                     id: "thematic_tree"
                 }, legendContainerContainer]
