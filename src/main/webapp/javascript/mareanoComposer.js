@@ -643,11 +643,23 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
                                 
                                 var re = new RegExp(Ext.escapeRe(this.getValue()), 'i');
                                 console.log("re:"+this.getValue());
+                                if ( this.getValue() == "" ) {
+                                    Ext.each(filteredNodes, function(n) {
+                                        //var el = Ext.fly(tree.getView().getNodeByRecord(n));
+                                        var indexEl = treeRoot.indexOf(n);
+                                        var el = treeRoot.item(indexEl);
+                                        if (el != null) {
+                                            el.getUI().show();
+                                        }
+                                    });
+                                    treeRoot.collapseChildNodes( true );
+                                    return;
+                                }
 
                                 var filter = function(node) { // descends into child nodes recursivly)
                                     if ( node.attributes != null && node.attributes.text != null) { //its a parent folder
                                         if ( re.test(node.attributes.text) ) { //basecase 1: If match on folder name - ignore children
-                                            console.log("text:"+node.attributes.text+" test:"+re.test(node.attributes.text))
+                                            //console.log("text:"+node.attributes.text+" test:"+re.test(node.attributes.text))
                                             return true;
                                         }
                                     }
@@ -658,14 +670,19 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
                                             if(childNode.isLeaf()) {
                                                 if ( childNode.layer != null) {
                                                     if ( re.test(childNode.layer.name) ) {
-                                                        console.log("name:"+childNode.layer.name+" test:"+re.test(childNode.layer.name) )
+                                                        //console.log("name:"+childNode.layer.name+" test:"+re.test(childNode.layer.name) )
                                                         hasLeafMatch = true;
                                                     }
                                                 }
-                                            } else filter(childNode);
+                                            } else { 
+                                                var childLeafMatch = filter(childNode);
+                                                if ( childLeafMatch == true ) {
+                                                    hasLeafMatch = true;
+                                                }
+                                            }
                                         }
-                                        if ( !childNode.isLeaf() && hasLeafMatch == false ) {
-                                            console.log("no match:"+node.attributes.text)
+                                        if ( hasLeafMatch == false ) {
+                                            //console.log("no match:"+node.attributes.text)
                                             filteredNodes.push(node);
                                         }
                                     }
