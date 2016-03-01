@@ -663,33 +663,36 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
                                             return true;
                                         }
                                     }
-                                    var hasLeafMatch = false;
+                                    var thisLeafMatch = false;
                                     if(node.hasChildNodes()) {
-                                        for ( var i=0; i < node.childNodes.length && hasLeafMatch == false; i++) {
+                                        for ( var i=0; i < node.childNodes.length; i++) {
                                             var childNode = node.childNodes[i];
                                             if(childNode.isLeaf()) {
                                                 if ( childNode.layer != null) {
                                                     if ( re.test(childNode.layer.name) ) {
                                                         //console.log("name:"+childNode.layer.name+" test:"+re.test(childNode.layer.name) )
-                                                        hasLeafMatch = true;
+                                                        return true;
                                                     }
                                                 }
                                             } else { 
                                                 var childLeafMatch = filter(childNode);
-                                                if ( childLeafMatch == true ) {
-                                                    hasLeafMatch = true;
+                                                if ( childLeafMatch == false ) {
+                                                    filteredNodes.push(childNode);
+                                                } else {
+                                                    thisLeafMatch = true;
                                                 }
                                             }
                                         }
-                                        if ( hasLeafMatch == false ) {
-                                            //console.log("no match:"+node.attributes.text)
-                                            filteredNodes.push(node);
-                                        }
                                     }
-                                    return hasLeafMatch;
+                                    return thisLeafMatch;
                                 }
                                 treeRoot.eachChild( function(childNode) {
-                                    filter(childNode);
+                                    //alternatively dont remove hovedtema without match but dont expand either
+                                    //filter(childNode)
+                                    var childLeafMatch = filter(childNode);
+                                    if ( childLeafMatch == false ) {
+                                        filteredNodes.push(childNode);
+                                    }                                   
                                 }); 
 
                                 Ext.each(filteredNodes, function(n) {
