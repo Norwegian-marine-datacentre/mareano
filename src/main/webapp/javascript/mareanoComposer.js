@@ -654,9 +654,21 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
                                 }
                                 var filterChoosen = "Layer:";
                                 if ( query.indexOf("Layer:") > -1 ) {
+                                    if ( query != "Layer:") {
+                                        Ext.each(filteredNodes, function(n) {
+                                            n.getUI().show();
+                                        });
+                                        filteredNodes = [];
+                                    }
                                     query = query.replace("Layer:", "");    
                                     filterChoosen = "Layer:";
                                 } else if ( query.indexOf("Abstract:") > -1 ) {
+                                    if ( query != "Abstract:") {
+                                        Ext.each(filteredNodes, function(n) {
+                                            n.getUI().show();
+                                        });
+                                        filteredNodes = [];
+                                    }
                                     query = query.replace("Abstract:", ""); 
                                     filterChoosen = "Abstract:";
                                 }
@@ -689,9 +701,7 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
                                         } 
                                         return "";
                                     } else if ( filterChoosen == "Abstract:" ) {
-                                        console.log("aabstract: "+anode.attributes.qtip);
                                         if ( anode.attributes != null && anode.attributes.qtip != null ) {
-                                            console.log("abstract: "+anode.attributes.qtip);
                                             return anode.attributes.qtip;
                                         } 
                                         return "";
@@ -753,25 +763,7 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
                                 }
                             }                       
                         }
-                    }],  
-                            focus : {
-                                fn : function(view, record, item, index, even) {
-                                    this.setValue("");
-                                    var tree = Ext.getCmp('thematic_tree');
-                                    var treeRoot = tree.getRootNode();
-                                    Ext.each(filteredNodes, function(n) {
-                                        //var el = Ext.fly(tree.getView().getNodeByRecord(n));
-                                        var indexEl = treeRoot.indexOf(n);
-                                        var el = treeRoot.item(indexEl);
-                                        if (el != null) {
-                                            el.getUI().show();
-                                        }
-                                    });
-                                    treeRoot.collapseChildNodes( true );
-                                }
-                            }                       
-                        }
-                    }],           
+                    }],    
                     layout: "fit",
                     id: "thematic_tree"
                 }, legendContainerContainer]
