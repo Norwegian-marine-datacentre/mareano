@@ -620,46 +620,87 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
                     tbar: [{
                         text: '<b>'+this.thematicText +'</b>'
                     }, '->', {
-                        xtype: 'textfield',
-                        value: 'Layer:',
+                        xtype: 'combo',
+                        id: 'filterLayers',
+                        width:160,
+                        store: ['Layer:','Abstract:'],
+                        triggerAction: 'all',
+                        editable: true,
+                        mode: 'local',
                         enableKeyEvents: true,
                         listeners: {
+                            afterrender:function(rec) { //set default value
+                                Ext.getCmp("filterLayers").setValue('Layer:');
+                            },
                             keydown: function(form, e) {
-                                var tree = Ext.getCmp('thematic_tree');
-                                var treeRoot = tree.getRootNode();
-                                treeRoot.expandChildNodes(true);
-                            },                          
-                            keyup: function(form, e) {
-                                if ( e != undefined) {
-                                    form.value += this.getValue();
-                                } else {
-                                    console.log("keystroke undefined");
+                                if ( this.lastQuery == "" || this.lastQuery == "Layer:" || this.layerQuery == "Abstract:") {
+                                    var tree = Ext.getCmp('thematic_tree');
+                                    var treeRoot = tree.getRootNode();
+                                    treeRoot.expandChildNodes(true);
                                 }
-                                //console.log(String.fromCharCode(e.getKey())); //this is work
-                                //console.log("form.value:"+form.value); //this is work
+                            },
+                            keydown: function(form, e) {
+                                var queryIsEmpty = this.lastQuery == "" || this.lastQuery == "Layer:" || this.layerQuery == "Abstract:";
+                                //if ( queryIsEmpty ) {
+                                    var tree = Ext.getCmp('thematic_tree');
+                                    var treeRoot = tree.getRootNode();
+                                    treeRoot.expandChildNodes(true);
+                                //}
+                            },
+                            keyup: function(form, e) {
+                                var query = this.getRawValue();
+                                if ( query == undefined ) {
+                                    console.log("query undefined:")
+                                }
+                                var filterChoosen = "Layer:";
+                                if ( query.indexOf("Layer:") > -1 ) {
+                                    query = query.replace("Layer:", "");    
+                                    filterChoosen = "Layer:";
+                                } else if ( query.indexOf("Abstract:") > -1 ) {
+                                    query = query.replace("Abstract:", ""); 
+                                    filterChoosen = "Abstract:";
+                                }
                                 
+                                if ( e.keyCode == 8 || query == "" ) {
+                                    Ext.each(filteredNodes, function(n) {
+                                        n.getUI().show();
+                                    });
+                                    filteredNodes = [];
+                                }
                                 var tree = Ext.getCmp('thematic_tree');
                                 var treeRoot = tree.getRootNode();
-                                
-                                var re = new RegExp(Ext.escapeRe(this.getValue()), 'i');
-                                console.log("re:"+this.getValue());
-                                if ( this.getValue() == "" ) {
-                                    Ext.each(filteredNodes, function(n) {
-                                        //var el = Ext.fly(tree.getView().getNodeByRecord(n));
-                                        var indexEl = treeRoot.indexOf(n);
-                                        var el = treeRoot.item(indexEl);
-                                        if (el != null) {
-                                            el.getUI().show();
-                                        }
-                                    });
+                                if ( query == "" ) {
                                     treeRoot.collapseChildNodes( true );
                                     return;
                                 }
 
+                                if ( query.length < 2 ) {
+                                    return;
+                                }
+                                var re = new RegExp(Ext.escapeRe( query ), 'i');
+                                //console.log("re:"+query);
+                                
+                                var getNodeValue = function( anode ) {
+                                    if ( filterChoosen == "Layer:") {
+                                        if ( anode.attributes != null && anode.attributes.text != null ) {
+                                            return anode.attributes.text;
+                                        } else if ( anode.layer!= null && anode.layer.name != null ) {
+                                            return anode.layer.name;
+                                        } 
+                                        return "";
+                                    } else if ( filterChoosen == "Abstract:" ) {
+                                        console.log("aabstract: "+anode.attributes.qtip);
+                                        if ( anode.attributes != null && anode.attributes.qtip != null ) {
+                                            console.log("abstract: "+anode.attributes.qtip);
+                                            return anode.attributes.qtip;
+                                        } 
+                                        return "";
+                                    }
+                                }                               
+
                                 var filter = function(node) { // descends into child nodes recursivly)
                                     if ( node.attributes != null && node.attributes.text != null) { //its a parent folder
-                                        if ( re.test(node.attributes.text) ) { //basecase 1: If match on folder name - ignore children
-                                            //console.log("text:"+node.attributes.text+" test:"+re.test(node.attributes.text))
+                                        if ( re.test( getNodeValue(node) ) ) { //basecase 1: If match on folder name - ignore children
                                             return true;
                                         }
                                     }
@@ -668,11 +709,8 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
                                         for ( var i=0; i < node.childNodes.length; i++) {
                                             var childNode = node.childNodes[i];
                                             if(childNode.isLeaf()) {
-                                                if ( childNode.layer != null) {
-                                                    if ( re.test(childNode.layer.name) ) {
-                                                        //console.log("name:"+childNode.layer.name+" test:"+re.test(childNode.layer.name) )
-                                                        return true;
-                                                    }
+                                                if ( re.test( getNodeValue(childNode) ) ) {
+                                                    return true;
                                                 }
                                             } else { 
                                                 var childLeafMatch = filter(childNode);
@@ -688,17 +726,34 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
                                 }
                                 treeRoot.eachChild( function(childNode) {
                                     //alternatively dont remove hovedtema without match but dont expand either
-                                    //filter(childNode)
+                                    //filter(childNode);
                                     var childLeafMatch = filter(childNode);
                                     if ( childLeafMatch == false ) {
                                         filteredNodes.push(childNode);
                                     }                                   
                                 }); 
-
                                 Ext.each(filteredNodes, function(n) {
                                     n.getUI().hide();
                                 });  
                             },
+                            focus : {
+                                fn : function(view, record, item, index, even) {
+                                    //this.setValue("");
+                                    var tree = Ext.getCmp('thematic_tree');
+                                    var treeRoot = tree.getRootNode();
+                                    Ext.each(filteredNodes, function(n) {
+                                        //var el = Ext.fly(tree.getView().getNodeByRecord(n));
+                                        var indexEl = treeRoot.indexOf(n);
+                                        var el = treeRoot.item(indexEl);
+                                        if (el != null) {
+                                            el.getUI().show();
+                                        }
+                                    });
+                                    treeRoot.collapseChildNodes( true );
+                                }
+                            }                       
+                        }
+                    }],  
                             focus : {
                                 fn : function(view, record, item, index, even) {
                                     this.setValue("");
