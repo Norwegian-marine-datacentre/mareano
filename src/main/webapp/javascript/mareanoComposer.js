@@ -627,7 +627,7 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
                         editable: true,
                         mode: 'local',
                         enableKeyEvents: true,
-                        listeners: filterLayers() //see filterLayers.js
+                        listeners: closureForFilterLayers() //see filterLayers.js
                     }],    
                     layout: "fit",
                     id: "thematic_tree"
