@@ -75,15 +75,35 @@ function getArrayOfInfoDivs( currentInfo ) {
 
 function createNewInfoFragment(layer, data) {
 
-    var service = layer.url;
-    var layers = layer.params.LAYERS;
-    var kartlagTitle = layer.metadata['kartlagTitle'];
     var kartlagId = layer.metadata['kartlagId'];
+
+    var getMapUrl = "";
+    var layers = app.mapPanel.map.layers;
+    for (var i=0; i<layers.length; i++) {
+        var alayer = layers[i];
+        var id = alayer.metadata['kartlagId'];
+        if ( id != null && id == kartlagId ) {
+            var is = (alayer.CLASS_NAME == "OpenLayers.Layer.WMS")
+            if (is) {
+                tParams = alayer.params;
+                tParams = OpenLayers.Util.extend(tParams, {
+                    BBOX: alayer.maxExtent.toArray(),
+                    WIDTH: alayer.map.size.w, 
+                    HEIGHT: alayer.map.size.h
+                });
+                getMapUrl = alayer.getFullRequestString(tParams);
+                console.log("url:"+getMapUrl);
+            }
+            break;
+        }
+    }
+
+    var layers = layer.params.LAYERS;
     var infoHTML = '<div id="'+kartlagId+'tips" style="margin-bottom: 0.1cm;"><font style="font-size: 12px;"><b>'+ 
     data.kartlagInfo.kartlagInfoTitel+'</b>' + ':<br />' + 
     data.kartlagInfo.text + '<br />' +
-    'wms service:<a href="' + service + '">'+service +' and layer(s):'+layers+'</a></font></div>';
-    
+    '<a href="' + getMapUrl + '">getMap:'+layers+'</a></font></div>';
+
     return infoHTML;
 }
 
