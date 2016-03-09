@@ -98,13 +98,59 @@ function createNewInfoFragment(layer, data) {
         }
     }
 
+    //add a href to urls
+    var infoWithLinks = closureForAddHrefsToUrl(data.kartlagInfo.text);
+    
     var layers = layer.params.LAYERS;
     var infoHTML = '<div id="'+kartlagId+'tips" style="margin-bottom: 0.1cm;"><font style="font-size: 12px;"><b>'+ 
     data.kartlagInfo.kartlagInfoTitel+'</b>' + ':<br />' + 
-    data.kartlagInfo.text + '<br />' +
+    infoWithLinks + '<br />' +
     '<a href="' + getMapUrl + '">getMap:'+layers+'</a></font></div>';
 
     return infoHTML;
+}
+
+function closureForAddHrefsToUrl(infoText) {
+    if ( infoText == null ) {
+        return infoText;
+    } else {
+        var re = new RegExp(Ext.escapeRe( '<a href' ), 'i')
+        if ( re.test(infoText) ) {
+            //already contains a href
+            return infoText;
+        }
+    }
+    var updatedInfoText = "";
+    addHrefsToUrl(infoText);
+    function addHrefsToUrl( infoTextFragment ) {
+        var indexHttp = infoTextFragment.indexOf("http");
+        if ( indexHttp > -1 ) {
+            addHrefString( indexHttp, infoTextFragment );
+        } else {
+            updatedInfoText += infoTextFragment;
+        }
+    }
+    
+    function addHrefString( indexHttp, infoTextFragment ) {
+        updatedInfoText += infoTextFragment.substring(0, indexHttp );
+        var lengthStr = infoTextFragment.length;
+        //console.log("length:"+lengthStr+" fragment:"+updatedInfoText)
+        var notUpdatedInfoText = infoTextFragment.substring(indexHttp, lengthStr );
+        var endOfWordToLink = notUpdatedInfoText.indexOf(" ");
+        var endOfWordToLinkNonAscii = notUpdatedInfoText.indexOf("<");
+        if ( endOfWordToLink == -1 ) {
+            endOfWordToLink = lengthStr;
+        } else if ( endOfWordToLinkNonAscii < endOfWordToLink ) {
+            endOfWordToLink = endOfWordToLinkNonAscii;
+        }
+        //console.log("begin substring:"+indexHttp+"index substring:"+endOfWordToLink+" subString:"+notUpdatedInfoText)
+        var theLink = notUpdatedInfoText.substring(0, endOfWordToLink);
+        //console.log("link:"+theLink.link(theLink))
+        updatedInfoText += theLink.link(theLink);
+        //console.log("recurse on:"+infoTextFragment.substring(endOfWordToLink, lengthStr))
+        addHrefsToUrl( notUpdatedInfoText.substring(endOfWordToLink, notUpdatedInfoText.length) );        
+    }
+    return updatedInfoText;
 }
 
 var layerIdHash = [];
