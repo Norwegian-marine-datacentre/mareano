@@ -92,7 +92,6 @@ function createNewInfoFragment(layer, data) {
                     HEIGHT: alayer.map.size.h
                 });
                 getMapUrl = alayer.getFullRequestString(tParams);
-                console.log("url:"+getMapUrl);
             }
             break;
         }
@@ -105,7 +104,7 @@ function createNewInfoFragment(layer, data) {
     var infoHTML = '<div id="'+kartlagId+'tips" style="margin-bottom: 0.1cm;"><font style="font-size: 12px;"><b>'+ 
     data.kartlagInfo.kartlagInfoTitel+'</b>' + ':<br />' + 
     infoWithLinks + '<br />' +
-    '<a href="' + getMapUrl + '">getMap:'+layers+'</a></font></div>';
+    '<a href="' + getMapUrl + '" target="_blank">getMap:'+layers+'</a></font></div>';
 
     return infoHTML;
 }
@@ -146,7 +145,7 @@ function closureForAddHrefsToUrl(infoText) {
         //console.log("begin substring:"+indexHttp+"index substring:"+endOfWordToLink+" subString:"+notUpdatedInfoText)
         var theLink = notUpdatedInfoText.substring(0, endOfWordToLink);
         //console.log("link:"+theLink.link(theLink))
-        updatedInfoText += theLink.link(theLink);
+        updatedInfoText += "<a href='"+theLink+"' target='_target'>"+theLink+"</a>";
         //console.log("recurse on:"+infoTextFragment.substring(endOfWordToLink, lengthStr))
         addHrefsToUrl( notUpdatedInfoText.substring(endOfWordToLink, notUpdatedInfoText.length) );        
     }
