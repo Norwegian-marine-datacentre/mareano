@@ -189,6 +189,11 @@
 		    <artifactId>jackson-annotations</artifactId>
 		    <version>2.4.0</version>
 		</dependency>
+		<dependency>
+		    <groupId>commons-io</groupId>
+		    <artifactId>commons-io</artifactId>
+		    <version>2.4</version>
+		</dependency>		
     </dependencies>
     <build>
 <!--        <sourceDirectory>src</sourceDirectory>
@@ -279,14 +284,14 @@
                                     <arg path="${war-src}/WEB-INF/app/static/script"/>
                                     <arg path="buildjs.cfg"/>
                                 </java>
-                                <move
+                                <copy
                                     file="${war-src}/WEB-INF/app/static/script/GeoExplorer.js"
                                     tofile="${war-src}/WEB-INF/app/static/script/GeoExplorer-debug.js"/>
-                                <move
+                                <copy
                                     file="${war-src}/WEB-INF/app/static/script/mareano.js"
                                     tofile="${war-src}/WEB-INF/app/static/script/mareano-debug.js"/>
                                 <!-- compressed -->
-                                <java classname="org.ringojs.tools.launcher.Main" failonerror="true" fork="true">
+                                <!--  java classname="org.ringojs.tools.launcher.Main" failonerror="true" fork="true">
                                     <classpath>
                                         <fileset dir="${war-src}/WEB-INF/lib">
                                             <include name="**/*.jar"/>
@@ -298,7 +303,7 @@
                                     <arg value="-o"/>
                                     <arg path="${war-src}/WEB-INF/app/static/script"/>
                                     <arg path="buildjs.cfg"/>
-                                </java>
+                                </java -->
                             </tasks>
                         </configuration>
                         <goals>

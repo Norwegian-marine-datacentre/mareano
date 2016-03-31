@@ -61,7 +61,7 @@ public class PrintMapController {
     protected @ResponseBody ImageFilenameResponse postMapImage( @RequestBody PrintLayerList pll, HttpServletResponse resp) throws Exception {
         
         Long startTime = System.currentTimeMillis();
-        System.out.println("startTime:"+startTime);
+        //System.out.println("startTime:"+startTime);
         
         List<PrintLayer> printLayers = pll.getPrintlayers();
         int width = pll.getWidth();
@@ -78,7 +78,7 @@ public class PrintMapController {
             }
         }
         Map<Integer, FutureImageOrTiles> layerMap = requestAllLayers(printLayers);
-        System.out.println("requestAllLayers:"+(System.currentTimeMillis()-startTime));
+        //System.out.println("requestAllLayers:"+(System.currentTimeMillis()-startTime));
         
         for ( int i=0; i < printLayers.size(); i++ ) {
             FutureImageOrTiles futureImage =  layerMap.get(i);
@@ -101,24 +101,24 @@ public class PrintMapController {
             }
         }
         
-        System.out.println("crop:"+(System.currentTimeMillis()-startTime));
+        //System.out.println("crop:"+(System.currentTimeMillis()-startTime));
         mapImage = tilesUtil.cropImage( mapImage, position, width, height );
-        System.out.println("legend:"+(System.currentTimeMillis()-startTime));
+        //System.out.println("legend:"+(System.currentTimeMillis()-startTime));
         mapImage = legendUtil.writeLegend( mapImage, printLayers );
-        System.out.println("northarrow:"+(System.currentTimeMillis()-startTime));
+        //System.out.println("northarrow:"+(System.currentTimeMillis()-startTime));
         mapImage = printedMapUtils.addNorthArrow( mapImage, appContext );
         
         mapImage = printedMapUtils.addScaleBar( mapImage, pll);
         
         String fileName = "printMap";        
         File temp = File.createTempFile(fileName, "."+PNG);
-        System.out.println("BeforeSave image:"+(System.currentTimeMillis()-startTime));
+        //System.out.println("BeforeSave image:"+(System.currentTimeMillis()-startTime));
         ImageIO.write(mapImage, PNG, temp);
-        System.out.println("AfterSave image:"+(System.currentTimeMillis()-startTime));
+        //System.out.println("AfterSave image:"+(System.currentTimeMillis()-startTime));
 
         ImageFilenameResponse respJson = new ImageFilenameResponse();
         respJson.setFilename(temp.getName());
-        System.out.println("complete:"+(System.currentTimeMillis()-startTime));
+        //System.out.println("complete:"+(System.currentTimeMillis()-startTime));
         return respJson;
     }
     
@@ -139,7 +139,7 @@ public class PrintMapController {
         BufferedImage mapImage = ImageIO.read(tempMapFile); 
         resp.setContentType("image/png");
         resp.setHeader("Content-Disposition", "attachment; filename="+filename);
-        ImageIO.write(mapImage, PNG, resp.getOutputStream());        
+        ImageIO.write(mapImage, PNG, resp.getOutputStream());
         resp.flushBuffer();        
     }
 
@@ -162,8 +162,8 @@ public class PrintMapController {
                 } catch( IOException ioe) {
                     String errorMsg = printLayer.getKartlagTitle() + " err:"+ ioe.getMessage();
                     printLayer.setKartlagTitle(errorMsg);
-                    System.out.println("tiles io exception:"+errorMsg);
-                    LOG.error(errorMsg);
+                    //System.out.println("tiles io exception:"+errorMsg);
+                    LOG.error("tiles io exception:"+errorMsg);
                     ioe.printStackTrace();
                 }
             } else {
@@ -174,9 +174,9 @@ public class PrintMapController {
                     layerMap.put(i, overlay);
                 } catch(IOException ioe) {
                     String errorMsg = printLayer.getKartlagTitle() + " err:"+ ioe.getMessage();
-                    System.out.println("overlay io exception:"+errorMsg);
+                    //System.out.println("overlay io exception:"+errorMsg);
                     printLayer.setKartlagTitle(errorMsg);
-                    LOG.error(errorMsg);
+                    LOG.error("overlay io exception:"+errorMsg);
                     ioe.printStackTrace();
                 }
             }
