@@ -31,7 +31,10 @@ function loadMareano(mapPanel, app) {
     app.mapPanel.map.events.register('zoomend', app, updateLegendScale);
 
     //Hacky approach to find current background layer on initial map display
-    changeBakgrunnsInfo(app.mapPanel.map.getLayersBy("visibility", true)[1]);  
+    var backgroundLayerInfoToChange = app.mapPanel.map.getLayersBy("visibility", true)[1]
+    if ( backgroundLayerInfoToChange != null ) {
+        changeBakgrunnsInfo(backgroundLayerInfoToChange);
+    }
     var mapLayerChanged = function(e) {
     	if (e.layer.visibility) {
     	    changeBakgrunnsInfo(e.layer);

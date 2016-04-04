@@ -10,10 +10,6 @@ var bakgrunn=[];
 
 
 //TODO discuss how background layers should be flagged
-var backgroundGroupName ="background";
-var backgroundSeaGroupName ="backgroundSea";
-var backgroundPolarName = "backgroundPolar";
-
 var hovedtemaBakgrunn = "Bakgrunnskart";
 var hovedtemaBakgrunnEn = "Background map";
 var hovedtemaGenerelle = "generelle";
@@ -115,15 +111,11 @@ function addLayersToHovedTemaOrBackgroundLayer(alleHovedtemaer, projection) {
             for (var k=0; k < gruppe.kart.length; k++) {
                 layer = gruppe.kart[k];
                 
-                if ( (gruppe.gruppe == backgroundGroupName || gruppe.gruppe == backgroundSeaGroupName) && projection == EPSG32633) {
+                if ( hovedtema.hovedtema ==  hovedtemaBakgrunn || hovedtema.hovedtema ==  hovedtemaBakgrunnEn ) {
                     if (app.map) { // If map does not exist at this point then GeoExplorer is loading saved map
                         app.map.layers.push(createBackgroundLayerObject(layer));
                     }
-                } else if (gruppe.gruppe == backgroundPolarName && projection == EPSG3575) {
-                    if (app.map) { // If map does not exist at this point then GeoExplorer is loading saved map
-                        app.map.layers.push(createBackgroundLayerObject(layer));
-                    }
-                } else if ( gruppe.gruppe != backgroundGroupName && gruppe.gruppe != backgroundSeaGroupName && gruppe.gruppe != backgroundPolarName ) {
+                } else {
                     OLRecord = createLayerRecord(gruppe.gruppe,gruppe.visible,layer);
                     if (gruppe.gruppe == "generelle") {
                         generelleLayers.push(OLRecord);
