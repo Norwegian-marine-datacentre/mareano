@@ -38,14 +38,14 @@
         <dependency>
             <groupId>org.ringojs</groupId>
             <artifactId>ringojs</artifactId>
-            <version>0.8.1</version>
+            <version>0.8.1</version> 
         </dependency>
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
             <version>3.1.0</version>
+            <scope>provided</scope>
         </dependency>
-    
         <dependency>
             <groupId>org.xerial</groupId>
             <artifactId>sqlite-jdbc</artifactId>
@@ -56,6 +56,7 @@
             <groupId>javax.servlet</groupId>
             <artifactId>jstl</artifactId>
             <version>1.2</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>taglibs</groupId>
@@ -122,7 +123,7 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>${org.junit.version}</version>
-            <scope>test</scope>
+            <!-- scope>test</scope -->
         </dependency>
 		<dependency>
 		    <groupId>org.hamcrest</groupId>
@@ -142,7 +143,7 @@
         <dependency>
             <groupId>postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <version>8.3-606.jdbc4</version>
+            <version>9.1-901-1.jdbc4</version>
         </dependency>				
         <dependency> <!-- needed by tomcat -->
             <groupId>org.apache.derby</groupId>
@@ -204,92 +205,109 @@
             </plugin>
             <plugin>
                 <artifactId>maven-antrun-plugin</artifactId>
+                <version>1.7</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.apache.ant</groupId>
+                        <artifactId>ant</artifactId>
+                        <version>${ant.version}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>ant-contrib</groupId>
+                        <artifactId>ant-contrib</artifactId>
+                        <version>1.0b3</version>
+                    </dependency>		
+			        <dependency>
+			            <groupId>org.ringojs</groupId>
+			            <artifactId>ringojs</artifactId>
+			            <version>0.8.0</version>
+			        </dependency >
+                </dependencies>
                 <executions>
+                    <execution>
+                        <id>initialize</id>
+                        <phase>initialize</phase>
+                        <configuration>
+                            <tasks>
+                                <mkdir dir="${project.build.directory}" />
+                                <property name="ver.ini" value="${project.build.directory}/version.ini" />
+                                <property name="sep" value="${line.separator}" />
+                                <echo file="${ver.ini}" message="suite_version=${project.version}${sep}" />
+                                <echo file="${ver.ini}" append="true"
+                                      message="build_revision=${git.commit.id}${sep}" />
+                                <echo file="${ver.ini}" append="true"
+                                      message="build_branch=${git.branch}${sep}" />
+                                <echo file="${ver.ini}" append="true"
+                                      message="build_date=${build.date}${sep}" />
+                                <echo file="${ver.ini}" append="true"
+                                      message="build_prettydate=${build.prettydate}${sep}" />
+                                <echo file="${ver.ini}" append="true"
+                                      message="build_profile=${build.profile}${sep}" />
+                            </tasks>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
                     <execution>
                         <phase>generate-resources</phase>
                         <configuration>
                             <tasks>
-                                <copy todir="${war-src}/WEB-INF/app">
-                                    <fileset dir="externals/suite/geoexplorer/app">
-                                        <!-- exclude name="**/externals/**"/ --> <!-- comment to include ext-all-debug-w-comments.js -->
-                                        <exclude name="**/script/**"/>
-                                    </fileset>
+                          
+                                <!--Copy geoexplorer components -->
+                                <copy file="externals/suite/geoexplorer/app/static/theme/app/geoexplorer.css" todir="${war-src}/lib/geoexplorer" />
+                                <copy file="externals/suite/geoexplorer/app/static/externals/ext/resources/css/ext-all.css" todir="${war-src}/lib/geoexplorer/ext" />
+                                <copy file="externals/suite/geoexplorer/app/static/externals/ext/resources/css/xtheme-gray.css" todir="${war-src}/lib/geoexplorer/ext" />
+                                <copy file="externals/suite/geoexplorer/app/static/externals/ext/ext-all-debug-w-comments.js" todir="${war-src}/lib/geoexplorer/ext" />
+                                <copy file="externals/suite/geoexplorer/app/static/externals/ext/ext-all-debug.js" todir="${war-src}/lib/geoexplorer/ext" />
+                                <copy file="externals/suite/geoexplorer/app/static/externals/ext/ext-all.js" todir="${war-src}/lib/geoexplorer/ext" />
+                                <copy file="externals/suite/geoexplorer/app/static/externals/ext/adapter/ext/ext-base.js" todir="${war-src}/lib/geoexplorer/ext" />
+                                <copy file="externals/suite/geoexplorer/app/static/externals/ext/adapter/ext/ext-base-debug.js" todir="${war-src}/lib/geoexplorer/ext" />
+                                <copy file="externals/suite/geoexplorer/app/static/externals/openlayers/theme/default/style.css" todir="${war-src}/lib/geoexplorer/openlayers/theme/default" />
+                                <copy todir="${war-src}/lib/geoexplorer/openlayers/img">
+                                	<fileset dir="externals/suite/geoexplorer/app/static/externals/openlayers/img" />
                                 </copy>
-                                <!-- copy stick -->
-                                <copy todir="${war-src}/WEB-INF/app/stick">
-                                    <fileset dir="externals/suite/geoexplorer/externals/stick">
-                                        <include name="**/lib/**"/>
-                                        <include name="package.json"/>
-                                    </fileset>
+                                <copy file="externals/suite/geoexplorer/app/static/externals/geoext/resources/css/popup.css" todir="${war-src}/lib/geoexplorer/geoext/resources/css" />
+                                <copy file="externals/suite/geoexplorer/app/static/externals/geoext/resources/css/layerlegend.css" todir="${war-src}/lib/geoexplorer/geoext/resources/css" />
+                                <copy file="externals/suite/geoexplorer/app/static/externals/geoext/resources/css/gxtheme-gray.css" todir="${war-src}/lib/geoexplorer/geoext/resources/css" />
+                                <copy file="externals/suite/geoexplorer/app/static/externals/geoext/resources/css/gxtheme-gray.css" todir="${war-src}/lib/geoexplorer/geoext/resources/css" />
+                                <copy file="externals/suite/geoexplorer/app/static/externals/geoext/resources/images/gray/anchor.png" todir="${war-src}/lib/geoexplorer/geoext/resources/images/gray/anchor.png" />
+                                <copy file="externals/suite/geoexplorer/app/static/externals/geoext/resources/images/gray/anchor-top.png" todir="${war-src}/lib/geoexplorer/geoext/resources/images/gray/anchor-top.png" />
+                                <copy file="externals/suite/geoexplorer/app/static/externals/gxp/src/theme/all.css" todir="${war-src}/lib/geoexplorer/gxp/src/theme" />
+                                <copy todir="${war-src}/lib/geoexplorer/colorpicker">
+                                    <fileset dir="externals/suite/geoexplorer/app/static/theme/ux/colorpicker" />
                                 </copy>
-                                <!-- copy Ext resources -->
-                                <copy todir="${war-src}/WEB-INF/app/static/externals/ext">
-                                    <fileset dir="externals/suite/geoexplorer/app/static/externals/ext">
-                                        <exclude name="**/*debug*.js"/>
-                                        <exclude name="**/ext-all-notheme.css"/>
-                                        <exclude name="**/xtheme-blue.css"/>
-                                    </fileset>
+                                <copy todir="${war-src}/lib/geoexplorer/images">
+                                    <fileset dir="externals/suite/geoexplorer/app/static/externals/ext/resources/images" />
                                 </copy>
-                                <!-- copy OpenLayers resources -->
-                                <copy todir="${war-src}/WEB-INF/app/static/externals/openlayers/theme">
-                                    <fileset dir="externals/suite/geoexplorer/app/static/externals/openlayers/theme"/>
+                                <copy todir="${war-src}/lib/imr">
+                                    <fileset dir="app/static/theme/imr" />
+                                </copy>            
+                                <copy todir="${war-src}/lib/geoexplorer/gxp/src/theme/img">
+                                    <fileset dir="externals/suite/geoexplorer/app/static/externals/gxp/src/theme/img"  />
                                 </copy>
-                                <!-- copy GeoExt resources -->
-                                <copy todir="${war-src}/WEB-INF/app/static/externals/geoext/resources">
-                                    <fileset dir="externals/suite/geoexplorer/app/static/externals/geoext/resources">
-                                        <exclude name="**/geoext-all-debug.css"/>
-                                        <exclude name="**/gxtheme-slate.css"/>
-                                        <exclude name="**/slate/**"/>
-                                    </fileset>
-                                </copy>
-                                <!-- copy gxp resources -->
-                                <copy todir="${war-src}/WEB-INF/app/static/externals/gxp/src/theme">
-                                    <fileset dir="externals/suite/geoexplorer/app/static/externals/gxp/src/theme"/>
-                                </copy>
-                                <!-- copy PrintPreview resources -->
-                                <copy todir="${war-src}/WEB-INF/app/static/externals/printpreview/resources">
-                                    <fileset dir="externals/suite/geoexplorer/app/static/externals/printpreview/resources"/>
-                                </copy>
-                                <!-- copy Mareano resources -->
-                                <copy todir="${war-src}/WEB-INF/app/static/theme/imr">
-                                    <fileset dir="app/static/theme/imr"/>
-                                </copy>
+                                <copy todir="${war-src}/lib/geoexplorer/img">
+                                    <fileset dir="externals/suite/geoexplorer/app/static/theme/app/img" />
+                                </copy>            
                                 <!-- build JavaScript -->
-                                <mkdir dir="${war-src}/WEB-INF/app/static/script"/>
+                                <mkdir dir="${war-src}/WEB-INF/app/static/script" />
                                 <!-- uncompressed -->
-                                <java classname="org.ringojs.tools.launcher.Main" failonerror="true" fork="true">
-                                    <classpath>
-                                        <fileset dir="${war-src}/WEB-INF/lib">
-                                            <include name="**/*.jar"/>
-                                        </fileset>
-                                    </classpath>
-                                    <sysproperty key="ringo.home" path="${war-src}/WEB-INF"/>
-                                    <arg path="externals/suite/geoexplorer/externals/buildkit/lib/buildkit/build.js"/>
-                                    <arg value="-u"/>
-                                    <arg value="-o"/>
-                                    <arg path="${war-src}/WEB-INF/app/static/script"/>
-                                    <arg path="buildjs.cfg"/>
+                                <java classname="org.ringojs.tools.launcher.Main" failonerror="true" fork="true" classpathref="maven.plugin.classpath" >
+                               		<sysproperty key="ringo.home" path="${war-src}/WEB-INF" />
+                                    <sysproperty key="ringo.modulepath" path="externals/suite/geoexplorer/externals/buildkit/lib/buildkit" />
+                                    
+                                    <!-- arg path="externals/suite/geoexplorer/externals/buildkit/lib/buildkit/build.js" / -->
+                                    
+                                    <arg   path="jsBuild/build.js" />
+                                    <arg value="-u" />
+                                    <arg value="-debug" />  
+                                    <arg value="-o" />
+                                    <arg path="${war-src}/lib/geoexplorer" />
+                                    
+                                    <!-- arg path="${war-src}/WEB-INF/app/static/script" / -->
+                                    
+                                    <arg path="buildjs.cfg" />
                                 </java>
-                                <copy
-                                    file="${war-src}/WEB-INF/app/static/script/GeoExplorer.js"
-                                    tofile="${war-src}/WEB-INF/app/static/script/GeoExplorer-debug.js"/>
-                                <copy
-                                    file="${war-src}/WEB-INF/app/static/script/mareano.js"
-                                    tofile="${war-src}/WEB-INF/app/static/script/mareano-debug.js"/>
-                                <!-- compressed -->
-                                <!--  java classname="org.ringojs.tools.launcher.Main" failonerror="true" fork="true">
-                                    <classpath>
-                                        <fileset dir="${war-src}/WEB-INF/lib">
-                                            <include name="**/*.jar"/>
-                                        </fileset>
-                                    </classpath>
-                                    <sysproperty key="ringo.home" path="${war-src}/WEB-INF"/>
-                                    <arg path="externals/suite/geoexplorer/externals/buildkit/lib/buildkit/build.js"/>
-                                    <arg value="-u"/>
-                                    <arg value="-o"/>
-                                    <arg path="${war-src}/WEB-INF/app/static/script"/>
-                                    <arg path="buildjs.cfg"/>
-                                </java -->
                             </tasks>
                         </configuration>
                         <goals>
@@ -298,6 +316,7 @@
                     </execution>
                 </executions>
             </plugin>
+            
             <plugin>
                 <artifactId>maven-war-plugin</artifactId>
                 <version>2.3</version>
@@ -310,6 +329,10 @@
                             <directory>${war-src}/WEB-INF</directory>
                             <targetPath>WEB-INF</targetPath>
                         </resource>
+                        <resource>
+                            <directory>${war-src}/lib</directory>
+                            <targetPath>lib</targetPath>
+                        </resource>                        
                     </webResources>
                 </configuration>
                 <executions>

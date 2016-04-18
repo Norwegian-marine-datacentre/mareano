@@ -12,6 +12,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletResponse;
 
 import no.imr.geoexplorer.admindatabase.dao.MareanoAdminDbDao;
@@ -28,6 +29,7 @@ import no.imr.geoexplorer.admindatabase.mybatis.pojo.KartlagEnNo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -73,6 +75,13 @@ public class MareanoController {
     private ModelAndView mavEn = null;
     private ModelAndView mavPolar = null;
     private ModelAndView mavPolarEn = null;
+    
+    @RequestMapping("/viewer")
+    public String getViewer(HttpServletResponse resp)  {
+    	System.out.println("returning viewer:");
+    	return "viewer";
+    }
+    
     
     @RequestMapping("/update")
     public ModelAndView updateMareano(HttpServletResponse resp) throws IOException {

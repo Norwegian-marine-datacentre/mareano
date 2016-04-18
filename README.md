@@ -16,6 +16,10 @@ To pull in the correct GeoExplorer dependencies:
 
     you@prompt:~$ cd mareano/
     you@prompt:~/mareano$ git submodule update --init --recursive
+	
+Then do:
+	you@prompt:~/mareano$cd externals\suite\geoexplorer\app\static\externals\gxp
+	you@prompt:~/mareano$git pull origin master
 
 ## Building WAR file for deployment
 

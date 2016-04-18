@@ -26,7 +26,7 @@ public class ProxyController {
     public void simpleProxy(@RequestParam(value = "url") String sourceURL,
             HttpServletRequest request,
             HttpServletResponse response) {
-        System.out.println("proxy request:"+sourceURL);
+//        System.out.println("proxy request:"+sourceURL);
         HttpURLConnection proxyRequest = createProxyRequest(sourceURL);
 
         if (proxyRequest != null) {

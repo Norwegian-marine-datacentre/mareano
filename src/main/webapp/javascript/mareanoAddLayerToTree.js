@@ -235,7 +235,7 @@ function addLayerToGroup( gruppeNavn, gruppeText, map, mapPanel, layers, store, 
                     childNodes[c].ui.toggleCheck(checked);
                     delete childNodes[c].ui._silent;
                 } 
-            },
+            }
         },                            
         layerStore: store,
         loader: layerLoader

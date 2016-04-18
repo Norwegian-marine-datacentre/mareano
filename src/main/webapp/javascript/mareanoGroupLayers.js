@@ -10,6 +10,10 @@ var bakgrunn=[];
 
 
 //TODO discuss how background layers should be flagged
+var backgroundGroupName ="background";
+var backgroundSeaGroupName ="backgroundSea";
+var backgroundPolarName = "backgroundPolar";
+
 var hovedtemaBakgrunn = "Bakgrunnskart";
 var hovedtemaBakgrunnEn = "Background map";
 var hovedtemaGenerelle = "generelle";
@@ -42,7 +46,7 @@ function createBackgroundLayerObject(layer) {
                 metadata: {
                     keyword: layer.keyword,
                     'kartlagId': layer.id,
-                    'kartlagTitle': layer.title,
+                    'kartlagTitle': layer.title
                 },
                 abstracts : layer.abstracts,
                 singleTile:false
@@ -73,7 +77,7 @@ function createLayerRecord(panelGroup,isVisible,layer){
                     keyword: layer.keyword,
                     'kartlagId': ''+layer.id,
                     'kartlagTitle': layer.title,
-                    'kartlagTitleTooltip': layer.titleTooltip,
+                    'kartlagTitleTooltip': layer.titleTooltip
                 },
                 abstracts : layer.abstracts,
                 minScale: layer.scalemax*(96/0.0254),
@@ -111,11 +115,15 @@ function addLayersToHovedTemaOrBackgroundLayer(alleHovedtemaer, projection) {
             for (var k=0; k < gruppe.kart.length; k++) {
                 layer = gruppe.kart[k];
                 
-                if ( hovedtema.hovedtema ==  hovedtemaBakgrunn || hovedtema.hovedtema ==  hovedtemaBakgrunnEn ) {
+                if ( (gruppe.gruppe == backgroundGroupName || gruppe.gruppe == backgroundSeaGroupName) && projection == EPSG32633) {
                     if (app.map) { // If map does not exist at this point then GeoExplorer is loading saved map
                         app.map.layers.push(createBackgroundLayerObject(layer));
                     }
-                } else {
+                } else if (gruppe.gruppe == backgroundPolarName && projection == EPSG3575) {
+                    if (app.map) { // If map does not exist at this point then GeoExplorer is loading saved map
+                        app.map.layers.push(createBackgroundLayerObject(layer));
+                    }
+                } else if ( gruppe.gruppe != backgroundGroupName && gruppe.gruppe != backgroundSeaGroupName && gruppe.gruppe != backgroundPolarName ) {
                     OLRecord = createLayerRecord(gruppe.gruppe,gruppe.visible,layer);
                     if (gruppe.gruppe == "generelle") {
                         generelleLayers.push(OLRecord);

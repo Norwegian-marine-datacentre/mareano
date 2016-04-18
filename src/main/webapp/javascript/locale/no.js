@@ -30,6 +30,6 @@ GeoExt.Lang.add("no", {
         localArea: "Lokalt"        
     },
     "GeoExplorer.prototype": {
-        zoomSliderText: "<div>Zoom nivå: {zoom}</div><div>Region: {region}</div>",            
+        zoomSliderText: "<div>Zoom nivå: {zoom}</div><div>Region: {region}</div>"            
     }
 });

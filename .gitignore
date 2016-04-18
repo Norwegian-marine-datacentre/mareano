@@ -11,7 +11,10 @@ maven-eclipse.xml
 target/*
 .externalToolBuilders/*
 .settings/*
+.metadata/*
 lib/*
 tests/*
 build/*
+bin/*
+externals/*
 ${war-src}/*

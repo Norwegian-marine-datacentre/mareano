@@ -27,5 +27,5 @@ Ext.override(Ext.tree.AsyncTreeNode, {
             this.ui.afterLoad(this); //bugfix
         }
         Ext.tree.AsyncTreeNode.superclass.expand.call(this, deep, anim, callback, scope);
-    },
+    }
 });
