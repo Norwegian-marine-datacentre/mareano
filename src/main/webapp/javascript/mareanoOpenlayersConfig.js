@@ -1,22 +1,54 @@
 /**
  * Adding overviewmap and keyboard defaults
  */
+
+var EPSG32633 = "EPSG:32633";
+var maxExtent33 = new OpenLayers.Bounds( -4101096.2210526327,5925725.768421048,4999746.221052637,9135005.768421048 );
+var minResolution33 = new OpenLayers.Bounds( -4101096.2210526327,5925725.768421048,4999746.221052637,9135005.768421048 );
+var bounds33 = new OpenLayers.Bounds( -4101096.2210526327,5925725.768421048,4999746.221052637,9135005.768421048 );
+
+var EPSG3575 = "EPSG:3575";
+var maxExtent75 = new OpenLayers.Bounds( -4889334.802954878,-4889334.802954878,4889334.802954878,4889334.802954878 );
+var minResolution75 = new OpenLayers.Bounds( 0,0,0,0 );
+var bounds75 = new OpenLayers.Bounds( -4889334.802954878,-4889334.802954878,4889334.802954878,4889334.802954878 );
+
 function addOverviewMapAndKeyboardDefaults(thisMap) {
-    var layerOptions = {
-        units: "m",
-        projection: "EPSG:32633",
-        maxExtent: new OpenLayers.Bounds( -4101096.2210526327,5925725.768421048,4999746.221052637,9135005.768421048 ),
-        minResolution: new OpenLayers.Bounds( -4101096.2210526327,5925725.768421048,4999746.221052637,9135005.768421048 ),
-        bounds: new OpenLayers.Bounds( -4101096.2210526327,5925725.768421048,4999746.221052637,9135005.768421048 ),
-        theme: null
-    };
-    var ol_wms2 = new OpenLayers.Layer.WMS(
-    		"geonorge",
-    		"http://wms.geonorge.no/skwms1/wms.europa?brukerid=EHAV_MOEEND&passord=spartakus234&VERSION=1.1.1&SERVICE=WMS",
-    		{layers: "Land,Vmap0Land,Vmap0Kystkontur"},
+    
+    var layerOptions = null;
+    var ol_wms2 = null;
+    if ( window.location.href.indexOf("Polar") > -1) {
+    	layerOptions = {
+            units: "m",
+            projection: EPSG3575,
+            maxExtent: maxExtent75,
+            minResolution: minResolution75,
+            bounds: bounds75,
+            theme: null
+        };
+        ol_wms2 = new OpenLayers.Layer.WMS(
+        		"GEBCO_skyggerelieff",
+        		"http://wms.geonorge.no/skwms1/wms.gebco_skyggerelieff?&VERSION=1.1.1&SERVICE=WMS&WIDTH=256&HEIGHT=256",
+        		{layers: "GEBCO_skyggerelieff"},
                 {singleTile: true, ratio: 1}
-	);
-    var tmpLayerOptions = {layers: [ol_wms2], mapOptions: layerOptions, maximized: false, minRatio: 48, maxRatio: 72, size: {w: 300, h: 150}};
+    	);
+    } else {
+    	layerOptions = {
+	        units: "m",
+    	    projection: EPSG32633,
+    	    maxExtent: maxExtent33,
+    	    minResolution: minResolution33,
+    	    bounds: bounds33,
+    	    theme: null
+	    };
+    	ol_wms2 = new OpenLayers.Layer.WMS(
+        		"geonorge",
+        		"http://wms.geonorge.no/skwms1/wms.europa?VERSION=1.1.1&SERVICE=WMS&WIDTH=256&HEIGHT=256",
+        		{layers: "Land,Vmap0Land,Vmap0Kystkontur"},
+                {singleTile: true, ratio: 1}
+    	);
+    } 
+     
+    var tmpLayerOptions = {layers: [ol_wms2], mapOptions: layerOptions, maximized: false, minRatio: 48, maxRatio: 72, size: {w: 256, h: 150}};
     thisMap.addControl(new OpenLayers.Control.OverviewMap(tmpLayerOptions));
     thisMap.addControl(new OpenLayers.Control.KeyboardDefaults());
     thisMap.addControl(new OpenLayers.Control.ScaleLine({bottomOutUnits: ''}));
