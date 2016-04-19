@@ -396,10 +396,23 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
         var indexMareanoEn = url.indexOf("mareano_en.html");
         var indexMareanoPolar = url.indexOf("mareanoPolar.html");
         var indexMareanoPolarEn = url.indexOf("mareanoPolar_en.html");
-        var polarBtnTooltip = "Polar";
+        var polarBtnTooltip = "Polar projeksjon";
         if ( indexMareanoPolar > -1 || indexMareanoPolarEn > -1) {
-            polarBtnTooltip = "UTM33";
+			if ( indexMareanoPolar > -1 ) {
+				polarBtnTooltip = "UTM33 nord projeksjon";
+			} else if ( indexMareanoPolarEn > -1 ) {
+				polarBtnTooltip = "UTM33 north projection";
+			}
         }        
+		
+		if ( indexMareano > -1 || indexMareanoEn > -1) {
+			if ( indexMareano > -1 ) {
+				polarBtnTooltip = "Polar projeksjon";
+			} else if ( indexMareanoEn > -1 ) {
+				polarBtnTooltip = "Polar projection";
+			}
+        }
+		
         var helpIcon = new Ext.Button({
             type:'help',
             tooltip: this.helpTitle,

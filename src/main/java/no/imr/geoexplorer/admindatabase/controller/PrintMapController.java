@@ -3,6 +3,7 @@ package no.imr.geoexplorer.admindatabase.controller;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -60,7 +61,7 @@ public class PrintMapController {
     @RequestMapping(value="/postMapImage", method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     protected @ResponseBody ImageFilenameResponse postMapImage( @RequestBody PrintLayerList pll, HttpServletResponse resp) throws Exception {
         
-        Long startTime = System.currentTimeMillis();
+//        Long startTime = System.currentTimeMillis();
         //System.out.println("startTime:"+startTime);
         
         List<PrintLayer> printLayers = pll.getPrintlayers();
@@ -71,16 +72,22 @@ public class PrintMapController {
 
         List<String> position = null;
         
+        List<PrintLayer> printLayersWithouEmptyUrl = new ArrayList<PrintLayer>(printLayers.size());
+        
         //get position only from background grid
         for ( PrintLayer printLayer : printLayers) {
-            if ( printLayer.getColumnSize() > 1) {
-                position = printLayer.getPosition();
-            }
+        	if ( printLayer.getUrl() != null && !printLayer.getUrl().equals("") ) {
+        		if ( printLayer.getColumnSize() > 1) {
+        			position = printLayer.getPosition();
+        		}
+        		printLayersWithouEmptyUrl.add(printLayer);
+        		System.out.println("printLayer.url:"+printLayer.getUrl());
+        	} else System.out.println("empty url:"+printLayer.getUrl()+" name:"+printLayer.getKartlagTitle());
         }
-        Map<Integer, FutureImageOrTiles> layerMap = requestAllLayers(printLayers);
+        Map<Integer, FutureImageOrTiles> layerMap = requestAllLayers(printLayersWithouEmptyUrl);
         //System.out.println("requestAllLayers:"+(System.currentTimeMillis()-startTime));
         
-        for ( int i=0; i < printLayers.size(); i++ ) {
+        for ( int i=0; i < printLayersWithouEmptyUrl.size(); i++ ) {
             FutureImageOrTiles futureImage =  layerMap.get(i);
             try {
                 if ( futureImage.getTiles() != null ) {
@@ -98,6 +105,7 @@ public class PrintMapController {
                 PrintLayer pl = printLayers.get(i);
                 String title = pl.getKartlagTitle();
                 pl.setKartlagTitle(title + " "+ ee.getMessage());
+                ee.printStackTrace();
             }
         }
         

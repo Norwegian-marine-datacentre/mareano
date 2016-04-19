@@ -115,6 +115,7 @@ function addLayersToHovedTemaOrBackgroundLayer(alleHovedtemaer, projection) {
             for (var k=0; k < gruppe.kart.length; k++) {
                 layer = gruppe.kart[k];
                 
+                gruppe.gruppe = gruppe.gruppe.trim(); 
                 if ( (gruppe.gruppe == backgroundGroupName || gruppe.gruppe == backgroundSeaGroupName) && projection == EPSG32633) {
                     if (app.map) { // If map does not exist at this point then GeoExplorer is loading saved map
                         app.map.layers.push(createBackgroundLayerObject(layer));
@@ -124,7 +125,7 @@ function addLayersToHovedTemaOrBackgroundLayer(alleHovedtemaer, projection) {
                         app.map.layers.push(createBackgroundLayerObject(layer));
                     }
                 } else if ( gruppe.gruppe != backgroundGroupName && gruppe.gruppe != backgroundSeaGroupName && gruppe.gruppe != backgroundPolarName ) {
-                    OLRecord = createLayerRecord(gruppe.gruppe,gruppe.visible,layer);
+                    OLRecord = createLayerRecord(gruppe.gruppe, gruppe.visible, layer);
                     if (gruppe.gruppe == "generelle") {
                         generelleLayers.push(OLRecord);
                         generelleLayerNames[layer.title]=true;

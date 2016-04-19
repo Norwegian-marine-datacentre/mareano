@@ -85,8 +85,37 @@ var layersToJSON = function addVisibleLayersToJSON( layerObjectArray ) {
                     layerTitle = layer.metadata['kartlagTitle'];
                 }
                 if (layer.grid[0] != null ) {
+                	var urlOfBackgroundLayer = layer.grid[0][0].url;
+                	if ( urlOfBackgroundLayer == null ) {
+                		urlOfBackgroundLayer = layer.url;
+                		urlOfBackgroundLayer += "&LAYERS="+params.LAYERS;
+                		urlOfBackgroundLayer += "&FORMAT="+params.FORMAT;
+                		urlOfBackgroundLayer += "&TRANSPARENT="+params.TRANSPARENT;
+                		urlOfBackgroundLayer += "&SERVICE="+params.SERVICE;
+                		urlOfBackgroundLayer += "&VERSION="+params.VERSION;
+                		urlOfBackgroundLayer += "&REQUEST="+params.REQUEST;
+                		urlOfBackgroundLayer += "&STYLES="+params.STYLES;
+                		
+                		if ( params.WIDTH != null) {
+                			urlOfBackgroundLayer += "&WIDTH="+params.WIDTH;	
+                		} else if ( layer.grid[0][0].size != null) 
+                			urlOfBackgroundLayer += "&WIDTH="+layer.grid[0][0].size.w;
+                		else {
+                			urlOfBackgroundLayer += "&WIDTH=256";
+                		}
+
+                		if ( params.HEIGHT != null) {
+                			urlOfBackgroundLayer += "&HEIGHT="+params.HEIGHT;	
+                		} else if ( layer.grid[0][0].size != null) 
+                			urlOfBackgroundLayer += "&HEIGHT="+layer.grid[0][0].size.h;
+                		else {
+                			urlOfBackgroundLayer += "&HEIGHT=256";
+                		}
+                		
+                		urlOfBackgroundLayer += "&SRS="+params.SRS;
+                	}
                     var layerObject = {
-                            url: layer.grid[0][0].url,
+                            url: urlOfBackgroundLayer,
                             gridBoundingBoxes: gridUrls,
                             columnSize: layer.grid[0].length,
                             position: [layer.grid[0][0].position.x, layer.grid[0][0].position.y],
@@ -96,7 +125,7 @@ var layersToJSON = function addVisibleLayersToJSON( layerObjectArray ) {
                             legend: []
                     }
                     layerObjectArray.push( layerObject );
-                }
+                } else console.log("not pushing:"+layerTitle);
             }
         }
     }, this);

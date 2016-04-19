@@ -84,19 +84,27 @@ function createNewInfoFragment(layer, data) {
         var id = alayer.metadata['kartlagId'];
         if ( id != null && id == kartlagId ) {
             var is = (alayer.CLASS_NAME == "OpenLayers.Layer.WMS")
+            
             if (is) {
+            	var width = alayer.map.size.w;
+            	var height = alayer.map.size.h;
+            	if ( alayer.url.indexOf("geonorge.no") || 
+            			alayer.url.indexOf("opencache.statkart.no") || 
+            			alayer.url.indexOf("maps.imr.no/geoserver/gwc") ) {
+                	var width = 256;
+                	var height = 256;
+            	}
                 tParams = alayer.params;
                 tParams = OpenLayers.Util.extend(tParams, {
                     BBOX: alayer.maxExtent.toArray(),
-                    WIDTH: alayer.map.size.w, 
-                    HEIGHT: alayer.map.size.h
+                    WIDTH: width, 
+                    HEIGHT: height
                 });
                 getMapUrl = alayer.getFullRequestString(tParams);
             }
             break;
         }
     }
-
     //add a href to urls
     var infoWithLinks = closureForAddHrefsToUrl(data.kartlagInfo.text);
     
