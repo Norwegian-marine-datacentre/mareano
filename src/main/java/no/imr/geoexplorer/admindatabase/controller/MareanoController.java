@@ -30,8 +30,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 
@@ -158,6 +160,25 @@ public class MareanoController {
 		return mav;    	
     }
 
+    @RequestMapping("/mareanoJson")
+    public @ResponseBody JsonNode getMareanoJson() throws IOException {
+        String utm33BBox = "mareano";
+        List<HovedtemaVisning> visninger = listOrganizedToBrowser("no", utm33BBox);
+        ObjectMapper mapper = new ObjectMapper();
+        String json = mapper.writeValueAsString(visninger);
+        return mapper.readTree(json);
+    }
+    
+    @RequestMapping("/mareanoPolarJson")
+    public @ResponseBody JsonNode getMareanoPolarJson(  ) throws IOException {
+        String polarBBox = "mareanoPolar";
+        List<HovedtemaVisning> visninger = listOrganizedToBrowser("no", polarBBox);
+        ObjectMapper mapper = new ObjectMapper();
+        String json = mapper.writeValueAsString(visninger);
+
+        return mapper.readTree(json);
+    }
+    
     protected ModelAndView getMareano(ModelAndView mav, String language, String mareanoJSP) throws IOException {
         
         List<HovedtemaVisning> visninger = listOrganizedToBrowser(language, mareanoJSP);
