@@ -38,7 +38,7 @@ var app =function() {
 	    },this)); 
 	},
        loadLayers: function() {
-	    $.getJSON( "mareanoJson", $.proxy(function(data) {
+	    $.getJSON( "../mareanoJson", $.proxy(function(data) {
 		//this.addWMSLayer(data);
 		data.forEach( function(theme) {
 		    console.log(theme.hovedtema);
