@@ -9,16 +9,6 @@
      xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
      version="2.4">
     <display-name>Mareano Map Client</display-name>
-    <servlet>
-        <servlet-name>ringo</servlet-name>
-        <servlet-class>org.ringojs.jsgi.JsgiServlet</servlet-class>
-        <init-param>
-            <param-name>production</param-name>
-            <param-value>true</param-value>
-        </init-param>
-    
-        <load-on-startup>1</load-on-startup>
-    </servlet>
     <welcome-file-list>
         <welcome-file>mareano.html</welcome-file>
     </welcome-file-list>

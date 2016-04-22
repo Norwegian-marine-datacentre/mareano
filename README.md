@@ -6,7 +6,7 @@ These instructions describe how to build the modified GeoExplorer
 
 To get a copy of the application source code, use git:
 
-    you@prompt:~$ git clone https://github.com/Norwegian-marine-datacentre/mareano.git
+    you@prompt:$ git clone https://github.com/Norwegian-marine-datacentre/mareano.git
 
 ## Dependencies
 
@@ -14,12 +14,13 @@ Currently (May 2015) the application uses GeoExplorer 4.1
 
 To pull in the correct GeoExplorer dependencies:
 
-    you@prompt:~$ cd mareano/
-    you@prompt:~/mareano$ git submodule update --init --recursive
+    you@prompt:$ cd mareano/
+    you@prompt:/mareano$ git submodule update --init --recursive
 	
 Then do:
-	you@prompt:~/mareano$cd externals\suite\geoexplorer\app\static\externals\gxp
-	you@prompt:~/mareano$git pull origin master
+
+	you@prompt:$cd externals/suite/geoexplorer/app/static/externals/gxp
+	you@prompt:/gxp$git pull origin master:
 
 ## Building WAR file for deployment
 

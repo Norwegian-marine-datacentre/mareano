@@ -5,10 +5,10 @@
 <link rel="stylesheet" type="text/css" href="lib/geoexplorer/ext/ext-all.css"> <!-- DONT use default ext-all or green mareano menu wount work! -->
          
 <link rel="stylesheet" type="text/css" href="lib/geoexplorer/ext/xtheme-gray.css">
-<script type="text/javascript" src="lib/geoexplorer/ext/ext-base-debug.js"></script>
-<!-- script type="text/javascript" src="lib/geoexplorer/ext/ext-base.js"></script -->
-<script type="text/javascript" src="lib/geoexplorer/ext/ext-all-debug-w-comments.js"></script>
-<!-- script type="text/javascript" src="lib/geoexplorer/ext/ext-all.js"></script -->
+<!-- script type="text/javascript" src="lib/geoexplorer/ext/ext-base-debug.js" / -->
+<script type="text/javascript" src="lib/geoexplorer/ext/ext-base.js"></script>
+<!-- script type="text/javascript" src="lib/geoexplorer/ext/ext-all-debug-w-comments.js"></script -->
+<script type="text/javascript" src="lib/geoexplorer/ext/ext-all.js"></script>
 
 <meta http-equiv="X-UA-Compatible" content="IE=IE8" >
 <script type="text/javascript" src="javascript/googleAnalyticsStatistics.js"></script>
@@ -48,4 +48,5 @@
 <link rel="stylesheet" type="text/css" href="lib/geoexplorer/colorpicker/color-picker.ux.css" />
 <script type="text/javascript" src="lib/geoexplorer/GeoExplorer.js"></script>
 
-<script type="text/javascript" src="lib/geoexplorer/mareano-debug.js"></script>
+<!--  script type="text/javascript" src="lib/geoexplorer/mareano-debug.js" / -->
+<script type="text/javascript" src="lib/geoexplorer/mareano.js"></script>
