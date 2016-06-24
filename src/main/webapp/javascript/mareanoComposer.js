@@ -147,16 +147,26 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
         }
         
         var me = this;
+        var url  = location.href;
+        
+        var overlays = "Overlays";
+        var baseLayers = "Base Layers";
+        var baseLayersSea = "Base Layers Sea";
+        if ( url.indexOf("_en") === -1 ) {
+            overlays = "Kartlag";
+            baseLayers = "Bakgrunnskart";
+            baseLayersSea = "Bakgrunnskart Sjø";    
+        }
         var layerTreeGroups = {
                 ptype: "mareano_layertree",
                 groups: {
-                    "default": "Overlays", // title can be overridden with overlayNodeText
+                    "default": overlays, // title can be overridden with overlayNodeText
                     "background": {
-                        title: "Base Layers", // can be overridden with baseNodeText
+                        title: baseLayers, // can be overridden with baseNodeText
                         exclusive: true
                     },
                     "backgroundSea": {
-                        title: "Base Layers Sea", 
+                        title: baseLayersSea, 
                         exclusive: true
                     }
                 },      

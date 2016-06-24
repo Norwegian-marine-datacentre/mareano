@@ -52,7 +52,7 @@ public class MareanoController {
     private long mavLastUpdatedPolar = new Date().getTime();
     private long mavLastUpdatedPolarEn = new Date().getTime();
 
-    private final static long ONEHOUR = 60 * 1000;
+    private final static long ONEHOUR = 60 * 60 * 1000;
     private final static String ENGLISH = "en";
     private final static String TEST_SERVER = "webtest1.nodc.no";
     private final static String HOVEDTEMA_NOT_IN_PRODUCTION = "Under utvikling";
@@ -80,7 +80,6 @@ public class MareanoController {
     
     @RequestMapping("/viewer")
     public String getViewer(HttpServletResponse resp)  {
-    	System.out.println("returning viewer:");
     	return "viewer";
     }
     
@@ -156,7 +155,7 @@ public class MareanoController {
 		String heading = getMareanoHeading(language);
 		mav.addObject("heading", heading);
 
-		resp.setCharacterEncoding("UTF-8");
+		resp.setCharacterEncoding("UTF-8"); //todo: remove
 		return mav;    	
     }
 

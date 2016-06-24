@@ -28,15 +28,19 @@
         </init-param>    
         <load-on-startup>1</load-on-startup>
     </servlet>
+    <servlet>
+        <servlet-name>staticContent</servlet-name>
+        <servlet-class>org.apache.catalina.servlets.DefaultServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>staticContent</servlet-name>
+        <url-pattern>/</url-pattern>
+    </servlet-mapping>      
     <servlet-mapping>
         <servlet-name>springmvc</servlet-name>
         <url-pattern>/spring/*</url-pattern>
     </servlet-mapping>
-    <servlet-mapping>
-    	<servlet-name>default</servlet-name>
-    	<url-pattern>/static/*</url-pattern>
-   	</servlet-mapping>
-
     <session-config>
         <session-timeout>30</session-timeout>
     </session-config>

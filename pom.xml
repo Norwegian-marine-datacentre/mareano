@@ -38,7 +38,7 @@
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
-            <version>3.1.0</version>
+            <version>3.0.1</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -199,8 +199,10 @@
         <plugins>
             <plugin>
                 <artifactId>maven-dependency-plugin</artifactId>
+                <version>2.10</version>
                 <configuration>
                     <outputDirectory>${war-src}/WEB-INF/lib</outputDirectory>
+                    <excludeScope>provided</excludeScope>
                 </configuration>
                 <executions>
                     <execution>
