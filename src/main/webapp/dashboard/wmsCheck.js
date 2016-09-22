@@ -1,15 +1,40 @@
+
+
+
 console.log("Init ");
 var app =function() {
     
     var imageWidth=256;
     var imageHeight=256;
+
     var mapMaxExtent="-2500000.0,3500000.0,3045984.0,9045984.0";
+    var polarMapMaxExtent="2444667.4014774,-2444667.4014775,4889334.8029549,0";
+
+    var srsID = "EPSG:32633";
+    var polarID = "EPSG:3575";
+    
+
+    
+    //var testTile="-1113504,6272992,272992,7659488";
     var testTile="-1113504,6272992,272992,7659488";
+    var polarTestTile="0,-2444667.4014775,2444667.4014774,0";
+
+
+    
+    var jsonURL= "../mareanoJson"
+    var polarJsonURL= "../mareanoPolarJson"
+    
     var layerCount=0;
     var themeID=0;
     var themeRow=0;
-    
-    
+
+    if (document.location.href.indexOf("Polar") != -1) {
+	console.log("have polar");
+
+	testTile = polarTestTile;
+	jsonURL = polarJsonURL;
+	srsID = polarID;
+    }
 
 
     return {
@@ -38,7 +63,7 @@ var app =function() {
 	    },this)); 
 	},
        loadLayers: function() {
-	    $.getJSON( "../mareanoJson", $.proxy(function(data) {
+	    $.getJSON( jsonURL, $.proxy(function(data) {
 		//this.addWMSLayer(data);
 		data.forEach( function(theme) {
 		    console.log(theme.hovedtema);
@@ -85,7 +110,7 @@ var app =function() {
 			    service:"WMS",
 			    version:"1.1.1",
 			    request:"GetMap",
-			    srs:"EPSG:32633",
+			    srs:srsID,
 			    bbox:boundsString,
 			    width:imageWidth,
 			    height:imageHeight};
