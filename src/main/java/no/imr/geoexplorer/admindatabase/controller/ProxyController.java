@@ -1,5 +1,6 @@
 package no.imr.geoexplorer.admindatabase.controller;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -10,11 +11,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 
 @Controller
@@ -22,11 +26,19 @@ public class ProxyController {
     
     private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(ProxyController.class);
     
+    @Autowired
+    private ApplicationContext ctx;
+    
+    private final static String HOST_WHITELIST = "whitelist_proxy_urls.properties";
+    
     @RequestMapping(value = "/proxy", method = RequestMethod.GET)
     public void simpleProxy(@RequestParam(value = "url") String sourceURL,
             HttpServletRequest request,
-            HttpServletResponse response) {
-//        System.out.println("proxy request:"+sourceURL);
+            HttpServletResponse response) throws IOException {
+        
+        if ( !isHostWhiteListUrl(sourceURL) ) {
+            return;
+        }
         HttpURLConnection proxyRequest = createProxyRequest(sourceURL);
 
         if (proxyRequest != null) {
@@ -46,6 +58,16 @@ public class ProxyController {
         } else {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
         }
+    }
+    
+    private boolean isHostWhiteListUrl(String sourceURL) throws IOException {
+        Resource template = ctx.getResource("classpath:"+HOST_WHITELIST );
+        File whitelistFile = template.getFile();
+        
+        URL aUrl = new URL(sourceURL);
+        boolean isFound = FileUtils.readFileToString(whitelistFile).contains(aUrl.getHost());
+        
+        return isFound;
     }
 
     private HttpURLConnection createProxyRequest(String requestURL) {
