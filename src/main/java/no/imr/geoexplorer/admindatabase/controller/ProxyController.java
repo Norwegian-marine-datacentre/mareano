@@ -25,20 +25,12 @@ import org.apache.commons.io.IOUtils;
 public class ProxyController {
     
     private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(ProxyController.class);
-    
-    @Autowired
-    private ApplicationContext ctx;
-    
-    private final static String HOST_WHITELIST = "whitelist_proxy_urls.properties";
-    
+       
     @RequestMapping(value = "/proxy", method = RequestMethod.GET)
     public void simpleProxy(@RequestParam(value = "url") String sourceURL,
             HttpServletRequest request,
             HttpServletResponse response) throws IOException {
         
-        if ( !isHostWhiteListUrl(sourceURL) ) {
-            return;
-        }
         HttpURLConnection proxyRequest = createProxyRequest(sourceURL);
 
         if (proxyRequest != null) {
@@ -58,16 +50,6 @@ public class ProxyController {
         } else {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
         }
-    }
-    
-    private boolean isHostWhiteListUrl(String sourceURL) throws IOException {
-        Resource template = ctx.getResource("classpath:"+HOST_WHITELIST );
-        File whitelistFile = template.getFile();
-        
-        URL aUrl = new URL(sourceURL);
-        boolean isFound = FileUtils.readFileToString(whitelistFile).contains(aUrl.getHost());
-        
-        return isFound;
     }
 
     private HttpURLConnection createProxyRequest(String requestURL) {
