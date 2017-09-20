@@ -16,6 +16,7 @@ function getLayerIcon(url) {
             return "gx-tree-rasterlayer-icon-FD";
         } else if (url.indexOf("geonorge.no") != -1
                 || url.indexOf("opencache.statkart.no") != -1
+                || url.indexOf("openwms.statkart.no") != -1
                 || url.indexOf("http://maps.imr.no/geoserver/gwc/service/wms") != -1) { //cached maps come from geoserver
             return "gx-tree-rasterlayer-icon-SK";
         } else if (url.indexOf("kart.kystverket.no") != -1) {

@@ -29,6 +29,7 @@ import no.imr.geoexplorer.admindatabase.mybatis.pojo.KartlagEnNo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
@@ -85,13 +86,13 @@ public class MareanoController {
     private ModelAndView mavPolar = null;
     private ModelAndView mavPolarEn = null;
     
-    @RequestMapping("/viewer")
+    @RequestMapping(value = "/viewer", method = RequestMethod.GET)
     public String getViewer(HttpServletResponse resp)  {
     	return "viewer";
     }
     
     
-    @RequestMapping("/update")
+    @RequestMapping(value = "/update", method = RequestMethod.GET)
     public ModelAndView updateMareano(HttpServletResponse resp) throws IOException {
     	mavNo = null;
     	mavEn = null;
@@ -100,7 +101,7 @@ public class MareanoController {
     	return getMareano( resp );
     }
     
-    @RequestMapping("/mareano")
+    @RequestMapping(value = "/mareano", method = RequestMethod.GET)
     public ModelAndView getMareano(HttpServletResponse resp) throws IOException {
         if (mavNo == null || (System.currentTimeMillis() - mavLastUpdatedNo) > ONEHOUR) {
             mavNo = commonGetMareano(resp, NO, "mareano");
@@ -110,7 +111,7 @@ public class MareanoController {
         return mavNo;
     }
     
-    @RequestMapping("/mareano_en")
+    @RequestMapping(value = "/mareano_en", method = RequestMethod.GET)
     public ModelAndView getMareanoEn(HttpServletResponse resp) throws IOException {
         if (mavEn == null || (System.currentTimeMillis() - mavLastUpdatedEn) > ONEHOUR) {
             mavEn = commonGetMareano(resp, EN, "mareano_en");
@@ -120,7 +121,7 @@ public class MareanoController {
         return mavEn;
     }
     
-    @RequestMapping("/mareanoPolar")
+    @RequestMapping(value = "/mareanoPolar", method = RequestMethod.GET)
     public ModelAndView getMareanoPolar(HttpServletResponse resp) throws IOException {
         if (mavPolar == null || (System.currentTimeMillis() - mavLastUpdatedPolar) > ONEHOUR) {
             mavPolar = commonGetMareano(resp, NO, "mareanoPolar");
@@ -130,7 +131,7 @@ public class MareanoController {
         return mavPolar;
     }
     
-    @RequestMapping("/mareanoPolar_en")
+    @RequestMapping(value = "/mareanoPolar_en", method = RequestMethod.GET)
     public ModelAndView getMareanoPolarEn(HttpServletResponse resp) throws IOException {
         if (mavPolarEn == null || (System.currentTimeMillis() - mavLastUpdatedPolarEn) > ONEHOUR) {
             mavPolarEn = commonGetMareano(resp, EN, "mareanoPolar_en");

@@ -29,11 +29,23 @@
 	        <url>http://build.imr.no/nexus/content/repositories/releases/</url>
 	    </repository>
 	    <repository>
+	    	<id>nexus-thirdparty-release</id>
+	    	<name>Nexus thirdparty release repository for IMR</name>
+	    	<url>https://build.imr.no/nexus/content/repositories/thirdparty/</url>
+    	</repository>
+	    <repository>
 	        <id>ibiblio.org</id>
 	        <name>ibiblio.org</name>
 	        <url>http://mirrors.ibiblio.org/pub/mirrors/maven2</url>
 	    </repository>    
     </repositories>  
+	<pluginRepositories>
+		<pluginRepository>
+			<id>nexus-thirdparty-release</id>
+			<name>Nexus thirdparty release repository for IMR</name>
+			<url>https://build.imr.no/nexus/content/repositories/thirdparty/</url>
+ 		</pluginRepository>
+	</pluginRepositories>
     <dependencies>
         <dependency>
             <groupId>javax.servlet</groupId>

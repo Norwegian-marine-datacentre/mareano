@@ -154,8 +154,10 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
         var baseLayersSea = "Base Layers Sea";
         if ( url.indexOf("_en") === -1 ) {
             overlays = "Kartlag";
-            baseLayers = "Bakgrunnskart";
-            baseLayersSea = "Bakgrunnskart Sjø";    
+            //baseLayers = "Bakgrunnskart"; //change the order of land and sea
+            baseLayersSea = "Bakgrunnskart";
+            //baseLayersSea = "Bakgrunnskart Sjø";    
+            baseLayers = "Bakgrunnskart Sjø";
         }
         var layerTreeGroups = {
                 ptype: "mareano_layertree",
@@ -212,6 +214,8 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
         config.tools.push({
             ptype: "gxp_loadingindicator"
         }, {
+        	actions: ["-", "gaaTilMarbunnButton"], actionTarget: "paneltbar"
+        }, {
             actions: ["-", "gaaTilKoordButton"], actionTarget: "paneltbar"
         }, {
             actions: ["gaaTilHavCombo"], actionTarget: "paneltbar"
@@ -257,7 +261,12 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
         });
         
         var oSrcPrj = new Proj4js.Proj('WGS84');
-        var oDestPrj = new Proj4js.Proj('EPSG:32633');
+        var oDestPrj;
+        if ( window.location.href.indexOf("Polar") > -1) {
+        	oDestPrj = new Proj4js.Proj('EPSG:3575');
+        } else {
+        	oDestPrj = new Proj4js.Proj('EPSG:32633');
+        }
         var me = this;
         function formatLonLats(lonLat) {
             var lat = lonLat.lat;
@@ -286,6 +295,16 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
         });
         var tmpMouseP = new MousePositionBox( {id: "mouseposition", map: this.mapPanel.map} );
         var theMap = this.mapPanel.map;
+        
+        var gaaTilMarbunn = new Ext.Button({
+            id: "gaaTilMarbunnButton",
+            tooltip: "Marbunn",
+            text: "Marbunn",
+            handler: function(){
+            	window.open( "http://mareano.no/marbunn_web/login" );
+            },
+            scope: this
+        });
         var gaaTilKoord = new Ext.Button({
             id: "gaaTilKoordButton",
             tooltip: this.goToTooltip,
@@ -409,17 +428,17 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
         var polarBtnTooltip = "Polar projeksjon";
         if ( indexMareanoPolar > -1 || indexMareanoPolarEn > -1) {
 			if ( indexMareanoPolar > -1 ) {
-				polarBtnTooltip = "UTM33 nord projeksjon";
+				polarBtnTooltip = "Fra Polar til UTM33 nord projeksjon";
 			} else if ( indexMareanoPolarEn > -1 ) {
-				polarBtnTooltip = "UTM33 north projection";
+				polarBtnTooltip = "From Polar to UTM33 north projection";
 			}
         }        
 		
 		if ( indexMareano > -1 || indexMareanoEn > -1) {
 			if ( indexMareano > -1 ) {
-				polarBtnTooltip = "Polar projeksjon";
+				polarBtnTooltip = "Fra UTM33N til Polar projeksjon";
 			} else if ( indexMareanoEn > -1 ) {
-				polarBtnTooltip = "Polar projection";
+				polarBtnTooltip = "From UTM33N to Polar projection";
 			}
         }
 		
