@@ -152,13 +152,15 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
         var overlays = "Overlays";
         var baseLayers = "Base Layers";
         var baseLayersSea = "Base Layers Sea";
+        var baseLayersPolar = "Polar Base Layers";
+        var baseLayersSeaPolar = "Polar Base Layers Sea";
         if ( url.indexOf("_en") === -1 ) {
             overlays = "Kartlag";
-            //baseLayers = "Bakgrunnskart"; //change the order of land and sea
-            baseLayersSea = "Bakgrunnskart";
-            //baseLayersSea = "Bakgrunnskart Sjø";    
+            baseLayersSea = "Bakgrunnskart";  
             baseLayers = "Bakgrunnskart Sjø";
-        }
+            baseLayersPolar = "Polar bakgrunnskart";
+            baseLayersSeaPolar = "Polar bakgrunnskart Sjø";
+        } 
         var layerTreeGroups = {
                 ptype: "mareano_layertree",
                 groups: {
@@ -202,8 +204,12 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
             if ( config.map.projection == EPSG3575 ) {
                 layerTreeGroups["groups"] = {
                     "default": "Overlays", 
-                    "backgroundPolar": {
-                        title: "Polar Base Layers", 
+                    "backgroundPolarLand": {
+                        title: baseLayersPolar, 
+                        exclusive: true
+                    }, 
+					"backgroundPolarSea": {
+                        title: baseLayersSeaPolar, 
                         exclusive: true
                     }
                 }

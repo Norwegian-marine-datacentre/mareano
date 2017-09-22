@@ -71,7 +71,8 @@ public class MareanoController {
     private final static String NO = "no";
     private final static String EN = "en";
     
-    private final static String POLAR_BACKGROUND_GROUP = "backgroundPolar";
+    private final static String POLAR_BACKGROUND_GROUP = "backgroundPolarLand";
+    private final static String POLAR_BACKGROUND_GROUP_SEA = "backgroundPolarSea";
     private final static String POLAR_VIEW = "mareanoPolar";
     private final static String POLAR_EN_VIEW = "mareanoPolar_en";
     private final static String VIEW = "mareano";
@@ -253,10 +254,14 @@ public class MareanoController {
             }
             
             if ( hovedtema.getGenericTitle().equals(HOVEDTEMA_BACKGROUND)) {
-                if ( (mareanoJSP.equals(POLAR_VIEW) || mareanoJSP.equals(POLAR_EN_VIEW) ) && kartbilderVisining.getGruppe().equals(POLAR_BACKGROUND_GROUP)) {
+                if ( (mareanoJSP.equals(POLAR_VIEW) || mareanoJSP.equals(POLAR_EN_VIEW) ) && 
+                		( kartbilderVisining.getGruppe().equals(POLAR_BACKGROUND_GROUP) ||
+                				kartbilderVisining.getGruppe().equals(POLAR_BACKGROUND_GROUP_SEA) ) ) {
                     addGroupAndLayers(kartbilderVisining, kartbilde, mareanoJSP, language);
                     hovedtemaVisning.addBilder(kartbilderVisining);
-                } else if ( (mareanoJSP.equals(VIEW) || mareanoJSP.equals(VIEW_EN) ) && !kartbilderVisining.getGruppe().equals(POLAR_BACKGROUND_GROUP) ) {
+                } else if ( (mareanoJSP.equals(VIEW) || mareanoJSP.equals(VIEW_EN) ) && 
+                		!kartbilderVisining.getGruppe().equals(POLAR_BACKGROUND_GROUP) &&
+                		!kartbilderVisining.getGruppe().equals(POLAR_BACKGROUND_GROUP_SEA) ) {
                     addGroupAndLayers(kartbilderVisining, kartbilde, mareanoJSP, language);
                     hovedtemaVisning.addBilder(kartbilderVisining);
                 }
