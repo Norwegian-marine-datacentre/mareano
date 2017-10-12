@@ -5,7 +5,7 @@
 * Whenever a layer is turned on or off - send a request to server to see
 * if layer also should include Spesialpunkt from Mareano.
 */
-app.on("ready", function() {
+app.on("ready", function( ) {
     console.time("on ready start");
     Ext.getCmp('topPanelHeading').update('${heading}');
     loadMareano( this.mapPanel, app, layers );
@@ -51,7 +51,8 @@ app.on("ready", function() {
         addGenerelleLayerToGroup("generelle", i18nGenerallMaps, this.map, this.mapPanel, generelleLayers, store, app) );
     /***********************************/                    
     addDropdownmenuToMareanoMenuIfIe();
-    console.timeEnd("on ready start");
+    turnOnPreselectedLayers( treeRoot );
+    console.timeEnd("on ready start-end");
 });	
 
 function addDropdownmenuToMareanoMenuIfIe() {
@@ -65,4 +66,58 @@ function addDropdownmenuToMareanoMenuIfIe() {
             this.className=this.className.replace(new RegExp(" sfhover\\b"), "");
         }
     }
+}    
+
+function turnOnPreselectedLayers( treeRoot ) {
+	var layerStore = Ext.StoreMgr.items[0];
+	var layers = layerStore.data.items;
+	var aurl = document.location.href;
+	var layersToTurnOn = aurl.split('selectedLayers=')[1];
+	if ( layersToTurnOn != null ) {
+		var isSelected = layersToTurnOn.split(',');
+		
+		for ( var i=0; i < isSelected.length; i++ ) {
+			if  ( isSelected[i] != "&" ) {
+				isSelected[i] = decodeURIComponent( isSelected[i] );
+	
+				for ( var j=0; j < layers.length; j++ ) {
+					if ( layers[j].getLayer().metadata['kartlagId'] == isSelected[i] ) {
+						var record = layerStore.getByLayer(layers[j]);
+						
+						layers[j].data.selected = true;
+						layers[i].data['layer'].visibility = true;
+						var clone = layers[j].clone();
+						clone.set("group", "default");
+						clone.getLayer().setVisibility(true);
+						console.log("after clone - visibility:"+clone.data.layer.visibility);
+						clone.getLayer().metadata['kartlagId'] = layers[j].getLayer().metadata['kartlagId'];
+						clone.getLayer().metadata['kartlagId'];
+						app.mapPanel.layers.add(clone);
+						ga('send','event', "kategori","addLayer", layers[j].getLayer().metadata['kartlagTitle']);
+						displayLegendGraphicsAndSpesialpunkt(app.mapPanel.map.getExtent() + "", layers[j].getLayer(), event, app);
+					}
+				}
+			}
+		}
+		treeRoot.getRootNode().expandChildNodes(true);
+		var treeNode = treeRoot.getRootNode();
+		for ( var j=0; treeNode.childNodes.length > j; j++ ) {
+			var hovedtemaExpand = false;
+			for ( var k=0; treeNode.childNodes[j].childNodes.length > k; k++ ) {
+				var kartbildeExpand = false;
+				for ( var l=0; treeNode.childNodes[j].childNodes[k].childNodes.length > l; l++ ) {
+					if ( treeNode.childNodes[j].childNodes[k].childNodes[l].ui.isChecked() ) {
+						kartbildeExpand = true;
+						hovedtemaExpand = true;
+					}
+				}
+				if ( kartbildeExpand == false ) {
+					treeNode.childNodes[j].childNodes[k].collapse(true);
+				}
+			}
+			if ( hovedtemaExpand == false ) {
+				treeNode.childNodes[j].collapse(true);
+			}
+		}		
+	}
 }

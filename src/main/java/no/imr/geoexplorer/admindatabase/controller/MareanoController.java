@@ -12,7 +12,6 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletResponse;
 
 import no.imr.geoexplorer.admindatabase.dao.MareanoAdminDbDao;
@@ -34,6 +33,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -99,47 +99,98 @@ public class MareanoController {
     	mavEn = null;
     	mavPolar = null;
     	mavPolarEn = null;
-    	return getMareano( resp );
+    	return getMareano( "", resp );
     }
     
     @RequestMapping(value = "/mareano", method = RequestMethod.GET)
-    public ModelAndView getMareano(HttpServletResponse resp) throws IOException {
+    public ModelAndView getMareano(
+    		@RequestParam(value = "selectedLayers", required=false) String selectedLayers,
+    		HttpServletResponse resp) throws IOException {
+
         if (mavNo == null || (System.currentTimeMillis() - mavLastUpdatedNo) > ONEHOUR) {
             mavNo = commonGetMareano(resp, NO, "mareano");
             mavLastUpdatedNo = new Date().getTime();
         } 
+        defaultLayersOnOrOff( selectedLayers, mavNo );
         UTM33Config(mavNo);
         return mavNo;
     }
     
     @RequestMapping(value = "/mareano_en", method = RequestMethod.GET)
-    public ModelAndView getMareanoEn(HttpServletResponse resp) throws IOException {
+    public ModelAndView getMareanoEn(
+    		@RequestParam(value = "selectedLayers", required=false) String selectedLayers,
+    		HttpServletResponse resp) throws IOException {
+    	
         if (mavEn == null || (System.currentTimeMillis() - mavLastUpdatedEn) > ONEHOUR) {
             mavEn = commonGetMareano(resp, EN, "mareano_en");
             mavLastUpdatedEn = new Date().getTime();
         } 
+        defaultLayersOnOrOff( selectedLayers, mavEn );
         UTM33Config(mavEn);
         return mavEn;
     }
     
     @RequestMapping(value = "/mareanoPolar", method = RequestMethod.GET)
-    public ModelAndView getMareanoPolar(HttpServletResponse resp) throws IOException {
+    public ModelAndView getMareanoPolar(
+    		@RequestParam(value = "selectedLayers", required=false) String selectedLayers,
+    		HttpServletResponse resp) throws IOException {
+
         if (mavPolar == null || (System.currentTimeMillis() - mavLastUpdatedPolar) > ONEHOUR) {
             mavPolar = commonGetMareano(resp, NO, "mareanoPolar");
             mavLastUpdatedPolar = new Date().getTime();
         } 
+        defaultLayersOnOrOff( selectedLayers, mavPolar );
         polarConfig(mavPolar);
         return mavPolar;
     }
     
     @RequestMapping(value = "/mareanoPolar_en", method = RequestMethod.GET)
-    public ModelAndView getMareanoPolarEn(HttpServletResponse resp) throws IOException {
+    public ModelAndView getMareanoPolarEn(
+    		@RequestParam(value = "selectedLayers", required=false) String selectedLayers,
+    		HttpServletResponse resp) throws IOException {
+
         if (mavPolarEn == null || (System.currentTimeMillis() - mavLastUpdatedPolarEn) > ONEHOUR) {
             mavPolarEn = commonGetMareano(resp, EN, "mareanoPolar_en");
             mavLastUpdatedPolarEn = new Date().getTime();
         } 
+        defaultLayersOnOrOff( selectedLayers, mavPolarEn );
+        
         polarConfig(mavPolarEn);
         return mavPolarEn;
+    }
+    
+    private void defaultLayersOnOrOff( String selectedLayers, ModelAndView mav ) throws JsonProcessingException {
+    	List<HovedtemaVisning> visninger = (List<HovedtemaVisning>) mav.getModel().get("tmpHovedTema");
+    	boolean isChanged = false;
+        if ( selectedLayers != null && !selectedLayers.equals("") ) {
+        	isChanged = changedDisplayDefaultLayers( false, visninger );
+        } else {
+        	isChanged = changedDisplayDefaultLayers( true, visninger );
+        }
+    	if ( isChanged ) {
+            ObjectMapper mapper = new ObjectMapper();
+            String json = mapper.writeValueAsString(visninger);
+            mav.addObject("hovedtemaer_json", json);               
+    	}
+//        mav.getModel().remove("tmpHovedTema");  
+    	mav.getModel().remove("selectedLayers");
+    	mav.addObject("selectedLayers", selectedLayers);
+    }
+    
+    private boolean changedDisplayDefaultLayers( boolean toDisplay, List<HovedtemaVisning> hovedtemaVisninger ) {
+    	
+    	for (HovedtemaVisning hovedtema : hovedtemaVisninger) {
+	    	for (KartbilderVisning kartbilderVisning : hovedtema.getBilder()) {
+	            if (kartbilderVisning.getGruppe().equals("MAREANO-stasjoner") || kartbilderVisning.getGruppe().equals("MAREANO-stations")) {
+	            	if ( kartbilderVisning.isVisible() != toDisplay) {
+	            		kartbilderVisning.setVisible( toDisplay ); //default = true
+	            		return true;
+	            	}
+	                return false;
+	            }
+	    	}
+    	}
+    	return false;
     }
     
     private void UTM33Config(ModelAndView mav) {
@@ -177,7 +228,7 @@ public class MareanoController {
     }
     
     @RequestMapping("/mareanoPolarJson")
-    public @ResponseBody JsonNode getMareanoPolarJson(  ) throws IOException {
+    public @ResponseBody JsonNode getMareanoPolarJson() throws IOException {
         
         List<HovedtemaVisning> visninger = listOrganizedToBrowser("no", POLAR_VIEW);
         ObjectMapper mapper = new ObjectMapper();
@@ -189,6 +240,7 @@ public class MareanoController {
     protected ModelAndView getMareano(ModelAndView mav, String language, String mareanoJSP) throws IOException {
         
         List<HovedtemaVisning> visninger = listOrganizedToBrowser(language, mareanoJSP);
+        mav.addObject("tmpHovedTema", visninger);
         ObjectMapper mapper = new ObjectMapper();
         String json = mapper.writeValueAsString(visninger);
 
@@ -196,7 +248,7 @@ public class MareanoController {
         return mav;
     }
 
-    protected List<HovedtemaVisning> listOrganizedToBrowser(String language, String mareanoJSP)  throws IOException{
+    protected List<HovedtemaVisning> listOrganizedToBrowser(String language, String mareanoJSP) throws IOException{
 
         List<Hovedtema> hovedtemaer = dao.getHovedtemaer();
         List<HovedtemaVisning> hovedtemaVisninger = new ArrayList<HovedtemaVisning>(hovedtemaer.size());
@@ -216,6 +268,7 @@ public class MareanoController {
 
     
     protected List<HovedtemaVisning> addToList(List<HovedtemaVisning> hovedtemaVisninger, Hovedtema hovedtema, String language, String mareanoJSP) {
+    	
         HovedtemaVisning hovedtemaVisning = new HovedtemaVisning();
         if (language.equals("en")) {
             List<HovedtemaEnNo> en = dao.getHovedtemaEn(hovedtema.getHovedtemaerId());
@@ -235,39 +288,39 @@ public class MareanoController {
 
         
         for (Kartbilder kartbilde : hovedtema.getKartbilder()) {
-            KartbilderVisning kartbilderVisining = new KartbilderVisning();
+            KartbilderVisning kartbilderVisning = new KartbilderVisning();
 
             if (language.equals("en")) {
                 List<KartBilderEnNo> en = dao.getKartbilderEn(kartbilde.getKartbilderId());
                 if (en.size() > 0) {
-                    kartbilderVisining.setGruppe(en.get(0).getAlternateTitle());
+                    kartbilderVisning.setGruppe(en.get(0).getAlternateTitle());
                 } else {
-                    kartbilderVisining.setGruppe(kartbilde.getGenericTitle());
+                    kartbilderVisning.setGruppe(kartbilde.getGenericTitle());
                 }
             } else {
                 List<KartBilderEnNo> norsk = dao.getKartbilderNo(kartbilde.getKartbilderId());
                 if (norsk.size() > 0) {
-                    kartbilderVisining.setGruppe(norsk.get(0).getAlternateTitle());
+                    kartbilderVisning.setGruppe(norsk.get(0).getAlternateTitle());
                 } else {
-                    kartbilderVisining.setGruppe(kartbilde.getGenericTitle());
+                    kartbilderVisning.setGruppe(kartbilde.getGenericTitle());
                 }
             }
             
             if ( hovedtema.getGenericTitle().equals(HOVEDTEMA_BACKGROUND)) {
                 if ( (mareanoJSP.equals(POLAR_VIEW) || mareanoJSP.equals(POLAR_EN_VIEW) ) && 
-                		( kartbilderVisining.getGruppe().equals(POLAR_BACKGROUND_GROUP) ||
-                				kartbilderVisining.getGruppe().equals(POLAR_BACKGROUND_GROUP_SEA) ) ) {
-                    addGroupAndLayers(kartbilderVisining, kartbilde, mareanoJSP, language);
-                    hovedtemaVisning.addBilder(kartbilderVisining);
+                		( kartbilderVisning.getGruppe().equals(POLAR_BACKGROUND_GROUP) ||
+                				kartbilderVisning.getGruppe().equals(POLAR_BACKGROUND_GROUP_SEA) ) ) {
+                    addGroupAndLayers(kartbilderVisning, kartbilde, mareanoJSP, language);
+                    hovedtemaVisning.addBilder(kartbilderVisning);
                 } else if ( (mareanoJSP.equals(VIEW) || mareanoJSP.equals(VIEW_EN) ) && 
-                		!kartbilderVisining.getGruppe().equals(POLAR_BACKGROUND_GROUP) &&
-                		!kartbilderVisining.getGruppe().equals(POLAR_BACKGROUND_GROUP_SEA) ) {
-                    addGroupAndLayers(kartbilderVisining, kartbilde, mareanoJSP, language);
-                    hovedtemaVisning.addBilder(kartbilderVisining);
+                		!kartbilderVisning.getGruppe().equals(POLAR_BACKGROUND_GROUP) &&
+                		!kartbilderVisning.getGruppe().equals(POLAR_BACKGROUND_GROUP_SEA) ) {
+                    addGroupAndLayers(kartbilderVisning, kartbilde, mareanoJSP, language);
+                    hovedtemaVisning.addBilder(kartbilderVisning);
                 }
             } else {
-                addGroupAndLayers(kartbilderVisining, kartbilde, mareanoJSP, language);
-                hovedtemaVisning.addBilder(kartbilderVisining);
+                addGroupAndLayers(kartbilderVisning, kartbilde, mareanoJSP, language);
+                hovedtemaVisning.addBilder(kartbilderVisning);
             }
 
         }
@@ -285,7 +338,7 @@ public class MareanoController {
         kartbilderVisining.setStartextentMiny( kartbilde.getStartextentMiny() );
 
         if (kartbilderVisining.getGruppe().equals("MAREANO-stasjoner") || kartbilderVisining.getGruppe().equals("MAREANO-stations")) {
-            kartbilderVisining.setVisible(true);
+            kartbilderVisining.setVisible( true ); //default = true
         }
         List<Kartlag> kartlagene = dao.getKartlagene(kartbilde.getKartbilderId());
         for (Kartlag kartlag : kartlagene) {

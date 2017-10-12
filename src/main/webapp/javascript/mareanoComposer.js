@@ -156,7 +156,7 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
         var baseLayersSeaPolar = "Polar Base Layers Sea";
         if ( url.indexOf("_en") === -1 ) {
             overlays = "Kartlag";
-            baseLayersSea = "Bakgrunnskart";  
+            baseLayersSea = "Bakgrunnskart";
             baseLayers = "Bakgrunnskart Sjø";
             baseLayersPolar = "Polar bakgrunnskart";
             baseLayersSeaPolar = "Polar bakgrunnskart Sjø";
@@ -307,7 +307,7 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
             tooltip: "Marbunn",
             text: "Marbunn",
             handler: function(){
-            	window.open( "http://mareano.no/marbunn_web/login" );
+            	window.open( "http://mareano.no/marbunn_web/viewspecies" );
             },
             scope: this
         });
@@ -471,13 +471,11 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
             tooltip: "Norsk",
             id: "mareanoNorskBtn",
             buttonAlign: "center",
-            handler: function(){
-                if ( indexMareanoPolarEn > -1) {
-                    location.href = url.substring(0,indexMareanoPolar) + "mareanoPolar.html?language=no";                    
-                } else if ( indexMareanoEn > -1) {   
-                    location.href = url.substring(0,indexMareanoEn) + "mareano.html?language=no";
-                }                
-            },
+            listeners: {
+            	click: function() {
+            		rememberSelectedLayers( false );
+            	}
+            },            
             iconCls: "icon-norsk",
             scope: this
         });
@@ -485,17 +483,44 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
             id: "mareanoEngelskBtn",
             tooltip: "English",
             buttonAlign: "right",
-            handler: function(){
-                if ( indexMareanoPolar > -1) {
-                    location.href = url.substring(0,indexMareanoPolar) + "mareanoPolar_en.html?language=en";                    
-                } else if ( indexMareano > -1) {   
-                    location.href = url.substring(0,indexMareanoEn) + "mareano_en.html?language=en";
-                }
+            listeners: {
+            	click: function() {
+            		rememberSelectedLayers( true );
+            	}
             },
             iconCls: "icon-english",
             scope: this
         }); 
-        
+        function rememberSelectedLayers( toEnglish ) {
+    		var selectedLayers = "";
+			for (var i=0; i<window.layers.length; i++) { 
+				var defaultLayer = app.mapPanel.layers.data.items[i];
+				if (  defaultLayer != undefined && defaultLayer.data != undefined && 
+						defaultLayer.data.group != undefined && defaultLayer.data.group == "default" ) {
+					selectedLayers += defaultLayer.data.layer.metadata['kartlagId'] + ",";
+				}
+			}
+			var oldUrl = location.href.split('&selectedLayers=')[0];
+			if ( toEnglish ) {
+	            if ( indexMareanoPolar > -1) {
+	            	oldUrl = url.substring(0,indexMareanoPolar) + "mareanoPolar_en.html?language=en";                    
+	            } else if ( indexMareano > -1) {   
+	            	oldUrl = url.substring(0,indexMareanoEn) + "mareano_en.html?language=en";
+	            }
+			} else {
+                if ( indexMareanoPolarEn > -1) {
+                	oldUrl = url.substring(0,indexMareanoPolar) + "mareanoPolar.html?language=no";                    
+                } else if ( indexMareanoEn > -1) {   
+                	oldUrl = url.substring(0,indexMareanoEn) + "mareano.html?language=no";
+                }				
+			}
+			
+			var urlWithLayers = "";
+			if ( oldUrl.indexOf("?") > -1 )
+				urlWithLayers = oldUrl + "&selectedLayers=" + selectedLayers;
+			else urlWithLayers = oldUrl + "?selectedLayers=" + selectedLayers;
+			location.href = urlWithLayers;
+        }
         var mareanoPolarBtn = new Ext.Button({
             id: "mareanoPolarBtn",
             tooltip: polarBtnTooltip,

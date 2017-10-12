@@ -139,7 +139,7 @@ function addLayersToHovedTemaOrBackgroundLayer(alleHovedtemaer, projection) {
         }
     }
     
-    var store = new GeoExt.data.LayerStore();
+    var store = new GeoExt.data.LayerStore({id:'mareanoStore'});
     store.add(layers);   
     store.add(generelleLayers);
     return store;

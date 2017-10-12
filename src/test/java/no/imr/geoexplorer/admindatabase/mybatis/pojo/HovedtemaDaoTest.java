@@ -24,7 +24,7 @@ import static org.junit.Assert.assertNotNull;
  * @author endrem
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations={"classpath:springmvc-servlet.xml"})
+@ContextConfiguration(locations={"classpath:test-context-dont-check-inn.xml"})
 public class HovedtemaDaoTest {
 	
 	@Autowired( required = true )
@@ -67,10 +67,10 @@ public class HovedtemaDaoTest {
 					assertNotNull( kartlag.getGenericTitle() );
 					KartlagVisning kart = new KartlagVisning();
 					kart.setLayers( kartlag.getLayers() );
-					kart.setTitle(kartlag.getGenericTitle() );
 					kart.setUrl( kartlag.getKarttjeneste().getUrl() );
 					kartbilderVisining.addKart(kart);
 				}
+				List<KartlagEnNo> tmp =  (List<KartlagEnNo>)template.selectList("getKartlagEn", kartbilde.getKartbilderId());
 				hovedtemaVisning.addBilder( kartbilderVisining );
 			}
 			if ( hovedtemaVisning.getBilder().size() > 0 )
