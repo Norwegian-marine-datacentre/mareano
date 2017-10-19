@@ -473,7 +473,7 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
             buttonAlign: "center",
             listeners: {
             	click: function() {
-            		rememberSelectedLayers( false );
+            		rememberSelectedLayers( false, (indexMareanoPolar > -1 || indexMareanoPolarEn > -1) );
             	}
             },            
             iconCls: "icon-norsk",
@@ -485,13 +485,13 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
             buttonAlign: "right",
             listeners: {
             	click: function() {
-            		rememberSelectedLayers( true );
+            		rememberSelectedLayers( true, (indexMareanoPolar > -1 || indexMareanoPolarEn > -1) );
             	}
             },
             iconCls: "icon-english",
             scope: this
         }); 
-        function rememberSelectedLayers( toEnglish ) {
+        function rememberSelectedLayers( toEnglish, toPolar ) {
     		var selectedLayers = "";
 			for (var i=0; i<window.layers.length; i++) { 
 				var defaultLayer = app.mapPanel.layers.data.items[i];
@@ -504,18 +504,14 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
 				selectedLayers = selectedLayers.substring(0, selectedLayers.lastIndexOf(","))
 			}
 			var oldUrl = location.href.split('&selectedLayers=')[0];
-			if ( toEnglish ) {
-	            if ( indexMareanoPolar > -1) {
-	            	oldUrl = url.substring(0,indexMareanoPolar) + "mareanoPolar_en.html?language=en";                    
-	            } else if ( indexMareano > -1) {   
-	            	oldUrl = url.substring(0,indexMareanoEn) + "mareano_en.html?language=en";
-	            }
-			} else {
-                if ( indexMareanoPolarEn > -1) {
-                	oldUrl = url.substring(0,indexMareanoPolar) + "mareanoPolar.html?language=no";                    
-                } else if ( indexMareanoEn > -1) {   
-                	oldUrl = url.substring(0,indexMareanoEn) + "mareano.html?language=no";
-                }				
+			if ( toEnglish && toPolar ) {
+				oldUrl = url.substring(0,indexMareanoPolar) + "mareanoPolar_en.html?language=en";                    
+			} else if ( toEnglish && !toPolar ) {
+				oldUrl = url.substring(0,indexMareanoEn) + "mareano_en.html?language=en";
+			} else if ( !toEnglish && toPolar ) {
+				oldUrl = url.substring(0,indexMareanoPolar) + "mareanoPolar.html?language=no";                    
+			} else if ( !toEnglish && !toPolar) {
+				oldUrl = url.substring(0,indexMareanoEn) + "mareano.html?language=no";
 			}
 			
 			var urlWithLayers = "";
@@ -529,15 +525,9 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
             tooltip: polarBtnTooltip,
             buttonAlign: "right",
             handler: function(){
-                if ( indexMareanoPolar > -1) {
-                    location.href = url.substring(0,indexMareanoPolar) + "mareano.html?language=no";
-                } else if ( indexMareanoPolarEn > -1) {   
-                    location.href = url.substring(0,indexMareanoPolarEn) + "mareano_en.html?language=en";
-                } else if ( indexMareano > -1) {   
-                    location.href = url.substring(0,indexMareano) + "mareanoPolar.html?language=no";
-                } else if ( indexMareanoEn > -1) {   
-                    location.href = url.substring(0,indexMareanoEn) + "mareanoPolar_en.html?language=en";
-                }
+				var toEnglish = (indexMareanoPolarEn > -1 || indexMareanoEn > -1);
+				var toPolar = !(indexMareanoPolar > -1 || indexMareanoPolarEn > -1);
+                rememberSelectedLayers(toEnglish, toPolar);
             },
             iconCls: "icon-polar",
             scope: this
