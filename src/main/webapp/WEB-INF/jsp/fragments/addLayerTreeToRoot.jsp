@@ -12,6 +12,7 @@ app.on("ready", function( ) {
     turnOnDefaultLayers( this, store );
     /***********************************/
     var treeRoot = Ext.getCmp('thematic_tree'); 
+	var rootNode = treeRoot.getRootNode();
     var mergedSomeHovedtema;
     for (var i=0; i < hovedtemaer.length; i++) {
         var hovedTemaCls = "normal-text-hovedtema";
@@ -40,9 +41,9 @@ app.on("ready", function( ) {
             ];
             mergedSomeHovedtema.appendChild( group );
         }
-        treeRoot.getRootNode().appendChild( mergedSomeHovedtema );
+        rootNode.appendChild( mergedSomeHovedtema );
     }
-//    treeRoot.getRootNode().appendChild( mergedSomeHovedtema );
+//    rootNode.appendChild( mergedSomeHovedtema );
  
 	/***********************************/
     var rootRightTree = Ext.getCmp('layers');
@@ -51,8 +52,9 @@ app.on("ready", function( ) {
         addGenerelleLayerToGroup("generelle", i18nGenerallMaps, this.map, this.mapPanel, generelleLayers, store, app) );
     /***********************************/                    
     addDropdownmenuToMareanoMenuIfIe();
-    turnOnPreselectedLayers( treeRoot );
-    console.timeEnd("on ready start-end");
+	turnOnPreselectedLayers(rootNode);
+	
+	console.timeEnd("on ready start-end");
 });	
 
 function addDropdownmenuToMareanoMenuIfIe() {
@@ -68,56 +70,67 @@ function addDropdownmenuToMareanoMenuIfIe() {
     }
 }    
 
-function turnOnPreselectedLayers( treeRoot ) {
-	var layerStore = Ext.StoreMgr.items[0];
-	var layers = layerStore.data.items;
+function turnOnPreselectedLayers(rootNode) {
+	
 	var aurl = document.location.href;
 	var layersToTurnOn = aurl.split('selectedLayers=')[1];
 	if ( layersToTurnOn != null ) {
 		var isSelected = layersToTurnOn.split(',');
 		
-		for ( var i=0; i < isSelected.length; i++ ) {
-			if  ( isSelected[i] != "&" ) {
-				isSelected[i] = decodeURIComponent( isSelected[i] );
+		rootNode.expandChildNodes(true);
+		addPreselectedLayersToMap( isSelected );
+		expandSelectedNodes( rootNode, isSelected );
+	}
+}
+
+function addPreselectedLayersToMap( isSelected ) {
 	
-				for ( var j=0; j < layers.length; j++ ) {
-					if ( layers[j].getLayer().metadata['kartlagId'] == isSelected[i] ) {
-						var record = layerStore.getByLayer(layers[j]);
-						
-						layers[j].data.selected = true;
-						layers[i].data['layer'].visibility = true;
-						var clone = layers[j].clone();
-						clone.set("group", "default");
-						clone.getLayer().setVisibility(true);
-						console.log("after clone - visibility:"+clone.data.layer.visibility);
-						clone.getLayer().metadata['kartlagId'] = layers[j].getLayer().metadata['kartlagId'];
-						clone.getLayer().metadata['kartlagId'];
-						app.mapPanel.layers.add(clone);
-						ga('send','event', "kategori","addLayer", layers[j].getLayer().metadata['kartlagTitle']);
-						displayLegendGraphicsAndSpesialpunkt(app.mapPanel.map.getExtent() + "", layers[j].getLayer(), event, app);
-					}
+	var layerStore = Ext.StoreMgr.items[0];
+	var layers = layerStore.data.items;
+
+	for ( var i=0; i < isSelected.length; i++ ) {
+		if  ( isSelected[i] != "&" ) {
+			isSelected[i] = decodeURIComponent( isSelected[i] );
+
+			for ( var j=0; j < layers.length; j++ ) {
+				if ( layers[j].getLayer().metadata['kartlagId'] == isSelected[i] ) {					
+					layers[j].data.selected = true;
+					layers[i].data['layer'].visibility = true;
+					var clone = layers[j].clone();
+					clone.set("group", "default");
+					clone.getLayer().setVisibility(true);
+					clone.getLayer().metadata['kartlagId'] = layers[j].getLayer().metadata['kartlagId'];
+					app.mapPanel.layers.add(clone);
+					ga('send','event', "kategori","addLayer", layers[j].getLayer().metadata['kartlagTitle']);
+					displayLegendGraphicsAndSpesialpunkt(app.mapPanel.map.getExtent() + "", layers[j].getLayer(), event, app);
 				}
 			}
 		}
-		treeRoot.getRootNode().expandChildNodes(true);
-		var treeNode = treeRoot.getRootNode();
-		for ( var j=0; treeNode.childNodes.length > j; j++ ) {
-			var hovedtemaExpand = false;
-			for ( var k=0; treeNode.childNodes[j].childNodes.length > k; k++ ) {
-				var kartbildeExpand = false;
-				for ( var l=0; treeNode.childNodes[j].childNodes[k].childNodes.length > l; l++ ) {
-					if ( treeNode.childNodes[j].childNodes[k].childNodes[l].ui.isChecked() ) {
+	}
+}
+
+function expandSelectedNodes( rootNode, isSelected ) {
+	
+	rootNode.expandChildNodes(true);
+	for ( var j=0; rootNode.childNodes.length > j; j++ ) {
+		var hovedtemaExpand = false;
+		for ( var k=0; rootNode.childNodes[j].childNodes.length > k; k++ ) {
+			var kartbildeExpand = false;
+			for ( var l=0; rootNode.childNodes[j].childNodes[k].childNodes.length > l; l++ ) {
+				for ( var i=0; i < isSelected.length; i++ ) {
+					if ( rootNode.childNodes[j].childNodes[k].childNodes[l].layer.metadata.kartlagId == isSelected[i]) {
+						rootNode.childNodes[j].childNodes[k].childNodes[l].ui.checkbox.checked = true;
 						kartbildeExpand = true;
 						hovedtemaExpand = true;
 					}
 				}
-				if ( kartbildeExpand == false ) {
-					treeNode.childNodes[j].childNodes[k].collapse(true);
-				}
 			}
-			if ( hovedtemaExpand == false ) {
-				treeNode.childNodes[j].collapse(true);
+			if ( kartbildeExpand == false ) {
+				rootNode.childNodes[j].childNodes[k].collapse(true);
 			}
-		}		
+		}
+		if ( hovedtemaExpand == false ) {
+			rootNode.childNodes[j].collapse(true);
+		}
 	}
 }

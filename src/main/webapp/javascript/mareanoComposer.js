@@ -500,6 +500,9 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
 					selectedLayers += defaultLayer.data.layer.metadata['kartlagId'] + ",";
 				}
 			}
+			if ( selectedLayers != "" ) {
+				selectedLayers = selectedLayers.substring(0, selectedLayers.lastIndexOf(","))
+			}
 			var oldUrl = location.href.split('&selectedLayers=')[0];
 			if ( toEnglish ) {
 	            if ( indexMareanoPolar > -1) {

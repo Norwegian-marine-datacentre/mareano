@@ -92,7 +92,8 @@ public class SaveMapsController implements ServletConfigAware {
     @PreDestroy
     public void cleanup() {
     	try {
-			conn.close();	
+    		if ( conn != null )
+    			conn.close();	
     	} catch( SQLException e) {
     		throw new Error("Error closing connection to:"+jdbcUrl);
     	}
