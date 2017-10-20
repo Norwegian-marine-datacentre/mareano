@@ -547,7 +547,6 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
 
     modifyPortal: function() {
         var mareanoLegendContainer = new Ext.Panel({
-            draggable:true,
             region: 'center',
             layout: 'fit',
             autoScroll: true,
