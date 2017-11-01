@@ -29,7 +29,7 @@ function loadMareano(mapPanel, app) {
     };
     app.mapPanel.on('afterlayout', updateLegendScale);
     app.mapPanel.map.events.register('zoomend', app, updateLegendScale);
-
+	
     //Hacky approach to find current background layer on initial map display
     var backgroundLayerInfoToChange = app.mapPanel.map.getLayersBy("visibility", true)[1]
     if ( backgroundLayerInfoToChange != null ) {
@@ -169,10 +169,10 @@ function addLayerToGroup( gruppeNavn, gruppeText, map, mapPanel, layers, store, 
 //                      if (event.ui._silent !== true && maxExtent) {
 //                      app.mapPanel.map.zoomToExtent(maxExtent, true);
 //                      }
-                        displayLegendGraphicsAndSpesialpunkt(app.mapPanel.map.getExtent() + "", layerRecord.getLayer(), event, app);
+                        displayLegendGraphicsAndSpesialpunkt(app.mapPanel.map.getExtent() + "", layerRecord.getLayer(), app);
                     }
                     //app.mapPanel.map.addLayer(layer); //adds layer to Overlay but mareano_wmslayerpanel is missing from properties and no layer properties are shown                        
-                    //displayLegendGraphicsAndSpesialpunkt(app.mapPanel.map.getExtent() + "", layer.metadata['kartlagId'], layerRecord.getLayer(), event, app);
+                    //displayLegendGraphicsAndSpesialpunkt(app.mapPanel.map.getExtent() + "", layer.metadata['kartlagId'], layerRecord.getLayer(), app);
                     
                     //set Hovedtema to bold if any of the child layers are checked
                     node.parentNode.parentNode.setCls("bold-text-hovedtema");
@@ -289,10 +289,10 @@ function addKartbildeAbstractOrRemoveWithName(text, checked) {
 }
 
 function addLegend(layer) {
-	displayLegendGraphicsAndSpesialpunkt(null, layer, null, null);
+	displayLegendGraphicsAndSpesialpunkt(null, layer, null);
 }
 
-function displayLegendGraphicsAndSpesialpunkt(extent, layer, event, app) {
+function displayLegendGraphicsAndSpesialpunkt(extent, layer, app) {
     var languageChoosen = getLanguage();
     var id = layer.metadata['kartlagId'];
     var title = layer.metadata['kartlagTitle'];
@@ -307,13 +307,13 @@ function displayLegendGraphicsAndSpesialpunkt(extent, layer, event, app) {
         },
         success:function(data) {
             addLegendAndInfo(layer, data);
-            addSpesialpunkt(extent, id, layer, event, app, data);
+            addSpesialpunkt(extent, id, layer, app, data);
         }
     }); 
 }
 
 var controlSelectFeature = null;
-function addSpesialpunkt(extent, kartlagId, layer, event, app, data) {
+function addSpesialpunkt(extent, kartlagId, layer, app, data) {
     if ( data.noSpesialpunkt == false ) { 
         var styleMap = new OpenLayers.StyleMap({
             'default':{

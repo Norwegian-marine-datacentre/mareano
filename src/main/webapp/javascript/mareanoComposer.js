@@ -514,10 +514,13 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
 				oldUrl = url.substring(0,indexMareanoEn) + "mareano.html?language=no";
 			}
 			
-			var urlWithLayers = "";
-			if ( oldUrl.indexOf("?") > -1 )
-				urlWithLayers = oldUrl + "&selectedLayers=" + selectedLayers;
-			else urlWithLayers = oldUrl + "?selectedLayers=" + selectedLayers;
+			var urlWithLayers = oldUrl;
+			var defaultSelectedLayers = "244,242,243";
+			if ( selectedLayers != "" && selectedLayers != defaultSelectedLayers ) {
+				if ( oldUrl.indexOf("?") > -1 )
+					urlWithLayers = oldUrl + "&selectedLayers=" + selectedLayers;
+				else urlWithLayers = oldUrl + "?selectedLayers=" + selectedLayers;
+			}
 			location.href = urlWithLayers;
         }
         var mareanoPolarBtn = new Ext.Button({

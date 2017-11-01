@@ -102,7 +102,7 @@ function addPreselectedLayersToMap( isSelected ) {
 					clone.getLayer().metadata['kartlagId'] = layers[j].getLayer().metadata['kartlagId'];
 					app.mapPanel.layers.add(clone);
 					ga('send','event', "kategori","addLayer", layers[j].getLayer().metadata['kartlagTitle']);
-					displayLegendGraphicsAndSpesialpunkt(app.mapPanel.map.getExtent() + "", layers[j].getLayer(), event, app);
+					displayLegendGraphicsAndSpesialpunkt(app.mapPanel.map.getExtent() + "", layers[j].getLayer(), app);
 				}
 			}
 		}
