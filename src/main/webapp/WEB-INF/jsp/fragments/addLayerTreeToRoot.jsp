@@ -133,4 +133,23 @@ function expandSelectedNodes( rootNode, isSelected ) {
 			rootNode.childNodes[j].collapse(true);
 		}
 	}
+	
+	//hack because closing "map-pictures" above doesnt work -- waiting 3 sec do it again
+	setTimeout(function() {
+		for ( var j=0; rootNode.childNodes.length > j; j++ ) {
+			if ( rootNode.childNodes[j].expanded == true) {
+				for ( var k=0; rootNode.childNodes[j].childNodes.length > k; k++ ) {
+					var closeMapPicture = true;
+					for ( var l=0; closeMapPicture && rootNode.childNodes[j].childNodes[k].childNodes.length > l; l++ ) {
+						if (rootNode.childNodes[j].childNodes[k].childNodes[l].ui.checkbox.checked == true ) {
+							closeMapPicture = false;
+						}
+					}
+					if ( closeMapPicture ) {
+						rootNode.childNodes[j].childNodes[k].collapse(true);
+					}
+				}
+			}
+		}		
+	}, 3000);	
 }
