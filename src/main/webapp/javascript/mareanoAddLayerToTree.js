@@ -4,6 +4,7 @@ var kartlagInfoState = []; //used by removeLayerLegendAndInfo(mapOfGMLspesialpun
 var layersInPicture = [];
 var bakgrunnInfoDiv;   // Used to hold background layer info
 
+var updateLegendScale
 function loadMareano(mapPanel, app) {
     OpenLayers.Util.alphaHackNeeded=false;
     
@@ -12,15 +13,19 @@ function loadMareano(mapPanel, app) {
 
     var layertree = Ext.getCmp("layers");
 
-    var updateLegendScale = function() {
+    updateLegendScale = function() {
         layertree.getRootNode().cascade(function(n) {
             var id = n.attributes.layer && n.attributes.layer.metadata['kartlagId'];
+            var legendContainer = Ext.getCmp('newLegend')
             if (id) {
                 var legdiv = Ext.get(id);
                 if (legdiv !== null) {
-                    if (n.disabled === true) {
+                	var layerNode = jQuery("[ext\\:tree-node-id='"+n.id+"']").find("a")
+                    if ( n.layer.inRange === false ) {
+                    	layerNode.addClass('out-of-scale')
                         legdiv.addClass('out-of-scale');
                     } else {
+                    	layerNode.removeClass('out-of-scale')
                         legdiv.removeClass('out-of-scale');
                     }
                 }
@@ -29,6 +34,7 @@ function loadMareano(mapPanel, app) {
     };
     app.mapPanel.on('afterlayout', updateLegendScale);
     app.mapPanel.map.events.register('zoomend', app, updateLegendScale);
+    app.mapPanel.on("legendAdded", updateLegendScale);
 	
     //Hacky approach to find current background layer on initial map display
     var backgroundLayerInfoToChange = app.mapPanel.map.getLayersBy("visibility", true)[1]
@@ -176,7 +182,7 @@ function addLayerToGroup( gruppeNavn, gruppeText, map, mapPanel, layers, store, 
                     
                     //set Hovedtema to bold if any of the child layers are checked
                     node.parentNode.parentNode.setCls("bold-text-hovedtema");
-                    node.parentNode.setCls("bold-text-hovedtema");      
+                    node.parentNode.setCls("bold-text-hovedtema");
                 } else {
                     //set Hovedtema to bold if any of the child layers are checked
                     var setHovedtemaBold = function(node) {
@@ -308,6 +314,9 @@ function displayLegendGraphicsAndSpesialpunkt(extent, layer, app) {
         success:function(data) {
             addLegendAndInfo(layer, data);
             addSpesialpunkt(extent, id, layer, app, data);
+            if ( app != null ) { //check if layers are inRange
+                app.mapPanel.fireEvent("legendAdded", app.mapPanel);
+            }
         }
     }); 
 }
