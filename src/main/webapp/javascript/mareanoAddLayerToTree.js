@@ -323,6 +323,8 @@ function displayLegendGraphicsAndSpesialpunkt(extent, layer, app) {
 
 var controlSelectFeature = null;
 function addSpesialpunkt(extent, kartlagId, layer, app, data) {
+	if (app == null ) return; //during loading of mapclient - app is null
+	
     if ( data.noSpesialpunkt == false ) { 
         var styleMap = new OpenLayers.StyleMap({
             'default':{
@@ -331,10 +333,10 @@ function addSpesialpunkt(extent, kartlagId, layer, app, data) {
             }
         });
 
-        var snitt = new OpenLayers.Layer.Vector("GML", { 
+        var snitt = new OpenLayers.Layer.Vector("GML_"+kartlagId, { 
             displayInLayerSwitcher: false,
             protocol: new OpenLayers.Protocol.HTTP({ 
-                url: "spring/getgml", 
+                url: "spring/getgml?kartlagId="+kartlagId, 
                 format: new OpenLayers.Format.GML()
             }), 
             strategies: [new OpenLayers.Strategy.Fixed()], 
@@ -345,7 +347,8 @@ function addSpesialpunkt(extent, kartlagId, layer, app, data) {
 
         snitt.events.register( "featureselected", snitt, GMLselected );
         app.mapOfGMLspesialpunkt[kartlagId] = snitt;	    
-        app.mapPanel.map.addLayer( snitt );   	           
+        app.mapPanel.map.addLayer( snitt );  
+        app.mapPanel.map.setLayerIndex(snitt, 999);
 
         if ( controlSelectFeature == null ) {
             controlSelectFeature = new OpenLayers.Control.SelectFeature( snitt );
