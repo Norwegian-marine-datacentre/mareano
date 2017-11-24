@@ -88,7 +88,7 @@ var layersToJSON = function addVisibleLayersToJSON( layerObjectArray ) {
                 	var urlOfBackgroundLayer = layer.grid[0][0].url;
                 	if ( urlOfBackgroundLayer == null ) {
                 		urlOfBackgroundLayer = layer.url;
-                		urlOfBackgroundLayer += "&LAYERS="+params.LAYERS;
+                		urlOfBackgroundLayer += "?LAYERS="+params.LAYERS;
                 		urlOfBackgroundLayer += "&FORMAT="+params.FORMAT;
                 		urlOfBackgroundLayer += "&TRANSPARENT="+params.TRANSPARENT;
                 		urlOfBackgroundLayer += "&SERVICE="+params.SERVICE;

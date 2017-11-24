@@ -13,15 +13,6 @@ import java.util.concurrent.Future;
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletResponse;
 
-import no.imr.geoexplorer.admindatabase.dao.MareanoAdminDbDao;
-import no.imr.geoexplorer.printmap.LegendUtil;
-import no.imr.geoexplorer.printmap.PrintedMapUtils;
-import no.imr.geoexplorer.printmap.TilesToImage;
-import no.imr.geoexplorer.printmap.json.pojo.PrintLayer;
-import no.imr.geoexplorer.printmap.json.pojo.PrintLayerList;
-import no.imr.geoexplorer.printmap.pojo.FutureImageOrTiles;
-import no.imr.geoexplorer.printmap.pojo.ImageFilenameResponse;
-
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -33,13 +24,18 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import no.imr.geoexplorer.printmap.LegendUtil;
+import no.imr.geoexplorer.printmap.PrintedMapUtils;
+import no.imr.geoexplorer.printmap.TilesToImage;
+import no.imr.geoexplorer.printmap.json.pojo.PrintLayer;
+import no.imr.geoexplorer.printmap.json.pojo.PrintLayerList;
+import no.imr.geoexplorer.printmap.pojo.FutureImageOrTiles;
+import no.imr.geoexplorer.printmap.pojo.ImageFilenameResponse;
+
 @Controller
 public class PrintMapController {
     
-    private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(PrintMapController.class);
-
-    @Autowired(required = true)
-    private MareanoAdminDbDao dao;
+    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(PrintMapController.class);
     
     @Autowired
     private ApplicationContext appContext;
@@ -61,8 +57,8 @@ public class PrintMapController {
     @RequestMapping(value="/postMapImage", method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     protected @ResponseBody ImageFilenameResponse postMapImage( @RequestBody PrintLayerList pll, HttpServletResponse resp) throws Exception {
         
-//        Long startTime = System.currentTimeMillis();
-        //System.out.println("startTime:"+startTime);
+        Long startTime = System.currentTimeMillis();
+        LOGGER.debug("startTime:"+startTime);
         
         List<PrintLayer> printLayers = pll.getPrintlayers();
         int width = pll.getWidth();
@@ -85,7 +81,7 @@ public class PrintMapController {
         	} else System.out.println("empty url:"+printLayer.getUrl()+" name:"+printLayer.getKartlagTitle());
         }
         Map<Integer, FutureImageOrTiles> layerMap = requestAllLayers(printLayersWithouEmptyUrl);
-        //System.out.println("requestAllLayers:"+(System.currentTimeMillis()-startTime));
+        LOGGER.debug("requestAllLayers:"+(System.currentTimeMillis()-startTime));
         
         for ( int i=0; i < printLayersWithouEmptyUrl.size(); i++ ) {
             FutureImageOrTiles futureImage =  layerMap.get(i);
@@ -109,24 +105,24 @@ public class PrintMapController {
             }
         }
         
-        //System.out.println("crop:"+(System.currentTimeMillis()-startTime));
+        LOGGER.debug("crop:"+(System.currentTimeMillis()-startTime));
         mapImage = tilesUtil.cropImage( mapImage, position, width, height );
-        //System.out.println("legend:"+(System.currentTimeMillis()-startTime));
+        LOGGER.debug("legend:"+(System.currentTimeMillis()-startTime));
         mapImage = legendUtil.writeLegend( mapImage, printLayers );
-        //System.out.println("northarrow:"+(System.currentTimeMillis()-startTime));
+        LOGGER.debug("northarrow:"+(System.currentTimeMillis()-startTime));
         mapImage = printedMapUtils.addNorthArrow( mapImage, appContext );
         
         mapImage = printedMapUtils.addScaleBar( mapImage, pll);
         
         String fileName = "printMap";        
         File temp = File.createTempFile(fileName, "."+PNG);
-        //System.out.println("BeforeSave image:"+(System.currentTimeMillis()-startTime));
+        LOGGER.debug("BeforeSave image:"+(System.currentTimeMillis()-startTime));
         ImageIO.write(mapImage, PNG, temp);
-        //System.out.println("AfterSave image:"+(System.currentTimeMillis()-startTime));
+        LOGGER.debug("AfterSave image:"+(System.currentTimeMillis()-startTime));
 
         ImageFilenameResponse respJson = new ImageFilenameResponse();
         respJson.setFilename(temp.getName());
-        //System.out.println("complete:"+(System.currentTimeMillis()-startTime));
+        LOGGER.debug("complete:"+(System.currentTimeMillis()-startTime));
         return respJson;
     }
     
@@ -170,8 +166,7 @@ public class PrintMapController {
                 } catch( IOException ioe) {
                     String errorMsg = printLayer.getKartlagTitle() + " err:"+ ioe.getMessage();
                     printLayer.setKartlagTitle(errorMsg);
-                    //System.out.println("tiles io exception:"+errorMsg);
-                    LOG.error("tiles io exception:"+errorMsg);
+                    LOGGER.error("tiles io exception:"+errorMsg);
                     ioe.printStackTrace();
                 }
             } else {
@@ -182,9 +177,8 @@ public class PrintMapController {
                     layerMap.put(i, overlay);
                 } catch(IOException ioe) {
                     String errorMsg = printLayer.getKartlagTitle() + " err:"+ ioe.getMessage();
-                    //System.out.println("overlay io exception:"+errorMsg);
                     printLayer.setKartlagTitle(errorMsg);
-                    LOG.error("overlay io exception:"+errorMsg);
+                    LOGGER.error("overlay io exception:"+errorMsg);
                     ioe.printStackTrace();
                 }
             }
