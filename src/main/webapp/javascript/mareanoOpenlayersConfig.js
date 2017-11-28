@@ -26,9 +26,9 @@ function addOverviewMapAndKeyboardDefaults(thisMap) {
             theme: null
         };
         ol_wms2 = new OpenLayers.Layer.WMS(
-        		"GEBCO_skyggerelieff",
-        		"http://wms.geonorge.no/skwms1/wms.gebco_skyggerelieff?&VERSION=1.1.1&SERVICE=WMS&WIDTH=256&HEIGHT=256",
-        		{layers: "GEBCO_skyggerelieff"},
+        		"geonorge",
+        		"http://maps.imr.no/geoserver/wms",
+                {layers: "landareal_europa"},
                 {singleTile: true, ratio: 1}
     	);
     } else {
@@ -42,13 +42,23 @@ function addOverviewMapAndKeyboardDefaults(thisMap) {
 	    };
     	ol_wms2 = new OpenLayers.Layer.WMS(
         		"geonorge",
-        		"http://wms.geonorge.no/skwms1/wms.europa?VERSION=1.1.1&SERVICE=WMS&WIDTH=256&HEIGHT=256",
-        		{layers: "Land,Vmap0Land,Vmap0Kystkontur"},
+        		"http://maps.imr.no/geoserver/wms",
+                {layers: "landareal_europa"},
                 {singleTile: true, ratio: 1}
     	);
     } 
      
-    var tmpLayerOptions = {layers: [ol_wms2], mapOptions: layerOptions, maximized: false, minRatio: 48, maxRatio: 72, size: {w: 256, h: 150}};
+    var tmpLayerOptions = { 
+    		layers: [ol_wms2], 
+    		mapOptions: layerOptions, 
+    		//maximized: false, 
+    		minRatio: 48, 
+    		maxRatio: 72, 
+    		size: {w: 256, h: 150},
+    		autoPan:true,
+    		maximizeTitle: 'Show the overview map'
+    };
+    
     thisMap.addControl(new OpenLayers.Control.OverviewMap(tmpLayerOptions));
     thisMap.addControl(new OpenLayers.Control.KeyboardDefaults());
     thisMap.addControl(new OpenLayers.Control.ScaleLine({bottomOutUnits: ''}));
