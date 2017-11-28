@@ -203,7 +203,7 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
             };
             if ( config.map.projection == EPSG3575 ) {
                 layerTreeGroups["groups"] = {
-                    "default": "Overlays", 
+                    "default": overlays, 
                     "backgroundPolarLand": {
                         title: baseLayersPolar, 
                         exclusive: true
