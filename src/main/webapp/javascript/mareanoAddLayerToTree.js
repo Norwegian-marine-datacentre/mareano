@@ -262,7 +262,8 @@ function getKartlagBildeDiv(nodeText) {
 
 function getLanguage() {
     var languageChoosen = "en";
-    if (document.location.href.indexOf("mareano.html") != -1) {
+    if (document.location.href.indexOf("mareano.html") != -1 || 
+    		document.location.href.indexOf("mareanoPolar.html")) {
         languageChoosen = "no";
     }
     return languageChoosen;
