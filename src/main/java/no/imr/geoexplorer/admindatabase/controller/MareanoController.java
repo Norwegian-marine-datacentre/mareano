@@ -25,6 +25,8 @@ import no.imr.geoexplorer.admindatabase.mybatis.pojo.Kartbilder;
 import no.imr.geoexplorer.admindatabase.mybatis.pojo.Kartlag;
 import no.imr.geoexplorer.admindatabase.mybatis.pojo.KartlagEnNo;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -47,7 +49,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  */
 @Controller
 public class MareanoController {
-
+	private static final Logger LOGGER = LoggerFactory.getLogger(MareanoController.class);
+	
     private long mavLastUpdatedNo = new Date().getTime();
     private long mavLastUpdatedEn = new Date().getTime();
     private long mavLastUpdatedPolar = new Date().getTime();
@@ -57,6 +60,9 @@ public class MareanoController {
     private final static String ENGLISH = "en";
     private final static String TEST_SERVER = "webtest1.nodc.no";
     private final static String HOVEDTEMA_NOT_IN_PRODUCTION = "Under utvikling";
+    
+    private final static String URL_MAREANO_EN = "http://www.mareano.no/en";
+    private final static String URL_MAREANO = "http://www.mareano.no/";
     
     private final static String UTM33 = "EPSG:32633";
     private final static Double UTM33_MAX_RESOLUTION = 10832.0;
@@ -73,11 +79,18 @@ public class MareanoController {
     
     private final static String POLAR_BACKGROUND_GROUP = "backgroundPolarLand";
     private final static String POLAR_BACKGROUND_GROUP_SEA = "backgroundPolarSea";
-    private final static String POLAR_VIEW = "mareanoPolar";
-    private final static String POLAR_EN_VIEW = "mareanoPolar_en";
-    private final static String VIEW = "mareano";
-    private final static String VIEW_EN = "mareano_en";
     private final static String HOVEDTEMA_BACKGROUND = "Bakgrunnskart";
+    
+    //html page the request comes from
+    private final static String MAREANO_POLAR_JSP = "mareanoPolar";
+    private final static String MAREANO_POLAR_EN_JSP = "mareanoPolar_en";
+    private final static String MAREANO_JSP = "mareano";
+    private final static String MAREANO_EN_JSP = "mareano_en";
+    
+    
+    //mareano stasjoner - default visible 'kartbilde' in json
+    private final static String MAREANO_STASJONER = "MAREANO-stasjoner";
+    private final static String MAREANO_STATIONS = "MAREANO-stations";
     
     @Autowired(required = true)
     private MareanoAdminDbDao dao;
@@ -108,7 +121,7 @@ public class MareanoController {
     		HttpServletResponse resp) throws IOException {
 
         if (mavNo == null || (System.currentTimeMillis() - mavLastUpdatedNo) > ONEHOUR) {
-            mavNo = commonGetMareano(resp, NO, "mareano");
+            mavNo = commonGetMareano(resp, NO, MAREANO_JSP); 
             mavLastUpdatedNo = new Date().getTime();
         } 
         defaultLayersOnOrOff( selectedLayers, mavNo );
@@ -122,7 +135,7 @@ public class MareanoController {
     		HttpServletResponse resp) throws IOException {
     	
         if (mavEn == null || (System.currentTimeMillis() - mavLastUpdatedEn) > ONEHOUR) {
-            mavEn = commonGetMareano(resp, EN, "mareano_en");
+            mavEn = commonGetMareano(resp, EN, MAREANO_EN_JSP); 
             mavLastUpdatedEn = new Date().getTime();
         } 
         defaultLayersOnOrOff( selectedLayers, mavEn );
@@ -136,7 +149,7 @@ public class MareanoController {
     		HttpServletResponse resp) throws IOException {
 
         if (mavPolar == null || (System.currentTimeMillis() - mavLastUpdatedPolar) > ONEHOUR) {
-            mavPolar = commonGetMareano(resp, NO, "mareanoPolar");
+            mavPolar = commonGetMareano(resp, NO, MAREANO_POLAR_JSP); 
             mavLastUpdatedPolar = new Date().getTime();
         } 
         defaultLayersOnOrOff( selectedLayers, mavPolar );
@@ -150,7 +163,7 @@ public class MareanoController {
     		HttpServletResponse resp) throws IOException {
 
         if (mavPolarEn == null || (System.currentTimeMillis() - mavLastUpdatedPolarEn) > ONEHOUR) {
-            mavPolarEn = commonGetMareano(resp, EN, "mareanoPolar_en");
+            mavPolarEn = commonGetMareano(resp, EN, MAREANO_POLAR_EN_JSP); 
             mavLastUpdatedPolarEn = new Date().getTime();
         } 
         defaultLayersOnOrOff( selectedLayers, mavPolarEn );
@@ -170,18 +183,19 @@ public class MareanoController {
     	if ( isChanged ) {
             ObjectMapper mapper = new ObjectMapper();
             String json = mapper.writeValueAsString(visninger);
-            mav.addObject("hovedtemaer_json", json);               
+            mav.addObject("hovedtemaer_json", json);                
     	}
 //        mav.getModel().remove("tmpHovedTema");  
-    	mav.getModel().remove("selectedLayers");
-    	mav.addObject("selectedLayers", selectedLayers);
+    	mav.getModel().remove("selectedLayers"); 
+    	mav.addObject("selectedLayers", selectedLayers); 
     }
     
     private boolean changedDisplayDefaultLayers( boolean toDisplay, List<HovedtemaVisning> hovedtemaVisninger ) {
     	
     	for (HovedtemaVisning hovedtema : hovedtemaVisninger) {
 	    	for (KartbilderVisning kartbilderVisning : hovedtema.getBilder()) {
-	            if (kartbilderVisning.getGruppe().equals("MAREANO-stasjoner") || kartbilderVisning.getGruppe().equals("MAREANO-stations")) {
+	            if (kartbilderVisning.getGruppe().equals( MAREANO_STASJONER ) || kartbilderVisning.getGruppe().equals( MAREANO_STATIONS )) {
+	            	LOGGER.debug("MAREANO-stasjoner _ kartbilderVisning:" + kartbilderVisning.isVisible() + " toDisplay:"+toDisplay);
 	            	if ( kartbilderVisning.isVisible() != toDisplay) {
 	            		kartbilderVisning.setVisible( toDisplay ); //default = true
 	            		return true;
@@ -215,13 +229,13 @@ public class MareanoController {
 		String heading = getMareanoHeading(language);
 		mav.addObject("heading", heading);
 
-		resp.setCharacterEncoding("UTF-8"); //todo: remove
+		resp.setCharacterEncoding("UTF-8"); 
 		return mav;    	
     }
 
     @RequestMapping("/mareanoJson")
     public @ResponseBody JsonNode getMareanoJson() throws IOException {
-        List<HovedtemaVisning> visninger = listOrganizedToBrowser("no", VIEW);
+        List<HovedtemaVisning> visninger = listOrganizedToBrowser("no", MAREANO_JSP);
         ObjectMapper mapper = new ObjectMapper();
         String json = mapper.writeValueAsString(visninger);
         return mapper.readTree(json);
@@ -230,7 +244,7 @@ public class MareanoController {
     @RequestMapping("/mareanoPolarJson")
     public @ResponseBody JsonNode getMareanoPolarJson() throws IOException {
         
-        List<HovedtemaVisning> visninger = listOrganizedToBrowser("no", POLAR_VIEW);
+        List<HovedtemaVisning> visninger = listOrganizedToBrowser("no", MAREANO_POLAR_JSP);
         ObjectMapper mapper = new ObjectMapper();
         String json = mapper.writeValueAsString(visninger);
 
@@ -264,9 +278,7 @@ public class MareanoController {
         }
         return hovedtemaVisninger;
     }
-    
 
-    
     protected List<HovedtemaVisning> addToList(List<HovedtemaVisning> hovedtemaVisninger, Hovedtema hovedtema, String language, String mareanoJSP) {
     	
         HovedtemaVisning hovedtemaVisning = new HovedtemaVisning();
@@ -286,7 +298,6 @@ public class MareanoController {
             }
         }
 
-        
         for (Kartbilder kartbilde : hovedtema.getKartbilder()) {
             KartbilderVisning kartbilderVisning = new KartbilderVisning();
 
@@ -307,12 +318,12 @@ public class MareanoController {
             }
             
             if ( hovedtema.getGenericTitle().equals(HOVEDTEMA_BACKGROUND)) {
-                if ( (mareanoJSP.equals(POLAR_VIEW) || mareanoJSP.equals(POLAR_EN_VIEW) ) && 
+                if ( (mareanoJSP.equals(MAREANO_POLAR_JSP) || mareanoJSP.equals(MAREANO_POLAR_EN_JSP) ) && 
                 		( kartbilderVisning.getGruppe().equals(POLAR_BACKGROUND_GROUP) ||
                 				kartbilderVisning.getGruppe().equals(POLAR_BACKGROUND_GROUP_SEA) ) ) {
                     addGroupAndLayers(kartbilderVisning, kartbilde, mareanoJSP, language);
                     hovedtemaVisning.addBilder(kartbilderVisning);
-                } else if ( (mareanoJSP.equals(VIEW) || mareanoJSP.equals(VIEW_EN) ) && 
+                } else if ( (mareanoJSP.equals(MAREANO_JSP) || mareanoJSP.equals(MAREANO_EN_JSP) ) && 
                 		!kartbilderVisning.getGruppe().equals(POLAR_BACKGROUND_GROUP) &&
                 		!kartbilderVisning.getGruppe().equals(POLAR_BACKGROUND_GROUP_SEA) ) {
                     addGroupAndLayers(kartbilderVisning, kartbilde, mareanoJSP, language);
@@ -337,7 +348,7 @@ public class MareanoController {
         kartbilderVisining.setStartextentMinx( kartbilde.getStartextentMinx() );
         kartbilderVisining.setStartextentMiny( kartbilde.getStartextentMiny() );
 
-        if (kartbilderVisining.getGruppe().equals("MAREANO-stasjoner") || kartbilderVisining.getGruppe().equals("MAREANO-stations")) {
+        if (kartbilderVisining.getGruppe().equals( MAREANO_STASJONER ) || kartbilderVisining.getGruppe().equals( MAREANO_STATIONS )) {
             kartbilderVisining.setVisible( true ); //default = true
         }
         List<Kartlag> kartlagene = dao.getKartlagene(kartbilde.getKartbilderId());
@@ -347,7 +358,7 @@ public class MareanoController {
                 kart.setId(kartlag.getKartlagId());
                 kart.setLayers(kartlag.getLayers());
                 kart.setKeyword(kartlag.getKeyword());
-                if ( mareanoJSP.equals("mareanoPolar") || mareanoJSP.equals("mareanoPolar_en")) {
+                if ( mareanoJSP.equals( MAREANO_POLAR_JSP ) || mareanoJSP.equals( MAREANO_POLAR_EN_JSP )) {
                     kart.setExGeographicBoundingBoxEastBoundLongitude(kartlag.getEastPolar());
                     kart.setExGeographicBoundingBoxWestBoundLongitude(kartlag.getWestPolar());
                     kart.setExGeographicBoundingBoxNorthBoundLatitude(kartlag.getNorthPolar());
@@ -398,9 +409,9 @@ public class MareanoController {
         try {
             URL url = null;
             if (language.equals(ENGLISH)) {
-                url = new URL("http://www.mareano.no/en");
+                url = new URL(URL_MAREANO_EN);  
             } else {
-                url = new URL("http://www.mareano.no/");
+                url = new URL(URL_MAREANO); 
             }
     	    BufferedReader reader;
     	    HttpURLConnection connection = (HttpURLConnection) url.openConnection();

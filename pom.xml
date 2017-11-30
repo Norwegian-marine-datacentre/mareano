@@ -19,10 +19,6 @@
         <org.junit.version>4.11</org.junit.version>
     </properties>
     <repositories> 
-<!--         <repository> -->
-<!--             <id>GeoSuite repo</id> -->
-<!--             <url>http://repo.boundlessgeo.com/main</url> -->
-<!--         </repository>     -->
 	    <repository>
 	        <id>nexus-release</id>
 	        <name>Nexus release repository for IMR</name>
@@ -32,12 +28,7 @@
 	    	<id>nexus-thirdparty-release</id>
 	    	<name>Nexus thirdparty release repository for IMR</name>
 	    	<url>https://build.imr.no/nexus/content/repositories/thirdparty/</url>
-    	</repository>
-	    <repository>
-	        <id>ibiblio.org</id>
-	        <name>ibiblio.org</name>
-	        <url>http://mirrors.ibiblio.org/pub/mirrors/maven2</url>
-	    </repository>    
+    	</repository>  
     </repositories>  
 	<pluginRepositories>
 		<pluginRepository>
@@ -196,10 +187,25 @@
 		    <version>2.4</version>
 		</dependency>		
         <dependency>
-            <groupId>no.imr.framework.logging.slf4j</groupId>
-            <artifactId>logging-framework</artifactId>
-            <version>1.1.7</version>
-            <type>jar</type>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.0.13</version>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-core</artifactId>
+            <version>1.0.13</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>jcl-over-slf4j</artifactId>
+            <version>1.7.5</version>
+        </dependency>
+        <!-- This adds a layer so that apache log4j uses slf4j instead -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>log4j-over-slf4j</artifactId>
+            <version>1.7.5</version>
         </dependency>		
     </dependencies>
     <build>

@@ -13,6 +13,7 @@ import java.util.concurrent.Future;
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -32,27 +33,37 @@ import no.imr.geoexplorer.printmap.json.pojo.PrintLayerList;
 import no.imr.geoexplorer.printmap.pojo.FutureImageOrTiles;
 import no.imr.geoexplorer.printmap.pojo.ImageFilenameResponse;
 
+/**
+ * Print visible layers from map client to pdf.
+ * 
+ * Post postMapImage - Writes pdf to temp directory and returns filename
+ * Get getMapImage - given a filename writes pdf to response
+ * @author endrem
+ *
+ */
 @Controller
 public class PrintMapController {
     
-    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(PrintMapController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(PrintMapController.class);
+    
+    private final static String PNG = "png";
+    private String tempImageFilePath = "";
     
     @Autowired
     private ApplicationContext appContext;
     
-    
     @Autowired
     private TilesToImage tilesUtil;
-    
-    public void setTilesToImage(TilesToImage tilesUtil) {
-        this.tilesUtil = tilesUtil;
-    }
 
     @Autowired
     private PrintedMapUtils printedMapUtils;
     
     @Autowired
     private LegendUtil legendUtil;
+    
+    public void setTilesToImage(TilesToImage tilesUtil) {
+        this.tilesUtil = tilesUtil;
+    }
     
     @RequestMapping(value="/postMapImage", method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     protected @ResponseBody ImageFilenameResponse postMapImage( @RequestBody PrintLayerList pll, HttpServletResponse resp) throws Exception {
@@ -77,8 +88,8 @@ public class PrintMapController {
         			position = printLayer.getPosition();
         		}
         		printLayersWithouEmptyUrl.add(printLayer);
-        		System.out.println("printLayer.url:"+printLayer.getUrl());
-        	} else System.out.println("empty url:"+printLayer.getUrl()+" name:"+printLayer.getKartlagTitle());
+        		LOGGER.debug("printLayer.url:"+printLayer.getUrl());
+        	} else LOGGER.debug("empty url:"+printLayer.getUrl()+" name:"+printLayer.getKartlagTitle());
         }
         Map<Integer, FutureImageOrTiles> layerMap = requestAllLayers(printLayersWithouEmptyUrl);
         LOGGER.debug("requestAllLayers:"+(System.currentTimeMillis()-startTime));
@@ -125,9 +136,6 @@ public class PrintMapController {
         LOGGER.debug("complete:"+(System.currentTimeMillis()-startTime));
         return respJson;
     }
-    
-    private final static String PNG = "png";
-    private String tempImageFilePath = "";
     
     @RequestMapping(value="/getMapImage", method = RequestMethod.GET)
     public void getMapImage(@RequestParam("printFilename") String filename, HttpServletResponse resp) throws Exception {
