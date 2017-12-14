@@ -114,6 +114,65 @@ function createNewInfoFragment(layer, data) {
     infoWithLinks + '<br />' +
     '<a href="' + getMapUrl + '" target="_blank">getMap:'+layers+'</a></font></div>';
 
+    /****************************/
+    //Also add date of when layer was last updated
+    //Currently implemented for IMR layers
+    //Todo: implement for NGU layers
+    var shape_date = null;
+    if (alayer.url.indexOf("maps.imr.no/geoserver/") > -1 ) { // /gwc or /wms
+        
+        var baseWFSurl = "http://maps.imr.no/geoserver/wms?service=WFS&version=2.0.0&request=GetFeature&typeName=";
+        var update_ = "&propertyName=update_";
+        var update = "&propertyName=update";
+        var version = "&propertyName=version";
+        var versjon = "&propertyName=VERSJON";
+        var date_shape_property = "&propertyName=date_shape";
+    
+        //corals is layer_group and only coralreefs in group has shp_date
+        if ( layers == "corals" ) { 
+            layers = "coralreefs";
+        }
+        
+        function checkIfXmlContainDate( url ) {
+            var xmlHttp = new XMLHttpRequest();
+            xmlHttp.open( "GET", url, false ); // false for synchronous request
+            xmlHttp.send( null );            
+            if (xmlHttp.status==200) {
+                var xmlDoc = xmlHttp.responseXML;
+                var feature_collection = xmlDoc.childNodes[0];
+                var last_member = feature_collection.childNodes[feature_collection.childNodes.length -1];
+                if (last_member.childNodes[0] != undefined) {
+                    var shape_date = last_member.childNodes[0].textContent;
+                    console.log("shape_date:"+shape_date);
+                    return shape_date;
+                }
+            }
+            return null;
+        }
+        
+        var wfsDate_shape = baseWFSurl + layers + date_shape_property;
+        var wfsUpdate_ = baseWFSurl + layers + update_;
+        var wfsUpdate = baseWFSurl + layers + update;
+        var wfsVersion = baseWFSurl + layers + version;
+        var wfsVersjon = baseWFSurl + layers + versjon;
+        
+        shape_date = checkIfXmlContainDate( wfsDate_shape );
+        if ( shape_date == null )
+        	shape_date = checkIfXmlContainDate( wfsUpdate_ );
+        if ( shape_date == null )
+            shape_date = checkIfXmlContainDate( wfsUpdate );
+        if ( shape_date == null )
+            shape_date = checkIfXmlContainDate( wfsVersion );
+        if ( shape_date == null )
+            shape_date = checkIfXmlContainDate( wfsVersjon );
+        console.log("shape_date:"+shape_date);
+        console.log("testing layername:"+layers+" version:"+wfsVersion);
+    }
+    /****************************/
+    if ( shape_date != null && shape_date != "" ) {
+    	infoHTML += "<font style='font-size:12px'>Shape_date:" +shape_date+" </font>";
+    }
+    
     return infoHTML;
 }
 

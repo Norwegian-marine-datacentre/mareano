@@ -390,6 +390,8 @@ function addLegendAndInfo( layer, data ) {
 }
 
 function changeBakgrunnsInfo(layer) {
+    if ( layer.metadate == undefined) 
+        return;
     var languageChoosen = getLanguage();
     jQuery.ajax({
         type: 'get',
@@ -477,10 +479,14 @@ function removeInfo(legendDiv) {
  */
 function updateOrSetKartlagInfo(kartlagInfoState) {
     if ( Ext.getCmp('tips').rendered ) {
-        Ext.getCmp('tips').update(kartlagInfoState.join("")+bakgrunnInfoDiv);
+        if ( bakgrunnInfoDiv != undefined )
+            Ext.getCmp('tips').update(kartlagInfoState.join("")+bakgrunnInfoDiv);
+        else Ext.getCmp('tips').update(kartlagInfoState.join("") )
     } else {
-        Ext.getCmp('tips').html = kartlagInfoState.join("")+bakgrunnInfoDiv;
-    }	
+        if ( bakgrunnInfoDiv != undefined ) 
+            Ext.getCmp('tips').html = kartlagInfoState.join("")+bakgrunnInfoDiv;
+        else Ext.getCmp('tips').html = kartlagInfoState.join("")
+    }
 }
 
 function showBilder(imageTitle,imageURL)
