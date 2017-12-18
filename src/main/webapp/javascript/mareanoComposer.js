@@ -516,7 +516,8 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
 			
 			var urlWithLayers = oldUrl;
 			var defaultSelectedLayers = "244,242,243";
-			if ( selectedLayers != "" && selectedLayers != defaultSelectedLayers ) {
+			var defaultSelectedLayers2 = "242,243,244";
+			if ( selectedLayers != "" && selectedLayers != defaultSelectedLayers && selectedLayers != defaultSelectedLayers2 ) {
 				if ( oldUrl.indexOf("?") > -1 )
 					urlWithLayers = oldUrl + "&selectedLayers=" + selectedLayers;
 				else urlWithLayers = oldUrl + "?selectedLayers=" + selectedLayers;
