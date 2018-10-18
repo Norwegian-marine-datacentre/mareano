@@ -115,8 +115,15 @@ function createNewInfoFragment(layer, data) {
     '<a href="' + getMapUrl + '" target="_blank">getMap:'+layers+'</a></font></div>';
     
     var shape_date = getShapeDate(alayer);
-    if ( shape_date != null && shape_date != "" ) {
-    	infoHTML += "<font style='font-size:12px'>Shape_date:" +shape_date+" </font>";
+    if (alayer.url.indexOf("maps.imr.no/geoserver/") > -1) {
+        if ( shape_date != null && shape_date != "" ) {
+            infoHTML += "<font style='font-size:12px'>Shape_date:" +shape_date+" </font>";
+        }
+    }
+    if (alayer.url.indexOf("geo.ngu.no") > -1) {
+        if ( shape_date != null && shape_date != "" ) {
+            infoHTML += "<font style='font-size:12px'>Dato:" +shape_date+" </font>";
+        }
     }
     
     return infoHTML;
@@ -126,7 +133,7 @@ function createNewInfoFragment(layer, data) {
 //Currently implemented for IMR layers
 //Todo: implement for NGU layers
 function getShapeDate(alayer) {
-
+  
   var shape_date = null;
   if (alayer.url.indexOf("maps.imr.no/geoserver/") > -1 ) { // /gwc or /wms
       
@@ -137,6 +144,7 @@ function getShapeDate(alayer) {
       var version = "&propertyName=version";
       var versjon = "&propertyName=VERSJON";
       var date_shape_property = "&propertyName=date_shape";
+      
       
       var wfsDate_shape = baseWFSurl + layerWithShapeDate + date_shape_property;
       var wfsUpdate_ = baseWFSurl + layerWithShapeDate + update_;
@@ -149,21 +157,22 @@ function getShapeDate(alayer) {
     	  layerWithShapeDate = "coralreefs";
       }
       
-      function checkIfXmlContainDate( url ) {
-          var xmlHttp = new XMLHttpRequest();
-          xmlHttp.open( "GET", url, false ); // false for synchronous request
-          xmlHttp.send( null );            
-          if (xmlHttp.status==200) {
-              var xmlDoc = xmlHttp.responseXML;
-              var feature_collection = xmlDoc.childNodes[0];
-              var last_member = feature_collection.childNodes[feature_collection.childNodes.length -1];
-              if (last_member.childNodes[0] != undefined) {
-                  shape_date = last_member.childNodes[0].textContent;
-                  return shape_date;
-              }
+    function checkIfXmlContainDate( url ) {
+      var xmlHttp = new XMLHttpRequest();
+      xmlHttp.open( "GET", url, false ); // false for synchronous request
+      xmlHttp.send( null );            
+      if (xmlHttp.status==200) {
+          var xmlDoc = xmlHttp.responseXML;
+          var feature_collection = xmlDoc.childNodes[0];
+          var last_member = feature_collection.childNodes[feature_collection.childNodes.length -1];
+          if (last_member.childNodes[0] != undefined) {
+              shape_date = last_member.childNodes[0].textContent;
+              return shape_date;
           }
-          return null;
       }
+      return null;
+    }
+
       shape_date = checkIfXmlContainDate( wfsDate_shape );
       if ( shape_date == null )
       	shape_date = checkIfXmlContainDate( wfsUpdate_ );
@@ -176,6 +185,40 @@ function getShapeDate(alayer) {
       
       //console.log("shape_date:"+shape_date);
   }
+  if (alayer.url.indexOf("http://geo.ngu.no") > -1) {
+
+      //NGU uses older WFS version 1.0.0
+      var baseWFSurl = alayer.url + "?service=WFS&version=1.0.0&request=GetFeature";
+      
+      var partsOfStr = alayer.params.LAYERS.split(',')
+      for (i=0; i < partsOfStr.length; i++) {
+          baseWFSurl += "&typeName=" + partsOfStr[i];
+      }
+      var dato_shape_property = "&propertyName=Dato";
+      
+      var wfsDate_shape = baseWFSurl + dato_shape_property;
+      
+      function checkIfXmlContainDate( url ) {
+        var xmlHttp = new XMLHttpRequest();
+        xmlHttp.open( "GET", url, false ); // false for synchronous request
+        xmlHttp.send( null );            
+        if (xmlHttp.status==200) {
+          var xmlDoc = xmlHttp.responseXML;
+          var feature_collection = xmlDoc.childNodes[0];
+          if (feature_collection != undefined && 
+             feature_collection.childNodes[3] != null &&
+             feature_collection.childNodes[3].childNodes[1] != null &&
+             feature_collection.childNodes[3].childNodes[1].childNodes[1] != null ) {
+              dato = feature_collection.childNodes[3].childNodes[1].childNodes[1].innerHTML
+              return dato;
+          }
+        }
+        return null;
+      }
+    
+      shape_date = checkIfXmlContainDate( wfsDate_shape );
+  }
+  
   return shape_date;
 }
 

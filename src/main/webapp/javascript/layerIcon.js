@@ -10,7 +10,7 @@ function getLayerIcon(url) {
             return "gx-tree-rasterlayer-icon-HI";
         } else if (url.indexOf("ngu.no") != -1) {
             return "gx-tree-rasterlayer-icon-NGU";
-        } else if (url.indexOf("dirnat.no") != -1) {
+        } else if (url.indexOf("dirnat.no") != -1 || url.indexOf("wms.miljodirektoratet.no") != -1 ) {
             return "gx-tree-rasterlayer-icon-DN";
         } else if (url.indexOf("fiskeridir.no") != -1) {
             return "gx-tree-rasterlayer-icon-FD";

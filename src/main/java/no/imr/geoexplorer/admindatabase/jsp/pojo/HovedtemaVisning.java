@@ -5,8 +5,15 @@ import java.util.List;
 
 public class HovedtemaVisning {
 	private String hovedtema;
+	private String abstracts;
 	private List<KartbilderVisning> bilder = new ArrayList<KartbilderVisning>();
 
+	public String getAbstracts() {
+		return abstracts;
+	}
+	public void setAbstracts(String abstracts) {
+		this.abstracts = abstracts;
+	}
 	public String getHovedtema() {
 		return hovedtema;
 	}

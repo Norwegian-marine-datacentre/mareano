@@ -304,8 +304,9 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
         
         var gaaTilMarbunn = new Ext.Button({
             id: "gaaTilMarbunnButton",
-            tooltip: "Marbunn",
+            tooltip: this.marbunnTooltip,
             text: "Marbunn",
+            style: 'background-color:white;',
             handler: function(){
             	window.open( "http://mareano.no/marbunn_web/viewspecies" );
             },
@@ -515,8 +516,8 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
 			}
 			
 			var urlWithLayers = oldUrl;
-			var defaultSelectedLayers = "244,242,243";
-			var defaultSelectedLayers2 = "242,243,244";
+			var defaultSelectedLayers = "244,242,243,599"; //in prod: 311
+			var defaultSelectedLayers2 = "242,243,244,599";
 			if ( selectedLayers != "" && selectedLayers != defaultSelectedLayers && selectedLayers != defaultSelectedLayers2 ) {
 				if ( oldUrl.indexOf("?") > -1 )
 					urlWithLayers = oldUrl + "&selectedLayers=" + selectedLayers;

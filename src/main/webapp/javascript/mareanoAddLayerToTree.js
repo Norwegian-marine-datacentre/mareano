@@ -19,7 +19,7 @@ function loadMareano(mapPanel, app) {
             var legendContainer = Ext.getCmp('newLegend')
             if (id) {
                 var legdiv = Ext.get(id);
-                if (legdiv !== null) {
+                if (legdiv !== null) { // && n.parentNode.attributes.text != "General maps") {
                 	var layerNode = jQuery("[ext\\:tree-node-id='"+n.id+"']").find("a")
                     if ( n.layer.inRange === false ) {
                     	layerNode.addClass('out-of-scale')
@@ -221,7 +221,7 @@ function addLayerToGroup( gruppeNavn, gruppeText, map, mapPanel, layers, store, 
     var layerContainerGruppe = new GeoExt.tree.LayerContainer({
         checked: groupChecked,
         expanded: groupChecked,    	
-        text: gruppeText,   
+        text: gruppeNavn,   
         qtip: gruppeText,
         listeners: {
             "checkchange": function(node, checked) { //setting all subnodes if parent is checked

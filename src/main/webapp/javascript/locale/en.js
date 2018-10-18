@@ -7,6 +7,7 @@ GeoExt.Lang.add("en", {
         helpText: "",
         mousePositionText: "Coordinates (WGS84): ",
         goToTooltip: "Go to coordinate",
+        marbunnTooltip: "Go to species list - Marbunn",
         goToText: "Go to coordinate",
         goToPrompt: "Position in WGS84 (Latitude, Longitude - eg. - 60.37,5.28):",
         zoomToItem1: "Barents Sea",

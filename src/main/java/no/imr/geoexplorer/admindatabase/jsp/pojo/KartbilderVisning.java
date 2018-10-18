@@ -5,6 +5,7 @@ import java.util.List;
 
 public class KartbilderVisning {
 	private String gruppe;
+	private String abstracts;
 	private List<KartlagVisning> kart = new ArrayList<KartlagVisning>();
 	private boolean visible = false;
 	private double startextentMinx;
@@ -12,6 +13,12 @@ public class KartbilderVisning {
 	private double startextentMiny;
 	private double startextentMaxy;
 
+	public String getAbstracts() {
+		return abstracts;
+	}
+	public void setAbstracts(String abstracts) {
+		this.abstracts = abstracts;
+	}
 	public boolean isVisible() {
 		return visible;
 	}

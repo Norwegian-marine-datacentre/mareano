@@ -91,6 +91,8 @@ public class MareanoController {
     //mareano stasjoner - default visible 'kartbilde' in json
     private final static String MAREANO_STASJONER = "MAREANO-stasjoner";
     private final static String MAREANO_STATIONS = "MAREANO-stations";
+    private final static String MAREANO_OVERSIKTSKART = "MAREANO-oversiktskart";
+    private final static String MAREANO_OVERVIEW = "MAREANO - overview";
     
     @Autowired(required = true)
     private MareanoAdminDbDao dao;
@@ -192,19 +194,26 @@ public class MareanoController {
     
     private boolean changedDisplayDefaultLayers( boolean toDisplay, List<HovedtemaVisning> hovedtemaVisninger ) {
     	
+    	boolean changedDisplay = false;
     	for (HovedtemaVisning hovedtema : hovedtemaVisninger) {
 	    	for (KartbilderVisning kartbilderVisning : hovedtema.getBilder()) {
-	            if (kartbilderVisning.getGruppe().equals( MAREANO_STASJONER ) || kartbilderVisning.getGruppe().equals( MAREANO_STATIONS )) {
+	    		String groupName = kartbilderVisning.getGruppe().trim(); 
+	            if (groupName.equals( MAREANO_STASJONER ) || groupName.equals( MAREANO_STATIONS )) {
 	            	LOGGER.debug("MAREANO-stasjoner _ kartbilderVisning:" + kartbilderVisning.isVisible() + " toDisplay:"+toDisplay);
 	            	if ( kartbilderVisning.isVisible() != toDisplay) {
 	            		kartbilderVisning.setVisible( toDisplay ); //default = true
-	            		return true;
-	            	}
-	                return false;
+	            		changedDisplay = true;
+	            	}	                
 	            }
+	            if (groupName.equals( MAREANO_OVERSIKTSKART ) || groupName.equals( MAREANO_OVERVIEW )) {
+	            	if ( kartbilderVisning.isVisible() != toDisplay) {
+	            		kartbilderVisning.setVisible( toDisplay ); //default = true
+	            		changedDisplay = true;
+	            	}	                
+	            }	            
 	    	}
     	}
-    	return false;
+    	return changedDisplay;
     }
     
     private void UTM33Config(ModelAndView mav) {
@@ -286,6 +295,7 @@ public class MareanoController {
             List<HovedtemaEnNo> en = dao.getHovedtemaEn(hovedtema.getHovedtemaerId());
             if (en.size() > 0) {
                 hovedtemaVisning.setHovedtema(en.get(0).getAlternateTitle());
+                hovedtemaVisning.setAbstracts(en.get(0).getAbstracts());
             } else {
                 hovedtemaVisning.setHovedtema(hovedtema.getGenericTitle());
             }
@@ -293,6 +303,7 @@ public class MareanoController {
             List<HovedtemaEnNo> norsk = dao.getHovedtemaNo(hovedtema.getHovedtemaerId());
             if (norsk.size() > 0) {
                 hovedtemaVisning.setHovedtema(norsk.get(0).getAlternateTitle());
+                hovedtemaVisning.setAbstracts(norsk.get(0).getAbstracts());
             } else {
                 hovedtemaVisning.setHovedtema(hovedtema.getGenericTitle());
             }
@@ -305,6 +316,7 @@ public class MareanoController {
                 List<KartBilderEnNo> en = dao.getKartbilderEn(kartbilde.getKartbilderId());
                 if (en.size() > 0) {
                     kartbilderVisning.setGruppe(en.get(0).getAlternateTitle());
+                    kartbilderVisning.setAbstracts(en.get(0).getAbstracts());
                 } else {
                     kartbilderVisning.setGruppe(kartbilde.getGenericTitle());
                 }
@@ -312,6 +324,7 @@ public class MareanoController {
                 List<KartBilderEnNo> norsk = dao.getKartbilderNo(kartbilde.getKartbilderId());
                 if (norsk.size() > 0) {
                     kartbilderVisning.setGruppe(norsk.get(0).getAlternateTitle());
+                    kartbilderVisning.setAbstracts(norsk.get(0).getAbstracts());
                 } else {
                     kartbilderVisning.setGruppe(kartbilde.getGenericTitle());
                 }
