@@ -25,7 +25,7 @@ Then do:
 ## Building WAR file for deployment
 
     you@prompt:~$ cd mareano/
-    you@prompt:~/mareano$ mvn -DskipTests clean install
+    you@prompt:~/mareano$ mvn clean install
 
 At the end of a successful build the WAR file should be located:
 
