@@ -205,12 +205,17 @@ public class MareanoController {
 	            		changedDisplay = true;
 	            	}	                
 	            }
+	            /**
+	             * Dont load mareano_oversiktskart - get it from saved map
+	             */
+	            /*
 	            if (groupName.equals( MAREANO_OVERSIKTSKART ) || groupName.equals( MAREANO_OVERVIEW )) {
 	            	if ( kartbilderVisning.isVisible() != toDisplay) {
 	            		kartbilderVisning.setVisible( toDisplay ); //default = true
 	            		changedDisplay = true;
 	            	}	                
-	            }	            
+	            }
+	            */	            
 	    	}
     	}
     	return changedDisplay;
