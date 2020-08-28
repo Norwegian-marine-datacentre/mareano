@@ -54,10 +54,10 @@ app.on("ready", function( ) {
     rootRightTree.getRootNode().appendChild( 
         addGenerelleLayerToGroup("generelle", i18nGenerallMaps, this.map, this.mapPanel, generelleLayers, store, app) );
     /***********************************/                    
-    addDropdownmenuToMareanoMenuIfIe();
+    //addDropdownmenuToMareanoMenuIfIe();
 	turnOnPreselectedLayers(rootNode);
 	
-	console.timeEnd("on ready start-end");
+	console.timeEnd("on ready start"); //("on ready start-end");
 });	
 
 function addDropdownmenuToMareanoMenuIfIe() {
