@@ -46,7 +46,8 @@
 <!-- GeoExplorer resources -->
 <link rel="stylesheet" type="text/css" href="lib/geoexplorer/geoexplorer.css" />
 <link rel="stylesheet" type="text/css" href="lib/geoexplorer/colorpicker/color-picker.ux.css" />
-<script type="text/javascript" src="lib/geoexplorer/GeoExplorer.js"></script>
+<!-- script type="text/javascript" src="lib/geoexplorer/GeoExplorer.js"></script -->
+<script type="text/javascript" src="lib/geoexplorer/GeoExplorer-debug.js"></script>
 
-<!--  script type="text/javascript" src="lib/geoexplorer/mareano-debug.js" / -->
-<script type="text/javascript" src="lib/geoexplorer/mareano.js"></script>
+<script type="text/javascript" src="lib/geoexplorer/mareano-debug.js" />
+<!-- script type="text/javascript" src="lib/geoexplorer/mareano.js"></script -->
