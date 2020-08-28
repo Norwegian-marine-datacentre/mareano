@@ -516,8 +516,8 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
 			}
 			
 			var urlWithLayers = oldUrl;
-			var defaultSelectedLayers = "244,242,243,599"; //in prod: 311
-			var defaultSelectedLayers2 = "242,243,244,599";
+			var defaultSelectedLayers = "244,242,243"; //,599"; //in prod: 311
+			var defaultSelectedLayers2 = "242,243,244"; //,599";
 			if ( selectedLayers != "" && selectedLayers != defaultSelectedLayers && selectedLayers != defaultSelectedLayers2 ) {
 				if ( oldUrl.indexOf("?") > -1 )
 					urlWithLayers = oldUrl + "&selectedLayers=" + selectedLayers;
@@ -632,7 +632,7 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
             layout: "border",
             region: "west",
             unstyled:true,
-            width: 240, 
+            width: 440, 
             tbar: [{
                 text: this.visibilityText,
                 tooltip: this.visibilityTooltip,
@@ -651,14 +651,14 @@ Mareano.Composer = Ext.extend(GeoExplorer.Composer, {
             }, '->', {
                 tooltip: this.expandCollapseTooltip,
                 cls: "expand-collapse",
-                text: this.expandText + btnPostfix + expandDiv,
+                text: this.collapseText + btnPostfix + collapseDiv,
                 handler: function(cmp) {
                     if (!cmp._expanded) {
-                        cmp.setText(this.collapseText + btnPostfix + collapseDiv);
-                        westPanel2.setWidth(440); 
-                    } else {
                         cmp.setText(this.expandText + btnPostfix + expandDiv);
                         westPanel2.setWidth(240); 
+                    } else {
+                        cmp.setText(this.collapseText + btnPostfix + collapseDiv);
+                        westPanel2.setWidth(440); 
                     }
                     westPanel2.ownerCt.doLayout();
                     cmp._expanded = !cmp._expanded;
