@@ -19,6 +19,7 @@ function addOverviewMapAndKeyboardDefaults(thisMap) {
     if ( window.location.href.indexOf("Polar") > -1) {
     	layerOptions = {
             units: "m",
+            numZoomLevels: 3,
             projection: EPSG3575,
             maxExtent: maxExtent75,
             minResolution: minResolution75,
@@ -34,6 +35,7 @@ function addOverviewMapAndKeyboardDefaults(thisMap) {
     } else {
     	layerOptions = {
 	        units: "m",
+	        numZoomLevels: 3, //dont zoom inn so much
     	    projection: EPSG32633,
     	    maxExtent: maxExtent33,
     	    minResolution: minResolution33,
@@ -51,8 +53,10 @@ function addOverviewMapAndKeyboardDefaults(thisMap) {
     var tmpLayerOptions = { 
     		layers: [ol_wms2], 
     		mapOptions: layerOptions, 
-    		//maximized: false, 
-    		minRatio: 48, 
+    		//maximized: false,
+    		//minRectSize: 5,
+    		minRectDisplayClass: 'RectReplacement',
+    		minRatio: 72, //48, 
     		maxRatio: 72, 
     		size: {w: 256, h: 150},
     		autoPan:true,
