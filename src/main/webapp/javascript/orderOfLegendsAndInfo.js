@@ -138,7 +138,7 @@ function getShapeDate(alayer) {
   if (alayer.url.indexOf("maps.imr.no/geoserver/") > -1 ) { // /gwc or /wms
       
 	  var layerWithShapeDate = alayer.params.LAYERS;
-      var baseWFSurl = "http://maps.imr.no/geoserver/wms?service=WFS&version=2.0.0&request=GetFeature&typeName=";
+      var baseWFSurl = "https://maps.imr.no/geoserver/wms?service=WFS&version=2.0.0&request=GetFeature&typeName=";
       var update_ = "&propertyName=update_";
       var update = "&propertyName=update";
       var version = "&propertyName=version";
