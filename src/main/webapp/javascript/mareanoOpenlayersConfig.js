@@ -28,7 +28,7 @@ function addOverviewMapAndKeyboardDefaults(thisMap) {
         };
         ol_wms2 = new OpenLayers.Layer.WMS(
         		"geonorge",
-        		"http://maps.imr.no/geoserver/wms",
+        		"https://maps.imr.no/geoserver/wms",
                 {layers: "landareal_europa"},
                 {singleTile: true, ratio: 1}
     	);
